@@ -57,7 +57,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/redcab-orig-logo.png',
       colorMode: {
         respectPrefersColorScheme: true,
       },
