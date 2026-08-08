@@ -18,13 +18,13 @@ v2 backlog themes — not part of the Phase 0–3 baseline.
 | Topic | Document |
 | --- | --- |
 | Roadmap overview | [Phasing Roadmap](/docs/roadmap) |
-| Prior phase | [Phase 3](/docs/roadmap/phase-3-b2b-packages) |
+| Prior phase | [Phase 3](/docs/roadmap/phase-3-corporate-packages) |
 | Ambiguity register | [Open Questions](/docs/ambiguities/open-questions) |
 | Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
 
 ---
 
-| [← Phase 3](/docs/roadmap/phase-3-b2b-packages) | [Roadmap overview →](/docs/roadmap) |
+| [← Phase 3](/docs/roadmap/phase-3-corporate-packages) | [Roadmap overview →](/docs/roadmap) |
 
 ---
 

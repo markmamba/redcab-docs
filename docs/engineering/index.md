@@ -76,7 +76,7 @@ Engineering conventions **must not** override invariants, context ownership, or 
 | Layer | Where documented | Examples |
 | --- | --- | --- |
 | **Baseline patterns** | [Backend](/docs/engineering/backend-conventions) / [Frontend](/docs/engineering/frontend-conventions) convention docs | Request lifecycle, Sorbet sigs, soft delete, pagination, Team layout nesting, env gating |
-| **Red Cab domain rules** | Same docs + business rules + ADRs | No client price, snapshot immutability, seat reservation guard, B2B ACL |
+| **Red Cab domain rules** | Same docs + business rules + ADRs | No client price, snapshot immutability, seat reservation guard, Corporate ACL |
 | **Actor / folder mapping** | [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping) | `marketplace/` vs `tourists/`, surface → route groups |
 
 When scaffolding `.ai/instructions.md` in each repo, copy the baseline patterns verbatim and append Red Cab–specific rules from this folder.

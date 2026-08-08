@@ -130,13 +130,13 @@ Accepted
 
 ## Context
 
-Red Cab is a two-sided marketplace earning a commission per booking, with two demand channels (instant B2C card checkout and negotiated B2B furikomi invoicing) and an external financial rail whose settlement truth is authoritative and asynchronous. The technology stack is selected to serve the architecture already established, under these forces:
+Red Cab is a two-sided marketplace earning a commission per booking, with two demand channels (instant B2C card checkout and negotiated Corporate furikomi invoicing) and an external financial rail whose settlement truth is authoritative and asynchronous. The technology stack is selected to serve the architecture already established, under these forces:
 
 - **Need for rapid MVP delivery.** A small operator must ship a verified marketplace quickly; the stack favors a high-productivity, batteries-included path over assembling many independent parts.
 - **Modular monolith architecture.** Per [ADR-001-modular-monolith.md](./adr-001-modular-monolith), the system is one deployable over one database, partitioned into the locked 6 core + 2 supporting bounded contexts that integrate in-process. The stack must host all contexts as logical modules with guarded surfaces, not as distributed services.
 - **Strong transactional consistency.** The most load-bearing requirement is the atomic checkout unit — snapshot freeze + seat reservation + booking creation commit together or not at all (`CON-1`) — including the one deliberate cross-context shared transaction, Booking↔Catalog seat reservation (`CR-1`). The stack must make this possible without a distributed protocol, while upholding inventory invariants (`INV-3`) and immutable Booking snapshots (`INV-1`).
 - **Small engineering team.** Coordination cost must stay low; one runtime and one data store minimize operational and cognitive overhead.
-- **Japanese market requirements.** Formal B2B documents (Omitsumorisho/Seikyusho) must itemize the 10% consumption tax (`PAY-10`) and render correctly as Japanese commercial documents; whole-yen JPY is the only money (`PAY-1`).
+- **Japanese market requirements.** Formal corporate documents (Omitsumorisho/Seikyusho) must itemize the 10% consumption tax (`PAY-10`) and render correctly as Japanese commercial documents; whole-yen JPY is the only money (`PAY-1`).
 - **Stripe Connect integration.** The B2C path runs on an external card-and-payout rail whose settlement outcomes arrive asynchronously and are authoritative; internal state must converge to them.
 - **EN/JA support.** The audience is EN-primary inbound travelers and JA-primary corporate/provider operations; language is a cross-cutting concern (`OPR-9`), not a single-screen feature.
 
@@ -147,10 +147,10 @@ The stack is recorded as already locked in [../tech-stack.md](/docs/architecture
 - **Ruby on Rails (API mode) backend** — a single deployable hosting the 6 core + 2 supporting contexts as in-process logical modules; synchronous commands/queries where an invariant must hold within the operation, asynchronous domain events for cross-context reactions.
 - **React Router v7 (SSR) frontend** — one web application presenting three role-confined surfaces (Tourist App, Client Portal, Admin Panel) over an authenticated session; it holds no financial truth and never computes price, consuming the `PriceBreakdown` from the single pricing authority (`PRC-1`). JavaScript, not TypeScript.
 - **PostgreSQL database** — a single shared database; each context owns its tables and exposes them only through commands, queries, and events. It is the system of record for immutable Booking snapshots and auditable money facts, and the enabling constraint behind the atomic seat-reservation transaction (`CR-1`, `CON-1`).
-- **Stripe Connect payment rail** — the external card-payment and marketplace-payout rail for the B2C path; Payments converges to Stripe's webhook settlement truth. B2B funds arrive off-Stripe by bank transfer and are reconciled by Admin (`PAY-9`).
+- **Stripe Connect payment rail** — the external card-payment and marketplace-payout rail for the B2C path; Payments converges to Stripe's webhook settlement truth. Corporate bank-transfer funds arrive off-Stripe by bank transfer and are reconciled by Admin (`PAY-9`).
 - **Rails-native background jobs** — an asynchronous, idempotent, retriable job runtime executing after-the-fact reactions (notification dispatch, payout queuing, rating recalculation, listing pause/restore cascades) and scheduled alerts.
 - **Email-first notifications** — an external email rail as the MVP notification channel, driven by the Notifications context, dispatched asynchronously and rendered in the recipient's language; SMS is optional and out of MVP baseline.
-- **Server-side PDF generation** — formal B2B documents generated server-side with embedded Japanese fonts so kanji/kana render correctly, owned by the B2B context.
+- **Server-side PDF generation** — formal corporate documents generated server-side with embedded Japanese fonts so kanji/kana render correctly, owned by the Corporate context.
 
 The architecture intentionally locks categories of capability (background jobs, notifications, PDF generation) while leaving concrete vendors and implementations open under the relevant AMB decisions.
 

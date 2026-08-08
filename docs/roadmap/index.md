@@ -19,7 +19,7 @@ Roadmap overview — scope, dependency order, phase index, context matrix, and a
 | Phase 0 | [Foundation](/docs/roadmap/phase-0-foundation) |
 | Phase 1 | [MVP](/docs/roadmap/phase-1-mvp) |
 | Phase 2 | [Marketplace depth](/docs/roadmap/phase-2-marketplace-depth) |
-| Phase 3 | [B2B + packages](/docs/roadmap/phase-3-b2b-packages) |
+| Phase 3 | [Corporate + packages](/docs/roadmap/phase-3-corporate-packages) |
 | Requirements | [Requirements](/docs/requirements) |
 | Open decisions | [Open Questions](/docs/ambiguities/open-questions) |
 
@@ -39,7 +39,7 @@ Roadmap overview — scope, dependency order, phase index, context matrix, and a
 | --- | --- | --- |
 | Auth principal (email, credentials, lockout, language, coarse `role` claim) | IAM | `identities_accounts` |
 | Tourist profile | Tourists | `tourists_profiles` |
-| Corporate Client profile (org + group size) | B2B | `b2b_corporate_clients` |
+| Corporate Client profile (org + group size) | Corporate | `corporate_profiles` |
 | Provider profile / onboarding | PRV | `providers_profiles` (+ type details, licenses, documents, support trial) |
 | Platform Admin | IAM (separate principal) | `identities_admins` — **not** a role on `Account` |
 
@@ -90,7 +90,7 @@ graph TD
   CAT --> BKG[4. Booking and Checkout]
   BKG --> PAY[5. Payments and Payouts]
   BKG --> REV[6. Reviews and Ratings]
-  PAY --> B2B[7. B2B Quotation and Invoicing]
+  PAY --> CORP[7. Corporate Quotation and Invoicing]
   IAM -. stub early, wire per context .-> NOT[8. Notifications]
 ```
 
@@ -105,7 +105,7 @@ graph TD
 | 4     | Booking & Checkout (`BKG`)                 | Depends on `calculate_quote()` and guarded seat reservation        |
 | 5     | Payments & Payouts (`PAY`)                 | Depends on Booking commission snapshots                            |
 | 6     | Reviews & Ratings (`REV`)                  | Depends on Booking completion fact                                 |
-| 7     | B2B Quotation & Invoicing (`B2B`)          | Client profile in Phase 0; quotations/invoices in Phase 3          |
+| 7     | Corporate Quotation & Invoicing (`COR`)          | Client profile in Phase 0; quotations/invoices in Phase 3          |
 | 8     | Notifications (`NOT`)                      | Stub in Phase 0; wire events as each context ships                 |
 
 
@@ -124,7 +124,7 @@ Within each Phase 1–3 context slice, build in order: **DBML → migrations →
 | **0** | [Foundation](/docs/roadmap/phase-0-foundation) | Runnable repos, IAM + profiles, event bus | IAM, profiles, NOT stub, engineering scaffold |
 | **1** | [MVP — B2C happy path](/docs/roadmap/phase-1-mvp) | End-to-end tourist booking + payout | PRV, CAT (basic), BKG, PAY, NOT |
 | **2** | [Marketplace depth](/docs/roadmap/phase-2-marketplace-depth) | Reviews, pricing, search, refunds | REV, CAT (advanced), BKG, PRV automation |
-| **3** | [B2B + packages](/docs/roadmap/phase-3-b2b-packages) | Quotations, invoices, bank transfer | B2B, BKG manifests, PAY reconciliation |
+| **3** | [Corporate + packages](/docs/roadmap/phase-3-corporate-packages) | Quotations, invoices, bank transfer | COR, BKG manifests, PAY reconciliation |
 | **v2** | [Post-baseline](/docs/roadmap/v2-post-baseline) | Unscheduled backlog | Ambiguity register |
 
 ---
@@ -143,7 +143,7 @@ Which contexts receive **new capability** in each phase (✓ = primary build, �
 | Booking (`BKG`)             | —       | ✓       | ✓       | ◐       |
 | Payments (`PAY`)            | —       | ✓       | ✓       | ✓       |
 | Reviews (`REV`)             | —       | —       | ✓       | —       |
-| B2B (`B2B`)                 | ✓ client profile | — | — | ✓ quotations/invoices |
+| Corporate (`COR`)                 | ✓ client profile | — | — | ✓ quotations/invoices |
 | Notifications (`NOT`)       | ✓ stub  | ◐       | ✓       | ◐       |
 
 
@@ -155,7 +155,7 @@ Which contexts receive **new capability** in each phase (✓ = primary build, �
 | `identities.dbml` | ✓ | — | — | — |
 | `tourists.dbml` | ✓ | — | — | — |
 | `providers.dbml` | ✓ schema | ◐ if gaps | ◐ automation fields | — |
-| `b2b.dbml` | ✓ corporate client | — | — | ✓ quotations/invoices |
+| `corporate.dbml` | ✓ corporate client | — | — | ✓ quotations/invoices |
 | `notifications.dbml` | ✓ stub | ◐ | ◐ | ◐ |
 | `catalog.dbml` | — | ✓ design + migrate | ◐ advanced pricing | ◐ if needed |
 | `bookings.dbml` | — | ✓ design + migrate | ◐ cancel/bundle | ◐ manifests/packages |
@@ -191,4 +191,4 @@ When picking up work in a given phase:
 - [../requirements/traceability-matrix.md](/docs/requirements/traceability-matrix) — PRD → requirements → contexts
 - [../ambiguities/open-questions.md](/docs/ambiguities/open-questions) — open decisions and temp assumptions
 - [../engineering/README.md](/docs/engineering) — implementation conventions
-- `red-cab-api/docs/db/` — DBML storage design (identities, tourists, providers, b2b, …)
+- `red-cab-api/docs/db/` — DBML storage design (identities, tourists, providers, corporate, …)

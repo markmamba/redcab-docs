@@ -151,7 +151,7 @@ Accepted
 
 ## Context
 
-Red Cab is a two-sided marketplace connecting inbound Tourists and Corporate Clients with verified Japanese transport and tour Providers, earning a commission per booking. The domain is non-trivial: eight cooperating areas of responsibility (provider verification, catalog and inventory, booking and checkout, payments and payouts, B2B quotation and invoicing, reviews, identity, notifications), two distinct demand channels (instant B2C card checkout and negotiated B2B furikomi invoicing), and an external financial rail whose settlement truth is authoritative and asynchronous.
+Red Cab is a two-sided marketplace connecting inbound Tourists and Corporate Clients with verified Japanese transport and tour Providers, earning a commission per booking. The domain is non-trivial: eight cooperating areas of responsibility (provider verification, catalog and inventory, booking and checkout, payments and payouts, Corporate quotation and invoicing, reviews, identity, notifications), two distinct demand channels (instant B2C card checkout and negotiated Corporate furikomi invoicing), and an external financial rail whose settlement truth is authoritative and asynchronous.
 
 The architecture is shaped less by feature count than by a small set of **strong transactional requirements** that must hold together at the moment a purchase is made:
 
@@ -175,9 +175,9 @@ The system is built as a **modular monolith**:
 
 - **Single Rails API deployable** that owns all domain logic and is the outer contract of the platform.
 - **Single PostgreSQL database**, shared by all contexts; each context owns its own tables and exposes them only through commands, queries, and events — never direct cross-context table access.
-- **6 core + 2 supporting bounded contexts** as logical ownership boundaries: core — Provider Onboarding & Verification, Catalog & Inventory, Booking & Checkout, Payments & Payouts, B2B Quotation & Invoicing, Reviews & Ratings; supporting — Identity & Access, Notifications.
+- **6 core + 2 supporting bounded contexts** as logical ownership boundaries: core — Provider Onboarding & Verification, Catalog & Inventory, Booking & Checkout, Payments & Payouts, Corporate Quotation & Invoicing, Reviews & Ratings; supporting — Identity & Access, Notifications.
 - **In-process integration** between contexts, with no network boundary between them; discipline is enforced by module boundaries and contracts, not by distribution.
-- **Commands and queries are synchronous** (the caller awaits the result), used where an invariant must hold within the operation — the atomic checkout unit, `calculate_quote(...)`, the guarded seat reserve, B2B→Booking conversion, Payments reading the Commission Snapshot, and IAM principal resolution.
+- **Commands and queries are synchronous** (the caller awaits the result), used where an invariant must hold within the operation — the atomic checkout unit, `calculate_quote(...)`, the guarded seat reserve, COR→Booking conversion, Payments reading the Commission Snapshot, and IAM principal resolution.
 - **Domain events are asynchronous** (in-process, past-tense, idempotent), used for cross-context reactions and notifications — payout queuing, rating recalculation, listing pause/restore cascades, and all Notifications fan-out.
 
 Governing rule of thumb: state-changing invariants that must hold together are synchronous and co-transactional; cross-context reactions and notifications are asynchronous.

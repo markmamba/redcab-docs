@@ -171,7 +171,7 @@ Locked technology choices and why each fits the architecture — no versions, pa
 | Auth / Identity | Session-based web authentication owned by IAM | [IAM context](/docs/architecture/bounded-contexts) | Locked (mechanism); methods open (`AMB-021`/`AMB-022`) |
 | Payments | Stripe Connect (cards + marketplace payouts) | [Payments context](/docs/architecture/overview#payments--payments--payouts-core) | Locked (rail); topology/capture open (`AMB-001`/`AMB-002`) |
 | Notifications | Email rail (MVP); SMS optional | [Notifications context](/docs/architecture/overview#notifications--notifications-supporting-generic-event-driven) | Locked (email MVP); provider/SMS open (`AMB-034`) |
-| PDF documents | Server-side PDF generation with embedded Japanese fonts | [B2B context](/docs/architecture/bounded-contexts) | Locked (capability); library open (`AMB-031`) |
+| PDF documents | Server-side PDF generation with embedded Japanese fonts | [Corporate context](/docs/architecture/bounded-contexts) | Locked (capability); library open (`AMB-031`) |
 | Internationalization | EN/JA, server-rendered language per recipient | cross-cutting (`OPR-9`) | Locked (EN/JA); defaults open (`AMB-024`) |
 
 ---
@@ -249,7 +249,7 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ## Payments — Stripe Connect
 
-**Choice.** **Stripe Connect** is the external card-payment and marketplace-payout rail for the B2C path. The platform's **Payments** context initiates charges for the snapshotted gross, encodes commission as the application fee equal to the snapshotted `commission_amount`, and reconciles webhook settlement back to internal state. B2B funds arrive **off-Stripe by bank transfer (furikomi)** and are reconciled manually by Admin (`PAY-9`).
+**Choice.** **Stripe Connect** is the external card-payment and marketplace-payout rail for the B2C path. The platform's **Payments** context initiates charges for the snapshotted gross, encodes commission as the application fee equal to the snapshotted `commission_amount`, and reconciles webhook settlement back to internal state. Corporate bank-transfer funds arrive **off-Stripe by bank transfer (furikomi)** and are reconciled manually by Admin (`PAY-9`).
 
 **Why it fits the architecture.**
 - The business model is commission per booking with a **frozen, auditable revenue split** (`INV-1`, `INV-2`, `PAY-2`). Encoding commission as Stripe's application fee makes the rail's split match the snapshot exactly (`INV-2`, [payments-architecture](/docs/architecture/payments-architecture)).
@@ -257,7 +257,7 @@ Locked technology choices and why each fits the architecture — no versions, pa
 - Every external money operation is **idempotent and uniquely keyed** so retries/duplicate webhooks cannot double-charge, double-refund, or double-pay (`FIN-10`, `NFR-AUD-004`).
 - Whole-yen JPY only (`PAY-1`); single-currency is the working baseline (`AMB-025`).
 
-**Status.** Locked as the **payment rail**. The **charge topology** and **merchant/seller-of-record** (`AMB-002`/`AMB-032`), **capture model** (`AMB-001`), **auto-transfer vs platform payout queue** (`AMB-003`), **clearing period** (`AMB-004`), **disbursement/failure states** (`AMB-005`), and **off-Stripe B2B settlement** (`AMB-029`) are open and **not resolved here**.
+**Status.** Locked as the **payment rail**. The **charge topology** and **merchant/seller-of-record** (`AMB-002`/`AMB-032`), **capture model** (`AMB-001`), **auto-transfer vs platform payout queue** (`AMB-003`), **clearing period** (`AMB-004`), **disbursement/failure states** (`AMB-005`), and **off-Stripe Corporate settlement** (`AMB-029`) are open and **not resolved here**.
 
 ---
 
@@ -276,11 +276,11 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ## PDF documents — server-side generation with embedded Japanese fonts
 
-**Choice.** Formal B2B documents — the **Quotation (Omitsumorisho)** and **Invoice (Seikyusho)** — are generated server-side as PDFs using an approach that **embeds Japanese fonts so kanji/kana render correctly**, owned by the **B2B Quotation & Invoicing** context.
+**Choice.** Formal corporate documents — the **Quotation (Omitsumorisho)** and **Invoice (Seikyusho)** — are generated server-side as PDFs using an approach that **embeds Japanese fonts so kanji/kana render correctly**, owned by the **Corporate Quotation & Invoicing** context.
 
 **Why it fits the architecture.**
-- B2B formal documents must itemize line items and the 10% consumption tax (`PAY-10`, `NFR-COMP-001`) and be **acceptable as formal Japanese commercial documents** (`NFR-COMP-003`). Correct kanji/kana rendering is therefore a hard capability requirement (`NFR-I18N-006`).
-- The capability lives where its data lives — the B2B context owns `Quotation` and `Invoice` ([bounded-contexts §5](/docs/architecture/bounded-contexts)) — so PDF generation is a B2B-internal concern, not a cross-context one.
+- corporate formal documents must itemize line items and the 10% consumption tax (`PAY-10`, `NFR-COMP-001`) and be **acceptable as formal Japanese commercial documents** (`NFR-COMP-003`). Correct kanji/kana rendering is therefore a hard capability requirement (`NFR-I18N-006`).
+- The capability lives where its data lives — the Corporate context owns `Quotation` and `Invoice` ([bounded-contexts §5](/docs/architecture/bounded-contexts)) — so PDF generation is a Corporate-internal concern, not a cross-context one.
 
 **Status.** Locked as the **capability** (server-side PDF with embedded JA fonts). The **specific PDF library** is open under `AMB-031` (the register notes the constraint that an approach must avoid rendering kanji as missing glyphs) and is **not resolved here**.
 
@@ -305,7 +305,7 @@ To stay at the architecture level and avoid making new decisions, the following 
 
 - Specific versions, packages/gems, configuration, environment, hosting/CI, and deployment topology.
 - The concrete background-job queue/broker product.
-- The Stripe Connect topology and capture model, payout-queue semantics, and B2B settlement mechanism (`AMB-001..008`, `AMB-029`).
+- The Stripe Connect topology and capture model, payout-queue semantics, and Corporate settlement mechanism (`AMB-001..008`, `AMB-029`).
 - Authentication methods and guest scope (`AMB-021`, `AMB-022`); SMS provider/scope (`AMB-034`); PDF library (`AMB-031`); language defaults/supported set (`AMB-024`); currency beyond the JPY baseline (`AMB-025`).
 
 > No choice recorded here changes the bounded-context or aggregate boundaries in [./bounded-contexts.md](/docs/architecture/bounded-contexts) and [../domain/domain-models.md](/docs/domain/domain-models). Each technology realizes an existing container or context; none introduces a new one.

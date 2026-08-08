@@ -11,13 +11,13 @@ description: Bounded context documentation for Red Cab Marketplace.
 - **CR-4 — Cross-context cascades as events, not direct writes (MED).** License expiry → pause listings and district deactivation → unlist must be event-driven (idempotent consumers), not Onboarding/Geography writing Catalog tables. Risk if violated: brittle hidden coupling.
 - **CR-5 — Notifications fan-out (MED).** Every context emits to Notifications. Risk: ordering/duplication. Mitigation: async + idempotent dispatch; no synchronous dependency on delivery.
 - **CR-6 — Identity as universal upstream (MED).** Everything depends on Identity; a change to the principal/role contract ripples widely. Mitigation: keep the exposed contract minimal and stable (`principal`, `role`, `language`).
-- **CR-7 — B2B pre-payment lifecycle (MED, open).** B2B "Pending Payment" conflicts with `BKG-2`; until AMB-027 is resolved the B2B→Booking contract is provisional.
+- **CR-7 — corporate pre-payment lifecycle (MED, open).** Corporate "Pending Payment" conflicts with `BKG-2`; until AMB-027 is resolved the Corporate→Booking contract is provisional.
 
 ## Boundary enforcement summary (no code)
 - Contexts expose **commands, queries, and published events** — never their tables.
 - Shared-transaction coupling is allowed in exactly one documented place (CR-1) and nowhere else.
 - Value contracts crossing boundaries: `PriceBreakdown`, `AvailabilitySnapshot`, Provider Status read, Commission Snapshot, completion fact, recipient language.
-- ACL boundaries: B2B→Booking (quotation→booking vocabulary) and Catalog's conformist read of Onboarding status.
+- ACL boundaries: Corporate→Booking (quotation→booking vocabulary) and Catalog's conformist read of Onboarding status.
 
 ## Open items affecting boundaries
-AMB-001/003/004/005 (Payments seam), AMB-013/014 (Booking lifecycle/initiator modeling), AMB-020 (navigation → Catalog IA), AMB-027/028 (B2B↔Booking/Availability). Resolutions flow back here via the ambiguity register's Decision Log.
+AMB-001/003/004/005 (Payments seam), AMB-013/014 (Booking lifecycle/initiator modeling), AMB-020 (navigation → Catalog IA), AMB-027/028 (Corporate↔Booking/Availability). Resolutions flow back here via the ambiguity register's Decision Log.

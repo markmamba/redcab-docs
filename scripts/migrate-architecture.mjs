@@ -116,7 +116,7 @@ function splitBoundedContexts() {
     catalog: { marker: '### 2. Catalog & Inventory' },
     booking: { marker: '### 3. Booking & Checkout' },
     payments: { marker: '### 4. Payments & Payouts' },
-    b2b: { marker: '### 5. B2B Quotation' },
+    corporate: { marker: '### 5. Corporate Quotation' },
     reviews: { marker: '### 6. Reviews & Ratings' },
     identity: { marker: '### 7. Identity & Access' },
     notifications: { marker: '### 8. Notifications' },
@@ -131,7 +131,7 @@ function splitBoundedContexts() {
     '### 2. Catalog & Inventory',
     '### 3. Booking & Checkout',
     '### 4. Payments & Payouts',
-    '### 5. B2B Quotation',
+    '### 5. Corporate Quotation',
     '### 6. Reviews & Ratings',
     '## Supporting contexts',
     '### 7. Identity & Access',
@@ -167,7 +167,7 @@ function splitBoundedContexts() {
       sidebar_position: 1,
       content:
         indexContent +
-        '\n\n## Core contexts\n\nSee individual context pages:\n\n- [Onboarding](/docs/architecture/bounded-contexts/onboarding)\n- [Catalog](/docs/architecture/bounded-contexts/catalog)\n- [Booking](/docs/architecture/bounded-contexts/booking)\n- [Payments](/docs/architecture/bounded-contexts/payments)\n- [B2B](/docs/architecture/bounded-contexts/b2b)\n- [Reviews](/docs/architecture/bounded-contexts/reviews)\n\n## Supporting contexts\n\n- [Identity](/docs/architecture/bounded-contexts/identity)\n- [Notifications](/docs/architecture/bounded-contexts/notifications)\n\n## Reference\n\n- [Domain Events](/docs/architecture/bounded-contexts/domain-events)\n- [Design Rationales](/docs/architecture/bounded-contexts/design-rationales)\n- [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks)',
+        '\n\n## Core contexts\n\nSee individual context pages:\n\n- [Onboarding](/docs/architecture/bounded-contexts/onboarding)\n- [Catalog](/docs/architecture/bounded-contexts/catalog)\n- [Booking](/docs/architecture/bounded-contexts/booking)\n- [Payments](/docs/architecture/bounded-contexts/payments)\n- [Corporate](/docs/architecture/bounded-contexts/corporate)\n- [Reviews](/docs/architecture/bounded-contexts/reviews)\n\n## Supporting contexts\n\n- [Identity](/docs/architecture/bounded-contexts/identity)\n- [Notifications](/docs/architecture/bounded-contexts/notifications)\n\n## Reference\n\n- [Domain Events](/docs/architecture/bounded-contexts/domain-events)\n- [Design Rationales](/docs/architecture/bounded-contexts/design-rationales)\n- [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks)',
       about: raw.match(/^> ([\s\S]*?)(?=\n\n## )/)?.[1]?.replace(/\n> /g, '\n').trim(),
     },
     'bounded-contexts/onboarding.md': {
@@ -189,12 +189,12 @@ function splitBoundedContexts() {
       title: 'Payments & Payouts (Context)',
       sidebar_label: 'Payments (Context)',
       sidebar_position: 5,
-      content: extractBetween('### 4. Payments & Payouts', '### 5. B2B'),
+      content: extractBetween('### 4. Payments & Payouts', '### 5. Corporate'),
     },
-    'bounded-contexts/b2b.md': {
-      title: 'B2B Quotation & Invoicing',
+    'bounded-contexts/corporate.md': {
+      title: 'Corporate Quotation & Invoicing',
       sidebar_position: 6,
-      content: extractBetween('### 5. B2B Quotation', '### 6. Reviews'),
+      content: extractBetween('### 5. Corporate Quotation', '### 6. Reviews'),
     },
     'bounded-contexts/reviews.md': {
       title: 'Reviews & Ratings',

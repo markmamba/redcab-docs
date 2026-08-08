@@ -19,9 +19,9 @@ The model is built to accommodate either resolution of each open decision and **
 | `AMB-024` — language defaults / supported languages | The supported-language value set and per-surface defaults | LanguagePreference (IAM), Listing/Search (CAT) |
 | `AMB-025` — currency | Whether Money remains single-currency JPY (the working baseline) | Money (cross-cutting) |
 | `AMB-026` — provider mid-flight status change | Effect of suspension/expiry on already-confirmed Bookings; boundary rule (no historical mutation) holds regardless | Provider (PRV), Booking (BKG) |
-| `AMB-027/028` — B2B pre-payment state / seat-hold timing | Whether B2B introduces a distinct pre-payment state and when seats are held; isolated behind the ACL | Quotation (B2B), AvailabilitySlot (CAT), Booking (BKG) |
+| `AMB-027/028` — corporate pre-payment state / seat-hold timing | Whether Corporate introduces a distinct pre-payment state and when seats are held; isolated behind the ACL | Quotation (COR), AvailabilitySlot (CAT), Booking (BKG) |
 | `AMB-029` — off-Stripe provider settlement | How the Provider's net for bank-transfer funds is recorded/disbursed | ReconciliationRecord, PayoutQueueEntry (PAY) |
-| `AMB-031/033` — PDF rendering / consumption tax | Formal-document rendering and tax treatment on B2B documents | Quotation, Invoice (B2B) |
+| `AMB-031/033` — PDF rendering / consumption tax | Formal-document rendering and tax treatment on corporate documents | Quotation, Invoice (COR) |
 | `AMB-034` — SMS scope | Whether the SMS Channel is in MVP and phone verification is required | NotificationDispatch (NOT) |
 
 > Scope note (mirrors [./overview.md](/docs/architecture/overview) and [../domain/domain-models.md](/docs/domain/domain-models) §7): no deferred decision above moves an ownership boundary. The boundaries are drawn so that these open questions can be resolved **within** a single owning context — which is precisely why this conceptual data model can be reviewed and relied upon ahead of those resolutions.

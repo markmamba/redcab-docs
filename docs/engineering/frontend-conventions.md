@@ -237,7 +237,7 @@ const handleSubmit = async (values) => {
 
 ### Naming
 
-Folders: flat, hyphenated — `catalog-listing/`, `bookings-booking/`, `b2b-quotation/`
+Folders: flat, hyphenated — `catalog-listing/`, `bookings-booking/`, `corporate-quotation/`
 
 | File | Purpose |
 | --- | --- |
@@ -321,7 +321,7 @@ Use `prepareSearchParams` / `serializeUrlParams` from `app/utils/search-param-ut
 3. **Checkout shows server-confirmed breakdown.** Submit booking with slot/listing/passenger selections; amounts come back from API.
 4. **Role-confined surfaces.** Tourist pages don't import provider auth HOCs. One segment per page.
 5. **EN/JA rendering.** Use stored language preference; geography labels may have `name_en` / `name_ja` from API.
-6. **B2B documents.** PDF download links from API; no client-side PDF generation.
+6. **corporate documents.** PDF download links from API; no client-side PDF generation.
 7. **Stripe Elements (if used).** Payment UI embeds Stripe client SDK; charge amount still originates from server snapshot, not client input.
 
 ---

@@ -15,7 +15,7 @@ description: Bounded context documentation for Red Cab Marketplace.
 | `RatingRecalculated` | Reviews | Catalog (display) |
 | `BookingCreated/Confirmed/Cancelled/Completed/Refunded` | Booking | Payments, Reviews, Notifications |
 | `PaymentSucceeded/Failed`, `RefundCompleted`, `PayoutQueued/Disbursed/Failed`, `ConnectedAccountVerified/Restricted`, `BankTransferConfirmed` | Payments | Booking, Catalog (restriction pause — Phase 2), Notifications |
-| `QuotationRequested/Sent/Accepted/Rejected/Expired`, `InvoiceIssued` | B2B | Booking, Payments, Notifications |
+| `QuotationRequested/Sent/Accepted/Rejected/Expired`, `InvoiceIssued` | COR | Booking, Payments, Notifications |
 | `ReviewSubmitted/Approved/Removed` | Reviews | Notifications |
 
 All events are in-process; consumers must be idempotent so redelivery cannot double-act (notifications, payout queuing, rating recalculation).

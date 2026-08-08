@@ -36,7 +36,7 @@ Sections:
 - §4 Ambiguity trace — `AMB-###` → Provisional requirements.
 - §5 Coverage analysis — orphans, gaps, and intentional internal-only rules.
 
-Owning-context codes (README §6): `IAM`, `PRV`, `CAT`, `BKG`, `PAY`, `B2B`, `REV`, `NOT`. The owning context of an FR is encoded in its ID; NFRs state scope per requirement.
+Owning-context codes (README §6): `IAM`, `PRV`, `CAT`, `BKG`, `PAY`, `COR`, `REV`, `NOT`. The owning context of an FR is encoded in its ID; NFRs state scope per requirement.
 
 ---
 

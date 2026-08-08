@@ -61,7 +61,7 @@ The system **shall** transition a Booking only along the permitted lifecycle tra
 - Source: E-09. Governs: LC-1..6. Status: Approved.
 
 ### FR-BKG-008 — B2C confirmation on payment
-For B2C card checkout, the system **shall** materialize the Booking directly into **confirmed** upon successful payment and **shall** notify the Tourist and Provider. B2B or pre-payment paths **may** enter **pending** until confirmation.
+For B2C card checkout, the system **shall** materialize the Booking directly into **confirmed** upon successful payment and **shall** notify the Tourist and Provider. Corporate or pre-payment paths **may** enter **pending** until confirmation.
 - Source: E-09. Governs: BKG-10, LC-2. Status: Approved (Decision Log `AMB-011`).
 
 ### FR-BKG-009 — Completion

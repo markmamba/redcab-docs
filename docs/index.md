@@ -6,7 +6,7 @@ description: Planning, architecture, domain, and implementation guidance for the
 
 ## TL;DR
 
-- **Authoritative planning foundation** for Red Cab: B2C/B2B marketplace for verified Japanese transport and tour providers.
+- **Authoritative planning foundation** for Red Cab: B2C/Corporate marketplace for verified Japanese transport and tour providers.
 - Read in order: Business Rules → Requirements → Domain → Architecture → Engineering → Ambiguities → Roadmap.
 - Precedence: Business Rules > Requirements > Domain > Architecture > ADRs > Engineering > Roadmap.
 
@@ -31,7 +31,7 @@ Red Cab is a two-sided marketplace connecting inbound travelers and corporate cl
 The platform supports:
 
 * B2C instant booking and payment
-* B2B quotation and invoicing workflows
+* Corporate quotation and invoicing workflows
 * Provider onboarding and verification
 * Inventory, pricing, and availability management
 * Booking lifecycle management

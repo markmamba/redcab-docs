@@ -77,7 +77,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 - [x] Provider registration by type — creates/updates `providers_profiles` + matching type-detail row (Private Car, Charter Bus, Tour Guide, etc.)
 - [x] Document upload and verification checklist (`providers_documents`, checklist on profile)
-- [ ] Admin approve / reject workflow (status + license/support-trial side effects)
+- [x] Admin approve / reject workflow (status + license/support-trial side effects)
 - [ ] Provider Status read contract exposed to Catalog (`{ provider_id, status, license_valid_until }`)
 - [ ] Provider portal auth gated on provider profile presence (Approved required for listing create; active Stripe Connected Account required for publish — `INV-12`, `LC-12`)
 
@@ -163,7 +163,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 ### Out of scope (Phase 1)
 
-- Reviews, B2B quotations/invoices, refunds/cancellation engine, bundle bookings
+- Reviews, Corporate quotations/invoices, refunds/cancellation engine, bundle bookings
 - Advanced pricing (tiers, seasonal, extra charges) — schema may reserve columns/tables; product behavior in Phase 2
 - SMS, license-expiry automation, support-trial gating
 - Passenger manifests and Corporate quotation flows (Corporate **profile** already exists from Phase 0)

@@ -10,13 +10,13 @@ Some data is **mutable lifecycle state** owned by a single aggregate and changed
 
 | Lifecycle-owned state | Owning aggregate (context) | Allowed values / shape | Authority |
 | --- | --- | --- | --- |
-| **Booking State** | Booking (BKG) | B2C card path enters `CONFIRMED`; then `CONFIRMED → COMPLETED → PAYOUT_QUEUED`; B2B may use `PENDING`; cancellations to `CANCELLED`; `COMPLETED → REFUNDED`; terminal states have no exit | [./booking-state-machine.md](/docs/architecture/booking-state-machine), `LC-1..6`, `BKG-10` |
+| **Booking State** | Booking (BKG) | B2C card path enters `CONFIRMED`; then `CONFIRMED → COMPLETED → PAYOUT_QUEUED`; Corporate may use `PENDING`; cancellations to `CANCELLED`; `COMPLETED → REFUNDED`; terminal states have no exit | [./booking-state-machine.md](/docs/architecture/booking-state-machine), `LC-1..6`, `BKG-10` |
 | **Provider Status** | ProviderApplication (PRV) | `Pending → Approved \| Rejected`; `Approved → Suspended ↔ Approved` | `LC-7`, `LC-9`, `INV-9` |
 | **License validity** | LicenseRecord (PRV) | valid → expiring-soon (≤30d) → expired → renewed | `OPR-3`, `INV-7` |
 | **Support trial** | SupportTrial (PRV) | active → expiring → expired | `OPR-2` |
 | **Listing Status** | Listing (CAT) | `Draft → Published → Paused/Unpublished → Unlisted`; only `Published` is tourist-visible | `LC-10`, `INV-8`, `INV-10` |
 | **AvailabilitySlot state** | AvailabilitySlot (CAT) | open → (partially reserved) → fully booked → past; `0 ≤ available_seats ≤ capacity` | `INV-3`, `CON-3` |
-| **Quotation Status** | Quotation (B2B) | `Pending → Sent → Accepted \| Rejected \| Expired`; converts to Booking only from `Accepted` | `LC-11` |
+| **Quotation Status** | Quotation (COR) | `Pending → Sent → Accepted \| Rejected \| Expired`; converts to Booking only from `Accepted` | `LC-11` |
 | **Review moderation** | Review (REV) | `PendingModeration → Approved \| Removed` | `OPR-6` |
 | **Payout queue entry state** | PayoutQueueEntry (PAY) | `QUEUED → PROCESSING → DISBURSED \| FAILED` (`LC-13`, `LC-14`) | `LC-6`, `FIN-5`, `PAY-14` |
 | **Account state** | Account (IAM) | registered → active → (locked ↔ active) | `OPR-1` |

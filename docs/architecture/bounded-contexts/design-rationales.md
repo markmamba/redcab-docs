@@ -20,9 +20,9 @@ description: Bounded context documentation for Red Cab Marketplace.
 - It is a **generic outbound adapter**: it reacts to events and renders templates. No competitive/domain decision is *made* there — the decisions (when to notify, in what language) are owned by the publishing contexts and Identity. Treating it as core invites a god-module accumulating every domain's templates and logic.
 - It is also purely **downstream and asynchronous**, which supports the 60-second SLAs (`OPR-8`) without coupling request latency to email/SMS providers. Keeping it supporting preserves star-shaped *event* flow without star-shaped *synchronous* coupling.
 
-### Why B2B Quotation was separated from Booking
+### Why Corporate Quotation was separated from Booking
 - **Different actors** (Corporate Client + Admin), **different intake** (custom quote vs instant checkout), **different artifacts** (formal Japanese PDFs), and **different payment path** (manual furikomi, Admin-confirmed `PAY-9`).
-- Most importantly, a **different evolution axis**: B2B is likely to grow PO numbers, credit terms, multi-event accounts, approval chains, and consolidated invoicing. Embedding that in Booking would bloat the B2C checkout core. Separated, B2B evolves independently and touches Booking only through a thin, anti-corruption-protected `create_booking_from_quote` command.
+- Most importantly, a **different evolution axis**: Corporate is likely to grow PO numbers, credit terms, multi-event accounts, approval chains, and consolidated invoicing. Embedding that in Booking would bloat the B2C checkout core. Separated, COR evolves independently and touches Booking only through a thin, anti-corruption-protected `create_booking_from_quote` command.
 - The cost is one ACL boundary — acceptable and intentional, versus the alternative of an ever-growing Booking god-context.
 
 ---

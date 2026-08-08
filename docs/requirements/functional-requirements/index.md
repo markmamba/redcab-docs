@@ -6,7 +6,7 @@ description: Functional requirements grouped by bounded context.
 
 ## TL;DR
 
-- **Functional requirements (FR)** grouped by bounded context: `IAM`, `PRV`, `CAT`, `BKG`, `PAY`, `B2B`, `REV`, `NOT`.
+- **Functional requirements (FR)** grouped by bounded context: `IAM`, `PRV`, `CAT`, `BKG`, `PAY`, `COR`, `REV`, `NOT`.
 - Each FR is a single externally observable behavior using normative **shall** / **shall not** / **may** language.
 - Governing rules cited as `INV-/LC-/PRC-/PAY-/CON-/BKG-/OPR-/FIN-`; `Provisional` items cite `AMB-###`.
 
@@ -39,7 +39,7 @@ Index and reading guide for functional requirements by context.
 - [Catalog & Inventory (CAT)](/docs/requirements/functional-requirements/cat)
 - [Booking & Checkout (BKG)](/docs/requirements/functional-requirements/bkg)
 - [Payments & Payouts (PAY)](/docs/requirements/functional-requirements/pay)
-- [Quotation & Invoicing (B2B)](/docs/requirements/functional-requirements/b2b)
+- [Quotation & Invoicing (Corporate)](/docs/requirements/functional-requirements/corporate)
 - [Reviews & Ratings (REV)](/docs/requirements/functional-requirements/rev)
 - [Notifications (NOT)](/docs/requirements/functional-requirements/not)
 - [Provisional index](/docs/requirements/functional-requirements/provisional-index)

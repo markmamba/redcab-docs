@@ -68,9 +68,9 @@ erDiagram
 - A **PayoutQueueEntry** carries the frozen Net Payout Amount for one Booking after completion; entry lifecycle is `QUEUED → PROCESSING → DISBURSED | FAILED` (`LC-13`, `LC-14`). Snapshots the destination `stripe_account_id` at transfer initiation (`FIN-3`).
 - A **Refund** records a return of funds for one Booking, computed from the snapshot (`PAY-6`).
 - A **CommissionRateSetting** is the single platform-wide rate, read at checkout to populate a Booking's snapshot; it owns no per-Booking fact (`PAY-2`).
-- A **ReconciliationRecord** records a bank-transfer receipt fact for a B2B Booking (`PAY-9`).
+- A **ReconciliationRecord** records a bank-transfer receipt fact for a corporate Booking (`PAY-9`).
 
-### 6.6 B2B Quotation & Invoicing
+### 6.6 Corporate Quotation & Invoicing
 - A **QuotationRequest** may give rise to one **Quotation**; a **Quotation** owns its **QuotationLineItem** entities (service/date/pax/unit price/total) and a **ConsumptionTax** (10%) value (`PAY-10`).
 - An accepted **Quotation** gives rise to one **Invoice** (Seikyusho) and, through the anti-corruption boundary, one Booking via create-from-quote (`LC-11`).
 
@@ -98,7 +98,7 @@ Across context boundaries, aggregates are related **only by identity** or throug
 | --- | --- | --- | --- |
 | Provider (PRV) | `account_id` (the principal behind the Provider) | Account (IAM) | id reference |
 | Booking (BKG) | `tourist_id` / buyer principal | Account (IAM) | id reference |
-| Quotation (B2B) | Corporate Client principal | Account (IAM) | id reference |
+| Quotation (COR) | Corporate Client principal | Account (IAM) | id reference |
 | Catalog (CAT) | Provider Status read `{ provider_id, status, license_valid_until }` | Provider (PRV) | conformist read contract |
 | Catalog (CAT) | payout capability read `{ provider_id, status, payouts_enabled, verified_at }` | Payments (PAY) | conformist read contract |
 | Listing (CAT) | `provider_id` | Provider (PRV) | id reference |
@@ -108,8 +108,8 @@ Across context boundaries, aggregates are related **only by identity** or throug
 | CheckoutSession (BKG) | Commission Rate value (input to CommissionSnapshot) | CommissionRateSetting (PAY) | read at session creation, then snapshotted |
 | Booking (BKG) | copies Price/Commission/Cancellation snapshots from CheckoutSession | CheckoutSession (BKG) | snapshot copy at materialization |
 | Payment (PAY) | `checkout_session_id`, then `booking_id` + **Commission Snapshot** | CheckoutSession / Booking (BKG) | id reference + read-only snapshot |
-| Quotation (B2B) | `PriceBreakdown` for line items | PricingPolicy (CAT) | computed value contract |
-| Booking (BKG) | created-from-quote command carrying `quotation_id` | Quotation (B2B) | id reference across ACL |
+| Quotation (COR) | `PriceBreakdown` for line items | PricingPolicy (CAT) | computed value contract |
+| Booking (BKG) | created-from-quote command carrying `quotation_id` | Quotation (COR) | id reference across ACL |
 | Review (REV) | completion fact `{ booking_id, tourist_id, listing_id, completed_at }` | Booking (BKG) | id reference + immutable fact |
 | RatingSummary (REV) | `listing_id` | Listing (CAT) | id reference |
 | Catalog (CAT) | `RatingRecalculated` score for display | RatingSummary (REV) | published value, display only |
@@ -120,4 +120,4 @@ Rules that hold for every cross-context reference:
 - The referencing context **never** reads the referenced aggregate's internals or mutates it; it uses the published query/contract or holds a snapshot ([./bounded-contexts.md](/docs/architecture/bounded-contexts)).
 - A reference is by **stable identity**, so the referenced aggregate can evolve without breaking the reference.
 - Where a downstream decision must be immune to upstream change, the fact is **snapshotted** rather than referenced live (see §8).
-- The **B2B → Booking** reference crosses an **anti-corruption boundary**: B2B vocabulary (line items, PO concepts, credit terms) is translated into Booking's command language and never leaks into Booking.
+- The **Corporate → Booking** reference crosses an **anti-corruption boundary**: corporate vocabulary (line items, PO concepts, credit terms) is translated into Booking's command language and never leaks into Booking.

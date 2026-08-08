@@ -100,7 +100,7 @@ Functional requirements are grouped by the owning bounded context from [../archi
 - `CAT` — Catalog & Inventory (incl. Geography, Pricing, Availability, Search modules)
 - `BKG` — Booking & Checkout
 - `PAY` — Payments & Payouts
-- `B2B` — B2B Quotation & Invoicing
+- `COR` — Corporate Quotation & Invoicing
 - `REV` — Reviews & Ratings
 - `NOT` — Notifications (supporting)
 

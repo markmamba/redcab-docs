@@ -37,7 +37,7 @@ Red Cab has four external roles ([../architecture/api-design.md](/docs/architect
 
 - **`marketplace/`** serves optional-auth discovery: geography, listings, `calculate_quote`, availability reads. Uses optional auth (try JWT, proceed if absent).
 - **`tourists/`** serves authenticated B2C booking lifecycle, payments visibility, and reviews. Booking initiation requires auth regardless of guest browsing scope (`AMB-022`).
-- **`corporate/`** serves B2B quotation requests, document views, manifest submission. Enters Booking only via accepted quotation (ACL).
+- **`corporate/`** serves corporate quotation requests, document views, manifest submission. Enters Booking only via accepted quotation (ACL).
 - **`providers/`** serves onboarding, catalog authoring, incoming bookings, review responses. Gated by Provider Status conformist read.
 - **`team/`** serves Admin operations across all contexts. Independent admin identity, separate from tourist/user accounts.
 
@@ -55,11 +55,11 @@ Each bounded context maps to a top-level domain folder. Table names use `{domain
 | --- | --- | --- | --- |
 | IAM | Identity & Access | `identities/` | `Identities::Account` → `identities_accounts` (thin auth principal) |
 | — | Tourist profile (demand) | `tourists/` | `Tourists::Profile` → `tourists_profiles` |
+| COR | Corporate Quotation & Invoicing | `corporate/` | `Corporate::Profile` → `corporate_profiles`; `Corporate::Quotation` → `corporate_quotations` |
 | PRV | Provider Onboarding & Verification | `providers/` | `Providers::Profile` → `providers_profiles` |
 | CAT | Catalog & Inventory | `catalog/` | `Catalog::Listing` → `catalog_listings` |
 | BKG | Booking & Checkout | `bookings/` | `Bookings::Booking` → `bookings_bookings` |
 | PAY | Payments & Payouts | `payments/` | `Payments::Charge` → `payments_charges` |
-| B2B | B2B Quotation & Invoicing | `b2b/` | `B2b::CorporateClient` → `b2b_corporate_clients`; `B2b::Quotation` → `b2b_quotations` |
 | REV | Reviews & Ratings | `reviews/` | `Reviews::Review` → `reviews_reviews` |
 | NOT | Notifications | `notifications/` | `Notifications::Dispatch` → `notifications_dispatches` |
 
@@ -125,7 +125,7 @@ Examples:
 
 - `marketplace-catalog-listings-api.js`
 - `tourists-bookings-booking-api.js`
-- `corporate-b2b-quotations-api.js`
+- `corporate-quotations-api.js`
 - `providers-catalog-listings-api.js`
 - `team-payments-commission-rates-api.js`
 
@@ -137,7 +137,7 @@ Hyphenated domain-model names under `app/domains/`:
 app/domains/
   catalog-listing/
   bookings-booking/
-  b2b-quotation/
+  corporate-quotation/
   providers-application/
   payments-charge/
   reviews-review/
@@ -158,7 +158,7 @@ docs/db/               # in red-cab-api
   catalog.dbml
   bookings.dbml
   payments.dbml
-  b2b.dbml
+  corporate.dbml
   reviews.dbml
   redcab.dbml          # index / cross-references
 ```

@@ -55,7 +55,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 ### Booking State Machine (`E-09`)
 - **LC-1** Valid Booking States are exactly: `PENDING`, `CONFIRMED`, `COMPLETED`, `PAYOUT_QUEUED`, `CANCELLED`, `REFUNDED`.
 - **LC-2** The only permitted transitions are:
-  - `PENDING → CONFIRMED`, `PENDING → CANCELLED` (B2B / pre-payment paths)
+  - `PENDING → CONFIRMED`, `PENDING → CANCELLED` (corporate / pre-payment paths)
   - `CONFIRMED → COMPLETED`, `CONFIRMED → CANCELLED`
   - `COMPLETED → PAYOUT_QUEUED`, `COMPLETED → REFUNDED`
 - **LC-3** `CANCELLED` and `REFUNDED` are terminal: no transition out of them is permitted.
@@ -100,10 +100,10 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **PAY-6** Refund amount MUST be computed from the Booking's snapshotted Cancellation Policy: `refund = gross_amount × (matched_tier_refund_pct / 100)`. (`E-12`)
 - **PAY-7** When a cancellation is initiated by Provider or Admin (not the Tourist), the Tourist MUST receive a 100% refund regardless of Cancellation Policy. (`E-12`)
 - **PAY-8** A cancelled or refunded Booking MUST reverse/void its Payout Queue entry; payout MUST NOT be disbursed for a Booking whose queue entry is not in a disbursable state. (`E-09`, `E-12`, `LC-14`)
-- **PAY-9** [B2B] A Corporate Bank Transfer Booking becomes `CONFIRMED` only when an Admin records receipt of payment. (`E-07`)
-- **PAY-10** [B2B] A Quotation/Invoice MUST itemize line items and the 10% Consumption Tax. (`E-06`)
+- **PAY-9** [Corporate] A Corporate Bank Transfer Booking becomes `CONFIRMED` only when an Admin records receipt of payment. (`E-07`)
+- **PAY-10** [Corporate] A Quotation/Invoice MUST itemize line items and the 10% Consumption Tax. (`E-06`)
 - **PAY-11** [Payments] Commission arithmetic MUST use whole JPY: `commission_amount = FLOOR(gross_amount × commission_rate_snapshot)` and `net_payout_amount = gross_amount − commission_amount`, guaranteeing `INV-2` identically.
-- **PAY-12** [Payments/Catalog] B2C prices displayed and charged are **tax-inclusive**; B2B formal documents itemize 10% consumption tax separately (`PAY-10`).
+- **PAY-12** [Payments/Catalog] B2C prices displayed and charged are **tax-inclusive**; corporate formal documents itemize 10% consumption tax separately (`PAY-10`).
 - **PAY-13** [Payments] B2C card charges MUST use **Separate Charges & Transfers**: charge the Tourist on the Platform Stripe account at checkout; hold funds on the Platform account until Booking `COMPLETED`; transfer the Provider's net share only via a platform-controlled Payout Queue Entry after completion.
 - **PAY-14** [Payments] Each Payout Queue Entry MUST progress through `QUEUED → PROCESSING → DISBURSED | FAILED`; failed transfers MUST be retriable and visible to Admin.
 
@@ -139,7 +139,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **OPR-2** [Onboarding] The 3-Month Support Trial starts at the Admin approval date. (`A-07`, `A1`)
 - **OPR-3** [Onboarding] When a License is within 30 days of expiry, the Provider is warned; on expiry, all the Provider's Listings are auto-paused; on renewal + Admin update, they are restored. (`A-06`)
 - **OPR-4** [Onboarding] A Pending registration with no Admin action for more than 14 days is flagged Overdue. (`A-05`, `A3`)
-- **OPR-5** [B2B] A Quotation Request unanswered for more than 3 business days raises an Admin overdue alert; a Bank Transfer past its deadline raises a payment-overdue alert. (`E-05`, `E-07`)
+- **OPR-5** [Corporate] A Quotation Request unanswered for more than 3 business days raises an Admin overdue alert; a Bank Transfer past its deadline raises a payment-overdue alert. (`E-05`, `E-07`)
 - **OPR-6** [Reviews] A Review enters **Pending Moderation** and is not public until an Admin approves it; the **Rating Score** is recalculated only from approved Reviews. (`F-01`, `F-03`, `F-04`)
 - **OPR-7** [Reviews] The Review Link is valid for 14 days from completion; after expiry no Review may be submitted. (`F-01`, `F2`)
 - **OPR-8** [Notifications] Booking confirmation notifications to Tourist and Provider MUST be dispatched within 60 seconds of the triggering event. (`G-01`, `G-02`)

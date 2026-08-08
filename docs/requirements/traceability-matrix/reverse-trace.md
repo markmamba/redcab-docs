@@ -50,7 +50,7 @@ No-orphan-rule check (README §5): every material rule of record is observable t
 | LC-8 | FR-PRV-003; FR-CAT-009, -010 |
 | LC-9 | FR-PRV-006 |
 | LC-10 | FR-CAT-005, -006 (Published-visibility); FR-CAT-022 |
-| LC-11 | FR-B2B-004 |
+| LC-11 | FR-COR-004 |
 
 ### 3.3 Pricing (`PRC-`)
 | Rule | Requirements |
@@ -75,8 +75,8 @@ No-orphan-rule check (README §5): every material rule of record is observable t
 | PAY-6 | FR-PAY-006; FR-BKG-010; NFR-AUD-003 |
 | PAY-7 | FR-BKG-011 |
 | PAY-8 | FR-PAY-007; NFR-AUD-005 |
-| PAY-9 | FR-B2B-005 |
-| PAY-10 | FR-B2B-003; NFR-COMP-001 |
+| PAY-9 | FR-COR-005 |
+| PAY-10 | FR-COR-003; NFR-COMP-001 |
 
 ### 3.5 Booking (`BKG-`)
 | Rule | Requirements |
@@ -106,7 +106,7 @@ No-orphan-rule check (README §5): every material rule of record is observable t
 | OPR-2 | FR-PRV-009, -010 |
 | OPR-3 | FR-PRV-011, -012; FR-NOT-005; NFR-TIME-003 |
 | OPR-4 | FR-PRV-008; FR-NOT-005; NFR-TIME-004 |
-| OPR-5 | FR-B2B-002, -006; FR-NOT-005; NFR-TIME-005, -006 |
+| OPR-5 | FR-COR-002, -006; FR-NOT-005; NFR-TIME-005, -006 |
 | OPR-6 | FR-REV-004, -007 |
 | OPR-7 | FR-REV-002; NFR-TIME-007 |
 | OPR-8 | FR-NOT-001; FR-REV-002; NFR-TIME-001, -002 |

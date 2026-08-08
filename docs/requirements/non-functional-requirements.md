@@ -53,11 +53,11 @@ The system **shall** flag a Pending Provider registration as Overdue when no Adm
 
 ### NFR-TIME-005 — Overdue quotation alert window
 The system **shall** raise an Admin overdue alert when a Quotation Request remains unanswered for more than 3 business days.
-- Source: E-05. Governs: OPR-5; relates FR-B2B-002. Status: Approved.
+- Source: E-05. Governs: OPR-5; relates FR-COR-002. Status: Approved.
 
 ### NFR-TIME-006 — Overdue corporate-payment alert
 The system **shall** raise an Admin payment-overdue alert when a corporate Booking's Bank Transfer deadline passes without recorded receipt.
-- Source: E-07. Governs: OPR-5; relates FR-B2B-006. Status: Approved.
+- Source: E-07. Governs: OPR-5; relates FR-COR-006. Status: Approved.
 
 ### NFR-TIME-007 — Review window enforcement
 The system **shall** accept a Review only within 14 days of the Booking's completion and **shall not** accept submissions after the window closes.
@@ -67,9 +67,9 @@ The system **shall** accept a Review only within 14 days of the Booking's comple
 The system **shall** keep an Account locked for 15 minutes after 5 consecutive failed login attempts before permitting further attempts.
 - Source: A-02. Governs: OPR-1; relates FR-IAM-007. Status: Provisional (AMB-016).
 
-### NFR-TIME-009 — B2B auto-confirmation timer bound
-For B2B or pre-payment paths that enter **pending**, the system **shall** elapse a Booking to confirmed after the auto-confirmation interval, bounded so the interval never extends past the service start time.
-- Source: E-09. Governs: LC-2. Status: Provisional (B2B paths; B2C superseded — Decision Log `AMB-011`).
+### NFR-TIME-009 — Corporate auto-confirmation timer bound
+For corporate or pre-payment paths that enter **pending**, the system **shall** elapse a Booking to confirmed after the auto-confirmation interval, bounded so the interval never extends past the service start time.
+- Source: E-09. Governs: LC-2. Status: Provisional (corporate paths; B2C superseded — Decision Log `AMB-011`).
 
 ### NFR-TIME-010 — Auto-completion after service end
 The system **shall** auto-transition a **confirmed** Booking to **completed** 24 hours after the slot's scheduled end time (Asia/Tokyo) when the Provider has not marked it delivered.
@@ -216,8 +216,8 @@ The system **shall** present and charge all monetary amounts in whole Japanese Y
 - Source: glossary (Money). Governs: PAY-1, FIN-8. Status: Provisional (AMB-025).
 
 ### NFR-I18N-006 — Formal document character rendering
-The system **shall** render Japanese kanji and kana correctly on formal B2B documents (Quotation/Invoice).
-- Source: E-04, E-06. Governs: relates FR-B2B-003. Status: Provisional (AMB-031).
+The system **shall** render Japanese kanji and kana correctly on formal corporate documents (Quotation/Invoice).
+- Source: E-04, E-06. Governs: relates FR-COR-003. Status: Provisional (AMB-031).
 
 ---
 
@@ -232,20 +232,20 @@ The system **shall** meet a published accessibility conformance baseline for its
 ## COMP — Legal & Regulatory Compliance
 
 ### NFR-COMP-001 — Consumption tax itemization
-The system **shall** itemize the 10% Japanese Consumption Tax on B2B Quotation and Invoice documents.
-- Source: E-06. Governs: PAY-10; relates FR-B2B-003. Status: Provisional (AMB-033).
+The system **shall** itemize the 10% Japanese Consumption Tax on Corporate Quotation and Invoice documents.
+- Source: E-06. Governs: PAY-10; relates FR-COR-003. Status: Provisional (AMB-033).
 
 ### NFR-COMP-002 — Whole-yen money handling
 The system **shall** charge, refund, and pay out only whole JPY amounts, with no fractional yen in stored or displayed amounts.
 - Source: glossary (Money). Governs: PAY-1, FIN-8. Status: Approved.
 
 ### NFR-COMP-003 — Formal document legal acceptability
-The system **shall** produce B2B Quotation and Invoice documents acceptable as formal Japanese commercial documents.
-- Source: E-04, E-06. Governs: relates FR-B2B-003. Status: Provisional (AMB-031).
+The system **shall** produce Corporate Quotation and Invoice documents acceptable as formal Japanese commercial documents.
+- Source: E-04, E-06. Governs: relates FR-COR-003. Status: Provisional (AMB-031).
 
 ### NFR-COMP-004 — Merchant/seller-of-record posture
 The system **shall** reflect the established merchant-of-record / seller-of-record posture in its charge and document flows.
-- Source: payments-architecture. Governs: relates FR-PAY-001, FR-B2B-003. Status: Provisional (AMB-032).
+- Source: payments-architecture. Governs: relates FR-PAY-001, FR-COR-003. Status: Provisional (AMB-032).
 
 ---
 

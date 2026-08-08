@@ -199,7 +199,7 @@ The forces that shaped the architecture, grouped as business drivers, technical 
 ## Business drivers
 - **Commission integrity is the business model.** The Platform earns a commission per booking; the revenue split between Platform and Provider must be frozen, auditable, and never retroactively altered (`INV-1`, `INV-2`, `PAY-2`). This single requirement is the strongest force on the design (see the [Snapshot Pattern](#snapshot-pattern) and the money-facts/money-movement seam).
 - **Trust on both sides of the market.** Providers must be verified before they are visible (`INV-6`, `INV-7`, `LC-7..9`); reviews must come only from real, completed bookings (`INV-5`, `BKG-7`). Trust mechanics are first-class, not afterthoughts.
-- **Two distinct demand channels.** Instant B2C checkout (Tourist) and negotiated B2B quotation/invoicing (Corporate Client) have different intake, artifacts, payment paths, and evolution speeds — which is why they are separated at the context level (B2B ≠ Booking).
+- **Two distinct demand channels.** Instant B2C checkout (Tourist) and negotiated Corporate quotation/invoicing (Corporate Client) have different intake, artifacts, payment paths, and evolution speeds — which is why they are separated at the context level (Corporate ≠ Booking).
 - **Inbound, bilingual audience.** The platform serves EN-primary inbound travelers and JA-primary corporate/provider operations; language is a cross-cutting concern (`OPR-9`) rather than a feature of one screen.
 - **Operational leverage for a small team.** Time-based alerts (license/trial expiry, overdue registrations, overdue quotations/payments) and Admin oversight let a small operator run a verified marketplace (`OPR-3..5`, `OPR-10`).
 
@@ -213,7 +213,7 @@ The forces that shaped the architecture, grouped as business drivers, technical 
 ## Constraints
 - **Whole-yen money only.** All monetary amounts are integer JPY; no fractional yen exists anywhere (`PAY-1`, `FIN-8`). Single-currency (JPY) is the working baseline (`AMB-025`).
 - **One deployable, one PostgreSQL database.** Contexts are logical modules in a single modular monolith with no network boundary between them (per [./bounded-contexts.md](/docs/architecture/bounded-contexts)). The one place two contexts share a transaction (CheckoutSession↔Catalog seat reservation, CR-1) depends on this.
-- **Japanese regulatory and document constraints.** B2B formal documents (Omitsumorisho/Seikyusho) must itemize 10% consumption tax (`PAY-10`) and render kanji/kana correctly (`AMB-031`); merchant/seller-of-record posture has tax consequences (`AMB-032`).
+- **Japanese regulatory and document constraints.** corporate formal documents (Omitsumorisho/Seikyusho) must itemize 10% consumption tax (`PAY-10`) and render kanji/kana correctly (`AMB-031`); merchant/seller-of-record posture has tax consequences (`AMB-032`).
 - **Snapshots are immutable; requirements cannot override invariants.** No part of the system may edit a frozen snapshot, introduce a new lifecycle transition, or relax a concurrency guarantee except by amending the authoritative document (often via an `AMB-###` resolution).
 - **Verification gates participation.** Nothing tourist-visible or bookable exists for a non-Approved or expired-license Provider (`INV-6`, `INV-7`).
 
@@ -226,7 +226,7 @@ Red Cab as a black box: who and what interacts with it across the system boundar
 ```mermaid
 graph TD
   Tourist[Tourist - B2C consumer] -->|browse, book, pay, review| RC[Red Cab Marketplace]
-  Corp[Corporate Client - B2B buyer] -->|request quote, pay by transfer, manifests| RC
+  Corp[Corporate Client - Corporate Client buyer] -->|request quote, pay by transfer, manifests| RC
   Provider[Provider - supply side] -->|list services, confirm, deliver, get paid| RC
   Admin[Platform Admin] -->|verify, moderate, set rate, oversee money| RC
   RC -->|charge, payout, refund| Stripe[Stripe Connect]
@@ -239,13 +239,13 @@ graph TD
 The authenticated individual traveler and primary B2C demand actor. Discovers services through the location hierarchy, sees a single consistent price, checks out and pays by card, manages bookings, and reviews completed services. The Tourist app defaults to English (`OPR-9`). The Tourist observably interacts with Catalog (discovery/pricing), Booking (checkout/lifecycle), Payments (charge/refund), and Reviews. Booking initiation requires an authenticated Tourist or Corporate account, regardless of guest-browsing scope (`AMB-022`).
 
 ## Corporate Client
-The B2B buyer (school/company/group coordinator, `account_type = Corporate`). Submits Quotation Requests, receives formal Japanese quotation/invoice documents, pays by **bank transfer (furikomi)** rather than card, submits passenger manifests for group bookings, and views history organized by trip/event. The Client Portal defaults to Japanese (`OPR-9`). The corporate path enters Booking only through an accepted Quotation, across an anti-corruption boundary (B2B → Booking).
+The Corporate Client buyer (school/company/group coordinator, `account_type = Corporate`). Submits Quotation Requests, receives formal Japanese quotation/invoice documents, pays by **bank transfer (furikomi)** rather than card, submits passenger manifests for group bookings, and views history organized by trip/event. The Client Portal defaults to Japanese (`OPR-9`). The corporate path enters Booking only through an accepted Quotation, across an anti-corruption boundary (Corporate → Booking).
 
 ## Provider
 The verified supply-side operator (Private Car / Luxury Transfer, Charter Bus Operator, Tour Guide, Tour Guide + Driver). Registers by type, uploads license documents, is verified by Admin, publishes listings, configures pricing and availability, confirms and delivers bookings, responds to reviews, and receives net payouts. A Provider's right to operate is gated by Provider Status and license validity (`INV-6`, `INV-7`, `LC-7..9`); the right to be paid requires a valid connected payout account (`AMB-002`).
 
 ## Admin
-Internal Red Cab staff with full override access. Runs provider verification (`LC-9`), moderates reviews (`OPR-6`), sets the platform-wide Commission Rate (`PAY-2`), issues B2B quotations/invoices and records bank-transfer receipt (`PAY-9`), manages geography (`OPR-10`), and oversees all money through the Payments Overview (`FIN-3`). Admin is an internal actor but interacts across the same system boundary as external actors.
+Internal Red Cab staff with full override access. Runs provider verification (`LC-9`), moderates reviews (`OPR-6`), sets the platform-wide Commission Rate (`PAY-2`), issues Corporate quotations/invoices and records bank-transfer receipt (`PAY-9`), manages geography (`OPR-10`), and oversees all money through the Payments Overview (`FIN-3`). Admin is an internal actor but interacts across the same system boundary as external actors.
 
 ## Stripe
 **Stripe Connect** is the external card-payment and marketplace-payout rail. It is responsible for card authorization/capture, holding funds, PCI scope, transferring the Provider's net share to their connected account, executing refunds, connected-account KYC, and emitting **settlement truth via webhooks** (charge, transfer, payout, refund, dispute). Webhooks are authoritative for settlement outcomes; Red Cab converges to them (`FIN-11`). The charge topology and capture model are unresolved (`AMB-001`, `AMB-002`); see [External Integrations](#external-integrations).
@@ -311,20 +311,20 @@ The Rails API is partitioned into the locked **6 core + 2 supporting** bounded c
 graph TD
   IAM[Identity & Access - supporting] --> PRV[Provider Verification - core]
   IAM --> BKG[Booking - core]
-  IAM --> B2B[B2B - core]
+  IAM --> CORP[Corporate - core]
   PRV -->|provider status, conformist read| CAT[Catalog - core]
   CAT -->|calculate_quote, availability, guarded reserve| BKG
-  CAT -->|calculate_quote| B2B
-  B2B -->|create-booking-from-quote ACL| BKG
+  CAT -->|calculate_quote| CORP
+  CORP -->|create-booking-from-quote ACL| BKG
   BKG -->|commission snapshot| PAY[Payments - core]
-  B2B -->|bank-transfer reconciliation| PAY
+  CORP -->|bank-transfer reconciliation| PAY
   BKG -->|completion enables review| REV[Reviews - core]
   IAM -. events .-> NOT[Notifications - supporting]
   PRV -. events .-> NOT
   CAT -. events .-> NOT
   BKG -. events .-> NOT
   PAY -. events .-> NOT
-  B2B -. events .-> NOT
+  CORP -. events .-> NOT
   REV -. events .-> NOT
 ```
 
@@ -343,8 +343,8 @@ Turns a selected Slot into a Booking and runs its lifecycle; **owns money facts*
 ## Payments — Payments & Payouts *(core)*
 **Owns money movement** and the Commission Rate setting: charges, captures, payouts, refunds, reconciliation. Owns `Payment`/`Charge`, `PayoutQueueEntry`, `Refund`, `CommissionRateSetting`, `ReconciliationRecord`. Reads the Booking Commission Snapshot read-only and **never authors or mutates it**. Each money operation is individually transactional and idempotent (`FIN-10`); state converges to external-rail truth via webhooks (`FIN-11`). Anchors `PAY-1..10`, `FIN-1..11`, `LC-6`. Heavily shaped by open decisions `AMB-001..008`.
 
-## B2B — B2B Quotation & Invoicing *(core)*
-Corporate intake (Quotation Request), Admin-issued formal documents (Omitsumorisho/Seikyusho), and conversion of an accepted Quotation into a Booking; bank-transfer instruction. Owns `QuotationRequest`, `Quotation`, `Invoice`. Calls Booking's `create_booking_from_quote` through an **anti-corruption boundary** so evolving B2B concepts (PO numbers, credit terms, consolidated invoicing) never leak into Booking. Separated from Booking because of different actors, intake, artifacts, payment path, and evolution axis. Anchors `LC-11`, `PAY-9`, `PAY-10`. Open: `AMB-027..033`.
+## Corporate — Corporate Quotation & Invoicing *(core)*
+Corporate intake (Quotation Request), Admin-issued formal documents (Omitsumorisho/Seikyusho), and conversion of an accepted Quotation into a Booking; bank-transfer instruction. Owns `QuotationRequest`, `Quotation`, `Invoice`. Calls Booking's `create_booking_from_quote` through an **anti-corruption boundary** so evolving corporate concepts (PO numbers, credit terms, consolidated invoicing) never leak into Booking. Separated from Booking because of different actors, intake, artifacts, payment path, and evolution axis. Anchors `LC-11`, `PAY-9`, `PAY-10`. Open: `AMB-027..033`.
 
 ## Reviews — Reviews & Ratings *(core)*
 Verified-booking reviews, moderation, provider responses, and the listing Rating Score. Owns `Review` and `RatingSummary`. Consumes only the minimal completion fact `{ booking_id, tourist_id, listing_id, completed_at }`; it never reads Booking internals or mutates a Booking. Publishes `RatingRecalculated`, which Catalog displays while Reviews remains the source of truth for the score. Anchors `INV-5`, `BKG-7`, `OPR-6`, `OPR-7`.
@@ -368,7 +368,7 @@ Price crosses context boundaries only as a **computed value contract** (`PriceBr
 At checkout, Booking captures **immutable snapshots** of the facts it needs from upstream — the Price Snapshot, the Commission Snapshot, and the Cancellation Policy Snapshot — and thereafter owns them as Booking facts (`INV-1`, `PAY-2`, `PAY-4`). This is the integration mechanism that decouples a Booking's commercial terms from later upstream edits: Catalog may change a listing's price or policy and Payments may change the Commission Rate, but a created Booking is unaffected (`BKG-8`, `INV-11`). Downstream contexts (Payments, refunds) **read** the snapshot and never mutate it. See the [Snapshot Pattern](#snapshot-pattern) principle.
 
 ## Payment Flows
-Booking and Payments are joined along the **money-facts vs money-movement** seam ([./payments-architecture.md](/docs/architecture/payments-architecture)). Booking authors the immutable financial fact (the Commission Snapshot, in the same atomic transaction as creation and seat reservation); Payments reads that fact and moves the money against external rails. Charges, payouts, and refunds are computed from the snapshot, never a live rate (`PAY-6`, `FIN-6`). Settlement outcomes arrive asynchronously as webhooks and are authoritative (`FIN-11`); the payout/refund interlock (`FIN-5`, `PAY-8`) must hold across the async gap so the same funds are never both paid out and refunded (coupling risk CR-3). B2B funds arrive off-Stripe by bank transfer and are reconciled manually by Admin (`PAY-9`). The capture model, charge topology, and payout-queue semantics that shape these flows are unresolved — see [Open Architectural Decisions](#open-architectural-decisions).
+Booking and Payments are joined along the **money-facts vs money-movement** seam ([./payments-architecture.md](/docs/architecture/payments-architecture)). Booking authors the immutable financial fact (the Commission Snapshot, in the same atomic transaction as creation and seat reservation); Payments reads that fact and moves the money against external rails. Charges, payouts, and refunds are computed from the snapshot, never a live rate (`PAY-6`, `FIN-6`). Settlement outcomes arrive asynchronously as webhooks and are authoritative (`FIN-11`); the payout/refund interlock (`FIN-5`, `PAY-8`) must hold across the async gap so the same funds are never both paid out and refunded (coupling risk CR-3). Corporate bank-transfer funds arrive off-Stripe by bank transfer and are reconciled manually by Admin (`PAY-9`). The capture model, charge topology, and payout-queue semantics that shape these flows are unresolved — see [Open Architectural Decisions](#open-architectural-decisions).
 
 ## The one shared transaction
 The single place two contexts share a transaction is **CheckoutSession↔Catalog seat reservation** (CR-1): CheckoutSession creation decrements Catalog's `available_seats` through a *guarded reserve command* within the same transaction, because both run in the same database. Booking materialization on payment success copies the session's hold. This is the deliberate, documented exception to "no shared transactions," and it exists solely to uphold the atomic-overbooking invariant (`CON-1`, `CON-2`, `BKG-9`). It must never become a network call without a redesign (a saga). Everywhere else, contexts integrate by event or by id-reference only.
@@ -435,8 +435,8 @@ Listed below: **remaining open items** by the architectural seam they most affec
 - **`AMB-021` — authentication methods (P0)** and **`AMB-022` — guest access scope (P1).** Affect the dependency-root contract and discovery/booking gating.
 - **`AMB-024` — language defaults / supported languages (P1)**, **`AMB-025` — currency (P1).** Refine value objects and contracts within their owning contexts without moving boundaries.
 
-## B2B
-- **`AMB-027` — B2B pre-payment state (P1)** and **`AMB-028` — B2B seat-hold timing (P1).** The accepted-quotation-awaiting-transfer state conflicts with `BKG-2`; until resolved the B2B→Booking contract is provisional (coupling risk CR-7). The ACL boundary keeps any resolution from rippling into Booking.
+## Corporate
+- **`AMB-027` — corporate pre-payment state (P1)** and **`AMB-028` — Corporate seat-hold timing (P1).** The accepted-quotation-awaiting-transfer state conflicts with `BKG-2`; until resolved the Corporate→Booking contract is provisional (coupling risk CR-7). The ACL boundary keeps any resolution from rippling into Booking.
 - **`AMB-029` — off-Stripe provider settlement (P1)**, **`AMB-031` — formal-document character rendering (P1)**, **`AMB-030` — manual bank-transfer reconciliation (P2).**
 
 ## Notifications & operations

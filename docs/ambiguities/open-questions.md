@@ -335,33 +335,33 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 
 ---
 
-## D. B2B (Quotation, Invoicing, Bank Transfer)
+## D. Corporate (Quotation, Invoicing, Bank Transfer)
 
-### AMB-027 — B2B pre-payment state vs. canonical states
+### AMB-027 — corporate pre-payment state vs. canonical states
 - **Sources:** state-machine `Q5`; payments `PAY-A10`.
 - **Classification:** Business (Engineering).
 - **Question:** An accepted Quotation converts to a Booking awaiting Bank Transfer ("Pending Payment"), which is not a canonical state and conflicts with `BKG-2` (Booking only after successful payment). Distinct pre-state, separate machine, or mapping?
-- **Affected contexts:** B2B Quotation & Invoicing, Booking & Checkout, Payments & Payouts.
-- **Temporary assumption:** Introduce a `PENDING_PAYMENT` pre-state scoped to B2B.
+- **Affected contexts:** Corporate Quotation & Invoicing, Booking & Checkout, Payments & Payouts.
+- **Temporary assumption:** Introduce a `PENDING_PAYMENT` pre-state scoped to Corporate.
 - **Priority:** P1.
 - **Owner:** Business Owner + Engineering.
-- **Risk if unresolved:** B2B lifecycle cannot be modeled consistently.
+- **Risk if unresolved:** corporate lifecycle cannot be modeled consistently.
 
-### AMB-028 — B2B seat reservation timing
+### AMB-028 — Corporate seat reservation timing
 - **Sources:** payments `PAY-A11`.
 - **Classification:** Business (Engineering).
 - **Question:** Are Slots held at Quotation acceptance (inventory held for unpaid orders, contra `CON-1`) or only at payment confirmation (quoted Slot may sell out before furikomi arrives)?
-- **Affected contexts:** B2B Quotation & Invoicing, Catalog & Inventory (Availability), Booking & Checkout.
+- **Affected contexts:** Corporate Quotation & Invoicing, Catalog & Inventory (Availability), Booking & Checkout.
 - **Temporary assumption:** Soft-hold at acceptance with expiry tied to the payment deadline.
 - **Priority:** P1.
 - **Owner:** Business + Engineering.
 - **Risk if unresolved:** Either stranded inventory or unfulfillable quotations.
 
-### AMB-029 — B2B provider settlement for off-Stripe funds
+### AMB-029 — Corporate provider settlement for off-Stripe funds
 - **Sources:** payments `PAY-A12`.
 - **Classification:** Finance.
-- **Question:** Since B2B funds arrive by Bank Transfer (off-Stripe), how is the Provider's Net Payout disbursed — off-platform settlement or routed through Connect?
-- **Affected contexts:** B2B Quotation & Invoicing, Payments & Payouts.
+- **Question:** Since Corporate bank-transfer funds arrive by Bank Transfer (off-Stripe), how is the Provider's Net Payout disbursed — off-platform settlement or routed through Connect?
+- **Affected contexts:** Corporate Quotation & Invoicing, Payments & Payouts.
 - **Temporary assumption:** Manual off-platform settlement, recorded as a Payments fact.
 - **Priority:** P1.
 - **Owner:** Finance.
@@ -370,7 +370,7 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Sources:** PRD `E3`.
 - **Classification:** Operational (Finance).
 - **Question:** Confirm manual Admin "Mark as Paid"; automated reconciliation is v2.
-- **Affected contexts:** B2B Quotation & Invoicing, Payments & Payouts.
+- **Affected contexts:** Corporate Quotation & Invoicing, Payments & Payouts.
 - **Temporary assumption:** Manual (`PAY-9`).
 - **Priority:** P2.
 - **Owner:** Business Owner.
@@ -384,7 +384,7 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Classification:** Legal (Engineering).
 - **Question:** Must formal Japanese documents (Omitsumorisho/Seikyusho) render kanji/kana, or is Latin-only acceptable? (Original spec notes ReportLab renders kanji as black boxes.)
 - **Impact:** Legal/business acceptability of formal documents in Japan.
-- **Affected contexts:** B2B Quotation & Invoicing.
+- **Affected contexts:** Corporate Quotation & Invoicing.
 - **Temporary assumption:** Use a PDF approach with embedded JA fonts so kanji renders correctly.
 - **Priority:** P1.
 - **Owner:** Engineering + Legal/Business.
@@ -396,7 +396,7 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Classification:** Legal (Finance).
 - **Question:** Is Red Cab the merchant-of-record, or the Provider (platform as agent)? Tied to Connect topology.
 - **Impact:** Tax collection/remittance, consumption-tax treatment, liability.
-- **Affected contexts:** Payments & Payouts, B2B Quotation & Invoicing.
+- **Affected contexts:** Payments & Payouts, Corporate Quotation & Invoicing.
 - **Temporary assumption:** Platform as agent; Provider is seller-of-record (to confirm with AMB-002).
 - **Priority:** P0 (paired with AMB-002).
 - **Owner:** Legal + Finance.
@@ -406,9 +406,9 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Status:** **RESOLVED** — see Decision Log (2026-07-29).
 - **Sources:** PRD `E-06`; `PAY-10`.
 - **Classification:** Finance (Legal).
-- **Question:** Confirm 10% consumption tax handling on B2B documents and whether B2C prices are tax-inclusive.
-- **Affected contexts:** B2B Quotation & Invoicing, Catalog & Inventory (Pricing), Payments.
-- **Temporary assumption:** B2B documents itemize 10% tax; B2C prices tax-inclusive (to confirm).
+- **Question:** Confirm 10% consumption tax handling on corporate documents and whether B2C prices are tax-inclusive.
+- **Affected contexts:** Corporate Quotation & Invoicing, Catalog & Inventory (Pricing), Payments.
+- **Temporary assumption:** corporate documents itemize 10% tax; B2C prices tax-inclusive (to confirm).
 - **Priority:** P1.
 - **Owner:** Finance + Legal.
 
@@ -472,4 +472,4 @@ Low-effort confirmations from the PRD Appendix already encoded as baseline rules
 | AMB-020 | Primary discovery navigation: **District → Area** hierarchy. Service type is a **filter** (`D-02`), not primary IA. | Product Owner | 2026-07-29 | `glossary.md`, `functional-requirements.md`, `phasing.md` |
 | AMB-023 | Canonical vehicle taxonomy: **PRD set** — Alphard, HiAce, Sedan, Limousine (private car); 20/40/50-seat bands (charter bus). Stored on `provider_assets.vehicle_category`. | Business + Engineering | 2026-07-29 | `glossary.md`, `domain-models.md` |
 | AMB-032 | **Platform merchant-of-record** for card charges; **Provider seller-of-record** for underlying service (platform as agent). | Legal + Finance | 2026-07-29 | `payments-architecture.md`, `glossary.md` |
-| AMB-033 | **B2C prices tax-inclusive**; **B2B documents itemize 10% consumption tax** separately (`PAY-12`, `PAY-10`). | Finance + Legal | 2026-07-29 | [Business Rules](/docs/business-rules/invariants), `glossary.md` |
+| AMB-033 | **B2C prices tax-inclusive**; **corporate documents itemize 10% consumption tax** separately (`PAY-12`, `PAY-10`). | Finance + Legal | 2026-07-29 | [Business Rules](/docs/business-rules/invariants), `glossary.md` |

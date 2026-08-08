@@ -65,7 +65,7 @@ Establish the implementation workspace so all subsequent phases build on a consi
 - [x] Coarse roles: Tourist, Corporate, Provider — `Identities::Account` string enum (Admin is **not** a value)
 - [x] Admin identity — separate `Identities::Admin` model + `POST team/identities/admins/sessions`
 - [x] Tourist profile — `tourists_profiles` created on Tourist registration and Google OAuth tourist signup
-- [x] Corporate Client profile — `b2b_corporate_clients` (`organization_name`, `group_size_range`) created on Corporate registration (`FR-IAM-013`)
+- [x] Corporate Client profile — `corporate_profiles` (`organization_name`, `group_size_range`) created on Corporate registration (`FR-IAM-013`)
 - [x] Provider profile schema — `providers_profiles` + type-detail / license / document / support-trial tables in DBML + migrations (PRV application flows land in Phase 1)
 - [x] Language preference capture (EN/JA) — account column + `PATCH identities/accounts/language_preference`
 - [x] Account lockout (`OPR-1`) — `LockoutPolicy` (5 attempts / 15 min) wired in session create
@@ -109,7 +109,7 @@ Establish the implementation workspace so all subsequent phases build on a consi
 - [x] Background job runtime — Sidekiq + Redis for Active Job; `bin/jobs` starts Sidekiq worker
 - [x] Error response format — `Errors::*` hierarchy per [../engineering/backend-conventions.md](/docs/engineering/backend-conventions)
 - [x] DBML + migrations for identity/profile foundation:
-  - `docs/db/identities.dbml`, `tourists.dbml`, `b2b.dbml` (corporate client only), `providers.dbml`, `notifications.dbml`, `redcab.dbml`
+  - `docs/db/identities.dbml`, `tourists.dbml`, `corporate.dbml` (corporate client only), `providers.dbml`, `notifications.dbml`, `redcab.dbml`
   - Thin Account + role-extension profiles (see **Identity & profile model** above)
 
 **red-cab-web**
@@ -119,7 +119,7 @@ Establish the implementation workspace so all subsequent phases build on a consi
 
 ### Out of scope (Phase 0)
 
-- Listings, bookings, payments, B2B quotations/invoices, reviews
+- Listings, bookings, payments, Corporate quotations/invoices, reviews
 - Provider registration/application **flows** (schema only; behavior in Phase 1)
 - Stripe integration
 - Admin panel beyond login
@@ -142,7 +142,7 @@ Establish the implementation workspace so all subsequent phases build on a consi
 - [x] A user can sign in with Google OAuth — API complete; web missing login entry point and OAuth authorize URL mismatch
 - [x] A verification email is dispatched within 60 seconds of registration (`OPR-8`, `NFR-TIME-001`) — dispatch adapters are no-ops
 - [x] Authenticated session resolves to principal + role + language on every API request — JWT cookie → `CurrentRequest.identities_user` (full account loaded)
-- [x] Tourist registration creates `tourists_profiles`; Corporate registration creates `b2b_corporate_clients` with org fields off Account
+- [x] Tourist registration creates `tourists_profiles`; Corporate registration creates `corporate_profiles` with org fields off Account
 - [x] CI passes on both repos — web: lint + test; api: Brakeman + RuboCop + Minitest
 - [x] Domain events can be published and consumed in-process with idempotent handler support — publish + sync consume works; idempotent dispatch layer not implemented
 

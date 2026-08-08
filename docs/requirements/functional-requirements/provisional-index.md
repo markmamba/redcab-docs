@@ -40,8 +40,8 @@ These FRs depend on open decisions and cannot reach Approved until the cited ite
 - AMB-022 (guest scope): FR-IAM-012.
 - AMB-024 (supported languages): FR-CAT-025.
 - AMB-026 (suspension in-flight bookings): FR-PRV-013.
-- AMB-027 (B2B pre-payment state): FR-B2B-004.
-- AMB-031/033 (PDF rendering / tax): FR-B2B-003.
+- AMB-027 (corporate pre-payment state): FR-COR-004.
+- AMB-031/033 (PDF rendering / tax): FR-COR-003.
 - AMB-034 (SMS scope): FR-NOT-004.
 - AMB-035 (support monetization): FR-PRV-010.
 - A1/A3 confirmations: FR-PRV-008, FR-PRV-009.

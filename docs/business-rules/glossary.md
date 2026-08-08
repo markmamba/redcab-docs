@@ -37,7 +37,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 
 - **Actor** — a person/system interacting with the platform: Visitor, Tourist, Corporate Client, Provider (Pending/Approved), Platform Admin.
 - **Tourist (Consumer)** — an authenticated individual traveler who browses, books, pays, and reviews. Demand side.
-- **Corporate / Group Client** — a school/company/group coordinator account (`account_type = Corporate`) that can request quotations, pay by bank transfer, and submit manifests. Demand side, B2B.
+- **Corporate / Group Client** — a school/company/group coordinator account (`account_type = Corporate`) that can request quotations, pay by bank transfer, and submit manifests. Demand side, COR.
 - **Provider (Supplier / Client)** — a verified operator (Private Car, Charter Bus, Tour Guide, Tour Guide + Driver) that lists services and receives bookings. Supply side. (Note: the raw notes call this a "Client"; in code/docs we use **Provider** to avoid collision with "Corporate Client".)
 - **Platform Admin** — internal Red Cab staff with full override access. Authenticates via a **separate Admin principal** (`Identities::Admin` / `admin_users`); Admin is **not** a value on marketplace `Account.role`.
 - **Platform** — Red Cab itself, the technology intermediary that earns commission.
@@ -83,7 +83,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Extra Charge** — a named line item (mandatory/optional) with a trigger (Always / Late-Night / Holiday / Per Item), e.g. tolls, child seat (`C-07`).
 - **Cancellation Policy** — up to 4 tiers of `(hours before service, refund %)`; Platform Default applies if none set; immutable for confirmed bookings (`C-08`).
 - **Pricing (module)** — the single authority that computes a **Price Breakdown** via `calculate_quote(listing, params, at:)`. No other context computes price.
-- **Price Breakdown / Quote** — computed result: base price, tier/duration/seasonal adjustments, extra charges, total (tax-inclusive for B2C). Distinct from a B2B **Quotation**.
+- **Price Breakdown / Quote** — computed result: base price, tier/duration/seasonal adjustments, extra charges, total (tax-inclusive for B2C). Distinct from a corporate **Quotation**.
 - **Availability Slot (Slot)** — a bookable window: date, start time, end time, max capacity, bound to a specific Provider Asset (`C-09`). Times interpreted in Service Timezone (JST).
 - **Seat Counter / available_seats** — remaining capacity on a slot; owned here, decremented transactionally during CheckoutSession seat hold (`E-11`).
 - **Fully Booked** — slot with `available_seats = 0`; shown but not bookable (`B-03`, `E-11`).
@@ -98,7 +98,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Checkout** — the synchronous flow: select slot → enter fulfillment details → review snapshotted summary → agree to policy → pay via PaymentIntent.
 - **Fulfillment Payload** — operational fields captured at checkout and copied immutably onto the Booking: pickup address, drop-off address, optional flight number, passenger name, passenger phone, luggage count, optional special notes (`BKG-11`).
 - **Price Snapshot** — the Price Breakdown frozen at CheckoutSession creation; immune to later provider changes (`C1`, `E-02`, `PRC-8`).
-- **Booking State** — `PENDING | CONFIRMED | COMPLETED | PAYOUT_QUEUED | CANCELLED | REFUNDED`. B2C card path enters at `CONFIRMED`; `PENDING` retained for B2B / pre-payment paths. Governed by the Booking State Machine (`E-09`).
+- **Booking State** — `PENDING | CONFIRMED | COMPLETED | PAYOUT_QUEUED | CANCELLED | REFUNDED`. B2C card path enters at `CONFIRMED`; `PENDING` retained for corporate / pre-payment paths. Governed by the Booking State Machine (`E-09`).
 - **Seat Reservation** — atomic decrement of `available_seats` during CheckoutSession creation (or restoration on session expiry/cancel); Booking materialization inherits the held seats (`CON-1`, `BKG-9`).
 - **Bundle Booking** — a car + guide booked together; creates 2 Booking records linked by `bundle_booking_id`; commission per sub-booking (`E-03`).
 - **Multi-Day Package** — a single-provider day-by-day itinerary booked as one purchase; all days' availability checked before checkout (`E-04`).
@@ -113,17 +113,17 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Stripe Connect** — marketplace payment rails: charge Tourist on the **Platform account** (Separate Charges & Transfers); hold funds until service completion; transfer net share to Provider Connected Account via platform-controlled payout queue (`PAY-13`).
 - **Payout Queue Entry** — Payments-owned record of net amount owed to a Provider after Booking `COMPLETED`. Lifecycle: `QUEUED → PROCESSING → DISBURSED | FAILED` (`PAY-14`). Booking state `PAYOUT_QUEUED` indicates a queue entry was created.
 - **Refund** — return to original payment method computed from the snapshotted cancellation policy; Provider/Admin-initiated cancellations always refund 100% (`E-12`).
-- **Bank Transfer (Furikomi)** — manual Japanese B2B payment; Admin marks paid (`E-07`).
+- **Bank Transfer (Furikomi)** — manual Japanese corporate bank-transfer payment; Admin marks paid (`E-07`).
 - **Payments Overview** — Admin screen of all transactions with snapshotted commission splits (`E-13`).
 
-## 5. B2B Quotation & Invoicing (core)
+## 5. Corporate Quotation & Invoicing (core)
 
 - **Quotation Request** — a Corporate Client's custom-price request (trip name, dates, pax, stops, requirements) (`E-05`).
 - **Quotation (Omitsumorisho)** — Admin-issued formal quote PDF with line items, 10% consumption tax, bank details, validity date (`E-06`).
 - **Invoice (Seikyusho)** — formal invoice PDF auto-generated when a quotation is accepted (`E-06`).
 - **Quotation Status** — `Pending | Sent | Accepted | Rejected | Expired`.
-- **Quote-to-Booking Conversion** — accepting a quotation creates a Booking via command into Booking; B2B pre-payment handling is scoped separately (`AMB-027`).
-- **Consumption Tax** — Japanese 10% tax line itemized on B2B documents; B2C listing/checkout prices are tax-inclusive (`PAY-12`).
+- **Quote-to-Booking Conversion** — accepting a quotation creates a Booking via command into Booking; corporate pre-payment handling is scoped separately (`AMB-027`).
+- **Consumption Tax** — Japanese 10% tax line itemized on corporate documents; B2C listing/checkout prices are tax-inclusive (`PAY-12`).
 
 ## 6. Reviews & Ratings (core)
 
@@ -152,8 +152,8 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 ---
 
 ## Terms intentionally avoided / disambiguated
-- **"Client"** — ambiguous in raw notes (means Provider in the Client Portal, but also "Corporate Client"). Use **Provider** for suppliers and **Corporate Client** for B2B buyers.
-- **"Quote"** — reserve **Price Breakdown** for the computed B2C price; reserve **Quotation** for the B2B document.
+- **"Client"** — ambiguous in raw notes (means Provider in the Client Portal, but also "Corporate Client"). Use **Provider** for suppliers and **Corporate Client** for Corporate Client buyers.
+- **"Quote"** — reserve **Price Breakdown** for the computed B2C price; reserve **Quotation** for the corporate document.
 - **"Cancellation policy" vs "refund"** — policy is the rule (config); refund is the computed money returned.
 - **"Admin" vs `Role`** — Admin is a standalone principal; never conflate with marketplace Account roles.
 

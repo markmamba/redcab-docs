@@ -28,7 +28,7 @@ Provisional requirements (README §8) cannot reach Approved until the cited item
 | --- | --- | --- |
 | AMB-006 | Refund-failure handling | NFR-AVAIL-004 |
 | AMB-009 | Commission base | FR-PAY-004 |
-| AMB-011 | B2B auto-confirm timer | NFR-TIME-009 (B2B paths only) |
+| AMB-011 | Corporate auto-confirm timer | NFR-TIME-009 (corporate paths only) |
 | AMB-013 | Missing transitions | (Phase 2 — no provisional FR beyond FR-BKG-010 scope) |
 | AMB-014 | Cancellation initiator | FR-BKG-010 |
 | AMB-016 | Lockout parameters | FR-IAM-007; NFR-SEC-002; NFR-TIME-008 |
@@ -40,10 +40,10 @@ Provisional requirements (README §8) cannot reach Approved until the cited item
 | AMB-024 | Supported / default languages | FR-CAT-025; NFR-I18N-002, -004 |
 | AMB-025 | Currency | NFR-I18N-005 |
 | AMB-026 | Suspension in-flight bookings | FR-PRV-013 |
-| AMB-027 | B2B pre-payment state | FR-B2B-004 |
-| AMB-031 | PDF rendering | FR-B2B-003; NFR-I18N-006; NFR-COMP-003 |
+| AMB-027 | corporate pre-payment state | FR-COR-004 |
+| AMB-031 | PDF rendering | FR-COR-003; NFR-I18N-006; NFR-COMP-003 |
 | AMB-032 | Merchant/seller-of-record | *(Resolved — Decision Log)* |
-| AMB-033 | Consumption tax | FR-B2B-003; NFR-COMP-001 *(B2B itemization; B2C tax-inclusive resolved)* |
+| AMB-033 | Consumption tax | FR-COR-003; NFR-COMP-001 *(corporate itemization; B2C tax-inclusive resolved)* |
 | AMB-034 | SMS scope | FR-NOT-004 |
 | AMB-035 | Support monetization | FR-PRV-010 |
 | A1 / A3 | Trial start / overdue confirmation | FR-PRV-008, -009; NFR-TIME-004 |

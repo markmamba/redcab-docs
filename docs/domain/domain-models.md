@@ -135,7 +135,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 ### Context overview
 - **Responsibility:** geography taxonomy, listings, pricing configuration + the sole price-calculation authority, and availability/seat inventory. Internal modules: Geography, Listings, Pricing, Availability, Search.
 - **Source of truth for:** District/Area, Listing content & status, PricingPolicy configuration, **ProviderAsset** registry, AvailabilitySlot and its seat counter, Rating Score *display* (the score itself is owned by Reviews).
-- **Dependencies:** upstream Onboarding (status), Identity; downstream Booking and B2B (pricing + availability), Notifications.
+- **Dependencies:** upstream Onboarding (status), Identity; downstream Booking and Corporate (pricing + availability), Notifications.
 
 ### Aggregates
 - **ProviderAsset** (root: `ProviderAsset` / `provider_assets`)
@@ -174,7 +174,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 ### Context overview
 - **Responsibility:** turn a selected Slot into a Booking via CheckoutSession and govern its lifecycle; **own money facts** (the frozen snapshots copied from session). Internal modules: Checkout (CheckoutSession), Order Lifecycle.
 - **Source of truth for:** CheckoutSession (pre-booking), Booking existence and state, Price/Commission/Cancellation snapshots, Fulfillment Payload, Passenger Manifest, the Bundle link.
-- **Dependencies:** upstream Identity (buyer), Catalog (pricing + availability + guarded reserve), Payments (charge result), B2B (create-from-quote); downstream Payments (reads snapshots), Reviews (completion), Notifications.
+- **Dependencies:** upstream Identity (buyer), Catalog (pricing + availability + guarded reserve), Payments (charge result), COR (create-from-quote); downstream Payments (reads snapshots), Reviews (completion), Notifications.
 
 ### Aggregates
 - **CheckoutSession** (root: `CheckoutSession`)
@@ -185,7 +185,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 - **Booking** (root: `Booking`) — the central order aggregate.
   - *Purpose:* represent a single buyer's paid reservation of a Slot, carrying immutable financial facts, Fulfillment Payload, and lifecycle state.
   - *Invariants:* references exactly one Slot and seats ≥ 1 not exceeding availability at reservation (`INV-4`); `gross = net + commission` on snapshot values (`INV-2`, `PAY-11`); snapshots and Fulfillment Payload immutable for life (`INV-1`); only permitted transitions (`LC-1..6`); historical data preserved (`INV-11`, `BKG-8`).
-  - *Lifecycle (authoritative — booking-state-machine.md):* B2C card path enters `CONFIRMED` on materialization (`BKG-10`); then `CONFIRMED → COMPLETED → PAYOUT_QUEUED`; cancellations to `CANCELLED`; `COMPLETED → REFUNDED`; `PENDING` reserved for B2B. Completion via Provider "Mark Delivered" or 24h after service end (`OPR-12`). Residual paths: `AMB-013`, `AMB-014`.
+  - *Lifecycle (authoritative — booking-state-machine.md):* B2C card path enters `CONFIRMED` on materialization (`BKG-10`); then `CONFIRMED → COMPLETED → PAYOUT_QUEUED`; cancellations to `CANCELLED`; `COMPLETED → REFUNDED`; `PENDING` reserved for Corporate. Completion via Provider "Mark Delivered" or 24h after service end (`OPR-12`). Residual paths: `AMB-013`, `AMB-014`.
   - *Transactionally consistent:* Booking materialization from CheckoutSession copies snapshots + payload atomically (`BKG-2`, `BKG-9`).
 - **BundleBooking** (root: `BundleBooking`)
   - *Purpose:* link two independent Bookings (car + guide) as one purchase.
@@ -212,7 +212,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 ### Context overview
 - **Responsibility:** **money movement** and the Commission Rate setting — charges, captures, payouts, refunds, reconciliation. Converges to external-rail truth.
 - **Source of truth for:** the platform Commission Rate setting, Provider Connected Account state, payment/charge movements, payout-queue entries and disbursement outcomes, refund movements, bank-transfer reconciliation facts.
-- **Dependencies:** upstream Booking (snapshots), B2B (reconciliation), external rails; downstream Notifications, Admin oversight.
+- **Dependencies:** upstream Booking (snapshots), COR (reconciliation), external rails; downstream Notifications, Admin oversight.
 
 ### Aggregates
 - **Payment** (root: `Payment` / charge record)
@@ -246,9 +246,9 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 
 ### Cross-context references
 - Reads the Booking **CommissionSnapshot** read-only; **never authors or mutates** it (§4). References `booking_id`, `provider_id` by id. External-rail truth (webhooks) is authoritative for settlement outcomes (`FIN-11`).
-- Disputes/chargebacks after payout are not yet modeled (`AMB-008`); B2B off-Stripe settlement `AMB-029`.
+- Disputes/chargebacks after payout are not yet modeled (`AMB-008`); Corporate off-Stripe settlement `AMB-029`.
 
-## 3.6 B2B Quotation & Invoicing (core)
+## 3.6 Corporate Quotation & Invoicing (core)
 
 ### Context overview
 - **Responsibility:** corporate intake, formal documents (Omitsumorisho/Seikyusho), conversion of accepted Quotation into a Booking, bank-transfer instruction.
@@ -275,8 +275,8 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 - `QuotationRequested`, `QuotationSent`, `QuotationAccepted`, `QuotationRejected`, `QuotationExpired`, `InvoiceIssued`.
 
 ### Cross-context references
-- Calls Booking's create-from-quote through an **anti-corruption boundary**, translating B2B vocabulary into Booking's command language; B2B concepts (PO numbers, credit terms) never leak into Booking.
-- The B2B pre-payment lifecycle conflicts with "booking only after payment" and is unresolved (`AMB-027`); B2B seat-hold timing `AMB-028`; PDF character rendering `AMB-031`; provider settlement `AMB-029`.
+- Calls Booking's create-from-quote through an **anti-corruption boundary**, translating corporate vocabulary into Booking's command language; corporate concepts (PO numbers, credit terms) never leak into Booking.
+- The corporate pre-payment lifecycle conflicts with "booking only after payment" and is unresolved (`AMB-027`); Corporate seat-hold timing `AMB-028`; PDF character rendering `AMB-031`; provider settlement `AMB-029`.
 
 ## 3.7 Reviews & Ratings (core)
 
@@ -370,14 +370,14 @@ graph TD
   Completed --> RevElig[Reviews eligibility + review link]
   Refund[RefundCompleted] --> VoidPayout[Payments voids payout entry]
   QAccept[QuotationAccepted] --> CreateFromQuote[Booking create-from-quote]
-  BankOK[BankTransferConfirmed] --> ConfirmB2B[Booking B2B confirmation]
+  BankOK[BankTransferConfirmed] --> ConfirmCorp[Booking corporate confirmation]
   RevApproved[ReviewApproved] --> Recalc[RatingRecalculated]
   Recalc --> CatScore[Catalog displays score]
 ```
 
-High-level reading: identity and onboarding gate participation; publishing feeds discovery; a Booking emits the financial and review choreography; B2B enters Booking through an accepted quotation and (separately) a confirmed bank transfer; reviews feed back a rating the catalog displays. Every arrow is an idempotent reaction across an eventual-consistency boundary, except the intra-checkout atomic unit which is not an event at all.
+High-level reading: identity and onboarding gate participation; publishing feeds discovery; a Booking emits the financial and review choreography; Corporate enters Booking through an accepted quotation and (separately) a confirmed bank transfer; reviews feed back a rating the catalog displays. Every arrow is an idempotent reaction across an eventual-consistency boundary, except the intra-checkout atomic unit which is not an event at all.
 
-Sequencing hazards to respect (not resolve here): payout-queue vs refund ordering across the async gap (`FIN-5`); completion-driven review link vs a later refund (`AMB-008`); B2B confirmation path vs canonical states (`AMB-027`).
+Sequencing hazards to respect (not resolve here): payout-queue vs refund ordering across the async gap (`FIN-5`); completion-driven review link vs a later refund (`AMB-008`); corporate confirmation path vs canonical states (`AMB-027`).
 
 ---
 
@@ -387,11 +387,11 @@ These are tracked in [../ambiguities/open-questions.md](/docs/ambiguities/open-q
 
 - **Booking lifecycle completeness (`AMB-013/014`).** Missing transitions (tourist-cancel-confirmed, provider decline, no-show, reschedule) and terminal-state overloading; `CancellationContext` (initiator) is modeled now so the refund rule stays derivable.
 - **Bundle cancellation semantics (`AMB-017`).** Cross-leg effect undefined; BundleBooking link is modeled but the cascade is not.
-- **B2B lifecycle (`AMB-027/028/029/031`).** Pre-payment state vs canonical states, seat-hold timing, off-Stripe settlement, and PDF rendering. The B2B→Booking conversion is modeled through an ACL so a resolution does not ripple into Booking.
+- **corporate lifecycle (`AMB-027/028/029/031`).** Pre-payment state vs canonical states, seat-hold timing, off-Stripe settlement, and PDF rendering. The Corporate→Booking conversion is modeled through an ACL so a resolution does not ripple into Booking.
 - **Provider mid-flight status change (`AMB-026`).** Effect of suspension/expiry on confirmed Bookings; the boundary rule (no historical mutation) holds regardless.
 - **Identity scope (`AMB-021/022`), SMS scope (`AMB-034`).** None alter aggregate boundaries; they refine value objects and contracts within the owning context.
 
-**Resolved (Decision Log 2026-07-29):** capture at checkout (`AMB-001`); Separate Charges & Transfers (`AMB-002`); platform payout queue (`AMB-003/004/005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); seat restoration idempotency (`AMB-012`); District→Area discovery (`AMB-020`); PRD vehicle taxonomy (`AMB-023`); MoR/seller-of-record (`AMB-032`); B2C tax-inclusive / B2B itemized tax (`AMB-033`).
+**Resolved (Decision Log 2026-07-29):** capture at checkout (`AMB-001`); Separate Charges & Transfers (`AMB-002`); platform payout queue (`AMB-003/004/005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); seat restoration idempotency (`AMB-012`); District→Area discovery (`AMB-020`); PRD vehicle taxonomy (`AMB-023`); MoR/seller-of-record (`AMB-032`); B2C tax-inclusive / Corporate itemized tax (`AMB-033`).
 
 No deferred decision changes the aggregate boundaries defined above; each affects value objects, lifecycle detail, or cross-context contracts within a single owning context — which is the point of drawing the boundaries where we did.
 

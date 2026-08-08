@@ -38,7 +38,7 @@ Each context owns a small set of **aggregates** (consistency boundaries addresse
 - **CommissionRateSetting** (root) — the platform-wide rate read at checkout (`PAY-2`).
 - **ReconciliationRecord** (root) — bank-transfer receipt facts (manual, `PAY-9`).
 
-### 5.6 B2B Quotation & Invoicing (core)
+### 5.6 Corporate Quotation & Invoicing (core)
 - **QuotationRequest** (root) — a Corporate Client's custom-price request (`OPR-5`).
 - **Quotation** (root) — the Admin-issued formal quote with line items, 10% tax, validity, and status; converts to a Booking only from `Accepted` (`LC-11`, `PAY-10`).
 - **Invoice** (root) — the formal Seikyusho issued on acceptance.

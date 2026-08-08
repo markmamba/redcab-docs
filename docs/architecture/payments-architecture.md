@@ -244,10 +244,10 @@ graph LR
 - **Payout interlock:** refund voids/reverses non-`DISBURSED` queue entries (`PAY-8`, `FIN-5`).
 - **Execution** is asynchronous; financial finality only on rail confirmation (`FIN-11`). Refund-failure handling remains open (`AMB-006`).
 
-## Manual bank transfer reconciliation (B2B / furikomi)
-- B2B Bookings originate from accepted **Quotation**; payment is by Bank Transfer outside Stripe.
+## Manual bank transfer reconciliation (Corporate / furikomi)
+- Corporate Bookings originate from accepted **Quotation**; payment is by Bank Transfer outside Stripe.
 - Booking becomes `CONFIRMED` when Admin records receipt (`PAY-9`).
-- B2B pre-payment state mapping remains open (`AMB-027`); off-Stripe provider settlement (`AMB-029`).
+- corporate pre-payment state mapping remains open (`AMB-027`); off-Stripe provider settlement (`AMB-029`).
 
 ## Financial invariants
 - **FIN-1** `gross_amount = net_payout_amount + commission_amount` on snapshot values (`INV-2`, `PAY-11`).
@@ -272,4 +272,4 @@ graph LR
 - **AMB-008** — Chargeback/dispute after payout.
 - **AMB-009** — Commission base confirmation (working baseline: gross incl. mandatory charges).
 - **AMB-010** — Snapshot scope confirmation (working baseline: price + commission + cancellation policy + fulfillment payload on session).
-- **AMB-027..029** — B2B payment paths.
+- **AMB-027..029** — Corporate payment paths.

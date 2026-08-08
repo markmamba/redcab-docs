@@ -8,7 +8,7 @@ description: Traceability matrix — master matrix.
 ## TL;DR
 
 - **Master matrix** — one row per requirement with source, governing rules/context, and acceptance criterion.
-- Organized by owning context: IAM, PRV, CAT, BKG, PAY, B2B, REV, NOT, plus NFR sections.
+- Organized by owning context: IAM, PRV, CAT, BKG, PAY, COR, REV, NOT, plus NFR sections.
 
 ## About this document
 
@@ -129,16 +129,16 @@ Four-way mapping table for all requirements.
 | FR-PAY-009 | E-13 | FIN-3; PAY | Admin sees all transactions (gross/commission/net/booking+payout status), filterable, with frozen split. |
 | FR-PAY-010 | Admin Panel, E-10 | PAY-2; PAY | Admin can set the platform-wide commission rate. |
 
-### 1.6 B2B — Quotation & Invoicing
+### 1.6 Corporate — Quotation & Invoicing
 | Req ID | Source | Governs (rules / context) | Acceptance criterion (observable) |
 | --- | --- | --- | --- |
-| FR-B2B-001 | E-05 | B2B | Corporate submits a quotation request (trip/dates/passengers/locations/type/requirements). |
-| FR-B2B-002 | E-05 | OPR-5; B2B | Requests are shown to Admin; an alert fires when unanswered >3 business days. |
-| FR-B2B-003 | E-06 | PAY-10; B2B | Admin issues a quotation with line items, 10% tax, due date, bank details, validity; delivered to client. |
-| FR-B2B-004 | E-06 | LC-11; B2B | Acceptance generates an invoice and converts the quotation into a booking awaiting payment. |
-| FR-B2B-005 | E-07 | PAY-9; B2B | A corporate booking confirms only when Admin records the bank-transfer receipt; client+provider notified. |
-| FR-B2B-006 | E-07 | OPR-5; B2B | Admin is alerted when a corporate booking's payment deadline passes unconfirmed. |
-| FR-B2B-007 | A-08 | B2B | Corporate booking history is organized by trip/event, not by booking identifier. |
+| FR-COR-001 | E-05 | COR | Corporate submits a quotation request (trip/dates/passengers/locations/type/requirements). |
+| FR-COR-002 | E-05 | OPR-5; COR | Requests are shown to Admin; an alert fires when unanswered >3 business days. |
+| FR-COR-003 | E-06 | PAY-10; COR | Admin issues a quotation with line items, 10% tax, due date, bank details, validity; delivered to client. |
+| FR-COR-004 | E-06 | LC-11; COR | Acceptance generates an invoice and converts the quotation into a booking awaiting payment. |
+| FR-COR-005 | E-07 | PAY-9; COR | A corporate booking confirms only when Admin records the bank-transfer receipt; client+provider notified. |
+| FR-COR-006 | E-07 | OPR-5; COR | Admin is alerted when a corporate booking's payment deadline passes unconfirmed. |
+| FR-COR-007 | A-08 | COR | Corporate booking history is organized by trip/event, not by booking identifier. |
 
 ### 1.7 REV — Reviews & Ratings
 | Req ID | Source | Governs (rules / context) | Acceptance criterion (observable) |
@@ -167,8 +167,8 @@ Four-way mapping table for all requirements.
 | NFR-TIME-002 | NOT | G-01, G-02 | OPR-8 | Confirmation/cancellation/refund notifications dispatch without undue delay. |
 | NFR-TIME-003 | PRV | A-06 | OPR-3 | A Provider is warned within 30 days before license expiry. |
 | NFR-TIME-004 | PRV | A-05 | OPR-4 | A Pending registration is flagged Overdue after >14 days of no Admin action. |
-| NFR-TIME-005 | B2B | E-05 | OPR-5 | An overdue alert fires when a quotation request is unanswered >3 business days. |
-| NFR-TIME-006 | B2B | E-07 | OPR-5 | A payment-overdue alert fires when a transfer deadline passes without receipt. |
+| NFR-TIME-005 | COR | E-05 | OPR-5 | An overdue alert fires when a quotation request is unanswered >3 business days. |
+| NFR-TIME-006 | COR | E-07 | OPR-5 | A payment-overdue alert fires when a transfer deadline passes without receipt. |
 | NFR-TIME-007 | REV | F-01 | OPR-7 | A review is accepted only within 14 days of completion. |
 | NFR-TIME-008 | IAM | A-02 | OPR-1 | A locked Account stays locked 15 min after 5 failures before further attempts. |
 | NFR-TIME-009 | BKG | E-09 | LC-2 | Auto-confirmation never elapses past the service start time. |
@@ -201,11 +201,11 @@ Four-way mapping table for all requirements.
 | NFR-I18N-003 | CAT | B-05 | — | Every District/Area carries EN and JA labels. |
 | NFR-I18N-004 | CAT | D-03 | — | Listings are filterable across the supported-language set. |
 | NFR-I18N-005 | PAY, CAT | glossary (Money) | PAY-1, FIN-8 | All amounts are presented and charged in whole JPY. |
-| NFR-I18N-006 | B2B | E-04, E-06 | — | Formal B2B documents render kanji/kana correctly. |
+| NFR-I18N-006 | COR | E-04, E-06 | — | Formal corporate documents render kanji/kana correctly. |
 | NFR-A11Y-001 | CAT | (none yet) | — | Tourist-facing surfaces meet a published accessibility baseline (source/owner pending). |
-| NFR-COMP-001 | B2B | E-06 | PAY-10 | B2B quotation/invoice documents itemize the 10% consumption tax. |
+| NFR-COMP-001 | COR | E-06 | PAY-10 | corporate quotation/invoice documents itemize the 10% consumption tax. |
 | NFR-COMP-002 | PAY | glossary (Money) | PAY-1, FIN-8 | Charges/refunds/payouts use only whole JPY; no fractional yen. |
-| NFR-COMP-003 | B2B | E-04, E-06 | — | B2B documents are acceptable as formal Japanese commercial documents. |
-| NFR-COMP-004 | PAY, B2B | payments-arch | — | Charge/document flows reflect the established merchant/seller-of-record posture. |
+| NFR-COMP-003 | COR | E-04, E-06 | — | corporate documents are acceptable as formal Japanese commercial documents. |
+| NFR-COMP-004 | PAY, COR | payments-arch | — | Charge/document flows reflect the established merchant/seller-of-record posture. |
 
 ---

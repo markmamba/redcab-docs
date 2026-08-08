@@ -19,12 +19,12 @@ Phase 2 scope, schema gates, deliverables, and exit criteria.
 | --- | --- |
 | Roadmap overview | [Phasing Roadmap](/docs/roadmap) |
 | Prior phase | [Phase 1](/docs/roadmap/phase-1-mvp) |
-| Next phase | [Phase 3](/docs/roadmap/phase-3-b2b-packages) |
+| Next phase | [Phase 3](/docs/roadmap/phase-3-corporate-packages) |
 | Reviews context | [Reviews & Ratings](/docs/architecture/bounded-contexts/reviews) |
 
 ---
 
-| [← Phase 1](/docs/roadmap/phase-1-mvp) | [Phase 3 →](/docs/roadmap/phase-3-b2b-packages) |
+| [← Phase 1](/docs/roadmap/phase-1-mvp) | [Phase 3 →](/docs/roadmap/phase-3-corporate-packages) |
 
 ---
 
@@ -96,7 +96,7 @@ Feature-competitive B2C marketplace: reviews, flexible pricing, search/filter, r
 - [ ] Complete state machine paths: cancellation, refund, no-show, provider decline (`AMB-013`, `AMB-014`)
 - [ ] Seat restoration on cancellation (`CON-5`, `CON-6` — resolved `AMB-012`)
 - [ ] Bundle bookings (car + guide link)
-- [ ] Auto-confirmation timer for B2B / pre-payment `PENDING` paths only (`AMB-011` superseded for B2C)
+- [ ] Auto-confirmation timer for corporate / pre-payment `PENDING` paths only (`AMB-011` superseded for B2C)
 
 **red-cab-web**
 
@@ -140,7 +140,7 @@ Feature-competitive B2C marketplace: reviews, flexible pricing, search/filter, r
 
 ### Out of scope (Phase 2)
 
-- B2B quotation/invoicing, bank-transfer reconciliation (Corporate **profile** already exists; quotation tables are Phase 3)
+- Corporate quotation/invoicing, bank-transfer reconciliation (Corporate **profile** already exists; quotation tables are Phase 3)
 - Multi-day cross-provider packages
 - Dedicated search engine (OpenSearch)
 

@@ -6,7 +6,7 @@ description: Booking lifecycle and state transitions.
 
 ## TL;DR
 
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for B2B pre-payment only.
+- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
 - Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
 - **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
 - Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
@@ -24,7 +24,7 @@ Invariant-driven Booking lifecycle — behavior and guarantees only (no code or 
 
 ## TL;DR
 
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for B2B pre-payment only.
+- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
 - Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
 - **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
 - Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
@@ -42,7 +42,7 @@ Invariant-driven Booking lifecycle — behavior and guarantees only (no code or 
 
 ## TL;DR
 
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for B2B pre-payment only.
+- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
 - Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
 - **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
 - Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
@@ -60,7 +60,7 @@ Invariant-driven Booking lifecycle — behavior and guarantees only (no code or 
 
 ## TL;DR
 
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for B2B pre-payment only.
+- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
 - Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
 - **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
 - Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
@@ -78,7 +78,7 @@ Invariant-driven Booking lifecycle — behavior and guarantees only (no code or 
 
 ## TL;DR
 
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for B2B pre-payment only.
+- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
 - Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
 - **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
 - Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
@@ -96,7 +96,7 @@ Invariant-driven Booking lifecycle — behavior and guarantees only (no code or 
 
 ## TL;DR
 
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for B2B pre-payment only.
+- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
 - Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
 - **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
 - Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
@@ -114,7 +114,7 @@ Invariant-driven Booking lifecycle — behavior and guarantees only (no code or 
 
 ## TL;DR
 
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for B2B pre-payment only.
+- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
 - Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
 - **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
 - Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
@@ -133,13 +133,13 @@ Invariant-driven Booking lifecycle — behavior and guarantees only (no code or 
 ## Scope
 - Governs a single Booking record. Bundle Bookings (`BKG-3`) are two independent Booking records, each running this machine separately.
 - The machine owns only **state and transitions**. Snapshots and Fulfillment Payload are frozen on **CheckoutSession** and copied immutably onto the Booking at materialization (`INV-1`, `BKG-9`).
-- **B2C card path** enters directly at `CONFIRMED` after successful payment (`BKG-10`). `PENDING` is retained for B2B / pre-payment flows only.
+- **B2C card path** enters directly at `CONFIRMED` after successful payment (`BKG-10`). `PENDING` is retained for corporate / pre-payment flows only.
 - Reading conventions: `sync` = effect occurs within the same triggering operation and must succeed for the transition to take effect; `async` = effect occurs as an event-driven reaction after the transition is committed.
 
 ## States
 Canonical states (`LC-1`):
 
-- **PENDING** — active (B2B / pre-payment only). Booking exists awaiting payment confirmation; not used on the B2C card happy path.
+- **PENDING** — active (corporate / pre-payment only). Booking exists awaiting payment confirmation; not used on the B2C card happy path.
 - **CONFIRMED** — active. B2C card checkout enters here immediately after payment success; service is upcoming.
 - **COMPLETED** — active. Service delivered per `LC-5` / `OPR-12`.
 - **PAYOUT_QUEUED** — settled. A Payout Queue Entry was created carrying the frozen Net Payout Amount (`LC-6`). Disbursement progress is tracked on the Payments-side entry (`LC-13`, `LC-14`).
@@ -147,7 +147,7 @@ Canonical states (`LC-1`):
 - **REFUNDED** — terminal (`LC-3`).
 
 State classification:
-- Active: `PENDING` (B2B only), `CONFIRMED`, `COMPLETED`.
+- Active: `PENDING` (Corporate only), `CONFIRMED`, `COMPLETED`.
 - Settled: `PAYOUT_QUEUED` (Booking state; payout entry may still be `QUEUED` / `PROCESSING` / `DISBURSED` / `FAILED`).
 - Terminal: `CANCELLED`, `REFUNDED`.
 
@@ -222,13 +222,13 @@ Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` d
 - **Sync side effects:** void/reverse any Payout Queue entry not yet `DISBURSED` (`PAY-8`, `LC-14`); set state `REFUNDED`.
 - **Async reactions:** refund to original payment method using snapshotted values (`PAY-6`, `INV-1`); Tourist + Provider notifications.
 
-### T5: PENDING → CONFIRMED (B2B / pre-payment only)
-- **Trigger type:** `sync`, actor: Admin records bank-transfer receipt (`PAY-9`) or B2B payment confirmation.
+### T5: PENDING → CONFIRMED (corporate / pre-payment only)
+- **Trigger type:** `sync`, actor: Admin records bank-transfer receipt (`PAY-9`) or corporate payment confirmation.
 - **Guards:** current state `PENDING`.
 - **Sync side effects:** set state `CONFIRMED`.
-- **Note:** B2B pre-payment Booking creation is scoped under `AMB-027`; this transition applies once that path is defined.
+- **Note:** corporate pre-payment Booking creation is scoped under `AMB-027`; this transition applies once that path is defined.
 
-### T6: PENDING → CANCELLED (B2B / pre-payment only)
+### T6: PENDING → CANCELLED (corporate / pre-payment only)
 - **Trigger type:** `sync`, actor: Tourist, Corporate Client, or Admin.
 - **Guards:** current state `PENDING`.
 - **Sync side effects:** restore seats if held (`CON-5`).
@@ -248,7 +248,7 @@ Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` d
 ## Timeout behavior
 - **Auto-completion timer** (T1): `CONFIRMED → COMPLETED` fires 24 hours after the Slot's scheduled **end time** (JST) if the Provider has not marked delivered (`OPR-12`).
 - **Review window:** Review Link expires 14 days after `COMPLETED` (`OPR-7`).
-- **B2B payment deadline:** Bank Transfer deadlines raise overdue alerts (`OPR-5`) — see `AMB-027`.
+- **Corporate payment deadline:** Bank Transfer deadlines raise overdue alerts (`OPR-5`) — see `AMB-027`.
 
 ## Synchronous vs async/event-driven — summary
 - **Synchronous:** CheckoutSession creation, Booking materialization, T1 (explicit path), T2, T4, T5, T6.
@@ -256,5 +256,5 @@ Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` d
 - **Async / event-driven:** T3 (payout queue creation and transfer processing), notifications, Review Link emission.
 
 ## Remaining open items
-- **Q5 — B2B "Pending Payment" vs canonical states:** accepted Quotation → Booking awaiting Bank Transfer is not yet mapped to `PENDING` vs a distinct pre-state. Owner: Business Owner/Engineering (`AMB-027`).
+- **Q5 — Corporate "Pending Payment" vs canonical states:** accepted Quotation → Booking awaiting Bank Transfer is not yet mapped to `PENDING` vs a distinct pre-state. Owner: Business Owner/Engineering (`AMB-027`).
 - **AMB-013 / AMB-014:** tourist cancel semantics, reschedule, and explicit cancellation initiator modeling — deferred to Phase 2 lifecycle depth.

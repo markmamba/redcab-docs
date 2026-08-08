@@ -247,7 +247,7 @@ The domain data is partitioned across the locked **6 core + 2 supporting** bound
 | Catalog & Inventory (`CAT`) | core | District/Area, Listing content & status, PricingPolicy configuration, AvailabilitySlot and its seat counter; Rating Score *display* (the score itself is owned by Reviews) |
 | Booking & Checkout (`BKG`) | core | Booking existence and lifecycle state, Price/Commission/Cancellation snapshots, Passenger Manifest, the Bundle link |
 | Payments & Payouts (`PAY`) | core | Commission Rate setting, Provider Connected Account state, payment/charge movements, payout-queue entries and disbursement outcomes, refund movements, bank-transfer reconciliation facts |
-| B2B Quotation & Invoicing (`B2B`) | core | Quotation Request, Quotation (line items, tax, validity, status), Invoice |
+| Corporate Quotation & Invoicing (`COR`) | core | Quotation Request, Quotation (line items, tax, validity, status), Invoice |
 | Reviews & Ratings (`REV`) | core | Review content & moderation state, RatingSummary (the authoritative score) |
 | Notifications (`NOT`) | supporting | Notification dispatch records and templates only |
 
@@ -266,19 +266,19 @@ graph TD
   CAT["Catalog & Inventory\n(District/Area, Listing, ProviderAsset, PricingPolicy, AvailabilitySlot)"]
   BKG["Booking & Checkout\n(CheckoutSession, Booking, BundleBooking, PassengerManifest + snapshots)"]
   PAY["Payments & Payouts\n(Payment, PayoutQueueEntry, Refund, CommissionRateSetting, ReconciliationRecord)"]
-  B2B["B2B Quotation & Invoicing\n(QuotationRequest, Quotation, Invoice)"]
+  CORP["Corporate Quotation & Invoicing\n(QuotationRequest, Quotation, Invoice)"]
   REV["Reviews & Ratings\n(Review, RatingSummary)"]
   NOT["Notifications\n(NotificationDispatch)"]
 
   IAM -->|principal id| PRV
   IAM -->|principal id| BKG
-  IAM -->|principal id| B2B
+  IAM -->|principal id| CORP
   PRV -->|provider status read| CAT
   CAT -->|listing_id / slot_id / price + availability| BKG
-  CAT -->|line-item pricing| B2B
-  B2B -->|create-from-quote ACL| BKG
+  CAT -->|line-item pricing| CORP
+  CORP -->|create-from-quote ACL| BKG
   BKG -->|commission snapshot read| PAY
-  B2B -->|bank-transfer reconciliation| PAY
+  CORP -->|bank-transfer reconciliation| PAY
   BKG -->|completion fact| REV
   REV -->|rating recalculated| CAT
   IAM -. recipient language .-> NOT
@@ -343,7 +343,7 @@ The domain data is partitioned across the locked **6 core + 2 supporting** bound
 | Catalog & Inventory (`CAT`) | core | District/Area, Listing content & status, PricingPolicy configuration, AvailabilitySlot and its seat counter; Rating Score *display* (the score itself is owned by Reviews) |
 | Booking & Checkout (`BKG`) | core | Booking existence and lifecycle state, Price/Commission/Cancellation snapshots, Passenger Manifest, the Bundle link |
 | Payments & Payouts (`PAY`) | core | Commission Rate setting, Provider Connected Account state, payment/charge movements, payout-queue entries and disbursement outcomes, refund movements, bank-transfer reconciliation facts |
-| B2B Quotation & Invoicing (`B2B`) | core | Quotation Request, Quotation (line items, tax, validity, status), Invoice |
+| Corporate Quotation & Invoicing (`COR`) | core | Quotation Request, Quotation (line items, tax, validity, status), Invoice |
 | Reviews & Ratings (`REV`) | core | Review content & moderation state, RatingSummary (the authoritative score) |
 | Notifications (`NOT`) | supporting | Notification dispatch records and templates only |
 
@@ -362,19 +362,19 @@ graph TD
   CAT["Catalog & Inventory\n(District/Area, Listing, ProviderAsset, PricingPolicy, AvailabilitySlot)"]
   BKG["Booking & Checkout\n(CheckoutSession, Booking, BundleBooking, PassengerManifest + snapshots)"]
   PAY["Payments & Payouts\n(Payment, PayoutQueueEntry, Refund, CommissionRateSetting, ReconciliationRecord)"]
-  B2B["B2B Quotation & Invoicing\n(QuotationRequest, Quotation, Invoice)"]
+  CORP["Corporate Quotation & Invoicing\n(QuotationRequest, Quotation, Invoice)"]
   REV["Reviews & Ratings\n(Review, RatingSummary)"]
   NOT["Notifications\n(NotificationDispatch)"]
 
   IAM -->|principal id| PRV
   IAM -->|principal id| BKG
-  IAM -->|principal id| B2B
+  IAM -->|principal id| CORP
   PRV -->|provider status read| CAT
   CAT -->|listing_id / slot_id / price + availability| BKG
-  CAT -->|line-item pricing| B2B
-  B2B -->|create-from-quote ACL| BKG
+  CAT -->|line-item pricing| CORP
+  CORP -->|create-from-quote ACL| BKG
   BKG -->|commission snapshot read| PAY
-  B2B -->|bank-transfer reconciliation| PAY
+  CORP -->|bank-transfer reconciliation| PAY
   BKG -->|completion fact| REV
   REV -->|rating recalculated| CAT
   IAM -. recipient language .-> NOT

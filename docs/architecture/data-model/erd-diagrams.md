@@ -89,7 +89,7 @@ erDiagram
   RECONCILIATION_RECORD ||--o| PAYMENT : "bank-transfer receipt fact"
 ```
 
-### 11.5 B2B and Reviews (intra-context)
+### 11.5 Corporate and Reviews (intra-context)
 
 ```mermaid
 erDiagram
