@@ -28,16 +28,29 @@ This command generates static content into the `build` directory and can be serv
 
 ## Deployment
 
-Using SSH:
+Production deploys run automatically via GitHub Actions on every push to `main`.
+
+Live site: [https://docs.redcab.com](https://docs.redcab.com)
+
+### GitHub Pages setup (one-time)
+
+1. Open **Settings → Pages** in the `markmamba/redcab-docs` repository.
+2. Set **Build and deployment → Source** to **GitHub Actions**.
+3. Set **Custom domain** to `docs.redcab.com` and enable **Enforce HTTPS** once DNS is verified.
+
+### DNS setup (one-time)
+
+At your DNS provider for `redcab.com`, add:
+
+| Type  | Name | Value                 |
+| ----- | ---- | --------------------- |
+| CNAME | docs | markmamba.github.io   |
+
+GitHub may take a few minutes to verify the domain after DNS propagates.
+
+### Manual deploy check
 
 ```bash
-USE_SSH=true npm run deploy
+npm run build
+npm run serve
 ```
-
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> npm run deploy
-```
-
-If you are using GitHub Pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.

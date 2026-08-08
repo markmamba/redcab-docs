@@ -15,10 +15,10 @@ const config = {
     v4: true,
   },
 
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://docs.redcab.com',
   baseUrl: '/',
 
-  organizationName: 'red-cab',
+  organizationName: 'markmamba',
   projectName: 'redcab-docs',
 
   onBrokenLinks: 'throw',
