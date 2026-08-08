@@ -1,6 +1,6 @@
 ---
-title: B2B — Quotation & Invoicing
-sidebar_label: B2B
+title: Quotation & Invoicing (B2B)
+sidebar_label: Quotation & Invoicing (B2B)
 sidebar_position: 7
 description: Functional requirements for B2B context.
 ---

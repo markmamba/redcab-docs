@@ -1,6 +1,6 @@
 ---
-title: CAT — Catalog & Inventory
-sidebar_label: CAT
+title: Catalog & Inventory (CAT)
+sidebar_label: Catalog & Inventory (CAT)
 sidebar_position: 4
 description: Functional requirements for CAT context.
 ---

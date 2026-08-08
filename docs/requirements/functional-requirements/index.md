@@ -34,12 +34,12 @@ Index and reading guide for functional requirements by context.
 
 ## Context index
 
-- [IAM](/docs/requirements/functional-requirements/iam)
-- [PRV](/docs/requirements/functional-requirements/prv)
-- [CAT](/docs/requirements/functional-requirements/cat)
-- [BKG](/docs/requirements/functional-requirements/bkg)
-- [PAY](/docs/requirements/functional-requirements/pay)
-- [B2B](/docs/requirements/functional-requirements/b2b)
-- [REV](/docs/requirements/functional-requirements/rev)
-- [NOT](/docs/requirements/functional-requirements/not)
+- [Identity & Access (IAM)](/docs/requirements/functional-requirements/iam)
+- [Provider Onboarding (PRV)](/docs/requirements/functional-requirements/prv)
+- [Catalog & Inventory (CAT)](/docs/requirements/functional-requirements/cat)
+- [Booking & Checkout (BKG)](/docs/requirements/functional-requirements/bkg)
+- [Payments & Payouts (PAY)](/docs/requirements/functional-requirements/pay)
+- [Quotation & Invoicing (B2B)](/docs/requirements/functional-requirements/b2b)
+- [Reviews & Ratings (REV)](/docs/requirements/functional-requirements/rev)
+- [Notifications (NOT)](/docs/requirements/functional-requirements/not)
 - [Provisional index](/docs/requirements/functional-requirements/provisional-index)

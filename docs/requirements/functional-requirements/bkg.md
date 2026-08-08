@@ -1,6 +1,6 @@
 ---
-title: BKG — Booking & Checkout
-sidebar_label: BKG
+title: Booking & Checkout (BKG)
+sidebar_label: Booking & Checkout (BKG)
 sidebar_position: 5
 description: Functional requirements for BKG context.
 ---

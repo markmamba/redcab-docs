@@ -9,7 +9,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'Red Cab Docs',
   tagline: 'Planning, architecture, and engineering documentation',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/redcab-orig-logo.png',
 
   future: {
     v4: true,
@@ -65,7 +65,7 @@ const config = {
         title: 'Red Cab Docs',
         logo: {
           alt: 'Red Cab Docs',
-          src: 'img/logo.svg',
+          src: 'img/redcab-logo-outlined.png',
         },
         items: [
           {
@@ -79,6 +79,19 @@ const config = {
       footer: {
         style: 'dark',
         copyright: `Copyright © ${new Date().getFullYear()} Red Cab Marketplace.`,
+      },
+      mermaid: {
+        theme: {light: 'base', dark: 'dark'},
+        options: {
+          themeVariables: {
+            primaryColor: '#c8102e',
+            primaryTextColor: '#ffffff',
+            primaryBorderColor: '#8c0b20',
+            lineColor: '#c8102e',
+            secondaryColor: '#f5f5f5',
+            tertiaryColor: '#ffffff',
+          },
+        },
       },
       prism: {
         theme: prismThemes.github,

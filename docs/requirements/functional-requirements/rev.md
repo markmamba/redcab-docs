@@ -1,6 +1,6 @@
 ---
-title: REV — Reviews & Ratings
-sidebar_label: REV
+title: Reviews & Ratings (REV)
+sidebar_label: Reviews & Ratings (REV)
 sidebar_position: 8
 description: Functional requirements for REV context.
 ---

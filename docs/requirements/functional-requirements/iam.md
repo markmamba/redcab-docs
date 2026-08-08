@@ -1,6 +1,6 @@
 ---
-title: IAM — Identity & Access
-sidebar_label: IAM
+title: Identity & Access (IAM)
+sidebar_label: Identity & Access (IAM)
 sidebar_position: 2
 description: Functional requirements for IAM context.
 ---

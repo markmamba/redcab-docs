@@ -1,6 +1,6 @@
 ---
-title: NOT — Notifications
-sidebar_label: NOT
+title: Notifications (NOT)
+sidebar_label: Notifications (NOT)
 sidebar_position: 9
 description: Functional requirements for NOT context.
 ---

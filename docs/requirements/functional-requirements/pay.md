@@ -1,6 +1,6 @@
 ---
-title: PAY — Payments & Payouts
-sidebar_label: PAY
+title: Payments & Payouts (PAY)
+sidebar_label: Payments & Payouts (PAY)
 sidebar_position: 6
 description: Functional requirements for PAY context.
 ---

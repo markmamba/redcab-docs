@@ -1,6 +1,6 @@
 ---
-title: PRV — Provider Onboarding
-sidebar_label: PRV
+title: Provider Onboarding (PRV)
+sidebar_label: Provider Onboarding (PRV)
 sidebar_position: 3
 description: Functional requirements for PRV context.
 ---
