@@ -15,8 +15,8 @@ const config = {
     v4: true,
   },
 
-  url: 'https://docs.redcab.com',
-  baseUrl: '/',
+  url: 'https://markmamba.github.io',
+  baseUrl: '/redcab-docs/',
 
   organizationName: 'markmamba',
   projectName: 'redcab-docs',
