@@ -7,13 +7,13 @@ description: Runnable repos, IAM, role profiles, event bus, and NOT stub.
 
 ## TL;DR
 
-- **Foundation:** runnable repos, thin IAM + role profiles, in-process domain events, NOT stub.
+- **Foundation:** runnable repos, thin IAM + role profiles, actor-scoped signups, in-process domain events, NOT mostly wired.
 - Delivers identity/profile schema without marketplace flows (no listings, bookings, or Stripe).
-- Most exit criteria met; verification email dispatch still stubbed.
+- Core deliverables met; post-audit follow-up items tracked separately below.
 
 ## About this document
 
-Phase 0 deliverables, out-of-scope items, open decisions, and exit criteria.
+Phase 0 deliverables, out-of-scope items, open decisions, exit criteria, and post-audit follow-up.
 
 | Topic | Document |
 | --- | --- |
@@ -30,11 +30,32 @@ Phase 0 deliverables, out-of-scope items, open decisions, and exit criteria.
 
 ## Phase 0 — Foundation
 
-> **Last verified:** 2026-07-25 against `red-cab-api/` and `red-cab-web/` (includes identity profile redesign).
+### Audit history
+
+| Date | Scope | Notes |
+| --- | --- | --- |
+| 2026-07-25 | Initial verification | Identity profile redesign; monolithic `POST identities/accounts/register` and single web sign-up page |
+| 2026-08-09 | Actor-scoped signups | Tourist, Provider, and Corporate signups split on API and web; deliverables refreshed; gaps moved to [Post-audit follow-up](#post-audit-follow-up) |
+
+> **Last verified:** 2026-08-09 against `red-cab-api/` and `red-cab-web/` (actor-scoped signups).
 
 ### Goal
 
-Establish the implementation workspace so all subsequent phases build on a consistent foundation — including a thin IAM principal and role-extension profiles.
+Establish the implementation workspace so all subsequent phases build on a consistent foundation — including a thin IAM principal, role-extension profiles, and **actor-scoped account signups** (one route per marketplace role).
+
+### Actor-scoped signups
+
+Signup uses **HTTP CRUD mapping** — never verb paths like `/register`. Each actor gets its own `POST …/identities/accounts` endpoint; the route implies the role (the client does not send `role`).
+
+| Actor | API route | Profile created at signup | Web route |
+| --- | --- | --- | --- |
+| Tourist | `POST tourists/identities/accounts` | `tourists_profiles` | `/tourists/sign-up` |
+| Corporate Client | `POST corporate/identities/accounts` | `corporate_profiles` (`organization_name`, `group_size_range`) | `/corporate/sign-up` |
+| Provider | `POST providers/identities/accounts` | **None** — `providers_profiles` is created in Phase 1 PRV (`POST providers/profiles`) | `/providers/sign-up` |
+
+Shared IAM (sessions, OAuth, email verification, password reset, language preference) stays on `/identities/…` and `/team/…`. Google OAuth creates a **Tourist** account only.
+
+Login (`/login`) links to all three sign-up pages and exposes Google sign-in.
 
 ### Deliverables
 
@@ -58,16 +79,19 @@ Establish the implementation workspace so all subsequent phases build on a consi
 
 **red-cab-api**
 
-- [x] Account registration (email/password) — `POST identities/accounts/register`
-- [x] Google OAuth sign-in — `GET identities/oauth/google`, callback handler, OmniAuth initializer
+- [x] Actor-scoped account registration (email/password):
+  - `POST tourists/identities/accounts` — Tourist + `tourists_profiles`
+  - `POST corporate/identities/accounts` — Corporate + `corporate_profiles` (`FR-IAM-013`)
+  - `POST providers/identities/accounts` — Provider credentials only (profile deferred to PRV)
+- [x] Google OAuth sign-in — `GET identities/oauth/google`, callback handler, OmniAuth initializer (Tourist only)
 - [x] Session-based JWT auth (cookie-based) — `jwt_sessions` + `SessionCookieManager` (`rc_access` / `rc_refresh`)
 - [x] Thin `identities_accounts` — credentials, name, coarse `role` claim, language, lockout; **no** corporate org fields on Account
 - [x] Coarse roles: Tourist, Corporate, Provider — `Identities::Account` string enum (Admin is **not** a value)
 - [x] Admin identity — separate `Identities::Admin` model + `POST team/identities/admins/sessions`
 - [x] Tourist profile — `tourists_profiles` created on Tourist registration and Google OAuth tourist signup
-- [x] Corporate Client profile — `corporate_profiles` (`organization_name`, `group_size_range`) created on Corporate registration (`FR-IAM-013`)
+- [x] Corporate Client profile — `corporate_profiles` (`organization_name`, `group_size_range`) created on Corporate registration
 - [x] Provider profile schema — `providers_profiles` + type-detail / license / document / support-trial tables in DBML + migrations (PRV application flows land in Phase 1)
-- [x] Language preference capture (EN/JA) — account column + `PATCH identities/accounts/language_preference`
+- [x] Language preference — account column + `PATCH identities/accounts/language_preference` (captured on **first login**, not signup — `FR-IAM-010`)
 - [x] Account lockout (`OPR-1`) — `LockoutPolicy` (5 attempts / 15 min) wired in session create
 - [x] Email verification flow — confirm + resend endpoints, token model, registration issues token
 - [x] `GET identities/accounts/current` — SSR principal hydration
@@ -78,28 +102,31 @@ Establish the implementation workspace so all subsequent phases build on a consi
 
 **red-cab-web**
 
-- [x] Sign-up page — registration form with language preference (defaults to Tourist role)
-- [x] Login page — email/password session create
+- [x] Tourist sign-up page — `/tourists/sign-up` → `POST tourists/identities/accounts`; Google sign-up on same page
+- [x] Corporate sign-up page — `/corporate/sign-up` → `POST corporate/identities/accounts` (org name + group size)
+- [x] Provider sign-up page — `/providers/sign-up` → `POST providers/identities/accounts`
+- [x] Login page — email/password session create; links to all three sign-up routes; Google sign-in
 - [x] Verify-email page — token confirm + resend
-- [x] Google OAuth sign-in — callback page wired; **no** “Sign in with Google” entry on login; OAuth client calls `GET …/google/authorize` but API route is `GET …/google`
-- [x] Forgot-password flow — placeholder page only (no API endpoint yet)
+- [x] Google OAuth callback page wired
+- [x] Forgot-password flow — request form calls `POST identities/password_resets/request`
 - [x] Auth HOCs — `withNoAuth`, `withTouristAuth`, `withProviderAuth`, `withCorporateAuth`
 - [x] Session state — `useAuth`, ky API clients, cookie passthrough
-- [x] Language preference update UI — captured at sign-up only; no post-registration settings surface
+- [x] Language preference — first-login prompt modal on tourist portal layout + account settings (`PATCH identities/accounts/language_preference`); **not** on sign-up forms
 - [x] Team admin login — `/team/login` + dashboard shell
-- [x] Provider / Corporate portal routes — route files and layouts exist; route arrays empty
+- [x] Provider / Corporate portal routes — route files and layouts exist; authenticated route arrays mostly empty
 
-#### Notifications (`NOT`) — stub
+#### Notifications (`NOT`)
 
 **red-cab-api**
 
-- [x] Dispatch adapter skeleton — `Notifications::*::EnqueueManager` stubs call through from domain events
-- [x] `notifications_dispatches` table + mailer path for account verification (dispatch still stubbed toward full idempotent pipeline)
 - [x] Domain-event subscription framework — in-process `Shared::DomainEvents::Publisher` with handler map
+- [x] `notifications_dispatches` table + idempotent enqueue pipeline
+- [x] Account verification email — `AccountRegistered` → `EnqueueManager` → Sidekiq `ProcessJob` → mailer
+- [~] Password-reset and account-lockout email dispatch — enqueue managers still stubbed
 
 **red-cab-web**
 
-- [x] Verification email UX beyond API polling — relies on user clicking link from email (email not sent until dispatch ships)
+- [x] Verification email UX — user follows link from email after registration
 
 #### Cross-cutting
 
@@ -110,17 +137,35 @@ Establish the implementation workspace so all subsequent phases build on a consi
 - [x] Error response format — `Errors::*` hierarchy per [../engineering/backend-conventions.md](/docs/engineering/backend-conventions)
 - [x] DBML + migrations for identity/profile foundation:
   - `docs/db/identities.dbml`, `tourists.dbml`, `corporate.dbml` (corporate client only), `providers.dbml`, `notifications.dbml`, `redcab.dbml`
-  - Thin Account + role-extension profiles (see **Identity & profile model** above)
+  - Thin Account + role-extension profiles (see **Actor-scoped signups** above)
 
 **red-cab-web**
 
 - [x] ky API client + shared error/toast utilities
-- [x] Route registry split — marketplace, tourist, team segments; provider/corporate stubs
+- [x] Route registry split — marketplace, tourist, provider, corporate, team segments
+
+### Post-audit follow-up
+
+> **Audited:** 2026-08-09 — separated from [Deliverables](#deliverables) so initial Phase 0 scope stays distinct from gaps found during implementation.
+
+These items were **not** part of the original Phase 0 checklist or need product/engineering decisions before closing:
+
+| Item | Repo | Status | Notes |
+| --- | --- | --- | --- |
+| Login without email verification | API | Open | `Sessions::CreateManager` does not gate on `is_email_verified` |
+| Provider two-step onboarding | API | By design | Brief window where `role=provider` but no `providers_profiles` row exists between account signup and `POST providers/profiles` (Phase 1 PRV) |
+| Language prompt on corporate/provider portals | Web | Open | First-login modal mounted on tourist layout only; reuse when those portals ship authenticated routes |
+| OAuth for Corporate / Provider | API + Web | Deferred | Google callback always creates Tourist; no corporate/provider OAuth path |
+| Password-reset email dispatch | API | Stub | Request/confirm endpoints work; `PasswordResetRequested` enqueue manager not wired to mailer |
+| Duplicate-email error shape | API | Open | Tourist uses array field errors; corporate/provider shapes differ — normalize when touching validators |
+| Provider `DUPLICATE_EMAIL_MESSAGE` constant | API | Open | Tourist manager defines shared constant; provider uses inline string — align for test consistency |
+| Actor signup controller 422 tests | API | Open | Happy-path + dispatch tests exist; validation failure coverage thin for corporate/provider |
+| Cross-role duplicate email | API | Open | Same email on tourist then corporate signup — not covered by tests |
 
 ### Out of scope (Phase 0)
 
 - Listings, bookings, payments, Corporate quotations/invoices, reviews
-- Provider registration/application **flows** (schema only; behavior in Phase 1)
+- Provider registration/application **flows** beyond account credentials (schema + `POST providers/profiles` land in Phase 1)
 - Stripe integration
 - Admin panel beyond login
 - Multi-role accounts / role-assignment audit history
@@ -138,20 +183,21 @@ Establish the implementation workspace so all subsequent phases build on a consi
 
 **Both repos**
 
-- [x] A user can register with email/password and verify their account — API + web UI complete; verification link not emailed yet (dispatch stub)
-- [x] A user can sign in with Google OAuth — API complete; web missing login entry point and OAuth authorize URL mismatch
-- [x] A verification email is dispatched within 60 seconds of registration (`OPR-8`, `NFR-TIME-001`) — dispatch adapters are no-ops
+- [x] A Tourist can register with email/password and verify their account — API + `/tourists/sign-up`
+- [x] A Corporate Client can register with email/password — API + `/corporate/sign-up`; org fields on `corporate_profiles`
+- [x] A Provider can register account credentials — API + `/providers/sign-up`; `providers_profiles` deferred to Phase 1 PRV
+- [x] A user can sign in with Google OAuth — Tourist account; login and tourist sign-up expose Google
+- [x] A verification email is dispatched within 60 seconds of registration (`OPR-8`, `NFR-TIME-001`)
 - [x] Authenticated session resolves to principal + role + language on every API request — JWT cookie → `CurrentRequest.identities_user` (full account loaded)
-- [x] Tourist registration creates `tourists_profiles`; Corporate registration creates `corporate_profiles` with org fields off Account
 - [x] CI passes on both repos — web: lint + test; api: Brakeman + RuboCop + Minitest
-- [x] Domain events can be published and consumed in-process with idempotent handler support — publish + sync consume works; idempotent dispatch layer not implemented
+- [x] Domain events can be published and consumed in-process — `AccountRegistered` → verification dispatch wired
 
 **red-cab-api only**
 
-- [x] Registration, session, email verification, OAuth, lockout, and language preference endpoints covered by Minitest (local)
+- [x] Actor-scoped registration, session, email verification, OAuth, lockout, and language preference endpoints covered by Minitest
 
 **red-cab-web only**
 
-- [x] Auth pages render and call IAM API clients (sign-up, login, verify-email, OAuth callback, team login)
+- [x] Auth pages render and call IAM API clients (tourist/corporate/provider sign-up, login, verify-email, OAuth callback, forgot-password request, team login)
 
 ---
