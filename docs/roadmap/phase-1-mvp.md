@@ -30,6 +30,14 @@ Phase 1 scope, DBML gates, deliverables by repo/context, and exit criteria.
 
 ## Phase 1 — MVP (B2C happy path)
 
+### Audit history
+
+| Date | Scope | Notes |
+| --- | --- | --- |
+| 2026-08-10 | Provider verification queue (PRV) | API: `GET team/providers/profiles` (index + show) with pagination; web: `/team/providers/profiles` list/detail with approve, reject, and request-correction flows; team admin session hydration aligned to flat `AdminSessionSerializer` payload |
+
+> **Last verified:** 2026-08-10 against `red-cab-api/` and `red-cab-web/` (admin provider verification queue).
+
 ### Goal
 
 A tourist can discover a transfer service, book it, pay by card, and the provider receives their net payout — with commission frozen on the booking snapshot.
@@ -78,13 +86,13 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 - [x] Provider registration by type — creates/updates `providers_profiles` + matching type-detail row (Private Car, Charter Bus, Tour Guide, etc.)
 - [x] Document upload and verification checklist (`providers_documents`, checklist on profile)
 - [x] Admin approve / reject workflow (status + license/support-trial side effects)
-- [ ] Provider Status read contract exposed to Catalog (`{ provider_id, status, license_valid_until }`)
-- [ ] Provider portal auth gated on provider profile presence (Approved required for listing create; active Stripe Connected Account required for publish — `INV-12`, `LC-12`)
+- [x] Provider Status read contract exposed to Catalog (`{ provider_id, status, license_valid_until }`)
+- [x] Provider portal auth gated on provider profile presence (Approved required for listing create; active Stripe Connected Account required for publish — `INV-12`, `LC-12`)
 
 **red-cab-web**
 
-- [ ] Provider registration and document upload flows (Provider Portal)
-- [ ] Admin provider verification queue (`/team`)
+- [x] Provider registration and document upload flows (Provider Portal)
+- [x] Admin provider verification queue (`/team`)
 
 #### Catalog & Inventory (`CAT`) — basic
 
