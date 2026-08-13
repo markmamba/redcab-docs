@@ -250,18 +250,18 @@ No domain classes, no models, no serializers, no migration.
 
 **New: `test/controllers/tourists/base_controller_test.rb`** — via an anonymous test controller, or against the first real tourist endpoint if this ships alongside one:
 
-- [ ] A tourist account with a profile reaches the action and `CurrentRequest.tourist_profile` is populated
-- [ ] A corporate account is rejected with 401
-- [ ] A tourist account whose profile row is missing is rejected with 401
-- [ ] No session at all is rejected with 401
+- [x] A tourist account with a profile reaches the action and `CurrentRequest.tourist_profile` is populated
+- [x] A corporate account is rejected with 401
+- [x] A tourist account whose profile row is missing is rejected with 401
+- [x] No session at all is rejected with 401
 
 **New: `test/controllers/corporate/base_controller_test.rb`** — the mirror image.
 
 **Modify existing provider tests:**
 
-- [ ] `POST /providers/profiles` still works for a provider account with no profile
-- [ ] `POST /providers/profiles` is rejected for a tourist account — this is the case that would silently open up if the role check were dropped without being re-added to the controller
-- [ ] An account with `role: tourist` that somehow has a `Providers::Profile` now **passes** the gate. Add this as an explicit test with a comment: it documents the deliberate shift from role to profile presence, and it is the behaviour change a reviewer is most likely to question
+- [x] `POST /providers/profiles` still works for a provider account with no profile
+- [x] `POST /providers/profiles` is rejected for a tourist account — this is the case that would silently open up if the role check were dropped without being re-added to the controller
+- [x] An account with `role: tourist` that somehow has a `Providers::Profile` now **passes** the gate. Add this as an explicit test with a comment: it documents the deliberate shift from role to profile presence, and it is the behaviour change a reviewer is most likely to question
 
 **New: `test/models/current_request_test.rb`** — assert all five attributes reset between requests. `ActiveSupport::CurrentAttributes` resets per request, but a leaked profile across requests is a cross-tenant data leak, so it is worth one cheap explicit test.
 
@@ -290,8 +290,8 @@ Expect zero. If it is not zero, the data disagrees with the DBML invariant and t
 
 ## 10. Reviewer checklist
 
-- [ ] The production query in § 9 returned zero, and the result is pasted in the PR description
-- [ ] `POST /providers/profiles` still rejects non-provider accounts — verify by test, not by reading
-- [ ] `git grep 'role_provider?\|role_tourist?\|role_corporate?'` in `app/controllers/` returns exactly one hit: the provider profile create guard
-- [ ] Every new `CurrentRequest` attribute has exactly one writer
-- [ ] `require_approved_provider_profile!` is either wired to an endpoint in this PR or explicitly named in the PR body as reserved for the Catalog PR, with a date
+- [ ] The production query in § 9 returned zero, and the result is pasted in the PR description *(run before merge — not verifiable from local dev)*
+- [x] `POST /providers/profiles` still rejects non-provider accounts — verify by test, not by reading
+- [x] `git grep 'role_provider?\|role_tourist?\|role_corporate?'` in `app/controllers/` returns exactly one hit: the provider profile create guard
+- [x] Every new `CurrentRequest` attribute has exactly one writer
+- [x] `require_approved_provider_profile!` is either wired to an endpoint in this PR or explicitly named in the PR body as reserved for the Catalog PR, with a date *(reserved for Catalog PR — not wired in this PR)*
