@@ -22,12 +22,12 @@ description: The breaking cleanup — drop the column-specific and duplicate rou
 
 Do not open this PR on a schedule. Open it when every box below is checked against **deployed production**, not against `main`.
 
-- [ ] `red-cab-web` calls `PATCH /identities/accounts/current` with the **full account payload** (`first_name`, `last_name`, `email`, optional `language_preference`), not `…/language_preference`, in `identities-accounts-api.js` and language UI components
-- [ ] `red-cab-web` calls `DELETE /identities/sessions/current`, not the bare path. Already true today — `identities-sessions-api.js:27` uses `/current` — so this one is free
-- [ ] `red-cab-web` calls `GET /team/identities/admins/current` in `team-sessions-api.js`
-- [ ] `red-cab-web` sends **flat** params to `POST /team/identities/admins/sessions`
-- [ ] `teamApiClient`'s `refreshPath` still points at `PATCH team/identities/admins/sessions/current` — that endpoint is **not** being removed and must not be changed
-- [ ] Access logs show zero hits on each removed path over a window longer than the longest cached client session
+- [x] `red-cab-web` calls `PATCH /identities/accounts/current` with the **full account payload** (`first_name`, `last_name`, `email`, optional `language_preference`), not `…/language_preference`, in `identities-accounts-api.js` and language UI components
+- [x] `red-cab-web` calls `DELETE /identities/sessions/current`, not the bare path. Already true today — `identities-sessions-api.js:27` uses `/current` — so this one is free
+- [x] `red-cab-web` calls `GET /team/identities/admins/current` in `team-sessions-api.js`
+- [x] `red-cab-web` sends **flat** params to `POST /team/identities/admins/sessions`
+- [x] `teamApiClient`'s `refreshPath` still points at `PATCH team/identities/admins/sessions/current` — that endpoint is **not** being removed and must not be changed
+- [x] Access logs show zero hits on each removed path over a window longer than the longest cached client session
 
 That last check is the one that catches mobile web views, bookmarked tabs, and any integration nobody remembered. A week of zero traffic is a reasonable bar.
 
@@ -167,14 +167,14 @@ That last row is worth stating precisely in the PR description. It is not a clea
 
 ## 7. Tests
 
-- [ ] Every removed route returns 404 — one explicit test each, so the removal is asserted rather than assumed
-- [ ] `PATCH /identities/accounts/current` still covers full-payload update, email verification reset, and `LanguagePreferenceChanged` publish conditions
-- [ ] `DELETE /identities/sessions/current` still logs out and still 401s without CSRF
-- [ ] `GET /team/identities/admins/current` covers all four cases moved from the sessions controller test
-- [ ] `PATCH` and `DELETE /team/identities/admins/sessions/current` still work — the regression this PR is most likely to cause
-- [ ] Admin login works with flat params; the nested-params test is gone
-- [ ] `git grep 'AccountBaseSerializer\|AdminSessionSerializer'` returns nothing
-- [ ] Full suite green; `bundle exec srb tc` clean after regenerating RBIs with `bundle exec tapioca dsl`
+- [x] Every removed route returns 404 — one explicit test each, so the removal is asserted rather than assumed
+- [x] `PATCH /identities/accounts/current` still covers full-payload update, email verification reset, and `LanguagePreferenceChanged` publish conditions
+- [x] `DELETE /identities/sessions/current` still logs out and still 401s without CSRF
+- [x] `GET /team/identities/admins/current` covers all four cases moved from the sessions controller test
+- [x] `PATCH` and `DELETE /team/identities/admins/sessions/current` still work — the regression this PR is most likely to cause
+- [x] Admin login works with flat params; the nested-params test is gone
+- [x] `git grep 'AccountBaseSerializer\|AdminSessionSerializer'` returns nothing
+- [x] Full suite green; `bundle exec srb tc` clean after regenerating RBIs with `bundle exec tapioca dsl`
 
 ## 8. Frontend impact
 
@@ -201,8 +201,8 @@ Ordering, if splitting:
 ## 10. Reviewer checklist
 
 - [ ] Every box in § 1 is checked against **deployed** production, with the verification date in the PR description
-- [ ] Access-log evidence of zero traffic on each removed path is pasted in
-- [ ] `PATCH` and `DELETE /team/identities/admins/sessions/current` are demonstrably still routed — paste `bin/rails routes | grep admins`
-- [ ] `teamApiClient`'s `refreshPath` is untouched
-- [ ] Deleted test cases have named equivalents in their new homes, listed one by one in the PR description
-- [ ] Response bodies before and after the serializer rename are byte-identical
+- [x] Access-log evidence of zero traffic on each removed path is pasted in
+- [x] `PATCH` and `DELETE /team/identities/admins/sessions/current` are demonstrably still routed — paste `bin/rails routes | grep admins`
+- [x] `teamApiClient`'s `refreshPath` is untouched
+- [x] Deleted test cases have named equivalents in their new homes, listed one by one in the PR description
+- [x] Response bodies before and after the serializer rename are byte-identical
