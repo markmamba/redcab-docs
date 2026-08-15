@@ -218,6 +218,10 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 **Status.** Locked.
 
+### Geography storage (no spatial extension)
+
+Geography reference data uses plain PostgreSQL `numeric` columns for `latitude`/`longitude` on Districts and Areas. **PostGIS is not required** at Phase 1 ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)). Near-me Area ranking uses haversine over ~1,750 centroids with an `INV-8` filter. Boundary geometries, if ever needed for map shading, are served from pre-simplified static assets (CDN) — not queried from the database. See [Geography](/docs/architecture/geography).
+
 ---
 
 ## Background jobs — Rails-native asynchronous runtime

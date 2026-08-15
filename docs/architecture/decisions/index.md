@@ -6,8 +6,8 @@ description: Architecture Decision Records (ADRs) for Red Cab Marketplace.
 
 ## TL;DR
 
-- Twelve **accepted** architecture decision records (ADR-001–012) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, and evolution strategy.
+- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -18,8 +18,8 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 
 ## TL;DR
 
-- Twelve **accepted** architecture decision records (ADR-001–012) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, and evolution strategy.
+- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -30,8 +30,8 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 
 ## TL;DR
 
-- Twelve **accepted** architecture decision records (ADR-001–012) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, and evolution strategy.
+- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -42,8 +42,8 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 
 ## TL;DR
 
-- Twelve **accepted** architecture decision records (ADR-001–012) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, and evolution strategy.
+- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -54,8 +54,8 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 
 ## TL;DR
 
-- Twelve **accepted** architecture decision records (ADR-001–012) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, and evolution strategy.
+- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -66,8 +66,8 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 
 ## TL;DR
 
-- Twelve **accepted** architecture decision records (ADR-001–012) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, and evolution strategy.
+- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -78,8 +78,8 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 
 ## TL;DR
 
-- Twelve **accepted** architecture decision records (ADR-001–012) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, and evolution strategy.
+- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -104,3 +104,4 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-010 | [ADR-010: Identity and Authorization Architecture](/docs/architecture/decisions/adr-010-identity-and-authorization-architecture) | Accepted |
 | ADR-011 | [ADR-011: Financial Authority Model](/docs/architecture/decisions/adr-011-financial-authority-model) | Accepted |
 | ADR-012 | [ADR-012: Evolution Strategy](/docs/architecture/decisions/adr-012-evolution-strategy) | Accepted |
+| ADR-013 | [ADR-013: Geography Reference Data](/docs/architecture/decisions/adr-013-geography-reference-data) | Accepted |

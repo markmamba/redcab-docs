@@ -60,7 +60,7 @@ Four-way mapping table for all requirements.
 ### 1.3 CAT — Catalog & Inventory
 | Req ID | Source | Governs (rules / context) | Acceptance criterion (observable) |
 | --- | --- | --- | --- |
-| FR-CAT-001 | B-05 | CAT (Geography) | Admin can create/edit/deactivate Districts and Areas, each with EN + JA labels. |
+| FR-CAT-001 | B-05, ADR-013 | CAT (Geography) | Districts and Areas are seeded from official administrative codes; Admin can edit labels, reorder, and deactivate. |
 | FR-CAT-002 | B-05 | OPR-10, INV-11; CAT | Deactivating a District with active listings requires count-stating confirmation and sets them Unlisted, not deleted. |
 | FR-CAT-003 | B-01, B-02 | INV-8; CAT | Only Districts/Areas with ≥1 Published listing appear; empty areas are indicated. |
 | FR-CAT-004 | B-01–B-03 | CAT | Tourists discover services through District→Area. |
@@ -107,6 +107,7 @@ Four-way mapping table for all requirements.
 | FR-CAT-029 | C-09 | CON-4; CAT | Provider asset registration. |
 | FR-CAT-030 | architecture | INV-12, LC-12; CAT | Publish requires Stripe Connected Account. |
 | FR-CAT-031 | E-02 | CON-6; CAT | Per-vehicle booking consumes full slot capacity. |
+| FR-CAT-032 | ADR-013 | INV-8; CAT | Near-me ranks Areas with published listings by distance to city-hall centroid; no spatial DB extension. |
 | FR-BKG-009 | E-09 | LC-5; BKG | Confirmed→Completed only after service time has passed and is marked delivered. |
 | FR-BKG-010 | E-09, E-12 | CON-5, PAY-6; BKG | Tourist cancel of an eligible booking restores seats; refund derives from the snapshotted policy. |
 | FR-BKG-011 | E-12 | PAY-7, CON-5; BKG | Provider/Admin cancel restores seats and grants a 100% refund regardless of policy. |

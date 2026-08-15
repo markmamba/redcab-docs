@@ -35,7 +35,7 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **P0 (blockers):** AMB-021
 - **P1 (pre-ship):** AMB-006, AMB-008, AMB-009, AMB-010, AMB-013, AMB-014, AMB-022, AMB-024, AMB-025, AMB-026
 - **P2 (confirmation / later):** AMB-015 through AMB-019, AMB-027 through AMB-035
-- **RESOLVED (Decision Log):** AMB-001, AMB-002, AMB-003, AMB-004, AMB-005, AMB-007, AMB-011, AMB-012, AMB-020, AMB-023, AMB-032, AMB-033
+- **RESOLVED (Decision Log):** AMB-001, AMB-002, AMB-003, AMB-004, AMB-005, AMB-007, AMB-011, AMB-012, AMB-020, AMB-023, AMB-032, AMB-033, AMB-036
 
 ---
 
@@ -270,6 +270,17 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Owner:** Product Owner.
 - **Risk if unresolved:** Core navigation rework after build.
 
+### AMB-036 — Geography administrative model and spatial strategy
+- **Status:** **RESOLVED** — see Decision Log (2026-08-15).
+- **Sources:** geography design review (administrative vs tourism taxonomy; GeoJSON/PostGIS evaluation).
+- **Classification:** Business (Engineering).
+- **Question:** What do District/Area represent editorially? Use GeoJSON/PostGIS for boundaries, lookup, and map features?
+- **Decision:** District = prefecture or designated city; Area = municipality/ward. Seed from official codes + city-hall points. No PostGIS at Phase 1. Tourism tags are a future layer on Listings.
+- **Impact:** Shapes Catalog schema, seed pipeline, discovery IA, and map features.
+- **Affected contexts:** Catalog & Inventory (Geography, Search).
+- **Priority:** P0.
+- **Owner:** Product + Engineering.
+
 ### AMB-021 — Authentication method conflict
 - **Sources:** planning conflict (PRD email/password + lockout vs meeting-notes Google OAuth + captcha).
 - **Classification:** Business (Engineering).
@@ -473,3 +484,4 @@ Low-effort confirmations from the PRD Appendix already encoded as baseline rules
 | AMB-023 | Canonical vehicle taxonomy: **PRD set** — Alphard, HiAce, Sedan, Limousine (private car); 20/40/50-seat bands (charter bus). Stored on `provider_assets.vehicle_category`. | Business + Engineering | 2026-07-29 | `glossary.md`, `domain-models.md` |
 | AMB-032 | **Platform merchant-of-record** for card charges; **Provider seller-of-record** for underlying service (platform as agent). | Legal + Finance | 2026-07-29 | `payments-architecture.md`, `glossary.md` |
 | AMB-033 | **B2C prices tax-inclusive**; **corporate documents itemize 10% consumption tax** separately (`PAY-12`, `PAY-10`). | Finance + Legal | 2026-07-29 | [Business Rules](/docs/business-rules/invariants), `glossary.md` |
+| AMB-036 | Geography: administrative seed (codes + centroids); designated cities as Districts; no PostGIS Phase 1; tourism tags on Listings later | Product + Engineering | 2026-08-15 | [Geography](/docs/architecture/geography), [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data) |

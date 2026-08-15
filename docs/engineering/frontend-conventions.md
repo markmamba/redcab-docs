@@ -292,8 +292,15 @@ return (
 - `DateField` holds naive wall-clock values; RHF carries them untouched
 - Convert in exactly one place — the submit handler — via `DateTimeUtils.toApiString(value, { timezone })`
 - Edit forms: `DateTimeUtils.toFormValue(apiValue, { timezone })`
-- Use the **entity's** timezone (listing area, provider locale), never the browser default or hardcoded `'Asia/Tokyo'`
+- Use platform **Service Timezone** (JST, `OPR-11`) for slot windows and cancellation cutoffs. Geography centroids are for map display and near-me only — not per-Area timezones.
 - See [Backend Conventions — Date / time / timezone](/docs/engineering/backend-conventions#date--time--timezone-handling) for instant vs civil date rules
+
+### Geography and maps (Phase 1)
+
+- Render District/Area **pins** from API `latitude`/`longitude` — no client-side boundary loading.
+- Near-me: request browser geolocation; pass coordinates to near-me Areas API; do not compute haversine in the client for authoritative ranking.
+- Geography labels: render `name_en` or `name_ja` per language preference; disambiguate homonymous Areas with parent District in UI.
+- See [Geography](/docs/architecture/geography).
 
 ---
 
@@ -320,7 +327,7 @@ Use `prepareSearchParams` / `serializeUrlParams` from `app/utils/search-param-ut
 2. **Never mutate API response objects.** Pass-through data from serializers.
 3. **Checkout shows server-confirmed breakdown.** Submit booking with slot/listing/passenger selections; amounts come back from API.
 4. **Role-confined surfaces.** Tourist pages don't import provider auth HOCs. One segment per page.
-5. **EN/JA rendering.** Use stored language preference; geography labels may have `name_en` / `name_ja` from API.
+5. **EN/JA rendering.** Use stored language preference; geography labels use `name_en` / `name_ja` / `name_kana` from API; disambiguate homonymous Areas with parent District.
 6. **corporate documents.** PDF download links from API; no client-side PDF generation.
 7. **Stripe Elements (if used).** Payment UI embeds Stripe client SDK; charge amount still originates from server snapshot, not client input.
 

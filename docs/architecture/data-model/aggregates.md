@@ -22,7 +22,7 @@ Each context owns a small set of **aggregates** (consistency boundaries addresse
 - **Listing** (root) — a bookable service with type-specific attributes, photos, location, and a reference to its pricing policy (`INV-8`, `INV-10`, `LC-10`, `INV-12`).
 - **PricingPolicy** (root) — pricing configuration (mode, group tiers, duration, seasonal overrides, extra charges) and the Cancellation Policy; the basis for the single calculation authority (`PRC-1..8`).
 - **AvailabilitySlot** (root) — a bookable window on a specific Asset and the **owner of `available_seats`** (`INV-3`, `CON-3`, `CON-4`).
-- **District / Area** (Geography reference data) — admin-managed taxonomy with EN/JA labels (`INV-8`, `OPR-10`).
+- **District / Area** (Geography reference data) — seeded administrative taxonomy (codes + centroids); admin-curated EN/JA labels (`INV-8`, `OPR-10`, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)).
 
 ### 5.4 Booking & Checkout (core)
 - **CheckoutSession** (root) — pre-booking checkout unit holding frozen Price/Commission/Cancellation snapshots, Fulfillment Payload, seat hold, and PaymentIntent reference until payment succeeds or session expires (`BKG-9`, `PRC-8`).

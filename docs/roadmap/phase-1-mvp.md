@@ -56,7 +56,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 | Step | DBML file | Tables (minimum) | Then implement |
 | --- | --- | --- | --- |
 | 1a | `providers.dbml` (already designed) | `providers_profiles` + satellites | PRV registration, docs, Admin approve |
-| 1b | `catalog.dbml` (**new**) | districts, areas, listings, photos, provider_assets, availability_slots, pricing_policies (+ basic mode fields) | Geography → Assets → Listings → Availability → Pricing → discovery |
+| 1b | `catalog.dbml` (**new**) | districts, areas (+ codes, centroids, seed task), listings, photos, provider_assets, availability_slots, pricing_policies (+ basic mode fields) | Geography → Assets → Listings → Availability → Pricing → discovery |
 | 1c | `bookings.dbml` (**new**) | checkout_sessions, bookings (+ price/commission/cancellation snapshots, fulfillment payload), seat allocation | CheckoutSession → payment → Booking materialization |
 | 1d | `payments.dbml` (**new**) | commission_rate_settings, provider_connected_accounts, charges, payout_queue_entries, refunds | Stripe Connect + payout queue |
 | 1e | `redcab.dbml` | consolidate new tables into the index diagram | — |
@@ -98,7 +98,8 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 **red-cab-api**
 
-- [ ] Geography module: District / Area hierarchy (EN + JA labels)
+- [ ] Geography module: District / Area hierarchy seeded from official administrative codes; EN/JA/kana labels; city-hall centroids; admin curate/deactivate ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), `AMB-036`)
+- [ ] Geography seed task: idempotent upsert from 総務省 code CSV + government-office coordinates (~1,750 Areas)
 - [ ] Listings module: create, configure, publish (≥1 photo, `INV-10`; publish blocked without verified Stripe Connected Account — `INV-12`)
 - [ ] Provider Asset module: register vehicles/guides (`provider_assets`); slots bound to `asset_id` (`CON-4`)
 - [ ] Availability module: slots, seat counter, overlap prevention per asset; per-vehicle bookings consume 100% slot capacity (`CON-6`)
@@ -108,6 +109,8 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 **red-cab-web**
 
 - [ ] Tourist discovery — listing list and detail (District → Area navigation)
+- [ ] Near-me Area discovery (geolocation + haversine ranking, `INV-8` filter)
+- [ ] Map pins on listing/area surfaces (centroid-based; no boundary shading)
 - [ ] Provider asset management (register vehicles/guides before slot creation)
 - [ ] Server-rendered price on listing detail (no client-side price computation)
 - [ ] Provider listing management (create, configure, publish)

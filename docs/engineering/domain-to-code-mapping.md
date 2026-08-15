@@ -74,11 +74,14 @@ app/domains/catalog/
   listing.rb
   pricing_policy.rb
   availability_slot.rb
+  geography/          # seed task, near-me query
   listings/           # action classes
   pricing/
   availability/
   search/             # query-only managers
 ```
+
+`catalog.dbml` is authoritative for geography storage shape: `prefecture_code`, `municipality_code`, `name_kana`, `kind`, `latitude`, `longitude`. See [Geography](/docs/architecture/geography).
 
 ### Cross-context calls
 

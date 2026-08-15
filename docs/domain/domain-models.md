@@ -157,10 +157,14 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
   - *Transactionally consistent:* the seat counter and its decrement/restoration (decrement on CheckoutSession creation; per-vehicle bookings set `available_seats = 0` per `CON-6` — see §5 and CR-1).
 
 ### Entities
-- **District**, **Area** (Geography — identity-bearing reference data), **Photo**, **PricingTier**, **SeasonalOverride**, **ExtraCharge**, **CancellationPolicyTier**.
+- **District**, **Area** (Geography — identity-bearing reference data seeded from Japanese administrative codes), **Photo**, **PricingTier**, **SeasonalOverride**, **ExtraCharge**, **CancellationPolicyTier**.
+  - *District kinds:* `prefecture | designated_city` (`AMB-036`). Designated cities (Yokohama, Osaka, …) are Districts; their wards are Areas.
+  - *Attributes:* `slug`, `name_en` (bare romanized), `name_ja` (official with suffix), `name_kana` (Areas), `prefecture_code`, `municipality_code` (Areas; District when `designated_city`), `latitude`/`longitude` (city-hall centroid), `display_order`, `status`.
+  - *Label rule:* `name_en` bare ("Shinjuku"); `name_ja` with suffix ("新宿区"); ambiguity resolved by parent District at render.
+  - *Not stored:* boundary polygons, PostGIS geometry, GeoJSON.
 
 ### Value objects
-- **GeoArea** (district/area labels EN/JA), **Capacity**, **DateRange**, **TimeWindow**, **Money** (configured prices), **PriceBreakdown** (the computed result of `calculate_quote`), **AvailabilitySnapshot** (point-in-time view for consumers).
+- **GeoArea** (district/area labels EN/JA/kana + slug), **Capacity**, **DateRange**, **TimeWindow**, **Money** (configured prices), **PriceBreakdown** (the computed result of `calculate_quote`), **AvailabilitySnapshot** (point-in-time view for consumers).
 
 ### Domain events
 - `ListingPublished`, `ListingPaused`, `ListingUnlisted`, `SlotCapacityChanged`. Consumes `LicenseExpired/Renewed` (pause/restore), district-deactivation cascade (`OPR-10`), `RatingRecalculated` (display).

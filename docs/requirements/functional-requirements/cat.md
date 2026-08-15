@@ -7,7 +7,7 @@ description: Functional requirements for CAT context.
 
 ## TL;DR
 
-- Catalog FRs: geography, listings, photos, pricing modes, tiers, seasonal overrides, slots, search, publish gates.
+- Catalog FRs: geography (administrative seed, codes + centroids), listings, photos, pricing modes, tiers, seasonal overrides, slots, search, publish gates.
 - **Catalog** is the single pricing authority; tourists see only districts/areas with published listings.
 
 ## About this document
@@ -18,6 +18,7 @@ Functional requirements for **CAT — Catalog & Inventory**.
 | --- | --- |
 | All FR contexts | [Functional Requirements](/docs/requirements/functional-requirements) |
 | Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
+| Geography design | [Geography](/docs/architecture/geography) |
 | Pricing authority | [Business Rules](/docs/business-rules/invariants) (`PRC-`) |
 
 ---
@@ -26,8 +27,8 @@ Functional requirements for **CAT — Catalog & Inventory**.
 *(Includes Geography, Listings, Pricing, Availability, Search modules. Price is computed only via the Pricing authority, PRC-1.)*
 
 ### FR-CAT-001 — District/Area management
-The system **shall** allow Admin to create, edit, and deactivate Districts and Areas, each with English and Japanese labels.
-- Source: B-05. Status: Approved.
+The system **shall** provide Admin with Districts and Areas seeded from official Japanese administrative codes (全国地方公共団体コード), and **shall** allow Admin to edit labels, reorder, and deactivate seeded Districts and Areas. Each District and Area **shall** carry English and Japanese labels per `NFR-I18N-003`. Admin create of new Districts/Areas remains available for exceptional cases.
+- Source: B-05, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data). Governs: FR-CAT-003, NFR-I18N-003. Status: Approved.
 
 ### FR-CAT-002 — District deactivation cascade
 When Admin deactivates a District with active Listings, the system **shall** require confirmation stating the affected count and **shall** set those Listings to Unlisted without deleting them.
@@ -148,5 +149,9 @@ The system **shall not** publish a Listing unless the owning Provider has an act
 ### FR-CAT-031 — Per-vehicle slot exclusivity
 When a Tourist books a per-vehicle (flat-rate) listing against a slot, the system **shall** set that slot's remaining capacity to zero immediately, regardless of the vehicle's nominal seat capacity.
 - Source: E-02. Governs: CON-6. Status: Approved.
+
+### FR-CAT-032 — Near-me Area discovery
+The system **shall** allow Tourists to discover Areas ranked by distance from the user's geolocation, **shall** include only Areas with at least one Published Listing (`INV-8`), and **shall** use Area centroids (city-hall coordinates) for distance calculation without a spatial database extension.
+- Source: [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data). Governs: INV-8. Status: Approved.
 
 ---

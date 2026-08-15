@@ -69,8 +69,10 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 
 > Owns geography taxonomy, listings, pricing configuration + calculation authority, availability/seat inventory, and provider assets. Internal modules: **Geography**, **Listings**, **Pricing**, **Availability**, **Search**.
 
-- **District** — top-level geographic region with EN + JA labels; shown on homepage only if it has ≥1 published listing (`B-01`, `B-05`).
-- **Area** — a neighborhood within a District; shown only if it has ≥1 published listing (`B-02`).
+- **District** — top-level geographic navigation unit: a Japanese **prefecture** (都道府県) **or designated city** (政令指定都市 — `AMB-036`). Carries EN + JA labels, slug, optional centroid. Shown only if it has ≥1 published listing in any child Area (`B-01`, `B-05`, `INV-8`).
+- **Area** — second-level unit: a **municipality** (市町村) or **ward** (区) within a designated city. Each Listing is located in exactly one Area. Shown only if it has ≥1 published listing (`B-02`, `INV-8`). Seeded from official administrative codes (`ADR-013`).
+- **Municipality code** — 5-digit 全国地方公共団体コード (JIS X 0402); stable seed key for Areas.
+- **Tourism tag** — *(future)* curated discovery label (Ginza, Fuji Five Lakes) attached to Listings, not an Area.
 - **Listing (Service Listing)** — a bookable service published by a Provider, typed by Provider Type, with photos, pricing, location, and availability (`C-01`).
 - **Listing Status** — `Draft | Published | Paused/Unpublished | Unlisted`. Published = visible to tourists; Unlisted = hidden by Admin/geography action; historical bookings always preserved (`C-11`, `B-05`).
 - **Provider Asset (`provider_assets`)** — a first-class, Provider-owned physical resource: a specific vehicle or guide instance (`id`, `provider_id`, `license_plate_or_vin`, `capacity`, `vehicle_category`). Slots reference `asset_id`; overlap constraints are **per-asset** (`CON-4`). Canonical vehicle categories follow PRD taxonomy: Alphard, HiAce, Sedan, Limousine (private car); 20 / 40 / 50-seat bands (charter bus).

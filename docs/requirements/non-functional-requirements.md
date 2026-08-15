@@ -204,8 +204,8 @@ The system **shall** default the Tourist app to English and the Client Portal to
 - Source: G-03, G-04. Governs: OPR-9; relates FR-IAM-011. Status: Provisional (AMB-024).
 
 ### NFR-I18N-003 — Bilingual geography labels
-The system **shall** carry English and Japanese labels for every District and Area.
-- Source: B-05. Governs: relates FR-CAT-001. Status: Approved.
+The system **shall** carry English and Japanese labels for every District and Area. Japanese labels **shall** use official administrative forms with type suffix (e.g. 新宿区). English labels **shall** use bare romanized names without suffix (e.g. Shinjuku). Areas **shall** also store source kana for sort order and romanization audit.
+- Source: B-05, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data). Governs: FR-CAT-001. Status: Approved.
 
 ### NFR-I18N-004 — Supported filter languages
 The system **shall** allow filtering Listings by supported service language across the published supported-language set.

@@ -22,7 +22,7 @@ This section describes the conceptual associations **within** each owning contex
 - A **Listing** references exactly one **PricingPolicy** and owns its **Photo** entities (the first being the representative thumbnail; ≥1 required to publish, `INV-10`). Publish requires Provider Stripe Connected Account verified (`INV-12`).
 - A **PricingPolicy** owns its **PricingTier** (group-size band), **SeasonalOverride**, **ExtraCharge**, and **CancellationPolicyTier** entities (up to 4 cancellation tiers; up to 5 non-overlapping group tiers, `PRC-4`, `C-08`).
 - An **AvailabilitySlot** is bound to exactly one **Asset** (the specific vehicle or guide it consumes) and owns the `available_seats` counter; overlap constraints are **per-Asset** (`CON-4`).
-- A **District** contains zero or more **Area** entities; a Listing is located within an Area. A District/Area with zero Published Listings is not presented (`INV-8`).
+- A **District** (`prefecture` or `designated_city`) contains zero or more **Area** entities (municipality or ward). A **Listing** is located within exactly one Area. A District/Area with zero Published Listings is not presented (`INV-8`). Geography is seeded from official administrative codes; coordinates are city-hall centroids for map pins and near-me — not boundary polygons ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)).
 - `calculate_quote` produces a **PriceBreakdown** value (computed, not stored as a cross-context authoritative fact) from the Listing's PricingPolicy and the requested parameters (`PRC-1..6`).
 
 ```mermaid

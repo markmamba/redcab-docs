@@ -251,7 +251,9 @@ The dependency-root supporting context. **Owns** the authenticated marketplace *
 **Owns** Provider Status, Provider Type, license validity, and the support-trial window. Capabilities: provider registration by type and document upload, submit-for-review, and the Admin verification/approval/rejection/suspension transitions (approval as one transaction with trial start, `LC-9`). It exposes a small **Provider Status read contract** `{ provider_id, status, license_valid_until }` that Catalog conforms to (conformist read) and never replicates. It publishes the status/license/trial events (`ProviderApproved`, `LicenseExpired`, etc.) that drive Catalog cascades and Notifications. It never owns listings; it owns the *right to operate* that gates them (`INV-6`, `INV-7`, `LC-7..9`).
 
 ## Catalog
-**Owns** geography (District/Area), listings, pricing configuration, and availability/seat inventory. Capabilities split across its query surface and two especially load-bearing contracts:
+**Owns** geography (District/Area — administrative reference data seeded from official codes, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)), listings, pricing configuration, and availability/seat inventory. Capabilities split across its query surface and two especially load-bearing contracts:
+- **Geography queries:** District list, Area list under District, near-me Areas (geolocation params, `INV-8` filter, haversine on centroids).
+- **Geography admin commands:** curate labels, reorder, deactivate District/Area (official seed is baseline).
 - **Discovery and search queries** over published listings (location hierarchy, listing lists/detail, filters/sorts), exposing only what `INV-8` and `LC-10` permit to be visible.
 - **`calculate_quote(...)` → `PriceBreakdown`**: the single pricing authority (`PRC-1`), the only capability in the system that computes price.
 - **Availability queries** and the **guarded seat-reservation command** invoked co-transactionally by Booking (CR-1) — Catalog owns `available_seats`; the decrement is reachable only through this guarded command, never raw table access.
@@ -373,7 +375,7 @@ Failures of external rails (charge declined, payout/refund failure, webhook dela
 
 ## Open API Decisions
 
-Unresolved decisions that shape API contracts. Each is tracked in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions). **Resolved (Decision Log 2026-07-29):** capture at checkout (`AMB-001`); Separate Charges & Transfers (`AMB-002`); platform payout queue + entry states (`AMB-003`–`005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); District→Area discovery (`AMB-020`); MoR/seller-of-record (`AMB-032`); B2C tax-inclusive (`AMB-033`).
+Unresolved decisions that shape API contracts. Each is tracked in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions). **Resolved (Decision Log 2026-07-29):** capture at checkout (`AMB-001`); Separate Charges & Transfers (`AMB-002`); platform payout queue + entry states (`AMB-003`–`005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); District→Area discovery (`AMB-020`); MoR/seller-of-record (`AMB-032`); B2C tax-inclusive (`AMB-033`). **Resolved (2026-08-15):** geography administrative model (`AMB-036`, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)).
 
 ## Authentication & access surface
 - **`AMB-021` — authentication methods (P0).** Sets the shape of the authentication contract and registration surface (email/password, Google OAuth, captcha).

@@ -7,6 +7,7 @@ description: Bounded context documentation for Red Cab Marketplace.
 ### 2. Catalog & Inventory (core)
 - **Purpose:** Everything a Provider publishes and everything a Tourist discovers and prices: geography, listings, pricing configuration + the price-calculation authority, and availability/seat inventory.
 - **Internal modules:** **Geography**, **Listings**, **Pricing**, **Availability**, **Search**.
+- **Geography module:** admin-curated administrative taxonomy (prefecture or designated city → municipality/ward); seeded from official codes ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)); centroids for pins and near-me; no spatial extension. See [Geography](/docs/architecture/geography).
 - **Aggregates owned:** `District`/`Area` (Geography); `ProviderAsset` (vehicle/guide registry — `CON-4`, `AMB-023`); `Listing` (Listings, incl. photos, type-specific fields, status); `PricingPolicy` (Pricing — mode, tiers, duration, seasonal overrides, extra charges, cancellation policy); `AvailabilitySlot` (Availability — owns `available_seats`, bound to `asset_id`, per-Asset overlap); search is a read/query module over the above.
 - **Transactional boundary:** slot creation + overlap check is one transaction (`CON-4`); listing publish (incl. ≥1 photo, `INV-10`) is one transaction; pricing config edits are transactional within `PricingPolicy`.
 - **Upstream deps:** Onboarding (Provider Status); Payments (payout capability read for publish gate); Identity (principal).
