@@ -266,19 +266,19 @@ This is a pure internal refactor. Any observable difference means it is wrong.
 
 **`test/domains/identities/accounts/provision_service_test.rb`** (renamed):
 
-- [ ] `credential_kind: :password` saves the account **and** creates one `EmailVerificationToken` with a SHA256 digest — never the raw token
-- [ ] `credential_kind: :oauth` saves the account and creates **no** token row
-- [ ] `credential_kind: :password` with a nil `raw_verification_token` raises rather than persisting a half-provisioned account
+- [x] `credential_kind: :password` saves the account **and** creates one `EmailVerificationToken` with a SHA256 digest — never the raw token
+- [x] `credential_kind: :oauth` saves the account and creates **no** token row
+- [x] `credential_kind: :password` with a nil `raw_verification_token` raises rather than persisting a half-provisioned account
 
 **New: `test/domains/tourists/profiles/create_service_test.rb`**
 
-- [ ] Creates an active profile with a uuid, linked to the account
-- [ ] Two calls for the same account violate the unique index — documents that the caller owns idempotency
+- [x] Creates an active profile with a uuid, linked to the account
+- [x] Two calls for the same account violate the unique index — documents that the caller owns idempotency
 
 **`test/domains/identities/oauth/google/callback_manager_test.rb`**
 
-- [ ] Every existing case passes **unmodified**. This is the acceptance criterion for the whole PR
-- [ ] **New:** a new OAuth account creates exactly zero `identities_email_verification_tokens` rows — the behaviour that would silently regress if `credential_kind` were threaded through wrong
+- [x] Every existing case passes **unmodified**. This is the acceptance criterion for the whole PR
+- [x] **New:** a new OAuth account creates exactly zero `identities_email_verification_tokens` rows — the behaviour that would silently regress if `credential_kind` were threaded through wrong
 
 **Actor signup manager tests** — all three pass unmodified.
 
@@ -296,9 +296,9 @@ The one failure mode worth naming: passing the wrong `credential_kind` from a ca
 
 ## 9. Reviewer checklist
 
-- [ ] `git grep 'Tourists::Profile.create!'` returns only `tourists/profiles/create_service.rb`
-- [ ] `git grep 'EmailVerificationToken.create!'` returns only `provision_service.rb`
-- [ ] `git grep 'An account with this email address already exists'` returns only the one constant definition
-- [ ] Every `ProvisionService.execute` call site passes an explicit `credential_kind` — no default
-- [ ] All existing OAuth and signup tests pass with **no edits**; if any needed changing, the refactor changed behaviour
-- [ ] The rename decision (§ 3) is recorded in the PR description either way
+- [x] `git grep 'Tourists::Profile.create!'` returns only `tourists/profiles/create_service.rb`
+- [x] `git grep 'EmailVerificationToken.create!'` returns only `provision_service.rb`
+- [x] `git grep 'An account with this email address already exists'` returns only the one constant definition
+- [x] Every `ProvisionService.execute` call site passes an explicit `credential_kind` — no default
+- [x] All existing OAuth and signup tests pass with **no edits**; if any needed changing, the refactor changed behaviour
+- [x] The rename decision (§ 3) is recorded in the PR description either way
