@@ -238,13 +238,13 @@ This is technically a breaking change to a response body. It is safe because the
 
 ## 7. Tests
 
-- [ ] **New:** `GET /team/identities/admins/current` returns the admin payload for an authenticated admin
-- [ ] **New:** the same path returns 401 without a session, and 401 with a *user* session (namespace isolation — assert an `rc_access` cookie cannot reach a team endpoint)
-- [ ] Existing `GET …/sessions/current` cases still pass unchanged
-- [ ] **New:** admin login succeeds with **flat** params (it already works; this locks it in before PR-08 removes the nested branch)
-- [ ] Existing nested-params admin login test still passes
-- [ ] **New:** duplicate-email signup on corporate and providers returns `messages.email` as an **array** — one test per portal
-- [ ] **New:** a failed login's error payload contains no `password` key. Assert on the serialized response body, not on the manager's internals
+- [x] **New:** `GET /team/identities/admins/current` returns the admin payload for an authenticated admin
+- [x] **New:** the same path returns 401 without a session, and 401 with a *user* session (namespace isolation — assert an `rc_access` cookie cannot reach a team endpoint)
+- [x] Existing `GET …/sessions/current` cases still pass unchanged
+- [x] **New:** admin login succeeds with **flat** params (it already works; this locks it in before PR-08 removes the nested branch)
+- [x] Existing nested-params admin login test still passes
+- [x] **New:** duplicate-email signup on corporate and providers returns `messages.email` as an **array** — one test per portal
+- [x] **New:** a failed login's error payload contains no `password` key. Assert on the serialized response body, not on the manager's internals
 
 That last test is the one worth writing carefully. It is the only thing standing between a refactor and plaintext passwords in an error log.
 
@@ -267,8 +267,8 @@ The one real risk is route shadowing: if `get 'current'` lands inside or after t
 
 ## 10. Reviewer checklist
 
-- [ ] `bin/rails routes | grep admins` output is in the PR description and shows both `current` paths resolving to different controllers
-- [ ] The nested-`session` branch is **still present** — removing it here breaks team login until the web app deploys
-- [ ] No error payload anywhere in IAM contains a password field; verified by an assertion on a response body
-- [ ] All three signup managers reference one shared duplicate-email constant
-- [ ] `teamApiClient`'s refresh path (`PATCH …/sessions/current`) is untouched
+- [x] `bin/rails routes | grep admins` output is in the PR description and shows both `current` paths resolving to different controllers
+- [x] The nested-`session` branch is **still present** — removing it here breaks team login until the web app deploys
+- [x] No error payload anywhere in IAM contains a password field; verified by an assertion on a response body
+- [x] All three signup managers reference one shared duplicate-email constant
+- [x] `teamApiClient`'s refresh path (`PATCH …/sessions/current`) is untouched
