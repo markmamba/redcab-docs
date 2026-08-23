@@ -60,7 +60,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
   - `COMPLETED → PAYOUT_QUEUED`, `COMPLETED → REFUNDED`
 - **LC-3** `CANCELLED` and `REFUNDED` are terminal: no transition out of them is permitted.
 - **LC-4** A Booking MUST NOT move backward (e.g. `COMPLETED → PENDING`/`CONFIRMED` is forbidden).
-- **LC-5** `CONFIRMED → COMPLETED` requires that the service end time (JST) has passed AND either the Provider explicitly marks the service delivered OR 24 hours have elapsed since service end time without cancellation (`OPR-12`).
+- **LC-5** `CONFIRMED → COMPLETED` requires that the service end time has passed in the Booking's snapshotted **Service Timezone** AND either the Provider explicitly marks the service delivered OR 24 hours have elapsed since service end time without cancellation (`OPR-12`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
 - **LC-6** `COMPLETED → PAYOUT_QUEUED` creates a **Payout Queue Entry** carrying the pre-frozen **Net Payout Amount**; provider transfer is deferred until queue processing (`PAY-13`, `PAY-14`).
 
 ### Provider Status (`A-05`, `A-06`)
@@ -145,8 +145,8 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **OPR-8** [Notifications] Booking confirmation notifications to Tourist and Provider MUST be dispatched within 60 seconds of the triggering event. (`G-01`, `G-02`)
 - **OPR-9** [Notifications] Notifications MUST be rendered in the recipient's stored **Language Preference** (Tourist default EN; Provider/Client Portal default JA). (`G-03`, `G-04`)
 - **OPR-10** [Catalog] Deactivating a District MUST set all its Listings to `Unlisted` (not deleted), after an explicit Admin confirmation that states the affected count. (`B-05`)
-- **OPR-11** [Catalog/Booking] All service windows, cancellation-tier cutoffs, and completion timers MUST be evaluated in **Asia/Tokyo (JST)**; persisted timestamps MUST use UTC (`TIMESTAMPTZ`).
-- **OPR-12** [Booking] A `CONFIRMED` Booking MUST auto-transition to `COMPLETED` 24 hours after the Slot's scheduled **end time** (JST) if the Provider has not marked it delivered and the Booking has not been cancelled.
+- **OPR-11** [Catalog/Booking] All service windows, cancellation-tier cutoffs, and completion timers MUST be evaluated in the **Service Timezone** — the Listing's Area timezone for catalog operations; the snapshotted `service_timezone` on CheckoutSession/Booking for in-flight and historical orders (`ADR-014`). Persisted timestamps MUST use UTC (`TIMESTAMPTZ`). Domain code MUST NOT hardcode an IANA zone or numeric offset.
+- **OPR-12** [Booking] A `CONFIRMED` Booking MUST auto-transition to `COMPLETED` 24 hours after the Slot's scheduled **end time** in the Booking's snapshotted **Service Timezone** if the Provider has not marked it delivered and the Booking has not been cancelled.
 
 ---
 

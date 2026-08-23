@@ -65,7 +65,7 @@ For B2C card checkout, the system **shall** materialize the Booking directly int
 - Source: E-09. Governs: BKG-10, LC-2. Status: Approved (Decision Log `AMB-011`).
 
 ### FR-BKG-009 — Completion
-The system **shall** transition a confirmed Booking to completed when the Provider marks the service delivered **or** when 24 hours have elapsed after the service end time without provider confirmation (operational timezone Asia/Tokyo).
+The system **shall** transition a confirmed Booking to completed when the Provider marks the service delivered **or** when 24 hours have elapsed after the service end time without provider confirmation (evaluated in the Booking's snapshotted **Service Timezone**, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
 - Source: E-09. Governs: LC-5, OPR-11, OPR-12. Status: Approved.
 
 ### FR-BKG-018 — Provider mark delivered

@@ -8,7 +8,7 @@ description: Conceptual data model for Red Cab Marketplace.
 
 - Conceptual picture of **what data exists, who owns it, and how it relates** — database-neutral, no tables or SQL.
 - One owner per concept; cross-context links are **identity references or snapshots**, never shared mutable state.
-- Canonical snapshots (price, commission, cancellation policy) are frozen on CheckoutSession and copied to Booking.
+- Canonical snapshots (price, commission, cancellation policy, service timezone) are frozen on CheckoutSession and copied to Booking.
 - The only co-transactional cross-context operation is checkout + seat reservation (`CR-1`).
 
 ## About this document
@@ -32,7 +32,7 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 - Conceptual picture of **what data exists, who owns it, and how it relates** — database-neutral, no tables or SQL.
 - One owner per concept; cross-context links are **identity references or snapshots**, never shared mutable state.
-- Canonical snapshots (price, commission, cancellation policy) are frozen on CheckoutSession and copied to Booking.
+- Canonical snapshots (price, commission, cancellation policy, service timezone) are frozen on CheckoutSession and copied to Booking.
 - The only co-transactional cross-context operation is checkout + seat reservation (`CR-1`).
 
 ## About this document
@@ -56,7 +56,7 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 - Conceptual picture of **what data exists, who owns it, and how it relates** — database-neutral, no tables or SQL.
 - One owner per concept; cross-context links are **identity references or snapshots**, never shared mutable state.
-- Canonical snapshots (price, commission, cancellation policy) are frozen on CheckoutSession and copied to Booking.
+- Canonical snapshots (price, commission, cancellation policy, service timezone) are frozen on CheckoutSession and copied to Booking.
 - The only co-transactional cross-context operation is checkout + seat reservation (`CR-1`).
 
 ## About this document
@@ -80,7 +80,7 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 - Conceptual picture of **what data exists, who owns it, and how it relates** — database-neutral, no tables or SQL.
 - One owner per concept; cross-context links are **identity references or snapshots**, never shared mutable state.
-- Canonical snapshots (price, commission, cancellation policy) are frozen on CheckoutSession and copied to Booking.
+- Canonical snapshots (price, commission, cancellation policy, service timezone) are frozen on CheckoutSession and copied to Booking.
 - The only co-transactional cross-context operation is checkout + seat reservation (`CR-1`).
 
 ## About this document
@@ -104,7 +104,7 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 - Conceptual picture of **what data exists, who owns it, and how it relates** — database-neutral, no tables or SQL.
 - One owner per concept; cross-context links are **identity references or snapshots**, never shared mutable state.
-- Canonical snapshots (price, commission, cancellation policy) are frozen on CheckoutSession and copied to Booking.
+- Canonical snapshots (price, commission, cancellation policy, service timezone) are frozen on CheckoutSession and copied to Booking.
 - The only co-transactional cross-context operation is checkout + seat reservation (`CR-1`).
 
 ## About this document
@@ -128,7 +128,7 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 - Conceptual picture of **what data exists, who owns it, and how it relates** — database-neutral, no tables or SQL.
 - One owner per concept; cross-context links are **identity references or snapshots**, never shared mutable state.
-- Canonical snapshots (price, commission, cancellation policy) are frozen on CheckoutSession and copied to Booking.
+- Canonical snapshots (price, commission, cancellation policy, service timezone) are frozen on CheckoutSession and copied to Booking.
 - The only co-transactional cross-context operation is checkout + seat reservation (`CR-1`).
 
 ## About this document
@@ -152,7 +152,7 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 - Conceptual picture of **what data exists, who owns it, and how it relates** — database-neutral, no tables or SQL.
 - One owner per concept; cross-context links are **identity references or snapshots**, never shared mutable state.
-- Canonical snapshots (price, commission, cancellation policy) are frozen on CheckoutSession and copied to Booking.
+- Canonical snapshots (price, commission, cancellation policy, service timezone) are frozen on CheckoutSession and copied to Booking.
 - The only co-transactional cross-context operation is checkout + seat reservation (`CR-1`).
 
 ## About this document

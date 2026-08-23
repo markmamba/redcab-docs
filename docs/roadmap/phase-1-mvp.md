@@ -98,7 +98,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 **red-cab-api**
 
-- [ ] Geography module: District / Area hierarchy seeded from official administrative codes; EN/JA/kana labels; city-hall centroids; admin curate/deactivate ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), `AMB-036`)
+- [ ] Geography module: District / Area hierarchy seeded from official administrative codes; EN/JA/kana labels; city-hall centroids; **Area `timezone`** (`Asia/Tokyo` for Japan seed); admin curate/deactivate ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), `AMB-036`)
 - [ ] Geography seed task: idempotent upsert from 総務省 code CSV + government-office coordinates (~1,750 Areas)
 - [ ] Listings module: create, configure, publish (≥1 photo, `INV-10`; publish blocked without verified Stripe Connected Account — `INV-12`)
 - [ ] Provider Asset module: register vehicles/guides (`provider_assets`); slots bound to `asset_id` (`CON-4`)
@@ -124,7 +124,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 - [ ] On payment success: materialize Booking from CheckoutSession snapshot → **`CONFIRMED`** (B2C happy path skips `PENDING` — `BKG-10`)
 - [ ] Booking references `tourist_id` → `tourists_profiles`, `provider_id` → `providers_profiles`, plus listing/slot ids
 - [ ] Core state machine: **`CONFIRMED → COMPLETED → PAYOUT_QUEUED`** (B2C happy path; full cancellation/refund paths in Phase 2)
-- [ ] Provider **Mark Delivered** action; system auto-completes 24h after service end if unconfirmed (`LC-5`, `OPR-11`, `OPR-12`; operational timezone `Asia/Tokyo`)
+- [ ] Provider **Mark Delivered** action; system auto-completes 24h after service end if unconfirmed (`LC-5`, `OPR-11`, `OPR-12`; snapshotted **Service Timezone**, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model))
 - [ ] Immutable Price, Commission, and Cancellation Policy snapshots copied from CheckoutSession (`INV-1`)
 - [ ] Tourist booking list and detail API
 

@@ -42,7 +42,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Platform Admin** — internal Red Cab staff with full override access. Authenticates via a **separate Admin principal** (`Identities::Admin` / `admin_users`); Admin is **not** a value on marketplace `Account.role`.
 - **Platform** — Red Cab itself, the technology intermediary that earns commission.
 - **Money / JPY minor units** — all monetary values are integers in Japanese Yen (JPY has no decimal subunit in practice; stored as whole yen). No floats for money. Commission rounding uses `FLOOR(gross × rate)`; `net = gross − commission` (`PAY-11`).
-- **Service Timezone** — fixed platform-wide operational timezone: `Asia/Tokyo` (JST). Slot windows, cancellation-tier cutoffs, and completion timers are evaluated in JST; persisted timestamps use `TIMESTAMPTZ` (UTC storage).
+- **Service Timezone** — the IANA timezone of the **Area** where a Listing is located (`catalog_areas.timezone`, e.g. `Asia/Tokyo`). Slot windows, cancellation-tier cutoffs, and completion timers are evaluated in this zone; **CheckoutSession / Booking** snapshoot `service_timezone` at session creation so historical orders are immune to later Area edits ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)). Persisted instants use `TIMESTAMPTZ` (UTC storage). Phase 1 Japan seeds all Areas as `Asia/Tokyo`.
 - **Snapshot** — an immutable copy of a value (price, commission rate, cancellation policy, fulfillment payload) frozen at a defined instant (CheckoutSession creation) so later changes never alter an in-flight or historical record. See [Business Rules](/docs/business-rules/invariants).
 - **Domain Event** — a past-tense, in-process notification (e.g. `ProviderApproved`, `BookingCompleted`) that decouples contexts; consumed by Notifications and cross-context cascades.
 - **Bounded Context** — a logical module boundary with its own ubiquitous language; in this project a namespaced module inside one modular-monolith Rails app.
@@ -70,7 +70,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 > Owns geography taxonomy, listings, pricing configuration + calculation authority, availability/seat inventory, and provider assets. Internal modules: **Geography**, **Listings**, **Pricing**, **Availability**, **Search**.
 
 - **District** — top-level geographic navigation unit: a Japanese **prefecture** (都道府県) **or designated city** (政令指定都市 — `AMB-036`). Carries EN + JA labels, slug, optional centroid. Shown only if it has ≥1 published listing in any child Area (`B-01`, `B-05`, `INV-8`).
-- **Area** — second-level unit: a **municipality** (市町村) or **ward** (区) within a designated city. Each Listing is located in exactly one Area. Shown only if it has ≥1 published listing (`B-02`, `INV-8`). Seeded from official administrative codes (`ADR-013`).
+- **Area** — second-level unit: a **municipality** (市町村) or **ward** (区) within a designated city. Each Listing is located in exactly one Area. Carries a **Service Timezone** (IANA string). Shown only if it has ≥1 published listing (`B-02`, `INV-8`). Seeded from official administrative codes (`ADR-013`, `ADR-014`).
 - **Municipality code** — 5-digit 全国地方公共団体コード (JIS X 0402); stable seed key for Areas.
 - **Tourism tag** — *(future)* curated discovery label (Ginza, Fuji Five Lakes) attached to Listings, not an Area.
 - **Listing (Service Listing)** — a bookable service published by a Provider, typed by Provider Type, with photos, pricing, location, and availability (`C-01`).
@@ -86,7 +86,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Cancellation Policy** — up to 4 tiers of `(hours before service, refund %)`; Platform Default applies if none set; immutable for confirmed bookings (`C-08`).
 - **Pricing (module)** — the single authority that computes a **Price Breakdown** via `calculate_quote(listing, params, at:)`. No other context computes price.
 - **Price Breakdown / Quote** — computed result: base price, tier/duration/seasonal adjustments, extra charges, total (tax-inclusive for B2C). Distinct from a corporate **Quotation**.
-- **Availability Slot (Slot)** — a bookable window: date, start time, end time, max capacity, bound to a specific Provider Asset (`C-09`). Times interpreted in Service Timezone (JST).
+- **Availability Slot (Slot)** — a bookable window: date, start time, end time, max capacity, bound to a specific Provider Asset (`C-09`). Times authored and displayed in the Listing's **Service Timezone** (from its Area).
 - **Seat Counter / available_seats** — remaining capacity on a slot; owned here, decremented transactionally during CheckoutSession seat hold (`E-11`).
 - **Fully Booked** — slot with `available_seats = 0`; shown but not bookable (`B-03`, `E-11`).
 - **Search / Filter / Sort** — discovery over published listings by date, type, language, group size, price; sorts: Recommended / Price / Rating / Reviews / Newest (`D-01..D-05`). Primary navigation: **District → Area** hierarchy; service type is a filter (`D-02`).

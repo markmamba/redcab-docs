@@ -24,6 +24,6 @@ Some data is **mutable lifecycle state** owned by a single aggregate and changed
 
 Rules for lifecycle-owned data:
 
-- **Each lifecycle fact records the instant it occurred** (e.g. `completed_at`); the context that owns the transition owns its timestamp ([../domain/domain-models.md](/docs/domain/domain-models) §2). Operational service times use fixed timezone **`Asia/Tokyo` (JST)**; persistence stores instants as UTC (`TIMESTAMPTZ`). Wall-clock auto-complete runs 24h after service end in JST (`OPR-12`).
+- **Each lifecycle fact records the instant it occurred** (e.g. `completed_at`); the context that owns the transition owns its timestamp ([../domain/domain-models.md](/docs/domain/domain-models) §2). Operational wall-clock rules (auto-complete, cancellation cutoffs) use the Booking's snapshotted **Service Timezone**; catalog authoring uses the Listing's Area timezone ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)). Persistence stores instants as UTC (`TIMESTAMPTZ`). Wall-clock auto-complete runs 24h after service end in the snapshotted service timezone (`OPR-12`).
 - **A committed transition is never rolled back by a failed downstream reaction**; the reaction is retried independently and idempotently.
 - **Mutable lifecycle state is distinct from immutable facts.** Snapshots and completed movements never change; only the lifecycle position advances along permitted transitions.

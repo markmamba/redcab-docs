@@ -195,7 +195,7 @@ Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` d
 ## Transitions
 
 ### T1: CONFIRMED → COMPLETED
-- **Trigger type:** `sync` explicit "Mark Delivered" (actor: Provider) **OR** `timeout` 24 hours after Slot scheduled **end time** (JST) (`OPR-12`).
+- **Trigger type:** `sync` explicit "Mark Delivered" (actor: Provider) **OR** `timeout` 24 hours after Slot scheduled **end time** in the Booking's snapshotted **Service Timezone** (`OPR-12`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
 - **Guards:** current state `CONFIRMED`; service end time has passed (`LC-5`, `OPR-11`).
 - **Sync side effects:** set state `COMPLETED`; record `completed_at`.
 - **Async reactions (`BookingCompleted`):**
@@ -246,7 +246,7 @@ Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` d
 - **Refund integrity:** all refund math derives from snapshotted values (`INV-1`, `PAY-6`).
 
 ## Timeout behavior
-- **Auto-completion timer** (T1): `CONFIRMED → COMPLETED` fires 24 hours after the Slot's scheduled **end time** (JST) if the Provider has not marked delivered (`OPR-12`).
+- **Auto-completion timer** (T1): `CONFIRMED → COMPLETED` fires 24 hours after the Slot's scheduled **end time** in the Booking's snapshotted **Service Timezone** if the Provider has not marked delivered (`OPR-12`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
 - **Review window:** Review Link expires 14 days after `COMPLETED` (`OPR-7`).
 - **Corporate payment deadline:** Bank Transfer deadlines raise overdue alerts (`OPR-5`) — see `AMB-027`.
 

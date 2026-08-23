@@ -19,6 +19,7 @@ Engineering overview — how planning docs connect to implementation repos.
 | Code mapping | [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping) |
 | API conventions | [Backend Conventions](/docs/engineering/backend-conventions) |
 | Web conventions | [Frontend Conventions](/docs/engineering/frontend-conventions) |
+| Date / time / timezone | [Date / Time / Timezone](/docs/engineering/datetime-and-timezones) |
 | Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
 | Domain | [Domain Models](/docs/domain/domain-models) |
 
@@ -46,6 +47,7 @@ Domain rules from Red Cab planning **always win** over generic patterns when the
 1. [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping) — actors, bounded contexts → folders, route namespaces
 2. [Backend Conventions](/docs/engineering/backend-conventions) — API structure, request lifecycle, DBML/migrations
 3. [Frontend Conventions](/docs/engineering/frontend-conventions) — routes, API clients, forms, surfaces
+4. [Date / Time / Timezone](/docs/engineering/datetime-and-timezones) — instants, civil dates, service timezone resolution
 
 ### With domain context (already in planning set)
 
@@ -106,4 +108,5 @@ The files in this `engineering/` folder are the **planning-time source** for tho
 | Domain-to-Code Mapping | ✅ Complete |
 | Backend Conventions | ✅ Aligned (baseline + Red Cab rules) |
 | Frontend Conventions | ✅ Aligned (baseline + Red Cab rules) |
+| Date / Time / Timezone | ✅ Complete ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)) |
 

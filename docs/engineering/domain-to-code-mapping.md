@@ -81,7 +81,9 @@ app/domains/catalog/
   search/             # query-only managers
 ```
 
-`catalog.dbml` is authoritative for geography storage shape: `prefecture_code`, `municipality_code`, `name_kana`, `kind`, `latitude`, `longitude`. See [Geography](/docs/architecture/geography).
+`catalog.dbml` is authoritative for geography storage shape: `prefecture_code`, `municipality_code`, `name_kana`, `kind`, `latitude`, `longitude`, `timezone` (on Areas). See [Geography](/docs/architecture/geography) and [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model).
+
+Shared datetime utilities: `app/shared/date_time_utils.rb` — see [Date / Time / Timezone](/docs/engineering/datetime-and-timezones).
 
 ### Cross-context calls
 

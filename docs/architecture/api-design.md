@@ -375,7 +375,7 @@ Failures of external rails (charge declined, payout/refund failure, webhook dela
 
 ## Open API Decisions
 
-Unresolved decisions that shape API contracts. Each is tracked in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions). **Resolved (Decision Log 2026-07-29):** capture at checkout (`AMB-001`); Separate Charges & Transfers (`AMB-002`); platform payout queue + entry states (`AMB-003`–`005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); District→Area discovery (`AMB-020`); MoR/seller-of-record (`AMB-032`); B2C tax-inclusive (`AMB-033`). **Resolved (2026-08-15):** geography administrative model (`AMB-036`, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)).
+Unresolved decisions that shape API contracts. Each is tracked in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions). **Resolved (Decision Log 2026-07-29):** capture at checkout (`AMB-001`); Separate Charges & Transfers (`AMB-002`); platform payout queue + entry states (`AMB-003`–`005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); District→Area discovery (`AMB-020`); MoR/seller-of-record (`AMB-032`); B2C tax-inclusive (`AMB-033`). **Resolved (2026-08-15):** geography administrative model (`AMB-036`, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)). **Resolved (2026-08-23):** area-based service timezone with booking snapshot ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
 
 ## Authentication & access surface
 - **`AMB-021` — authentication methods (P0).** Sets the shape of the authentication contract and registration surface (email/password, Google OAuth, captcha).

@@ -25,7 +25,7 @@ Each context owns a small set of **aggregates** (consistency boundaries addresse
 - **District / Area** (Geography reference data) — seeded administrative taxonomy (codes + centroids); admin-curated EN/JA labels (`INV-8`, `OPR-10`, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)).
 
 ### 5.4 Booking & Checkout (core)
-- **CheckoutSession** (root) — pre-booking checkout unit holding frozen Price/Commission/Cancellation snapshots, Fulfillment Payload, seat hold, and PaymentIntent reference until payment succeeds or session expires (`BKG-9`, `PRC-8`).
+- **CheckoutSession** (root) — pre-booking checkout unit holding frozen Price/Commission/Cancellation snapshots, **Service Timezone** snapshot, Fulfillment Payload, seat hold, and PaymentIntent reference until payment succeeds or session expires (`BKG-9`, `PRC-8`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
 - **Booking** (root) — the central order aggregate materialized from a successful CheckoutSession, carrying copied immutable snapshots, Fulfillment Payload, and lifecycle state (`INV-1..4`, `LC-1..6`, `BKG-1..11`). B2C card path enters at `CONFIRMED` (`BKG-10`).
 - **BundleBooking** (root) — links two independent Bookings (car + guide) as one purchase, each with independent commission (`BKG-3`).
 - **PassengerManifest** (root, keyed by `booking_id`) — group passenger roster for a confirmed group Booking (`BKG-6`).

@@ -100,7 +100,7 @@ Four-way mapping table for all requirements.
 | FR-BKG-006 | E-02, E-11 | CON-2; BKG | Concurrent last-seat attempts allow only enough to reach zero; the rest are rejected fully booked. |
 | FR-BKG-007 | E-09 | LC-1..6; BKG | Only permitted transitions occur; no terminal-exit or backward transitions. |
 | FR-BKG-008 | E-09 | BKG-10, LC-2; BKG | B2C: materialize CONFIRMED on payment; notify Tourist + Provider. |
-| FR-BKG-009 | E-09 | LC-5, OPR-11, OPR-12; BKG | Mark Delivered or auto-complete 24h post service end (JST). |
+| FR-BKG-009 | E-09 | LC-5, OPR-11, OPR-12; BKG | Mark Delivered or auto-complete 24h post service end (snapshotted Service Timezone). |
 | FR-BKG-016 | E-02 | BKG-9, CON-1; BKG | CheckoutSession with snapshots + seat hold + PaymentIntent. |
 | FR-BKG-017 | E-02 | BKG-11; BKG | Fulfillment payload fields at checkout. |
 | FR-BKG-018 | E-09 | OPR-11; BKG | Provider Mark Delivered action. |

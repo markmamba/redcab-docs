@@ -309,14 +309,18 @@ Records are not hard-deleted. Soft delete uses `status :archived` — no `is_del
 
 ## Date / time / timezone handling
 
-Ask: **in whose timezone is this?**
+**Source of truth:** [Date / Time / Timezone](/docs/engineering/datetime-and-timezones) and [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model).
+
+Ask: **did the system create this time, or did a person pick it?**
 
 | Kind | When | DB column | Wire format | Parse / format |
 | --- | --- | --- | --- | --- |
-| **Instant** | A moment in time (booking start, payment captured) | `timestamptz` | ISO-8601 with offset | `Time.zone.parse` — never `Date.parse` |
-| **Civil date** | Same calendar day everywhere (date of birth, travel date label) | `date` | `YYYY-MM-DD` | Date-only, no timezone conversion |
+| **Instant** | System-created (`created_at`, `captured_at`) | `timestamptz` | ISO-8601 with offset (responses only) | `Time.current` on write; `Time.zone.parse` for external webhooks only |
+| **Person-picked civil date** | User picks a calendar day (seasonal range, license date) | `timestamptz` anchored, or `date` if zone-free | `YYYY-MM-DD` | `DateTimeUtils.parse_civil_date(date_string:, timezone:)` with listing Area or booking snapshot timezone |
+| **Person-picked local datetime** | User picks slot start/end | `timestamptz` | Naive `YYYY-MM-DDTHH:mm` per endpoint contract | Anchor in listing Area timezone on write |
+| **Zone-free civil date** | Same calendar day everywhere (rare) | `date` | `YYYY-MM-DD` | Date-only, no conversion |
 
-Red Cab operates in Japan — store and display using the entity's timezone (listing area, provider locale), not hardcoded offsets. Frontend converts in one place per form submit (see [Frontend Conventions](/docs/engineering/frontend-conventions#date-and-time)).
+**Service timezone** resolves from `listing.area.timezone` (live catalog) or `booking.service_timezone` (snapshotted). Never hardcode `Asia/Tokyo` in domain code. App clock is UTC. See [Frontend Conventions — Date and time](/docs/engineering/frontend-conventions#date-and-time).
 
 ---
 

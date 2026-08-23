@@ -15,6 +15,7 @@ The canonical snapshots are captured by **CheckoutSession at session creation** 
 | **Price Snapshot** | the computed `PriceBreakdown` (base, tier/duration/seasonal adjustments, extra charges, total) | Catalog `calculate_quote` (`PRC-1`) | CheckoutSession creation (`BKG-9`, Decision Log `AMB-007`) | `INV-1`, `PRC-8` |
 | **Commission Snapshot** | `{ gross_amount, commission_rate_snapshot, commission_amount, net_payout_amount }` | gross from Price Snapshot; rate from CommissionRateSetting (PAY) | CheckoutSession creation | `INV-1`, `INV-2`, `PAY-2`, `PAY-4`, `PAY-11`, `FIN-1..2` |
 | **Cancellation Policy Snapshot** | the captured cancellation tiers `(hours-before, refund %)` in effect | Listing's PricingPolicy (`PRC-7`) | CheckoutSession creation | `INV-1`, `BKG-8`, `PAY-6` |
+| **Service Timezone** | IANA zone string (e.g. `Asia/Tokyo`) | Listing's Area (`catalog_areas.timezone`) | CheckoutSession creation | `OPR-11`, `OPR-12`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model) |
 
 Structural rules these snapshots obey:
 
@@ -29,10 +30,12 @@ erDiagram
   CHECKOUT_SESSION ||--|| PRICE_SNAPSHOT : "write-once at creation"
   CHECKOUT_SESSION ||--|| COMMISSION_SNAPSHOT : "write-once at creation"
   CHECKOUT_SESSION ||--|| CANCELLATION_POLICY_SNAPSHOT : "write-once at creation"
+  CHECKOUT_SESSION ||--|| SERVICE_TIMEZONE : "write-once at creation"
   CHECKOUT_SESSION ||--|| FULFILLMENT_PAYLOAD : "captured at checkout"
   BOOKING ||--|| PRICE_SNAPSHOT : "copied at materialization"
   BOOKING ||--|| COMMISSION_SNAPSHOT : "copied at materialization"
   BOOKING ||--|| CANCELLATION_POLICY_SNAPSHOT : "copied at materialization"
+  BOOKING ||--|| SERVICE_TIMEZONE : "copied at materialization"
   BOOKING ||--|| FULFILLMENT_PAYLOAD : "copied at materialization"
   COMMISSION_SNAPSHOT }o--|| COMMISSION_RATE_SETTING : "rate read at session creation (not co-owned)"
   PRICE_SNAPSHOT }o--|| PRICING_POLICY : "computed from (not co-owned)"

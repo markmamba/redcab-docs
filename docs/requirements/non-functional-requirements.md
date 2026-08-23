@@ -72,7 +72,7 @@ For corporate or pre-payment paths that enter **pending**, the system **shall** 
 - Source: E-09. Governs: LC-2. Status: Provisional (corporate paths; B2C superseded — Decision Log `AMB-011`).
 
 ### NFR-TIME-010 — Auto-completion after service end
-The system **shall** auto-transition a **confirmed** Booking to **completed** 24 hours after the slot's scheduled end time (Asia/Tokyo) when the Provider has not marked it delivered.
+The system **shall** auto-transition a **confirmed** Booking to **completed** 24 hours after the slot's scheduled end time in the Booking's snapshotted **Service Timezone** when the Provider has not marked it delivered.
 - Source: E-09. Governs: OPR-12, LC-5; relates FR-BKG-009. Status: Approved.
 
 ---

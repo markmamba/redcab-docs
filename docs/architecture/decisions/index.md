@@ -105,3 +105,4 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-011 | [ADR-011: Financial Authority Model](/docs/architecture/decisions/adr-011-financial-authority-model) | Accepted |
 | ADR-012 | [ADR-012: Evolution Strategy](/docs/architecture/decisions/adr-012-evolution-strategy) | Accepted |
 | ADR-013 | [ADR-013: Geography Reference Data](/docs/architecture/decisions/adr-013-geography-reference-data) | Accepted |
+| ADR-014 | [ADR-014: Service Timezone Model](/docs/architecture/decisions/adr-014-service-timezone-model) | Accepted |

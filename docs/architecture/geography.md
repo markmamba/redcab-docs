@@ -20,6 +20,7 @@ Authoritative geography design for the Catalog Geography module. Business rules 
 | --- | --- |
 | Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
 | ADR | [ADR-013: Geography Reference Data](/docs/architecture/decisions/adr-013-geography-reference-data) |
+| Service timezone | [ADR-014: Service Timezone Model](/docs/architecture/decisions/adr-014-service-timezone-model) |
 | FRs | [CAT functional requirements](/docs/requirements/functional-requirements/cat) |
 | Decision Log | [Open Questions](/docs/ambiguities/open-questions) (`AMB-036`) |
 
@@ -99,6 +100,7 @@ See `red-cab-api/docs/db/catalog.dbml` for authoritative columns.
 - `municipality_code` — 5-digit, unique, seed upsert key
 - `name_kana`
 - `latitude`, `longitude` — required (city-hall point)
+- `timezone` — IANA string (NOT NULL); operational **Service Timezone** for Listings in this Area ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)). Phase 1 Japan seed: `Asia/Tokyo` on every Area.
 
 Coordinates are plain `numeric`; no spatial index required at ~1,750 rows.
 
@@ -115,7 +117,7 @@ Coordinates are plain `numeric`; no spatial index required at ~1,750 rows.
 ### Procedure
 
 1. Upsert all Districts (47 prefectures + 20 designated cities).
-2. Upsert all Areas (~1,750 municipalities and wards).
+2. Upsert all Areas (~1,750 municipalities and wards); set `timezone` per Area (Phase 1: `Asia/Tokyo` for all).
 3. Set `status = active`; **do not delete** retired codes — archive on merger (`INV-11`).
 4. Idempotent upsert keyed on `municipality_code`.
 
