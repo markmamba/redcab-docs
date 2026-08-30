@@ -75,9 +75,11 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 - [x] `docs/db/catalog.dbml` designed and reviewed against [../architecture/data-model.md](/docs/architecture/data-model) §5.3 / §6.3
 - [x] `docs/db/bookings.dbml` designed (`checkout_sessions`, Booking + snapshots + fulfillment payload; buyer = tourist profile)
-- [x] `docs/db/payments.dbml` designed (commission rate, provider connected account, charge, payout queue, refund stub)
+- [x] `docs/db/payments.dbml` designed (commission rate, provider merchant account, charge, payout queue, refund stub)
 - [x] `docs/db/redcab.dbml` updated to include Phase 1 tables
 - [x] Migrations applied for the above (DBML → migration → model stubs)
+
+> **Schema lag (`red-cab-api`):** applied `payments.dbml` migrations still model the withdrawn Platform-account Separate Charges & Transfers topology. Documentation here reflects [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation); schema sync is tracked on the separate `red-cab-api` provider-neutral persistence migration issue.
 
 #### Provider Onboarding & Verification (`PRV`)
 
@@ -190,7 +192,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 ### Resolved decisions applied in Phase 1
 
-Phase 1 implementation follows the Decision Log in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions) (2026-07-29): capture at checkout on Platform account (`AMB-001`), Separate Charges & Transfers (`AMB-002`), platform-controlled payout queue after `COMPLETED` (`AMB-003`), snapshots at CheckoutSession creation (`AMB-007`), B2C enters `CONFIRMED` on payment success (`AMB-011`), District → Area discovery (`AMB-020`), PRD vehicle taxonomy on `provider_assets` (`AMB-023`).
+Phase 1 implementation follows the Decision Log in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions). **Payment custody and topology** (`AMB-001` custody element, `AMB-002`, `AMB-032`) are superseded by [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) (provisional, pending counsel): sub-merchant settlement with deferred platform-triggered release; funds held by the licensed payment provider; Provider merchant-of-record. **Still applied:** platform-controlled payout queue after completion (`AMB-003`–`005`); snapshots at CheckoutSession creation (`AMB-007`); B2C enters `CONFIRMED` on payment success (`AMB-011`); District → Area discovery (`AMB-020`); PRD vehicle taxonomy on `provider_assets` (`AMB-023`). **Reopened:** capture timing (`AMB-039`).
 
 ### Open decisions for Phase 1
 
