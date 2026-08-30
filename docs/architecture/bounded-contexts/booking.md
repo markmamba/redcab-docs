@@ -6,7 +6,7 @@ description: Bounded context documentation for Red Cab Marketplace.
 
 ### 3. Booking & Checkout (core)
 - **Purpose:** Turn a selected Slot into a Booking via CheckoutSession and run its lifecycle; **owns money facts** (the frozen snapshots copied from session).
-- **Internal modules:** **Checkout** (`CheckoutSession` — snapshot freeze, Fulfillment Payload, seat hold, PaymentIntent) and **Order Lifecycle** (state machine, completion, cancellation, manifest, bundle, multi-day).
+- **Internal modules:** **Checkout** (`CheckoutSession` — snapshot freeze, Fulfillment Payload, Terms of Use acceptance, seat hold, Payment Attempt) and **Order Lifecycle** (state machine, completion determination, cancellation, manifest, bundle, multi-day).
 - **Aggregates owned:** `CheckoutSession` (pre-booking checkout unit); `Booking` (the order aggregate, incl. copied snapshots, Fulfillment Payload, state — B2C enters `CONFIRMED` on materialization, `BKG-10`); `PassengerManifest`, `BundleBooking` (the link across two `Booking`s).
 - **Transactional boundary (critical):** at CheckoutSession creation, **snapshot freeze + seat reservation commit as one atomic unit** (`BKG-9`, `CON-1`). On payment success, Booking materialization copies session facts. This is the reason CheckoutSession and the seat counter must be reachable in a single transaction (CR-1).
 - **Upstream deps:** Identity (buyer principal), Catalog (`calculate_quote`, availability, guarded reserve), Payments (charge result), COR (create-from-quote command).

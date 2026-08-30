@@ -44,7 +44,7 @@ This documentation set serves as the authoritative planning foundation for imple
 * Ruby on Rails API (modular monolith, Request → Manager → Validator)
 * React Router v7 SSR frontend (JavaScript, `app/routes/` / `app/api/` / `app/domains/`)
 * PostgreSQL
-* Stripe Connect
+* Licensed payment provider (vendor open — `AMB-040`)
 
 ---
 
@@ -92,7 +92,7 @@ Defines system structure and integration patterns.
 | Document                                                       | Purpose                                          |
 | -------------------------------------------------------------- | ------------------------------------------------ |
 | [Architecture Overview](/docs/architecture/overview)              | Top-level architectural guide                    |
-| [Payments Architecture](/docs/architecture/payments-architecture) | Commission, payouts, refunds, Stripe integration |
+| [Payments Architecture](/docs/architecture/payments-architecture) | Custody, control, commission, settlement, refunds |
 | [Booking State Machine](/docs/architecture/booking-state-machine) | Booking lifecycle and transitions                |
 | [API Design](/docs/architecture/api-design)                       | REST conventions and contracts                   |
 | [Data Model](/docs/architecture/data-model)                       | Storage model and key relationships              |

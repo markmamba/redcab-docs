@@ -6,9 +6,9 @@ description: Locked technology choices for Red Cab Marketplace.
 
 ## TL;DR
 
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, Stripe Connect, email MVP notifications.
+- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
 - Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and some Stripe topology details remain open under `AMB-###`.
+- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
 
 ## About this document
 
@@ -27,9 +27,9 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ## TL;DR
 
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, Stripe Connect, email MVP notifications.
+- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
 - Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and some Stripe topology details remain open under `AMB-###`.
+- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
 
 ## About this document
 
@@ -48,9 +48,9 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ## TL;DR
 
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, Stripe Connect, email MVP notifications.
+- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
 - Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and some Stripe topology details remain open under `AMB-###`.
+- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
 
 ## About this document
 
@@ -69,9 +69,9 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ## TL;DR
 
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, Stripe Connect, email MVP notifications.
+- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
 - Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and some Stripe topology details remain open under `AMB-###`.
+- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
 
 ## About this document
 
@@ -90,9 +90,9 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ## TL;DR
 
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, Stripe Connect, email MVP notifications.
+- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
 - Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and some Stripe topology details remain open under `AMB-###`.
+- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
 
 ## About this document
 
@@ -111,9 +111,9 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ## TL;DR
 
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, Stripe Connect, email MVP notifications.
+- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
 - Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and some Stripe topology details remain open under `AMB-###`.
+- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
 
 ## About this document
 
@@ -132,9 +132,9 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ## TL;DR
 
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, Stripe Connect, email MVP notifications.
+- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
 - Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and some Stripe topology details remain open under `AMB-###`.
+- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
 
 ## About this document
 
@@ -169,7 +169,7 @@ Locked technology choices and why each fits the architecture — no versions, pa
 | Database | PostgreSQL, single shared database | [PostgreSQL](/docs/architecture/overview#postgresql) | Locked |
 | Background jobs | Rails-native asynchronous job runtime | [Background Jobs](/docs/architecture/overview#background-jobs) | Locked (category); queue backend open |
 | Auth / Identity | Session-based web authentication owned by IAM | [IAM context](/docs/architecture/bounded-contexts) | Locked (mechanism); methods open (`AMB-021`/`AMB-022`) |
-| Payments | Stripe Connect (cards + marketplace payouts) | [Payments context](/docs/architecture/overview#payments--payments--payouts-core) | Locked (rail); topology/capture open (`AMB-001`/`AMB-002`) |
+| Payments | Licensed marketplace payment provider (cards + sub-merchant settlement) | [Payments context](/docs/architecture/overview#payments--payments--payouts-core) | **Not locked** — vendor, custody mechanics, and release control open (`AMB-040`); integrated via capability-declaring adapter ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)) |
 | Notifications | Email rail (MVP); SMS optional | [Notifications context](/docs/architecture/overview#notifications--notifications-supporting-generic-event-driven) | Locked (email MVP); provider/SMS open (`AMB-034`) |
 | PDF documents | Server-side PDF generation with embedded Japanese fonts | [Corporate context](/docs/architecture/bounded-contexts) | Locked (capability); library open (`AMB-031`) |
 | Internationalization | EN/JA, server-rendered language per recipient | cross-cutting (`OPR-9`) | Locked (EN/JA); defaults open (`AMB-024`) |
@@ -184,7 +184,7 @@ Locked technology choices and why each fits the architecture — no versions, pa
 - The architecture is explicitly a **modular monolith over one database** ([Modular Monolith First](/docs/architecture/overview#modular-monolith-first)); Rails gives one deployable that hosts all eight contexts as logical modules with guarded public surfaces, with module boundaries — not distribution — enforcing the discipline.
 - The single most load-bearing requirement is the **atomic checkout unit** — snapshot freeze + seat reservation + booking creation commit together (`BKG-2`, `CON-1`). A single Rails process over a single relational database makes the one deliberate cross-context shared transaction (Booking↔Catalog seat reserve, **CR-1**) possible without a saga.
 - Rails' request/transaction model and in-process event dispatch match the **"invariants that must hold together are synchronous and co-transactional; cross-context reactions are asynchronous"** rule from [./bounded-contexts.md](/docs/architecture/bounded-contexts).
-- It naturally receives **Stripe webhooks** and **enqueues asynchronous work** as described in the [Container View](/docs/architecture/overview#container-view).
+- It naturally receives **payment-provider events** and **enqueues asynchronous work** as described in the [Container View](/docs/architecture/overview#container-view).
 - Implementation conventions (Request → Manager → Validator, `app/domains/`, explicit routes, DBML-first schema) are documented in [../engineering/backend-conventions.md](/docs/engineering/backend-conventions).
 
 **Status.** Locked (stated as the implementation backend in [../index.md](/docs) and the architecture overview).
@@ -251,17 +251,22 @@ Geography reference data uses plain PostgreSQL `numeric` columns for `latitude`/
 
 ---
 
-## Payments — Stripe Connect
+## Payments — licensed payment provider (vendor not selected)
 
-**Choice.** **Stripe Connect** is the external card-payment and marketplace-payout rail for the B2C path. The platform's **Payments** context initiates charges for the snapshotted gross, encodes commission as the application fee equal to the snapshotted `commission_amount`, and reconciles webhook settlement back to internal state. Corporate bank-transfer funds arrive **off-Stripe by bank transfer (furikomi)** and are reconciled manually by Admin (`PAY-9`).
+**Choice.** A **licensed marketplace payment provider** is the external card-payment and settlement rail for the B2C path, and — via per-transaction virtual accounts — for the Corporate transfer path (`PAY-9`). **The vendor is deliberately not chosen** (`AMB-040`): Stripe Connect, Komoju, and PAY.JP differ materially in whose balance holds funds while held and who controls the release trigger, which is the dimension carrying regulatory weight here.
+
+The provider is the **legal recipient and holder of customer funds**; Red Cab holds none (`INV-13`, `PAY-13`). The platform's **Payments** context initiates collection for the snapshotted gross, records the completion determination (`PAY-16`), instructs settlement release plus a platform fee equal to the snapshotted `commission_amount` (`FIN-12`), and reconciles provider-event settlement back to internal state.
 
 **Why it fits the architecture.**
-- The business model is commission per booking with a **frozen, auditable revenue split** (`INV-1`, `INV-2`, `PAY-2`). Encoding commission as Stripe's application fee makes the rail's split match the snapshot exactly (`INV-2`, [payments-architecture](/docs/architecture/payments-architecture)).
-- Stripe owns card authorization/capture, PCI scope, fund holding, connected-account KYC, refunds, and **settlement truth via webhooks**; internal Payments state **converges to that external truth** and surfaces divergence rather than losing it (`FIN-11`, `NFR-AVAIL-004`). This realizes the [Money Facts vs Money Movement](/docs/architecture/overview#money-facts-vs-money-movement) seam: Booking authors the immutable fact, Payments moves the money against Stripe.
-- Every external money operation is **idempotent and uniquely keyed** so retries/duplicate webhooks cannot double-charge, double-refund, or double-pay (`FIN-10`, `NFR-AUD-004`).
+- The **transaction-platform exemption** requires that Red Cab hold no customer funds while retaining control of transaction completion. Custody at the provider with platform-triggered release satisfies both ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)).
+- The business model is commission per booking with a **frozen, auditable revenue split** (`INV-1`, `INV-2`, `PAY-2`). Instructing the platform fee to equal the snapshotted `commission_amount` makes the rail's split match the snapshot exactly, without the rail ever computing it.
+- The provider owns card authorization/capture, PCI scope, **fund custody**, sub-merchant KYC, refunds, and **settlement truth via events**; internal Payments state **converges to that external truth** and surfaces divergence rather than losing it (`FIN-11`, `NFR-AVAIL-004`). This realizes the [Money Facts vs Money Movement](/docs/architecture/overview#money-facts-vs-money-movement) seam: Booking authors the immutable fact, Payments instructs movement, the provider holds and moves.
+- Every external money operation is **idempotent and uniquely keyed** so retries and duplicate events cannot double-charge, double-refund, or double-settle (`FIN-10`, `NFR-AUD-004`).
 - Whole-yen JPY only (`PAY-1`); single-currency is the working baseline (`AMB-025`).
 
-**Status.** Locked as the **payment rail**. The **charge topology** and **merchant/seller-of-record** (`AMB-002`/`AMB-032`), **capture model** (`AMB-001`), **auto-transfer vs platform payout queue** (`AMB-003`), **clearing period** (`AMB-004`), **disbursement/failure states** (`AMB-005`), and **off-Stripe Corporate settlement** (`AMB-029`) are open and **not resolved here**.
+**Integration shape.** The provider is engaged only through a **capability-declaring adapter** that declares custody location, merchant-of-record posture, settlement model, capture timing, and clawback capability. Domain code branches on declared capability, never on provider identity, and a startup assertion rejects any adapter declaring platform custody or platform merchant-of-record (`ADR-015` C6). Persisted external references are provider-neutral.
+
+**Status.** **Not locked.** Provider selection (`AMB-040`) and cross-border exemption applicability (`AMB-037`) are P0 and unresolved; clawback (`AMB-038`) and capture timing (`AMB-039`) are P1. `ADR-015` is **Proposed pending counsel**.
 
 ---
 
@@ -309,7 +314,7 @@ To stay at the architecture level and avoid making new decisions, the following 
 
 - Specific versions, packages/gems, configuration, environment, hosting/CI, and deployment topology.
 - The concrete background-job queue/broker product.
-- The Stripe Connect topology and capture model, payout-queue semantics, and Corporate settlement mechanism (`AMB-001..008`, `AMB-029`).
+- Payment provider selection and its custody/release mechanics (`AMB-040`), cross-border exemption applicability (`AMB-037`), clawback (`AMB-038`), and capture timing (`AMB-039`).
 - Authentication methods and guest scope (`AMB-021`, `AMB-022`); SMS provider/scope (`AMB-034`); PDF library (`AMB-031`); language defaults/supported set (`AMB-024`); currency beyond the JPY baseline (`AMB-025`).
 
 > No choice recorded here changes the bounded-context or aggregate boundaries in [./bounded-contexts.md](/docs/architecture/bounded-contexts) and [../domain/domain-models.md](/docs/domain/domain-models). Each technology realizes an existing container or context; none introduces a new one.

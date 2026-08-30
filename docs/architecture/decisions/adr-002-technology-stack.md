@@ -7,7 +7,8 @@ description: Architecture decision record 002.
 
 ## TL;DR
 
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, **Stripe Connect**, email-first notifications.
+- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
+- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Technology serves the domain model; stack does not define architecture boundaries.
 
 ## About this document
@@ -24,7 +25,8 @@ ADR for locked technology stack selection.
 
 ## TL;DR
 
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, **Stripe Connect**, email-first notifications.
+- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
+- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Technology serves the domain model; stack does not define architecture boundaries.
 
 ## About this document
@@ -41,7 +43,8 @@ ADR for locked technology stack selection.
 
 ## TL;DR
 
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, **Stripe Connect**, email-first notifications.
+- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
+- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Technology serves the domain model; stack does not define architecture boundaries.
 
 ## About this document
@@ -58,7 +61,8 @@ ADR for locked technology stack selection.
 
 ## TL;DR
 
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, **Stripe Connect**, email-first notifications.
+- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
+- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Technology serves the domain model; stack does not define architecture boundaries.
 
 ## About this document
@@ -75,7 +79,8 @@ ADR for locked technology stack selection.
 
 ## TL;DR
 
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, **Stripe Connect**, email-first notifications.
+- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
+- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Technology serves the domain model; stack does not define architecture boundaries.
 
 ## About this document
@@ -92,7 +97,8 @@ ADR for locked technology stack selection.
 
 ## TL;DR
 
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, **Stripe Connect**, email-first notifications.
+- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
+- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Technology serves the domain model; stack does not define architecture boundaries.
 
 ## About this document
@@ -109,7 +115,8 @@ ADR for locked technology stack selection.
 
 ## TL;DR
 
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, **Stripe Connect**, email-first notifications.
+- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
+- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Technology serves the domain model; stack does not define architecture boundaries.
 
 ## About this document
@@ -137,7 +144,7 @@ Red Cab is a two-sided marketplace earning a commission per booking, with two de
 - **Strong transactional consistency.** The most load-bearing requirement is the atomic checkout unit — snapshot freeze + seat reservation + booking creation commit together or not at all (`CON-1`) — including the one deliberate cross-context shared transaction, Booking↔Catalog seat reservation (`CR-1`). The stack must make this possible without a distributed protocol, while upholding inventory invariants (`INV-3`) and immutable Booking snapshots (`INV-1`).
 - **Small engineering team.** Coordination cost must stay low; one runtime and one data store minimize operational and cognitive overhead.
 - **Japanese market requirements.** Formal corporate documents (Omitsumorisho/Seikyusho) must itemize the 10% consumption tax (`PAY-10`) and render correctly as Japanese commercial documents; whole-yen JPY is the only money (`PAY-1`).
-- **Stripe Connect integration.** The B2C path runs on an external card-and-payout rail whose settlement outcomes arrive asynchronously and are authoritative; internal state must converge to them.
+- **Payment provider integration.** The B2C path runs on an external licensed card-and-settlement rail whose settlement outcomes arrive asynchronously and are authoritative; internal state must converge to them.
 - **EN/JA support.** The audience is EN-primary inbound travelers and JA-primary corporate/provider operations; language is a cross-cutting concern (`OPR-9`), not a single-screen feature.
 
 ## Decision
@@ -147,7 +154,7 @@ The stack is recorded as already locked in [../tech-stack.md](/docs/architecture
 - **Ruby on Rails (API mode) backend** — a single deployable hosting the 6 core + 2 supporting contexts as in-process logical modules; synchronous commands/queries where an invariant must hold within the operation, asynchronous domain events for cross-context reactions.
 - **React Router v7 (SSR) frontend** — one web application presenting three role-confined surfaces (Tourist App, Client Portal, Admin Panel) over an authenticated session; it holds no financial truth and never computes price, consuming the `PriceBreakdown` from the single pricing authority (`PRC-1`). JavaScript, not TypeScript.
 - **PostgreSQL database** — a single shared database; each context owns its tables and exposes them only through commands, queries, and events. It is the system of record for immutable Booking snapshots and auditable money facts, and the enabling constraint behind the atomic seat-reservation transaction (`CR-1`, `CON-1`).
-- **Stripe Connect payment rail** — the external card-payment and marketplace-payout rail for the B2C path; Payments converges to Stripe's webhook settlement truth. Corporate bank-transfer funds arrive off-Stripe by bank transfer and are reconciled by Admin (`PAY-9`).
+- **Licensed payment provider rail** — the external card-payment and marketplace-settlement rail for the B2C path; Payments converges to verified provider settlement truth. Corporate bank-transfer funds are collected through a provider-issued virtual account (`PAY-9`). Vendor selection is open (`AMB-040`) and superseded here by [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - **Rails-native background jobs** — an asynchronous, idempotent, retriable job runtime executing after-the-fact reactions (notification dispatch, payout queuing, rating recalculation, listing pause/restore cascades) and scheduled alerts.
 - **Email-first notifications** — an external email rail as the MVP notification channel, driven by the Notifications context, dispatched asynchronously and rendered in the recipient's language; SMS is optional and out of MVP baseline.
 - **Server-side PDF generation** — formal corporate documents generated server-side with embedded Japanese fonts so kanji/kana render correctly, owned by the Corporate context.
@@ -163,7 +170,7 @@ The architecture intentionally locks categories of capability (background jobs, 
 - **Simplified operations.** One deployable, one database, and a Rails-native job runtime keep the operational surface small and matched to the team size.
 - **Good architecture alignment.** The chosen technologies directly realize the architectural principles already established: Rails and PostgreSQL support the modular-monolith and atomic-checkout requirements,
 React Router supports the role-confined web surface,
-and Stripe Connect realizes the marketplace payment and payout rail.
+and a licensed payment provider realizes the marketplace payment and settlement rail (vendor open, `AMB-040`).
 Implementation conventions are documented in [../../engineering/README.md](/docs/engineering).
 
 ### Negative

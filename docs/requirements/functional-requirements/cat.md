@@ -142,8 +142,8 @@ The system **shall** compute every displayed and charged price through the singl
 The system **shall** allow an Approved Provider to register Provider Assets (vehicles or guides) with capacity and vehicle category, and **shall** require every Availability Slot to reference an Asset.
 - Source: C-09, architecture. Governs: CON-4, `AMB-023`. Status: Approved.
 
-### FR-CAT-030 — Publish requires Stripe Connected Account
-The system **shall not** publish a Listing unless the owning Provider has an active, verified Stripe Connected Account.
+### FR-CAT-030 — Publish requires verified Provider Merchant Account
+The system **shall not** publish a Listing unless the owning Provider has an active, verified Provider Merchant Account with the configured payment provider.
 - Source: architecture. Governs: INV-12, LC-12. Status: Approved.
 
 ### FR-CAT-031 — Per-vehicle slot exclusivity

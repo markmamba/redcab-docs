@@ -25,14 +25,14 @@ Each context owns a small set of **aggregates** (consistency boundaries addresse
 - **District / Area** (Geography reference data) — seeded administrative taxonomy (codes + centroids); admin-curated EN/JA labels (`INV-8`, `OPR-10`, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data)).
 
 ### 5.4 Booking & Checkout (core)
-- **CheckoutSession** (root) — pre-booking checkout unit holding frozen Price/Commission/Cancellation snapshots, **Service Timezone** snapshot, Fulfillment Payload, seat hold, and PaymentIntent reference until payment succeeds or session expires (`BKG-9`, `PRC-8`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
+- **CheckoutSession** (root) — pre-booking checkout unit holding frozen Price/Commission/Cancellation snapshots, **Service Timezone** snapshot, Fulfillment Payload, Terms of Use acceptance (`PAY-17`), seat hold, and a provider-neutral Payment Attempt reference until payment succeeds or session expires (`BKG-9`, `PRC-8`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
 - **Booking** (root) — the central order aggregate materialized from a successful CheckoutSession, carrying copied immutable snapshots, Fulfillment Payload, and lifecycle state (`INV-1..4`, `LC-1..6`, `BKG-1..11`). B2C card path enters at `CONFIRMED` (`BKG-10`).
 - **BundleBooking** (root) — links two independent Bookings (car + guide) as one purchase, each with independent commission (`BKG-3`).
 - **PassengerManifest** (root, keyed by `booking_id`) — group passenger roster for a confirmed group Booking (`BKG-6`).
 
 ### 5.5 Payments & Payouts (core)
 - **Payment** (root, charge record) — the buyer-side money movement for a Booking (`PAY-5`, `FIN-3`, `FIN-9..10`).
-- **ProviderConnectedAccount** (root) — the Provider's Stripe Connect destination; lifecycle driven by Stripe webhooks; gates listing publish (`INV-12`, `LC-12`) and payout transfers (`PAY-14`).
+- **ProviderMerchantAccount** (root) — the Provider's sub-merchant destination with the configured payment provider; lifecycle driven by provider events; gates listing publish (`INV-12`, `LC-12`) and settlement (`PAY-14`).
 - **PayoutQueueEntry** (root) — the Net Payout owed to a Provider after completion; lifecycle `QUEUED → PROCESSING → DISBURSED | FAILED` (`LC-6`, `LC-13`, `LC-14`, `FIN-4..5`).
 - **Refund** (root) — a return of funds computed from snapshot + snapshotted policy (`PAY-6`, `PAY-7`, `FIN-6`).
 - **CommissionRateSetting** (root) — the platform-wide rate read at checkout (`PAY-2`).

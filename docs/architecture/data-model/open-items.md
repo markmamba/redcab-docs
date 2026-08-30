@@ -20,7 +20,10 @@ The model is built to accommodate either resolution of each open decision and **
 | `AMB-025` — currency | Whether Money remains single-currency JPY (the working baseline) | Money (cross-cutting) |
 | `AMB-026` — provider mid-flight status change | Effect of suspension/expiry on already-confirmed Bookings; boundary rule (no historical mutation) holds regardless | Provider (PRV), Booking (BKG) |
 | `AMB-027/028` — corporate pre-payment state / seat-hold timing | Whether Corporate introduces a distinct pre-payment state and when seats are held; isolated behind the ACL | Quotation (COR), AvailabilitySlot (CAT), Booking (BKG) |
-| `AMB-029` — off-Stripe provider settlement | How the Provider's net for bank-transfer funds is recorded/disbursed | ReconciliationRecord, PayoutQueueEntry (PAY) |
+| `AMB-040` — provider custody/release and selection (P0) | Whose balance holds funds and who triggers release; determines representable external references | Charge, PayoutQueueEntry, ProviderMerchantAccount, Refund (PAY) |
+| `AMB-037` — cross-border exemption applicability (P0) | Whether payer jurisdiction must be captured and retained per transaction | Charge, CheckoutSession (PAY, BKG) |
+| `AMB-038` — clawback mechanism | How post-settlement recovery from a Provider is recorded | RefundRecord, PayoutQueueEntry (PAY) |
+| `AMB-039` — capture timing | Whether an authorization-then-capture lifecycle needs distinct states | Charge (PAY) |
 | `AMB-031/033` — PDF rendering / consumption tax | Formal-document rendering and tax treatment on corporate documents | Quotation, Invoice (COR) |
 | `AMB-034` — SMS scope | Whether the SMS Channel is in MVP and phone verification is required | NotificationDispatch (NOT) |
 

@@ -41,7 +41,7 @@ Corporate Client **profile** (`corporate_profiles`) already exists from Phase 0.
 ```text
 1. Expand corporate.dbml        → quotation_requests, quotations, line_items, invoices
 2. Extend bookings.dbml   → passenger_manifests + passengers; multi-day package shape if in-scope
-3. Extend payments.dbml   → reconciliation_records (+ any off-Stripe settlement fields)
+3. Extend payments.dbml   → reconciliation_records (+ virtual-account reference fields)
 4. Then code:             Corporate → BKG corporate → PAY reconciliation → Corporate portal → NOT alerts
 ```
 
@@ -96,7 +96,7 @@ Corporate Client **profile** (`corporate_profiles`) already exists from Phase 0.
 
 - [ ] Manual bank-transfer reconciliation by Admin (`AMB-030`)
 - [ ] Admin Payments Overview (`FIN-3`, `NFR-AUD-006`)
-- [ ] Off-Stripe provider settlement for corporate path (`AMB-029`)
+- [ ] Provider-collected virtual-account transfer for corporate path; settlement follows the standard deferred-release path (`PAY-9`, `PAY-15`; `AMB-029`/`AMB-030` resolved)
 
 **red-cab-web**
 

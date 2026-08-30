@@ -101,11 +101,11 @@ Four-way mapping table for all requirements.
 | FR-BKG-007 | E-09 | LC-1..6; BKG | Only permitted transitions occur; no terminal-exit or backward transitions. |
 | FR-BKG-008 | E-09 | BKG-10, LC-2; BKG | B2C: materialize CONFIRMED on payment; notify Tourist + Provider. |
 | FR-BKG-009 | E-09 | LC-5, OPR-11, OPR-12; BKG | Mark Delivered or auto-complete 24h post service end (snapshotted Service Timezone). |
-| FR-BKG-016 | E-02 | BKG-9, CON-1; BKG | CheckoutSession with snapshots + seat hold + PaymentIntent. |
+| FR-BKG-016 | E-02 | BKG-9, CON-1; BKG | CheckoutSession with snapshots + seat hold + Payment Attempt. |
 | FR-BKG-017 | E-02 | BKG-11; BKG | Fulfillment payload fields at checkout. |
 | FR-BKG-018 | E-09 | OPR-11; BKG | Provider Mark Delivered action. |
 | FR-CAT-029 | C-09 | CON-4; CAT | Provider asset registration. |
-| FR-CAT-030 | architecture | INV-12, LC-12; CAT | Publish requires Stripe Connected Account. |
+| FR-CAT-030 | architecture | INV-12, LC-12; CAT | Publish requires verified Provider Merchant Account. |
 | FR-CAT-031 | E-02 | CON-6; CAT | Per-vehicle booking consumes full slot capacity. |
 | FR-CAT-032 | ADR-013 | INV-8; CAT | Near-me ranks Areas with published listings by distance to city-hall centroid; no spatial DB extension. |
 | FR-BKG-009 | E-09 | LC-5; BKG | Confirmed→Completed only after service time has passed and is marked delivered. |

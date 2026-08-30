@@ -244,8 +244,12 @@ The system **shall** produce Corporate Quotation and Invoice documents acceptabl
 - Source: E-04, E-06. Governs: relates FR-COR-003. Status: Provisional (AMB-031).
 
 ### NFR-COMP-004 — Merchant/seller-of-record posture
-The system **shall** reflect the established merchant-of-record / seller-of-record posture in its charge and document flows.
-- Source: payments-architecture. Governs: relates FR-PAY-001, FR-COR-003. Status: Provisional (AMB-032).
+The system **shall** reflect the **Provider merchant-of-record** posture in its charge, settlement, and document flows, and **shall not** represent Red Cab as the recipient or holder of customer funds.
+- Source: payments-architecture, [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation). Governs: relates FR-PAY-001, FR-PAY-013, FR-COR-003; INV-13, PAY-13, FIN-12. Status: Provisional (AMB-032 reversed 2026-08-30; pending counsel).
+
+### NFR-COMP-005 — No-custody posture is machine-enforced
+The system **shall** refuse to start when the configured payment provider adapter declares platform fund custody or platform merchant-of-record, or cannot support deferred platform-triggered settlement release.
+- Source: [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) C6. Governs: INV-13, PAY-13, PAY-15. Status: Provisional.
 
 ---
 
@@ -262,7 +266,9 @@ These NFRs depend on open decisions and cannot reach Approved until the cited it
 - AMB-024 (language defaults / supported languages): NFR-I18N-002, NFR-I18N-004.
 - AMB-025 (currency): NFR-I18N-005.
 - AMB-031 (PDF rendering): NFR-I18N-006, NFR-COMP-003.
-- AMB-032 (merchant/seller-of-record): NFR-COMP-004.
+- AMB-032 (merchant/seller-of-record, reversed): NFR-COMP-004, NFR-COMP-005.
+- AMB-037 (cross-border exemption): NFR-COMP-004.
+- AMB-040 (provider custody/release): NFR-COMP-005.
 - AMB-033 (consumption tax): NFR-COMP-001.
 - A3 confirmation: NFR-TIME-004.
 

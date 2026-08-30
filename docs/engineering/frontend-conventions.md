@@ -330,7 +330,7 @@ Use `prepareSearchParams` / `serializeUrlParams` from `app/utils/search-param-ut
 4. **Role-confined surfaces.** Tourist pages don't import provider auth HOCs. One segment per page.
 5. **EN/JA rendering.** Use stored language preference; geography labels use `name_en` / `name_ja` / `name_kana` from API; disambiguate homonymous Areas with parent District.
 6. **corporate documents.** PDF download links from API; no client-side PDF generation.
-7. **Stripe Elements (if used).** Payment UI embeds Stripe client SDK; charge amount still originates from server snapshot, not client input.
+7. **Payment step is provider-agnostic.** The API returns a payment handoff descriptor and the UI branches on its `kind` (redirect to a hosted page, or embedded fields). Only the embedded branch may lazy-load a provider SDK, keeping it out of the main bundle. The charge amount always originates from the server snapshot, never client input. The post-payment return route is a **presentation hint only** — booking confirmation is read from our own API, which converges to verified provider events (`FIN-11`, `FIN-13`).
 
 ---
 

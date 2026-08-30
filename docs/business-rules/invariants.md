@@ -19,6 +19,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 | --- | --- |
 | Terminology | [Glossary](/docs/business-rules/glossary) |
 | Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payment custody / control | [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) |
 | Booking lifecycle | [Booking State Machine](/docs/architecture/booking-state-machine) |
 | Observable behavior | [Requirements](/docs/requirements) |
 | Resolved decisions | [Open Questions](/docs/ambiguities/open-questions) (Decision Log) |
@@ -47,7 +48,8 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **INV-9** [Identity] **Provider Type** MUST be immutable after registration except by explicit Admin action. (`A-03`)
 - **INV-10** [Catalog] A Listing MUST NOT be `Published` with zero Photos. (`C-02`)
 - **INV-11** [Booking] Historical Booking data MUST be preserved when a Listing is Paused, Unlisted, or its District deactivated — never deleted. (`C-11`, `B-05`)
-- **INV-12** [Onboarding/Payments] A Listing MUST NOT be `Published` unless its Provider has an active, verified **Stripe Connected Account**. (`LC-12`)
+- **INV-12** [Onboarding/Payments] A Listing MUST NOT be `Published` unless its Provider has an active, verified **Provider Merchant Account** with the configured payment provider. (`LC-12`)
+- **INV-13** [Payments/Legal] Red Cab MUST NOT be the legal recipient or holder of Tourist or Corporate Client funds for the service portion of a transaction, at any point, on any payment rail. (`PAY-13`, `PAY-9`, [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) C1)
 
 ## 2. Lifecycle Constraints
 *Allowed states and transitions for entities with a lifecycle.*
@@ -60,14 +62,14 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
   - `COMPLETED → PAYOUT_QUEUED`, `COMPLETED → REFUNDED`
 - **LC-3** `CANCELLED` and `REFUNDED` are terminal: no transition out of them is permitted.
 - **LC-4** A Booking MUST NOT move backward (e.g. `COMPLETED → PENDING`/`CONFIRMED` is forbidden).
-- **LC-5** `CONFIRMED → COMPLETED` requires that the service end time has passed in the Booking's snapshotted **Service Timezone** AND either the Provider explicitly marks the service delivered OR 24 hours have elapsed since service end time without cancellation (`OPR-12`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
-- **LC-6** `COMPLETED → PAYOUT_QUEUED` creates a **Payout Queue Entry** carrying the pre-frozen **Net Payout Amount**; provider transfer is deferred until queue processing (`PAY-13`, `PAY-14`).
+- **LC-5** `CONFIRMED → COMPLETED` requires that the service end time has passed in the Booking's snapshotted **Service Timezone** AND either the Provider explicitly marks the service delivered OR 24 hours have elapsed since service end time without cancellation (`OPR-12`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)). The transition MUST record a completion determination per `PAY-16`.
+- **LC-6** `COMPLETED → PAYOUT_QUEUED` creates a **Payout Queue Entry** carrying the pre-frozen **Net Payout Amount**; provider settlement is deferred until queue processing (`PAY-14`, `PAY-15`).
 
 ### Provider Status (`A-05`, `A-06`)
 - **LC-7** Provider Status values: `Pending`, `Approved`, `Rejected`, `Suspended`.
 - **LC-8** Listing creation is permitted only while Provider Status is `Approved`.
 - **LC-9** Approval is permitted only after all Verification Checklist items are satisfied. (`A-05`)
-- **LC-12** Listing publish (`Published`) is permitted only while the Provider's Stripe Connected Account is active and verified.
+- **LC-12** Listing publish (`Published`) is permitted only while the Provider's **Provider Merchant Account** with the configured payment provider is active and verified.
 
 ### Listing & Quotation Status
 - **LC-10** Listing Status values: `Draft`, `Published`, `Paused/Unpublished`, `Unlisted`. Only `Published` Listings are tourist-visible.
@@ -100,12 +102,15 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **PAY-6** Refund amount MUST be computed from the Booking's snapshotted Cancellation Policy: `refund = gross_amount × (matched_tier_refund_pct / 100)`. (`E-12`)
 - **PAY-7** When a cancellation is initiated by Provider or Admin (not the Tourist), the Tourist MUST receive a 100% refund regardless of Cancellation Policy. (`E-12`)
 - **PAY-8** A cancelled or refunded Booking MUST reverse/void its Payout Queue entry; payout MUST NOT be disbursed for a Booking whose queue entry is not in a disbursable state. (`E-09`, `E-12`, `LC-14`)
-- **PAY-9** [Corporate] A Corporate Bank Transfer Booking becomes `CONFIRMED` only when an Admin records receipt of payment. (`E-07`)
+- **PAY-9** [Corporate] Corporate Bank Transfer funds MUST be collected by the payment provider via a per-transaction virtual account; they MUST NOT be received into a Red Cab bank account (`INV-13`). A Corporate Bank Transfer Booking becomes `CONFIRMED` only on provider-confirmed receipt. (`E-07`, `AMB-029`, `AMB-030`)
 - **PAY-10** [Corporate] A Quotation/Invoice MUST itemize line items and the 10% Consumption Tax. (`E-06`)
 - **PAY-11** [Payments] Commission arithmetic MUST use whole JPY: `commission_amount = FLOOR(gross_amount × commission_rate_snapshot)` and `net_payout_amount = gross_amount − commission_amount`, guaranteeing `INV-2` identically.
 - **PAY-12** [Payments/Catalog] B2C prices displayed and charged are **tax-inclusive**; corporate formal documents itemize 10% consumption tax separately (`PAY-10`).
-- **PAY-13** [Payments] B2C card charges MUST use **Separate Charges & Transfers**: charge the Tourist on the Platform Stripe account at checkout; hold funds on the Platform account until Booking `COMPLETED`; transfer the Provider's net share only via a platform-controlled Payout Queue Entry after completion.
-- **PAY-14** [Payments] Each Payout Queue Entry MUST progress through `QUEUED → PROCESSING → DISBURSED | FAILED`; failed transfers MUST be retriable and visible to Admin.
+- **PAY-13** [Payments/Legal] **Custody.** Tourist payments MUST be received and held by the licensed payment provider, not by Red Cab (`INV-13`). The **Provider** is merchant-of-record for the underlying service. Red Cab's commission MUST reach the platform only as a provider-routed **platform fee** equal to the snapshotted `commission_amount`, never as a residual of funds Red Cab received or held. ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) C1, C3, C4; reverses Decision Log `AMB-002`, `AMB-032`)
+- **PAY-14** [Payments] Each Payout Queue Entry MUST progress through `QUEUED → PROCESSING → DISBURSED | FAILED`; failed settlements MUST be retriable and visible to Admin. The entry is the evidentiary record of Red Cab's release instruction under `PAY-15`.
+- **PAY-15** [Payments/Legal] **Control.** Provider settlement MUST NOT be released until Red Cab records a completion determination for the Booking (`PAY-16`). Automatic release at capture is forbidden. Control of transaction completion is a compliance requirement, not an operational preference, and MUST NOT be traded away for settlement convenience. ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) C2, C5)
+- **PAY-16** [Booking/Payments] Each completion determination MUST record the determining actor, the basis, and the instant, and MUST be immutable once recorded. Provider `mark_delivered` and the elapsed-time sweep (`OPR-12`) are **inputs** to the determination, not the determination itself. ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) C8)
+- **PAY-17** [Booking/Payments] Each CheckoutSession MUST record the accepted **Terms of Use version** and its acceptance instant before payment may proceed, alongside the Cancellation Policy agreement required by `BKG-1`. ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) C8)
 
 ## 5. Booking Rules
 *Reservation, checkout, bundles, packages, manifests.*
@@ -118,7 +123,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **BKG-6** A **Passenger Manifest** is permitted only on a confirmed group Booking and is viewable by the assigned Provider. (`E-08`)
 - **BKG-7** A Tourist may review only services from their own verified Bookings. (`F-01`, INV-5)
 - **BKG-8** Changes to a Listing MUST NOT affect already-confirmed Bookings (price, availability, or policy). (`C-11`, INV-1)
-- **BKG-9** [Checkout] Initiating checkout MUST create a **CheckoutSession** that atomically: computes and freezes Price/Commission/Cancellation snapshots, captures the Fulfillment Payload, reserves seats on the Slot, and binds a Stripe PaymentIntent keyed to the session. On payment success, the Booking is constructed from the session snapshots and payload in one operation.
+- **BKG-9** [Checkout] Initiating checkout MUST create a **CheckoutSession** that atomically: computes and freezes Price/Commission/Cancellation snapshots, captures the Fulfillment Payload, records Terms of Use acceptance (`PAY-17`), reserves seats on the Slot, and binds a **Payment Attempt** with the configured payment provider keyed to the session. On payment success, the Booking is constructed from the session snapshots and payload in one operation.
 - **BKG-10** [Checkout] B2C card checkout MUST create the Booking in `CONFIRMED` state immediately upon successful payment; there is no `PENDING` state on the happy path.
 - **BKG-11** [Checkout] Every Booking MUST carry a **Fulfillment Payload** with: pickup address, drop-off address, optional flight number, passenger name, passenger phone, luggage count (integer ≥ 0), and optional special notes. All fields except flight number and special notes are mandatory at checkout.
 
@@ -146,7 +151,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **OPR-9** [Notifications] Notifications MUST be rendered in the recipient's stored **Language Preference** (Tourist default EN; Provider/Client Portal default JA). (`G-03`, `G-04`)
 - **OPR-10** [Catalog] Deactivating a District MUST set all its Listings to `Unlisted` (not deleted), after an explicit Admin confirmation that states the affected count. (`B-05`)
 - **OPR-11** [Catalog/Booking] All service windows, cancellation-tier cutoffs, and completion timers MUST be evaluated in the **Service Timezone** — the Listing's Area timezone for catalog operations; the snapshotted `service_timezone` on CheckoutSession/Booking for in-flight and historical orders (`ADR-014`). Persisted timestamps MUST use UTC (`TIMESTAMPTZ`). Domain code MUST NOT hardcode an IANA zone or numeric offset.
-- **OPR-12** [Booking] A `CONFIRMED` Booking MUST auto-transition to `COMPLETED` 24 hours after the Slot's scheduled **end time** in the Booking's snapshotted **Service Timezone** if the Provider has not marked it delivered and the Booking has not been cancelled.
+- **OPR-12** [Booking] A `CONFIRMED` Booking MUST auto-transition to `COMPLETED` 24 hours after the Slot's scheduled **end time** in the Booking's snapshotted **Service Timezone** if the Provider has not marked it delivered and the Booking has not been cancelled. The resulting completion determination MUST be attributed to an explicit system actor with `elapsed_time` as its recorded basis (`PAY-16`); anonymous completion is forbidden.
 
 ---
 

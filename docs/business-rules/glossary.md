@@ -63,7 +63,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Listing Auto-Pause** — on license expiry, all of a provider's listings are set to Paused automatically (`A-06`).
 - **Support Trial (3-Month Free Support)** — free support window starting at Admin approval date; after expiry support is gated (`A-07`).
 - **Provider Status** — `Pending | Approved | Rejected | Suspended`. Exposed to other contexts for access gating.
-- **Stripe Connected Account** — Provider's Stripe Connect account for receiving net payouts. Must be active and verified before any Listing may be Published (`LC-12`). **Owned by Payments** (`payments_provider_connected_accounts`); PRV onboarding is the flow, PAY is the data owner. Catalog reads `payout_capability(provider_id)` as a conformist sync contract — never PAY's tables directly.
+- **Provider Merchant Account** — Provider's sub-merchant account with the configured payment provider, used to receive net settlement. Must be active and verified before any Listing may be Published (`LC-12`, `INV-12`). Sub-merchant KYC is performed by the payment provider as the licensed party. **Owned by Payments**; PRV onboarding is the flow, PAY is the data owner. Catalog reads `payout_capability(provider_id)` as a conformist sync contract — never PAY's tables directly. *(Formerly "Stripe Connected Account"; renamed with `ADR-015` as the provider is not yet selected — `AMB-040`.)*
 
 ## 2. Catalog & Inventory (core)
 
@@ -93,11 +93,12 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 
 ## 3. Booking & Checkout (core)
 
-> Internal modules: **Checkout** (CheckoutSession + PaymentIntent + seat hold) and **Order Lifecycle** (state machine, completion, manifest, bundle, multi-day).
+> Internal modules: **Checkout** (CheckoutSession + Payment Attempt + seat hold) and **Order Lifecycle** (state machine, completion determination, manifest, bundle, multi-day).
 
-- **CheckoutSession** — pre-booking aggregate created when a Tourist initiates checkout. Holds frozen Price Snapshot, Commission Snapshot, Cancellation Policy Snapshot, Fulfillment Payload, seat reservation, and links to the Stripe PaymentIntent. On successful payment, a Booking is materialized from the session (`BKG-9`).
+- **CheckoutSession** — pre-booking aggregate created when a Tourist initiates checkout. Holds frozen Price Snapshot, Commission Snapshot, Cancellation Policy Snapshot, Fulfillment Payload, Terms of Use acceptance (`PAY-17`), seat reservation, and a link to the **Payment Attempt** with the configured payment provider. On verified payment success, a Booking is materialized from the session (`BKG-9`).
+- **Payment Attempt** — the provider-side payment record keyed to a CheckoutSession, referenced by a provider discriminator plus an opaque reference rather than a provider-named identifier. *(Formerly "Stripe PaymentIntent".)*
 - **Booking** — a paid reservation of a slot by a Tourist/Corporate Client; the central order aggregate. B2C card checkout enters at `CONFIRMED` immediately after payment success (`BKG-2`, `BKG-10`).
-- **Checkout** — the synchronous flow: select slot → enter fulfillment details → review snapshotted summary → agree to policy → pay via PaymentIntent.
+- **Checkout** — the synchronous flow: select slot → enter fulfillment details → review snapshotted summary → agree to policy and Terms of Use → pay through the payment provider.
 - **Fulfillment Payload** — operational fields captured at checkout and copied immutably onto the Booking: pickup address, drop-off address, optional flight number, passenger name, passenger phone, luggage count, optional special notes (`BKG-11`).
 - **Price Snapshot** — the Price Breakdown frozen at CheckoutSession creation; immune to later provider changes (`C1`, `E-02`, `PRC-8`).
 - **Booking State** — `PENDING | CONFIRMED | COMPLETED | PAYOUT_QUEUED | CANCELLED | REFUNDED`. B2C card path enters at `CONFIRMED`; `PENDING` retained for corporate / pre-payment paths. Governed by the Booking State Machine (`E-09`).
@@ -112,10 +113,15 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Commission Snapshot** — `{ gross_amount, commission_rate_snapshot, commission_amount, net_payout_amount }` frozen on CheckoutSession and copied to Booking; computed per `PAY-11`. Refunds use these, never the live rate (`E-10`, `E-12`).
 - **Gross Amount** — total amount the buyer pays (including mandatory extra charges); B2C prices are tax-inclusive (`PAY-12`).
 - **Net Payout Amount** — `gross_amount − commission_amount` (whole JPY).
-- **Stripe Connect** — marketplace payment rails: charge Tourist on the **Platform account** (Separate Charges & Transfers); hold funds until service completion; transfer net share to Provider Connected Account via platform-controlled payout queue (`PAY-13`).
-- **Payout Queue Entry** — Payments-owned record of net amount owed to a Provider after Booking `COMPLETED`. Lifecycle: `QUEUED → PROCESSING → DISBURSED | FAILED` (`PAY-14`). Booking state `PAYOUT_QUEUED` indicates a queue entry was created.
-- **Refund** — return to original payment method computed from the snapshotted cancellation policy; Provider/Admin-initiated cancellations always refund 100% (`E-12`).
-- **Bank Transfer (Furikomi)** — manual Japanese corporate bank-transfer payment; Admin marks paid (`E-07`).
+- **Payment Provider** — the licensed third party that receives, holds, splits, and releases funds, and performs sub-merchant KYC. It is the legal recipient of Tourist funds; Red Cab is not (`INV-13`, `PAY-13`). Not yet selected (`AMB-040`); engaged only through a capability-declaring adapter so the domain never encodes one provider's topology ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)).
+- **Custody** — legal receipt and holding of customer funds. Sits with the Payment Provider at all times and never with Red Cab (`INV-13`).
+- **Control (transaction completion)** — Red Cab's authority to determine when a transaction completes and settlement releases (`PAY-15`, `PAY-16`). A condition of the transaction-platform exemption, not an operational preference.
+- **Platform Fee** — the mechanism by which Red Cab receives its commission: an amount routed by the Payment Provider equal to the snapshotted `commission_amount`, as consideration for booking orchestration, itinerary management, supplier matching, and customer service. Never a residual of funds Red Cab held (`FIN-12`, `PAY-13`).
+- **Completion Determination** — Red Cab's recorded, immutable finding that a Booking's service was delivered, carrying the determining actor, basis, and instant (`PAY-16`). Provider `mark_delivered` and the elapsed-time sweep are inputs to it, not substitutes for it. Triggers settlement release.
+- **Payout Queue Entry** — Payments-owned record of net amount owed to a Provider following a completion determination. Lifecycle: `QUEUED → PROCESSING → DISBURSED | FAILED` (`PAY-14`). Booking state `PAYOUT_QUEUED` indicates a queue entry was created. Serves as the evidentiary record of Red Cab's release instruction.
+- **Refund** — return to original payment method computed from the snapshotted cancellation policy; Provider/Admin-initiated cancellations always refund 100% (`E-12`). Pre-settlement refunds need no recovery; post-settlement refunds depend on clawback against the Provider as merchant-of-record (`FIN-14`, `AMB-038`).
+- **Clawback** — recovery of already-settled funds from a Provider, by balance reversal, deduction from future settlement, or invoice. Required because refund liability sits with the Provider as merchant-of-record (`AMB-038`).
+- **Bank Transfer (Furikomi)** — Japanese corporate bank-transfer payment, collected by the Payment Provider through a per-transaction **virtual account**; confirmed by provider event, not by manual Admin entry (`PAY-9`, `E-07`).
 - **Payments Overview** — Admin screen of all transactions with snapshotted commission splits (`E-13`).
 
 ## 5. Corporate Quotation & Invoicing (core)

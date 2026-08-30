@@ -58,7 +58,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 | 1a | `providers.dbml` (already designed) | `providers_profiles` + satellites | PRV registration, docs, Admin approve |
 | 1b | `catalog.dbml` (**new**) | districts, areas (+ codes, centroids, seed task), listings, photos, provider_assets, availability_slots, pricing_policies (+ basic mode fields) | Geography → Assets → Listings → Availability → Pricing → discovery |
 | 1c | `bookings.dbml` (**new**) | checkout_sessions, bookings (+ price/commission/cancellation snapshots, fulfillment payload), seat allocation | CheckoutSession → payment → Booking materialization |
-| 1d | `payments.dbml` (**new**) | commission_rate_settings, provider_connected_accounts, charges, payout_queue_entries, refunds | Stripe Connect + payout queue |
+| 1d | `payments.dbml` (**new**) | commission_rate_settings, provider_merchant_accounts, charges, payout_queue_entries, refunds, provider_events | Provider-neutral refs + payout queue |
 | 1e | `redcab.dbml` | consolidate new tables into the index diagram | — |
 
 **Profile FK conventions for Phase 1**
@@ -87,7 +87,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 - [x] Document upload and verification checklist (`providers_documents`, checklist on profile)
 - [x] Admin approve / reject workflow (status + license/support-trial side effects)
 - [x] Provider Status read contract exposed to Catalog (`{ provider_id, status, license_valid_until }`)
-- [x] Provider portal auth gated on provider profile presence (Approved required for listing create; active Stripe Connected Account required for publish — `INV-12`, `LC-12`)
+- [x] Provider portal auth gated on provider profile presence (Approved required for listing create; verified Provider Merchant Account required for publish — `INV-12`, `LC-12`)
 
 **red-cab-web**
 
@@ -100,7 +100,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 - [ ] Geography module: District / Area hierarchy seeded from official administrative codes; EN/JA/kana labels; city-hall centroids; **Area `timezone`** (`Asia/Tokyo` for Japan seed); admin curate/deactivate ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), `AMB-036`)
 - [ ] Geography seed task: idempotent upsert from 総務省 code CSV + government-office coordinates (~1,750 Areas)
-- [ ] Listings module: create, configure, publish (≥1 photo, `INV-10`; publish blocked without verified Stripe Connected Account — `INV-12`)
+- [ ] Listings module: create, configure, publish (≥1 photo, `INV-10`; publish blocked without a verified Provider Merchant Account — `INV-12`)
 - [ ] Provider Asset module: register vehicles/guides (`provider_assets`); slots bound to `asset_id` (`CON-4`)
 - [ ] Availability module: slots, seat counter, overlap prevention per asset; per-vehicle bookings consume 100% slot capacity (`CON-6`)
 - [ ] Pricing module: per-person and per-vehicle modes; **`calculate_quote()` as sole pricing authority** (`PRC-1`); commission rounding `FLOOR(gross × rate)` (`PAY-11`)
@@ -119,7 +119,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 **red-cab-api**
 
-- [ ] CheckoutSession flow: snapshot freeze + seat reservation at session creation; PaymentIntent keyed to `checkout_session_id` (`BKG-9`, `CON-1`, `CR-1`)
+- [ ] CheckoutSession flow: snapshot freeze + Terms of Use acceptance + seat reservation at session creation; Payment Attempt keyed to `checkout_session_id` (`BKG-9`, `CON-1`, `CR-1`, `PAY-17`)
 - [ ] Fulfillment payload capture at checkout (pickup/dropoff addresses, passenger name/phone, luggage count; optional flight number and special notes — `BKG-11`)
 - [ ] On payment success: materialize Booking from CheckoutSession snapshot → **`CONFIRMED`** (B2C happy path skips `PENDING` — `BKG-10`)
 - [ ] Booking references `tourist_id` → `tourists_profiles`, `provider_id` → `providers_profiles`, plus listing/slot ids
@@ -134,19 +134,28 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 - [ ] Provider incoming bookings with **Mark Delivered**
 - [ ] Tourist booking list and detail views
 
-#### Payments & Payouts (`PAY`) — Stripe B2C
+#### Payments & Payouts (`PAY`) — provider-agnostic B2C
+
+> Provider not selected (`AMB-040`). Build against the ports and a `FakeProvider` adapter first — a green end-to-end lifecycle on the fake is what proves the abstraction holds ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)).
 
 **red-cab-api**
 
-- [ ] Stripe Connect: **Separate Charges & Transfers** — charge Tourist on Platform account at checkout (`PAY-13`; Decision Log `AMB-002`)
-- [ ] PaymentIntent amount MUST match CheckoutSession snapshotted gross; commission split per `PAY-11` (`FLOOR(gross × rate)`, `net = gross − commission`)
-- [ ] Payout queue entry on `COMPLETED` with lifecycle **`QUEUED → PROCESSING → DISBURSED | FAILED`** (`LC-13`, `LC-14`, `PAY-14`)
-- [ ] Stripe Transfer to Provider Connected Account on disbursement
+- [ ] Provider-neutral persistence: replace provider-named external reference columns with a `provider` discriminator + opaque `provider_ref` + `provider_payload`. The non-nullable Stripe columns on charges and refunds currently make any non-Stripe provider unrepresentable — **do this first**
+- [ ] Payment provider ports + capability descriptor (custody location, merchant-of-record, settlement model, capture timing, clawback) (`ADR-015` C6)
+- [ ] `FakeProvider` adapter covering the full lifecycle, including a mock hosted payment page
+- [ ] Startup assertion rejecting any adapter declaring platform custody or platform merchant-of-record, or lacking deferred platform-triggered release (`ADR-015` C6)
+- [ ] Provider event ingestion table + normalization to canonical events; idempotent, uniquely keyed (`FIN-10`, `FIN-11`)
+- [ ] Charge amount MUST match CheckoutSession snapshotted gross; commission split per `PAY-11` (`FLOOR(gross × rate)`, `net = gross − commission`); platform fee equals snapshotted commission (`FIN-12`)
+- [ ] Terms of Use acceptance on CheckoutSession (`PAY-17`)
+- [ ] Completion determination record — actor, basis, instant, immutable; `mark_delivered` and the sweep become inputs (`PAY-16`)
+- [ ] Payout queue entry on completion determination with lifecycle **`QUEUED → PROCESSING → DISBURSED | FAILED`** (`LC-13`, `LC-14`, `PAY-14`, `PAY-15`)
+- [ ] Settlement release instruction to the provider on queue processing
 - [ ] Admin commission rate setting (`PAY-2`)
 
 **red-cab-web**
 
-- [ ] Checkout payment step (Stripe)
+- [ ] Checkout payment step driven by a `payment_handoff` descriptor; branch on `kind` (redirect vs embedded), lazy-load any provider SDK only in the embedded branch
+- [ ] Return route treated as a presentation hint only; booking confirmation polled from our own API (`FIN-13`)
 - [ ] Admin commission rate setting UI (`/team`)
 
 #### Notifications (`NOT`)
@@ -198,7 +207,7 @@ Phase 1 implementation follows the Decision Log in [../ambiguities/open-question
 - [ ] A Tourist can browse listings (District → Area), see a consistent `PriceBreakdown`, complete checkout with fulfillment details, and pay by card
 - [ ] CheckoutSession creation, snapshot freeze, and seat decrement commit atomically — no overbooking under concurrent load (`CON-2`, `CON-3`, `BKG-9`)
 - [ ] On payment success, Booking materializes as `CONFIRMED` with immutable snapshots matching the CheckoutSession (`INV-1`, `BKG-10`)
-- [ ] Stripe charge on Platform account succeeds; commission split matches frozen snapshot (`INV-2`, `PAY-11`, `PAY-13`)
+- [ ] Charge succeeds via the provider adapter with no Red Cab custody; commission split matches frozen snapshot (`INV-2`, `PAY-11`, `PAY-13`, `INV-13`)
 - [ ] Provider receives net payout via payout queue after booking completes (`QUEUED → DISBURSED`)
 - [ ] Provider can Mark Delivered; system auto-completes 24h post-service-end if unconfirmed (`OPR-11`, `OPR-12`)
 - [ ] Tourist and Provider receive booking confirmation email within 60 seconds (`OPR-8`)

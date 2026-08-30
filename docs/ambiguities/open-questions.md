@@ -32,50 +32,48 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - An entry is recorded once; related entries are linked rather than duplicated.
 
 ## Priority index
-- **P0 (blockers):** AMB-021
-- **P1 (pre-ship):** AMB-006, AMB-008, AMB-009, AMB-010, AMB-013, AMB-014, AMB-022, AMB-024, AMB-025, AMB-026
-- **P2 (confirmation / later):** AMB-015 through AMB-019, AMB-027 through AMB-035
-- **RESOLVED (Decision Log):** AMB-001, AMB-002, AMB-003, AMB-004, AMB-005, AMB-007, AMB-011, AMB-012, AMB-020, AMB-023, AMB-032, AMB-033, AMB-036
+- **P0 (blockers):** AMB-021, **AMB-037** (cross-border exemption — highest severity), **AMB-040** (provider custody/release)
+- **P1 (pre-ship):** AMB-001, AMB-006, AMB-008, AMB-009, AMB-010, AMB-013, AMB-014, AMB-022, AMB-024, AMB-025, AMB-026, AMB-038, AMB-039
+- **P2 (confirmation / later):** AMB-015 through AMB-019, AMB-027, AMB-028, AMB-031, AMB-034, AMB-035
+- **RESOLVED (Decision Log):** AMB-003 (reaffirmed), AMB-004, AMB-005, AMB-007, AMB-011, AMB-012, AMB-020, AMB-023, AMB-029, AMB-030, AMB-033, AMB-036
+- **REVERSED (superseded by [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)):** AMB-001 (custody element), AMB-002, AMB-032
 
 ---
 
 ## A. Finance (money movement, settlement, commission)
 
 ### AMB-001 — Authorization vs. Capture model
-- **Status:** **RESOLVED** — see Decision Log (2026-07-29).
-- **Sources:** state-machine `Q2`; payments `PAY-A1`.
+- **Status:** **PARTIALLY REVERSED** — the custody element of the 2026-07-29 resolution ("on Platform Stripe account", "funds held on Platform") is withdrawn per [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation). Capture timing is reopened as `AMB-039`.
+- **Sources:** state-machine `Q2`; payments `PAY-A1`; legal payment-flow memos (2026-08).
 - **Classification:** Finance (Engineering).
 - **Question:** Is the buyer's card **captured at checkout** (Model A) or **authorized at checkout and captured later** (Model B)?
-- **Impact:** Load-bearing. Determines whether `PENDING → CANCELLED` is a refund or a hold-release, when Provider funds are fundable, refund mechanics, and timeout semantics.
+- **Impact:** Determines when Provider funds are fundable, refund mechanics, and timeout semantics. Custody is no longer part of this question — `PAY-13` fixes custody with the payment provider regardless of capture timing, and `ADR-015` C9 makes capture timing an independent axis.
 - **Affected contexts:** Payments & Payouts, Booking & Checkout, Notifications.
-- **Temporary assumption:** Model A (capture at checkout); `PENDING` means paid-and-awaiting-confirmation.
-- **Priority:** P0.
+- **Temporary assumption:** Model A (capture at checkout) pending lead-time data (`AMB-039`).
+- **Priority:** P1 (downgraded — no longer gates the custody model).
 - **Owner:** Finance + Engineering.
-- **Risk if unresolved:** Cancellation/refund/payout flows cannot be built correctly; rework across the entire financial core.
 
-### AMB-002 — Stripe Connect charge topology
-- **Status:** **RESOLVED** — see Decision Log (2026-07-29).
-- **Sources:** payments `PAY-A4`.
-- **Classification:** Finance (Legal, Engineering).
-- **Question:** Which Connect topology — destination charges with `application_fee`, separate charges + transfers, or `on_behalf_of`?
-- **Impact:** Sets merchant-of-record, when the Provider transfer happens, and whether payout timing is automatic or platform-controlled (couples to AMB-005).
-- **Affected contexts:** Payments & Payouts; Provider Onboarding (connected-account KYC).
-- **Temporary assumption:** Destination charges with `application_fee` equal to the snapshotted Commission Amount.
+### AMB-002 — Charge topology and custody location
+- **Status:** **REVERSED** — the 2026-07-29 resolution (Separate Charges & Transfers on the Platform account) is withdrawn; re-resolved 2026-08-30 as sub-merchant settlement with deferred release. See Decision Log and [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
+- **Sources:** payments `PAY-A4`; legal payment-flow memos (2026-08).
+- **Classification:** Legal (Finance, Engineering).
+- **Question:** Which charge topology, and — decisively — whose balance legally holds the funds while they are held?
+- **Impact:** Sets merchant-of-record and determines whether Red Cab triggers Funds Transfer Business registration. The original resolution put custody on the Platform account, which is the exact activity the transaction-platform exemption exists to distinguish Red Cab from.
+- **Affected contexts:** Payments & Payouts; Provider Onboarding (sub-merchant KYC).
 - **Priority:** P0.
-- **Owner:** Finance + Legal + Engineering.
-- **Risk if unresolved:** Wrong merchant-of-record has tax/legal consequences; payout model may contradict the Payout Queue.
+- **Owner:** Legal + Finance + Engineering.
+- **Note:** Per-provider custody mechanics remain open as `AMB-040`.
 
-### AMB-003 — Automatic transfer vs. platform-controlled Payout Queue
-- **Status:** **RESOLVED** — see Decision Log (2026-07-29).
-- **Sources:** payments `PAY-A7`; planning conflict (Stripe auto-payout vs manual queue).
-- **Classification:** Finance (Engineering).
-- **Question:** Are Provider funds transferred automatically by Stripe at charge time, or held and disbursed via the platform **Payout Queue** after `COMPLETED`?
-- **Impact:** These are mutually exclusive; the Payout Queue model (`LC-6`) assumes platform control.
+### AMB-003 — Automatic settlement vs. platform-controlled Payout Queue
+- **Status:** **RESOLVED and REAFFIRMED** — originally resolved 2026-07-29 on operational grounds; reaffirmed 2026-08-30 on **compliance** grounds per [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) C2/C5 and `PAY-15`.
+- **Sources:** payments `PAY-A7`; planning conflict (auto-payout vs manual queue); legal payment-flow memos (2026-08).
+- **Classification:** Legal (Finance, Engineering).
+- **Question:** Are Provider funds settled automatically at charge time, or held and released via the platform **Payout Queue** after a completion determination?
+- **Impact:** Now load-bearing for the transaction-platform exemption, not merely for operational control. Automatic settlement at capture would leave Red Cab exercising no control over transaction completion, weakening the exemption argument even though it satisfies the no-custody rule. The Payout Queue is the evidentiary artifact of that control.
 - **Affected contexts:** Payments & Payouts, Booking & Checkout.
-- **Temporary assumption:** Platform-controlled Payout Queue; disbursement after completion.
 - **Priority:** P0.
-- **Owner:** Finance + Engineering.
-- **Risk if unresolved:** Double money-out exposure and contradiction with the state machine; see AMB-004.
+- **Owner:** Legal + Finance + Engineering.
+- **Note:** `split_at_capture` remains expressible but disfavored and requires recorded counsel sign-off (`ADR-015` C7).
 
 ### AMB-004 — Clearing period & completion→refund→payout timing
 - **Status:** **RESOLVED** — see Decision Log (2026-07-29).
@@ -368,23 +366,25 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Owner:** Business + Engineering.
 - **Risk if unresolved:** Either stranded inventory or unfulfillable quotations.
 
-### AMB-029 — Corporate provider settlement for off-Stripe funds
-- **Sources:** payments `PAY-A12`.
-- **Classification:** Finance.
-- **Question:** Since Corporate bank-transfer funds arrive by Bank Transfer (off-Stripe), how is the Provider's Net Payout disbursed — off-platform settlement or routed through Connect?
+### AMB-029 — Corporate provider settlement for bank-transfer funds
+- **Status:** **RESOLVED** — see Decision Log (2026-08-30). Corporate transfers are provider-collected via virtual account, so Provider settlement follows the same deferred-release path as card (`PAY-9`, `PAY-15`).
+- **Sources:** payments `PAY-A12`; legal payment-flow memos (2026-08).
+- **Classification:** Legal (Finance).
+- **Question:** Since Corporate bank-transfer funds previously arrived outside the payment rail, how is the Provider's Net Payout settled?
+- **Impact:** Funds landing in a Red Cab bank account for onward remittance was a more direct instance of the activity triggering Funds Transfer Business registration than the card path. Making furikomi a provider-collected payment method removes the off-rail path entirely.
 - **Affected contexts:** Corporate Quotation & Invoicing, Payments & Payouts.
-- **Temporary assumption:** Manual off-platform settlement, recorded as a Payments fact.
 - **Priority:** P1.
-- **Owner:** Finance.
+- **Owner:** Legal + Finance.
 
 ### AMB-030 — Bank transfer reconciliation (manual confirm)
-- **Sources:** PRD `E3`.
-- **Classification:** Operational (Finance).
-- **Question:** Confirm manual Admin "Mark as Paid"; automated reconciliation is v2.
+- **Status:** **RESOLVED** — see Decision Log (2026-08-30). Superseded: confirmation is provider-driven, not a manual Admin "Mark as Paid".
+- **Sources:** PRD `E3`; legal payment-flow memos (2026-08).
+- **Classification:** Operational (Finance, Legal).
+- **Question:** Is Corporate transfer receipt confirmed manually by Admin, or by the payment provider?
+- **Impact:** Manual confirmation presumed funds arriving in a Red Cab account, which `INV-13` forbids. Provider-confirmed receipt converges to provider truth like any other rail (`FIN-11`) and removes the manual step.
 - **Affected contexts:** Corporate Quotation & Invoicing, Payments & Payouts.
-- **Temporary assumption:** Manual (`PAY-9`).
 - **Priority:** P2.
-- **Owner:** Business Owner.
+- **Owner:** Business Owner + Finance.
 
 ---
 
@@ -402,19 +402,62 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Risk if unresolved:** Legally/operationally unusable invoices.
 
 ### AMB-032 — Merchant-of-record / seller-of-record
-- **Status:** **RESOLVED** — see Decision Log (2026-07-29).
-- **Sources:** derived from AMB-002.
+- **Status:** **REVERSED** — the 2026-07-29 resolution (Platform merchant-of-record) is withdrawn; re-resolved 2026-08-30 as **Provider merchant-of-record**. See Decision Log and [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
+- **Sources:** derived from AMB-002; legal payment-flow memos (2026-08).
 - **Classification:** Legal (Finance).
-- **Question:** Is Red Cab the merchant-of-record, or the Provider (platform as agent)? Tied to Connect topology.
-- **Impact:** Tax collection/remittance, consumption-tax treatment, liability.
+- **Question:** Is Red Cab the merchant-of-record, or the Provider?
+- **Impact:** Tax collection/remittance, consumption-tax treatment, liability, and whether Red Cab is characterised as holding customer funds. Platform merchant-of-record is incompatible with `INV-13`.
 - **Affected contexts:** Payments & Payouts, Corporate Quotation & Invoicing.
-- **Temporary assumption:** Platform as agent; Provider is seller-of-record (to confirm with AMB-002).
-- **Priority:** P0 (paired with AMB-002).
+- **Priority:** P0.
 - **Owner:** Legal + Finance.
-- **Risk if unresolved:** Tax/regulatory exposure.
+- **Note:** Post-settlement liability recovery remains open as `AMB-038`.
+
+### AMB-037 — Cross-border carve-back to the transaction-platform exemption
+- **Sources:** legal payment-flow memo (2026-08), open item 3.
+- **Classification:** Legal (Finance).
+- **Question:** Does the transaction-platform exemption still apply given that Tourists pay from overseas, under the 2025 amendments to the Payment Services Act? What conditions would keep the arrangement exempt?
+- **Impact:** **Decisive.** The target market is inbound tourists from English-speaking countries, so essentially all B2C payment volume is cross-border by design — this is the base case, not an edge case. A negative answer invalidates the exemption strategy regardless of how well the no-custody architecture is implemented, leaving Funds Transfer Business registration (1–2 years, ¥10 million reserve) as the fallback.
+- **Affected contexts:** Payments & Payouts, Corporate Quotation & Invoicing, Identity & Access (payer jurisdiction capture).
+- **Temporary assumption:** The exemption holds for cross-border collection where the provider is the legal receiver; payer country is captured and retained per transaction pending confirmation.
+- **Priority:** **P0.**
+- **Owner:** Legal.
+- **Risk if unresolved:** The entire payment architecture rests on an exemption that may not apply. Highest-severity open item in the register.
+
+### AMB-038 — Clawback mechanism for post-settlement refunds and disputes
+- **Sources:** derived from AMB-032 reversal and `PAY-7`.
+- **Classification:** Finance (Legal, Engineering).
+- **Question:** With the Provider as merchant-of-record and refund liability assigned to the Provider (`FIN-14`), by what mechanism are funds recovered once settled — reversal against provider balance, deduction from future settlement, or invoice? What happens when none is available?
+- **Impact:** `PAY-7` guarantees Tourists a 100% refund on Provider- or Admin-initiated cancellation. Post-settlement, honoring that guarantee depends entirely on clawback working. A Provider with one booking, no balance, no future volume, and no cooperation is an unrecovered loss the platform absorbs despite not being merchant-of-record.
+- **Affected contexts:** Payments & Payouts, Provider Onboarding (contractual terms).
+- **Temporary assumption:** Deferred release (`PAY-15`) keeps most refunds pre-settlement, where no recovery is needed; post-settlement recovery is a provider-selection requirement plus a contractual obligation on the Provider.
+- **Priority:** P1.
+- **Owner:** Finance + Legal.
+- **Risk if unresolved:** A tourist-facing refund guarantee the platform cannot reliably honor.
+
+### AMB-039 — Capture timing and booking lead time
+- **Sources:** derived from AMB-001; `ADR-015` C9.
+- **Classification:** Finance (Engineering, Business).
+- **Question:** Is the Tourist's instrument captured at checkout, or authorized at checkout and captured nearer to service delivery? What is the actual distribution of booking-to-service lead time?
+- **Impact:** Deferred capture is the strongest position on both sides of the two-sided test — no party holds funds during the wait, and Red Cab controls capture timing — but card authorizations expire in roughly seven days, and storing the instrument for later merchant-initiated capture adds 3DS complexity plus a decline-at-capture failure mode after the Provider has been committed. Viability depends entirely on lead time, and there is no data: the platform is pre-launch.
+- **Affected contexts:** Payments & Payouts, Booking & Checkout, Catalog & Inventory (availability lead time).
+- **Temporary assumption:** Capture at checkout; `capture_timing` is declared separately from `settlement_model` so this can change without domain rework. Booking-to-service lead time is instrumented from launch so the decision becomes data-driven.
+- **Priority:** P1.
+- **Owner:** Finance + Product + Engineering.
+- **Risk if unresolved:** Provider hold-duration caps (`AMB-040`) may be exceeded by long-lead bookings.
+
+### AMB-040 — Custody location and release control per candidate provider
+- **Sources:** legal payment-flow memo (2026-08), open item 1; derived from AMB-002.
+- **Classification:** Engineering (Legal, Finance).
+- **Question:** For each candidate provider (Stripe Connect, Komoju, PAY.JP): whose balance legally holds the funds while held, who controls the release trigger, is the provider contractually the legal receiver of funds, and what is the maximum hold duration? Which providers support virtual-account bank transfer for the Corporate rail, and clawback against a sub-merchant?
+- **Impact:** Gates provider selection. Requiring custody at the provider **and** platform-triggered release (`PAY-13` with `PAY-15`) is a demanding combination that some providers cannot satisfy — and it is not answerable from public documentation, only from the provider's contract terms. Corporate virtual-account support may be the deciding factor.
+- **Affected contexts:** Payments & Payouts, Provider Onboarding, Corporate Quotation & Invoicing.
+- **Temporary assumption:** No provider is assumed. The domain branches only on declared capability (`ADR-015` C6), so selection can be deferred without blocking build.
+- **Priority:** **P0.**
+- **Owner:** Engineering + Legal + Finance.
+- **Risk if unresolved:** Building a provider-shaped integration before confirming it satisfies the custody and control conditions repeats the error `ADR-015` exists to correct.
 
 ### AMB-033 — Consumption tax treatment
-- **Status:** **RESOLVED** — see Decision Log (2026-07-29).
+- **Status:** **RESOLVED** — see Decision Log (2026-07-29). Note: the `AMB-032` reversal moves merchant-of-record to the Provider, which may affect consumption-tax collection responsibility; to be confirmed with `AMB-037`.
 - **Sources:** PRD `E-06`; `PAY-10`.
 - **Classification:** Finance (Legal).
 - **Question:** Confirm 10% consumption tax handling on corporate documents and whether B2C prices are tax-inclusive.
@@ -472,9 +515,9 @@ Low-effort confirmations from the PRD Appendix already encoded as baseline rules
 
 | AMB ID | Decision | Decided by | Date | Docs updated |
 | --- | --- | --- | --- | --- |
-| AMB-001 | **Capture at checkout** on Platform Stripe account. Funds held on Platform until Booking `COMPLETED`; no authorize-only model for B2C MVP. | Product + Finance + Engineering | 2026-07-29 | [Business Rules](/docs/business-rules/invariants) (`PAY-13`), `payments-architecture.md`, `booking-state-machine.md`, `phasing.md` |
-| AMB-002 | **Separate Charges & Transfers** (not Destination Charges). Charge Tourist on Platform account; transfer Provider net via Payout Queue after completion. | Finance + Legal + Engineering | 2026-07-29 | `payments-architecture.md`, `glossary.md`, `phasing.md` |
-| AMB-003 | **Platform-controlled Payout Queue** after `COMPLETED`. No automatic Provider transfer at charge time. | Finance + Engineering | 2026-07-29 | [Business Rules](/docs/business-rules/invariants) (`PAY-13`, `PAY-14`), `payments-architecture.md`, `domain-models.md` |
+| AMB-001 | ~~**Capture at checkout** on Platform Stripe account. Funds held on Platform until Booking `COMPLETED`.~~ **Custody element reversed 2026-08-30** — see below. Capture timing reopened as `AMB-039`. | Product + Finance + Engineering | 2026-07-29 | [Business Rules](/docs/business-rules/invariants) (`PAY-13`), `payments-architecture.md`, `booking-state-machine.md`, `phasing.md` |
+| AMB-002 | ~~**Separate Charges & Transfers** (not Destination Charges). Charge Tourist on Platform account; transfer Provider net via Payout Queue after completion.~~ **Reversed 2026-08-30** — see below. | Finance + Legal + Engineering | 2026-07-29 | `payments-architecture.md`, `glossary.md`, `phasing.md` |
+| AMB-003 | **Platform-controlled Payout Queue** after `COMPLETED`. No automatic Provider settlement at charge time. *(Reaffirmed 2026-08-30 on compliance grounds — see below.)* | Finance + Engineering | 2026-07-29 | [Business Rules](/docs/business-rules/invariants) (`PAY-14`, `PAY-15`), `payments-architecture.md`, `domain-models.md` |
 | AMB-004 | Payout disbursement occurs only after Booking `COMPLETED` and Payout Queue Entry processing. Refund before `DISBURSED` voids queue entry (`PAY-8`, `FIN-5`). | Finance | 2026-07-29 | `payments-architecture.md`, `booking-state-machine.md` |
 | AMB-005 | Payout Queue Entry lifecycle: **`QUEUED → PROCESSING → DISBURSED \| FAILED`** (`LC-13`, `LC-14`). Failed entries retriable; Admin alerted. | Engineering | 2026-07-29 | [Business Rules](/docs/business-rules/invariants), `payments-architecture.md`, `domain-models.md` |
 | AMB-007 | Snapshots authoritative at **CheckoutSession creation** (`PRC-8`, `BKG-9`); copied to Booking at materialization. PaymentIntent amount MUST match snapshotted gross. | Engineering | 2026-07-29 | `glossary.md`, [Business Rules](/docs/business-rules/invariants), `booking-state-machine.md`, `data-model.md` |
@@ -482,7 +525,21 @@ Low-effort confirmations from the PRD Appendix already encoded as baseline rules
 | AMB-012 | Seat restoration **idempotent** on cancellation/session expiry; skipped for elapsed slots; per-vehicle restores full capacity unit (`CON-5`, `CON-6`). | Engineering | 2026-07-29 | [Business Rules](/docs/business-rules/invariants) (`CON-5`) |
 | AMB-020 | Primary discovery navigation: **District → Area** hierarchy. Service type is a **filter** (`D-02`), not primary IA. | Product Owner | 2026-07-29 | `glossary.md`, `functional-requirements.md`, `phasing.md` |
 | AMB-023 | Canonical vehicle taxonomy: **PRD set** — Alphard, HiAce, Sedan, Limousine (private car); 20/40/50-seat bands (charter bus). Stored on `provider_assets.vehicle_category`. | Business + Engineering | 2026-07-29 | `glossary.md`, `domain-models.md` |
-| AMB-032 | **Platform merchant-of-record** for card charges; **Provider seller-of-record** for underlying service (platform as agent). | Legal + Finance | 2026-07-29 | `payments-architecture.md`, `glossary.md` |
+| AMB-032 | ~~**Platform merchant-of-record** for card charges; **Provider seller-of-record** for underlying service.~~ **Reversed 2026-08-30** — see below. | Legal + Finance | 2026-07-29 | `payments-architecture.md`, `glossary.md` |
 | AMB-033 | **B2C prices tax-inclusive**; **corporate documents itemize 10% consumption tax** separately (`PAY-12`, `PAY-10`). | Finance + Legal | 2026-07-29 | [Business Rules](/docs/business-rules/invariants), `glossary.md` |
 | AMB-036 | Geography: administrative seed (codes + centroids); designated cities as Districts; no PostGIS Phase 1; tourism tags on Listings later | Product + Engineering | 2026-08-15 | [Geography](/docs/architecture/geography), [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data) |
 | — | **Service timezone:** IANA zone on `catalog_areas`; snapshotted on CheckoutSession/Booking; Phase 1 Japan seed `Asia/Tokyo`; no hardcoded zones in domain code | Product + Engineering | 2026-08-23 | [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [Date / Time / Timezone](/docs/engineering/datetime-and-timezones), `glossary.md`, `invariants.md` (`OPR-11`, `OPR-12`) |
+
+### Revisions — 2026-08-30 (payment custody and control)
+
+Driven by the legal payment-flow memos (August 2026) and the objective of qualifying for the **transaction-platform exemption** rather than registering as a Funds Transfer Business. Recorded in [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation), which is **Proposed pending counsel** — these revisions are the working baseline, not a confirmed legal position.
+
+| AMB ID | Revision | Decided by | Date | Docs updated |
+| --- | --- | --- | --- | --- |
+| AMB-001 | **Custody element reversed.** Funds are held by the licensed payment provider, not on a Platform account. Capture timing is now an independent axis, reopened as `AMB-039`. | Product + Finance + Engineering (pending Legal) | 2026-08-30 | [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation), [Business Rules](/docs/business-rules/invariants) (`PAY-13`, `INV-13`), [Payments Architecture](/docs/architecture/payments-architecture) |
+| AMB-002 | **Reversed.** Sub-merchant settlement with deferred, platform-triggered release replaces Separate Charges & Transfers on the Platform account. Red Cab is never the legal recipient of funds. | Finance + Engineering (pending Legal) | 2026-08-30 | [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation), [Business Rules](/docs/business-rules/invariants) (`PAY-13`), [Payments Architecture](/docs/architecture/payments-architecture), `pay.md` |
+| AMB-003 | **Reaffirmed on compliance grounds.** The platform-controlled Payout Queue is retained because control of transaction completion is a condition of the exemption, not merely operational preference (`PAY-15`). | Finance + Engineering (pending Legal) | 2026-08-30 | [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation), [Business Rules](/docs/business-rules/invariants) (`PAY-15`, `PAY-16`) |
+| AMB-029 | **Resolved.** Corporate transfers are provider-collected via per-transaction virtual account, so Provider settlement follows the same deferred-release path as card. No off-rail settlement remains. | Finance + Engineering (pending Legal) | 2026-08-30 | [Business Rules](/docs/business-rules/invariants) (`PAY-9`), [Payments Architecture](/docs/architecture/payments-architecture), `pay.md` (`FR-PAY-014`) |
+| AMB-030 | **Resolved / superseded.** Corporate transfer receipt is confirmed by the payment provider, not by manual Admin entry — manual confirmation presumed funds in a Red Cab account, which `INV-13` forbids. | Finance + Engineering (pending Legal) | 2026-08-30 | [Business Rules](/docs/business-rules/invariants) (`PAY-9`), `pay.md` (`FR-PAY-014`) |
+| AMB-032 | **Reversed.** The **Provider** is merchant-of-record for the underlying service; Red Cab is merchant-of-record for nothing. Post-settlement refund and dispute liability sits with the Provider (`FIN-14`), recovered by clawback (`AMB-038`). | Legal + Finance (pending counsel opinion) | 2026-08-30 | [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation), [Business Rules](/docs/business-rules/invariants) (`PAY-13`), [Payments Architecture](/docs/architecture/payments-architecture) |
+| — | **New open questions raised:** `AMB-037` cross-border carve-back (P0, highest severity), `AMB-038` clawback mechanism, `AMB-039` capture timing and lead time, `AMB-040` custody location and release control per provider (P0). | Engineering | 2026-08-30 | [Open Questions](/docs/ambiguities/open-questions), [Payments Architecture](/docs/architecture/payments-architecture) |

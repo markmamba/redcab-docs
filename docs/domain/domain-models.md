@@ -144,7 +144,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
   - *Lifecycle:* active → retired (soft); historical Slots/Bookings preserved.
 - **Listing** (root: `Listing`)
   - *Purpose:* a bookable service with type-specific attributes, photos, location, and a reference to its pricing policy.
-  - *Invariants:* cannot be `Published` with zero photos (`INV-10`); cannot be `Published` without Provider Stripe Connected Account verified (`INV-12`, `LC-12`); a District/Area with zero published listings is not shown (`INV-8`); listing edits must not retroactively affect confirmed Bookings (`BKG-8`, enforced because Booking holds snapshots).
+  - *Invariants:* cannot be `Published` with zero photos (`INV-10`); cannot be `Published` without the Provider's Merchant Account verified (`INV-12`, `LC-12`); a District/Area with zero published listings is not shown (`INV-8`); listing edits must not retroactively affect confirmed Bookings (`BKG-8`, enforced because Booking holds snapshots).
   - *Lifecycle:* `Draft → Published → Paused/Unpublished → Unlisted`; only `Published` is tourist-visible (`LC-10`). Paused/Unlisted preserve history (`INV-11`).
 - **PricingPolicy** (root: `PricingPolicy`)
   - *Purpose:* hold the pricing configuration (mode, group tiers, duration, seasonal overrides, extra charges) and the Cancellation Policy, and to be the basis for the single calculation authority.
@@ -182,7 +182,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 
 ### Aggregates
 - **CheckoutSession** (root: `CheckoutSession`)
-  - *Purpose:* pre-booking checkout unit holding frozen snapshots, Fulfillment Payload, seat hold, and PaymentIntent reference until payment succeeds or session expires.
+  - *Purpose:* pre-booking checkout unit holding frozen snapshots, Fulfillment Payload, Terms of Use acceptance (`PAY-17`), seat hold, and a provider-neutral Payment Attempt reference until payment succeeds or session expires.
   - *Invariants:* snapshots frozen at session creation (`PRC-8`, `PAY-4`, `PAY-11`); seat hold atomic with session creation (`CON-1`, `BKG-9`); per-vehicle listings consume full slot capacity (`CON-6`); payment amount MUST equal snapshotted gross.
   - *Lifecycle:* initiated → awaiting_payment → materialized | expired | abandoned.
   - *Transactionally consistent:* snapshot freeze + seat decrement + session record (`BKG-9`).
@@ -215,20 +215,20 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 
 ### Context overview
 - **Responsibility:** **money movement** and the Commission Rate setting — charges, captures, payouts, refunds, reconciliation. Converges to external-rail truth.
-- **Source of truth for:** the platform Commission Rate setting, Provider Connected Account state, payment/charge movements, payout-queue entries and disbursement outcomes, refund movements, bank-transfer reconciliation facts.
+- **Source of truth for:** the platform Commission Rate setting, Provider Merchant Account state, payment/charge movements, payout-queue entries and settlement outcomes, refund movements, bank-transfer reconciliation facts. **Not** a source of truth for fund custody, which is external (`INV-13`).
 - **Dependencies:** upstream Booking (snapshots), COR (reconciliation), external rails; downstream Notifications, Admin oversight.
 
 ### Aggregates
 - **Payment** (root: `Payment` / charge record)
-  - *Purpose:* represent the buyer-side capture on the Platform Stripe account, keyed to CheckoutSession then Booking.
+  - *Purpose:* represent the buyer-side capture **held by the payment provider**, keyed to CheckoutSession then Booking. Red Cab holds no funds and no balance is modeled here (`INV-13`, `PAY-13`).
   - *Invariants:* failed payment yields no Booking (`PAY-5`, `FIN-9`); amount equals CheckoutSession snapshotted gross; every movement traceable (`FIN-3`); idempotent (`FIN-10`). Separate Charges & Transfers on Platform account (`PAY-13`).
   - *Lifecycle:* initiated → captured → (refunded).
 - **ProviderConnectedAccount** (root: `ProviderConnectedAccount`)
-  - *Purpose:* the Provider's Stripe Connect destination for receiving net payouts; gates listing publish and transfer initiation.
-  - *Invariants:* one account per Provider; publish requires `status = verified` with `payouts_enabled` and `transfers_capability = active` (`INV-12`, `LC-12`); restricted accounts cause payout failure (`LC-14`, `PAY-14`). State converges to Stripe webhooks (`FIN-11`).
+  - *Purpose:* the Provider's sub-merchant destination with the configured payment provider for receiving net settlement; gates listing publish and settlement initiation.
+  - *Invariants:* one account per Provider; publish requires `status = verified` with settlement enabled (`INV-12`, `LC-12`); restricted accounts cause settlement failure (`LC-14`, `PAY-14`). State converges to verified provider events (`FIN-11`).
   - *Lifecycle:* `onboarding → verified | restricted | disabled`.
 - **PayoutQueueEntry** (root: `PayoutQueueEntry`)
-  - *Purpose:* record the Net Payout owed to a Provider after Booking `COMPLETED`; drives Stripe Transfer to Connected Account.
+  - *Purpose:* record the Net Payout owed to a Provider after Booking `COMPLETED`; carries Red Cab's settlement-release instruction to the payment provider and serves as its evidentiary record (`PAY-15`, `PAY-16`).
   - *Invariants:* carries frozen Net Payout Amount (`LC-6`); payout never exceeds net (`FIN-4`); payout/refund mutually exclusive (`FIN-5`, `PAY-8`).
   - *Lifecycle:* `QUEUED → PROCESSING → DISBURSED | FAILED` (`LC-13`, `LC-14`, `PAY-14`).
 - **Refund** (root: `Refund`)
@@ -250,7 +250,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 
 ### Cross-context references
 - Reads the Booking **CommissionSnapshot** read-only; **never authors or mutates** it (§4). References `booking_id`, `provider_id` by id. External-rail truth (webhooks) is authoritative for settlement outcomes (`FIN-11`).
-- Disputes/chargebacks after payout are not yet modeled (`AMB-008`); Corporate off-Stripe settlement `AMB-029`.
+- Disputes/chargebacks after settlement are not yet modeled (`AMB-008`); post-settlement clawback against the Provider as merchant-of-record is open (`AMB-038`, `FIN-14`).
 
 ## 3.6 Corporate Quotation & Invoicing (core)
 
@@ -367,7 +367,7 @@ graph TD
   Appr --> NotifB[Notifications]
   LicExp[LicenseExpired] --> Pause[Catalog pauses listings]
   Pub[ListingPublished] --> Discover[Catalog discovery + Search index]
-  Created[CheckoutSessionCreated] --> Pay[Payments charge via PaymentIntent]
+  Created[CheckoutSessionCreated] --> Pay[Payments initiate via provider]
   Materialized[BookingMaterialized CONFIRMED] --> NotifC[Notifications confirm to tourist + provider]
   Confirmed[BookingConfirmed] --> NotifD[Notifications]
   Completed[BookingCompleted] --> Queue[Payments queues payout]
@@ -391,7 +391,7 @@ These are tracked in [../ambiguities/open-questions.md](/docs/ambiguities/open-q
 
 - **Booking lifecycle completeness (`AMB-013/014`).** Missing transitions (tourist-cancel-confirmed, provider decline, no-show, reschedule) and terminal-state overloading; `CancellationContext` (initiator) is modeled now so the refund rule stays derivable.
 - **Bundle cancellation semantics (`AMB-017`).** Cross-leg effect undefined; BundleBooking link is modeled but the cascade is not.
-- **corporate lifecycle (`AMB-027/028/029/031`).** Pre-payment state vs canonical states, seat-hold timing, off-Stripe settlement, and PDF rendering. The Corporate→Booking conversion is modeled through an ACL so a resolution does not ripple into Booking.
+- **corporate lifecycle (`AMB-027/028/031`).** Pre-payment state vs canonical states, seat-hold timing, and PDF rendering. Settlement and reconciliation resolved 2026-08-30 via provider-collected virtual accounts (`PAY-9`). The Corporate→Booking conversion is modeled through an ACL so a resolution does not ripple into Booking.
 - **Provider mid-flight status change (`AMB-026`).** Effect of suspension/expiry on confirmed Bookings; the boundary rule (no historical mutation) holds regardless.
 - **Identity scope (`AMB-021/022`), SMS scope (`AMB-034`).** None alter aggregate boundaries; they refine value objects and contracts within the owning context.
 

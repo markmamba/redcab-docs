@@ -8,7 +8,7 @@ description: Runnable repos, IAM, role profiles, event bus, and NOT stub.
 ## TL;DR
 
 - **Foundation:** runnable repos, thin IAM + role profiles, actor-scoped signups, in-process domain events, NOT mostly wired.
-- Delivers identity/profile schema without marketplace flows (no listings, bookings, or Stripe).
+- Delivers identity/profile schema without marketplace flows (no listings, bookings, or payments).
 - Core deliverables met; post-audit follow-up items tracked separately below.
 
 ## About this document
@@ -166,7 +166,7 @@ These items were **not** part of the original Phase 0 checklist or need product/
 
 - Listings, bookings, payments, Corporate quotations/invoices, reviews
 - Provider registration/application **flows** beyond account credentials (schema + `POST providers/profiles` land in Phase 1)
-- Stripe integration
+- Payment provider integration
 - Admin panel beyond login
 - Multi-role accounts / role-assignment audit history
 

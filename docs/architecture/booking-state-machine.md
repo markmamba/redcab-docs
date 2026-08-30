@@ -175,7 +175,7 @@ Checkout is modeled outside the Booking state machine as a **CheckoutSession** a
    - Compute and freeze Price Snapshot, Commission Snapshot (`PAY-11`), and Cancellation Policy Snapshot on the CheckoutSession (`PRC-8`, `PAY-4`).
    - Capture Fulfillment Payload (`BKG-11`).
    - Reserve seats on the Slot (`CON-1`, `CON-6` for per-vehicle exclusivity).
-   - Create Stripe PaymentIntent keyed to `checkout_session_id` (`PAY-13`).
+   - Record Terms of Use acceptance (`PAY-17`) and create a Payment Attempt with the configured payment provider keyed to `checkout_session_id` (`PAY-13`).
 4. **On payment success:** materialize Booking from session snapshots + payload; set state `CONFIRMED` (`BKG-2`, `BKG-10`).
 5. **On payment failure or session expiry:** release seat hold; no Booking created (`PAY-5`, `CON-5`).
 6. **On payment success but seat hold lost (race):** reverse charge; no Booking created (`CON-2`).
@@ -183,7 +183,7 @@ Checkout is modeled outside the Booking state machine as a **CheckoutSession** a
 ## Entry — Booking materialization (B2C)
 Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` directly.
 
-- **Trigger:** successful PaymentIntent confirmation (`sync`, actor: Tourist via payment rail).
+- **Trigger:** verified payment success from the payment provider (`sync`, actor: Tourist via payment rail). A browser return redirect is never the trigger (`FIN-13`).
 - **Guards:** CheckoutSession in payable state; seats still held; payment amount equals snapshotted `gross_amount`.
 - **Sync side effects (all-or-nothing, `BKG-2`, `BKG-9`):**
   - Copy Price, Commission, Cancellation Policy snapshots and Fulfillment Payload onto the Booking (`INV-1`).
@@ -212,9 +212,9 @@ Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` d
 
 ### T3: COMPLETED → PAYOUT_QUEUED
 - **Trigger type:** `async` / system (event-driven from `BookingCompleted`).
-- **Guards:** current state `COMPLETED`; Net Payout Amount present from snapshot (`LC-6`, `INV-2`); Provider Connected Account verified at disbursement time.
+- **Guards:** current state `COMPLETED`; a recorded completion determination (`PAY-16`); Net Payout Amount present from snapshot (`LC-6`, `INV-2`); Provider Merchant Account verified at settlement time.
 - **Sync side effects (within the queuing operation):** create Payout Queue Entry in `QUEUED` state with frozen Net Payout Amount (`LC-13`, `PAY-14`); set Booking state `PAYOUT_QUEUED`.
-- **Async reactions:** Payments processes entry `QUEUED → PROCESSING → DISBURSED | FAILED` via Stripe Transfer to Provider Connected Account (`PAY-13`, `PAY-14`).
+- **Async reactions:** Payments processes entry `QUEUED → PROCESSING → DISBURSED | FAILED` by instructing the payment provider to settle to the Provider Merchant Account (`PAY-13`, `PAY-14`, `PAY-15`). Entry creation requires a recorded completion determination (`PAY-16`).
 
 ### T4: COMPLETED → REFUNDED
 - **Trigger type:** `sync`, actor: Admin.

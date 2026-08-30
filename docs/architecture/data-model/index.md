@@ -246,7 +246,7 @@ The domain data is partitioned across the locked **6 core + 2 supporting** bound
 | Provider Onboarding & Verification (`PRV`) | core | Provider Status, Provider Type, license validity window, support-trial window, uploaded verification Documents |
 | Catalog & Inventory (`CAT`) | core | District/Area, Listing content & status, PricingPolicy configuration, AvailabilitySlot and its seat counter; Rating Score *display* (the score itself is owned by Reviews) |
 | Booking & Checkout (`BKG`) | core | Booking existence and lifecycle state, Price/Commission/Cancellation snapshots, Passenger Manifest, the Bundle link |
-| Payments & Payouts (`PAY`) | core | Commission Rate setting, Provider Connected Account state, payment/charge movements, payout-queue entries and disbursement outcomes, refund movements, bank-transfer reconciliation facts |
+| Payments & Payouts (`PAY`) | core | Commission Rate setting, Provider Merchant Account state, payment/charge movements, payout-queue entries and settlement outcomes, refund movements, bank-transfer reconciliation facts. Custody is external (`INV-13`) |
 | Corporate Quotation & Invoicing (`COR`) | core | Quotation Request, Quotation (line items, tax, validity, status), Invoice |
 | Reviews & Ratings (`REV`) | core | Review content & moderation state, RatingSummary (the authoritative score) |
 | Notifications (`NOT`) | supporting | Notification dispatch records and templates only |
@@ -342,7 +342,7 @@ The domain data is partitioned across the locked **6 core + 2 supporting** bound
 | Provider Onboarding & Verification (`PRV`) | core | Provider Status, Provider Type, license validity window, support-trial window, uploaded verification Documents |
 | Catalog & Inventory (`CAT`) | core | District/Area, Listing content & status, PricingPolicy configuration, AvailabilitySlot and its seat counter; Rating Score *display* (the score itself is owned by Reviews) |
 | Booking & Checkout (`BKG`) | core | Booking existence and lifecycle state, Price/Commission/Cancellation snapshots, Passenger Manifest, the Bundle link |
-| Payments & Payouts (`PAY`) | core | Commission Rate setting, Provider Connected Account state, payment/charge movements, payout-queue entries and disbursement outcomes, refund movements, bank-transfer reconciliation facts |
+| Payments & Payouts (`PAY`) | core | Commission Rate setting, Provider Merchant Account state, payment/charge movements, payout-queue entries and settlement outcomes, refund movements, bank-transfer reconciliation facts. Custody is external (`INV-13`) |
 | Corporate Quotation & Invoicing (`COR`) | core | Quotation Request, Quotation (line items, tax, validity, status), Invoice |
 | Reviews & Ratings (`REV`) | core | Review content & moderation state, RatingSummary (the authoritative score) |
 | Notifications (`NOT`) | supporting | Notification dispatch records and templates only |

@@ -6,80 +6,9 @@ description: Architecture Decision Records (ADRs) for Red Cab Marketplace.
 
 ## TL;DR
 
-- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
-- They record **why** — they do not introduce new boundaries or override business rules.
-
-## About this document
-
-Index of architecture decision records. Each ADR is authoritative for its decision; unresolved detail remains in [Open Questions](/docs/ambiguities/open-questions).
-
----
-
-## TL;DR
-
-- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
-- They record **why** — they do not introduce new boundaries or override business rules.
-
-## About this document
-
-Index of architecture decision records. Each ADR is authoritative for its decision; unresolved detail remains in [Open Questions](/docs/ambiguities/open-questions).
-
----
-
-## TL;DR
-
-- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
-- They record **why** — they do not introduce new boundaries or override business rules.
-
-## About this document
-
-Index of architecture decision records. Each ADR is authoritative for its decision; unresolved detail remains in [Open Questions](/docs/ambiguities/open-questions).
-
----
-
-## TL;DR
-
-- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
-- They record **why** — they do not introduce new boundaries or override business rules.
-
-## About this document
-
-Index of architecture decision records. Each ADR is authoritative for its decision; unresolved detail remains in [Open Questions](/docs/ambiguities/open-questions).
-
----
-
-## TL;DR
-
-- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
-- They record **why** — they do not introduce new boundaries or override business rules.
-
-## About this document
-
-Index of architecture decision records. Each ADR is authoritative for its decision; unresolved detail remains in [Open Questions](/docs/ambiguities/open-questions).
-
----
-
-## TL;DR
-
-- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
-- They record **why** — they do not introduce new boundaries or override business rules.
-
-## About this document
-
-Index of architecture decision records. Each ADR is authoritative for its decision; unresolved detail remains in [Open Questions](/docs/ambiguities/open-questions).
-
----
-
-## TL;DR
-
-- Thirteen **accepted** architecture decision records (ADR-001–013) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, geography reference data, and evolution strategy.
+- Fourteen **accepted** architecture decision records (ADR-001–014) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, and service timezone.
+- **ADR-015 is Proposed**, not Accepted — it records the payment custody/control separation pending legal counsel opinion.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -93,7 +22,7 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ID | Decision | Status |
 | --- | --- | --- |
 | ADR-001 | [ADR-001: Modular Monolith Architecture](/docs/architecture/decisions/adr-001-modular-monolith) | Accepted |
-| ADR-002 | [ADR-002: Technology Stack Selection](/docs/architecture/decisions/adr-002-technology-stack) | Accepted |
+| ADR-002 | [ADR-002: Technology Stack Selection](/docs/architecture/decisions/adr-002-technology-stack) | Accepted (payments dimension superseded by ADR-015) |
 | ADR-003 | [ADR-003: Bounded Context Architecture](/docs/architecture/decisions/adr-003-bounded-context-architecture) | Accepted |
 | ADR-004 | [ADR-004: Context Integration Model](/docs/architecture/decisions/adr-004-context-integration-model) | Accepted |
 | ADR-005 | [ADR-005: Single Pricing Authority](/docs/architecture/decisions/adr-005-single-pricing-authority) | Accepted |
@@ -106,3 +35,4 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-012 | [ADR-012: Evolution Strategy](/docs/architecture/decisions/adr-012-evolution-strategy) | Accepted |
 | ADR-013 | [ADR-013: Geography Reference Data](/docs/architecture/decisions/adr-013-geography-reference-data) | Accepted |
 | ADR-014 | [ADR-014: Service Timezone Model](/docs/architecture/decisions/adr-014-service-timezone-model) | Accepted |
+| ADR-015 | [ADR-015: Payment Custody and Control Separation](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) | **Proposed** — pending counsel |

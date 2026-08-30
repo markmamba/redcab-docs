@@ -17,8 +17,9 @@ Ownership boundary rules the model holds:
 - **Every money movement traces to exactly one Booking and its snapshot** (`FIN-3`). There is no money movement without a Booking it belongs to.
 - **Payout and refund are mutually exclusive for a Booking's funds** (`FIN-5`, `PAY-8`): the platform never both pays the Provider and refunds the buyer for the same captured amount. A refund voids/reverses any payout-queue entry for that Booking.
 - **Amount bounds.** No payout exceeds `net_payout_amount`; no refund exceeds `gross_amount` (`FIN-4`). All amounts are whole JPY (`FIN-8`, `PAY-1`).
-- **External-rail truth is authoritative.** Settlement outcomes arrive asynchronously; internal Payments facts converge to them, and divergence surfaces as a reconcilable fact rather than silent loss (`FIN-11`). Corporate bank-transfer funds arrive off-Stripe and are reconciled manually (`PAY-9`).
-- **Corporate settlement** of the Provider's net for off-Stripe funds is owned as a Payments fact but its disbursement mechanism is unresolved (`AMB-029`).
+- **External-rail truth is authoritative.** Settlement outcomes arrive asynchronously; internal Payments facts converge to them, and divergence surfaces as a reconcilable fact rather than silent loss (`FIN-11`). Corporate bank-transfer funds are collected by the payment provider through a per-transaction virtual account and confirmed by provider event (`PAY-9`).
+- **Custody is external.** No Payments record represents funds held by Red Cab (`INV-13`, `PAY-13`); the context holds only instructions issued and outcomes observed. Control of settlement release stays with Red Cab (`PAY-15`, `PAY-16`) — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
+- **Post-settlement liability** sits with the Provider as merchant-of-record; recovery is by clawback and remains unresolved (`FIN-14`, `AMB-038`).
 
 ```mermaid
 graph LR

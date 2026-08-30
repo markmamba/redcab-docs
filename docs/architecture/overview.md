@@ -206,7 +206,8 @@ The forces that shaped the architecture, grouped as business drivers, technical 
 ## Technical drivers
 - **Atomic correctness at checkout.** Booking creation, snapshot freezing, and seat reservation must commit as one indivisible unit (`BKG-2`, `CON-1`); overbooking must be impossible even under concurrent contention for the last seat (`CON-2`, `CON-3`). This drives both the [Atomic Capacity Reservation](#atomic-capacity-reservation) principle and the single-database container choice.
 - **A single source of truth for price.** Display, search filtering, and checkout must all show the same price for the same inputs (`PRC-1`, `PRC-2`); divergence is a defect. This drives the [Single Pricing Authority](#single-pricing-authority).
-- **Convergence to external financial truth.** Money movement runs against external rails (Stripe Connect, bank transfer) whose settlement outcomes are authoritative and asynchronous; internal state must converge to them and surface divergence rather than lose it (`FIN-10`, `FIN-11`).
+- **Convergence to external financial truth.** Money movement runs against an external licensed payment provider whose settlement outcomes are authoritative and asynchronous; internal state must converge to them and surface divergence rather than lose it (`FIN-10`, `FIN-11`).
+- **No custody, retained control.** Red Cab must never be the legal recipient or holder of customer funds (`INV-13`), and must remain the sole authority over when a transaction completes and settlement releases (`PAY-15`). Both are conditions of the transaction-platform exemption, not operational preferences ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)).
 - **Decoupling across the seams that change at different rates.** Notifications, payouts, reviews, and cross-context cascades react after the fact and must tolerate delay, reordering, and redelivery — driving the [Event-Driven](#event-driven-notifications) integration style and idempotent consumers.
 - **Low coordination cost for the current team and scale.** A single deployable with one database minimizes operational and consistency overhead at expected volume — driving the [Modular Monolith First](#modular-monolith-first) stance.
 
@@ -229,8 +230,8 @@ graph TD
   Corp[Corporate Client - Corporate Client buyer] -->|request quote, pay by transfer, manifests| RC
   Provider[Provider - supply side] -->|list services, confirm, deliver, get paid| RC
   Admin[Platform Admin] -->|verify, moderate, set rate, oversee money| RC
-  RC -->|charge, payout, refund| Stripe[Stripe Connect]
-  Stripe -.->|settlement webhooks| RC
+  RC -->|"initiate, release, refund"| PSP[Payment Provider - custody]
+  PSP -.->|settlement events| RC
   RC -->|transactional + scheduled messages| Email[Email Provider]
   RC -->|optional alerts| SMS[SMS Provider]
 ```
@@ -247,8 +248,8 @@ The verified supply-side operator (Private Car / Luxury Transfer, Charter Bus Op
 ## Admin
 Internal Red Cab staff with full override access. Runs provider verification (`LC-9`), moderates reviews (`OPR-6`), sets the platform-wide Commission Rate (`PAY-2`), issues Corporate quotations/invoices and records bank-transfer receipt (`PAY-9`), manages geography (`OPR-10`), and oversees all money through the Payments Overview (`FIN-3`). Admin is an internal actor but interacts across the same system boundary as external actors.
 
-## Stripe
-**Stripe Connect** is the external card-payment and marketplace-payout rail. It is responsible for card authorization/capture, holding funds, PCI scope, transferring the Provider's net share to their connected account, executing refunds, connected-account KYC, and emitting **settlement truth via webhooks** (charge, transfer, payout, refund, dispute). Webhooks are authoritative for settlement outcomes; Red Cab converges to them (`FIN-11`). The charge topology and capture model are unresolved (`AMB-001`, `AMB-002`); see [External Integrations](#external-integrations).
+## Payment provider
+The external **licensed payment provider** is the card-payment and marketplace-settlement rail. It is the **legal recipient and holder of customer funds** — Red Cab holds none (`INV-13`, `PAY-13`). It is responsible for card authorization/capture, fund custody, PCI scope, sub-merchant KYC, splitting and releasing funds on the platform's instruction, executing refunds, and emitting **settlement truth via events** (charge, settlement, refund, dispute). Provider events are authoritative for settlement outcomes; Red Cab converges to them (`FIN-11`). The provider is **not yet selected** (`AMB-040`) and is engaged only through a capability-declaring adapter ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)); see [External Integrations](#external-integrations).
 
 ## Email Provider
 The external transactional email rail. Carries verification emails, booking-confirmation and lifecycle notifications, review links, and all scheduled alerts, rendered in the recipient's stored Language Preference (`OPR-9`) and dispatched within the 60-second SLA for confirmations (`OPR-8`). Email is the MVP notification channel (`AMB-034`).
@@ -279,8 +280,8 @@ graph TD
   Jobs -->|reads + writes| DB
   API -->|enqueue async work + domain-event reactions| Jobs
   Jobs -->|render + dispatch| Notif
-  API -->|charge / refund / payout| Stripe[Stripe Connect]
-  Stripe -.->|webhooks| API
+  API -->|"initiate / refund / release"| PSP[Payment Provider - custody]
+  PSP -.->|events| API
   Notif -->|email| Email[Email Provider]
   Notif -->|sms - optional| SMS[SMS Provider]
 ```
@@ -290,7 +291,7 @@ graph TD
 The single front-end application (React Router v7, framework mode with SSR), presenting marketplace role-confined surfaces — the **Tourist App**, the **Client Portal** (Corporate + Provider), and the **Admin Panel** (`/team`, Admin principal) — so each Actor reaches only permitted surfaces (`FR-IAM-009`, `NFR-SEC-004`). It renders in the Actor's Language Preference (EN/JA, `OPR-9`) and **never computes price**; it displays the Price Breakdown returned by the single pricing authority (`PRC-1`). It holds no financial truth. Implementation conventions: JavaScript (not TypeScript), `app/routes/`, `app/api/`, `app/domains/` ([../engineering/frontend-conventions.md](/docs/engineering/frontend-conventions)).
 
 ## Rails API Modular Monolith
-The single server-side deployable that owns all domain logic. Internally it is partitioned into the eight bounded contexts (next section), which integrate **in-process** — synchronously via commands/queries, asynchronously via in-process domain events — with no network boundary between them. It exposes the API the web app consumes, receives Stripe webhooks, and enqueues asynchronous work. Module boundaries and contracts (not distribution) enforce the discipline. Implementation conventions: Request → Manager → Validator, `app/domains/`, explicit routes ([../engineering/backend-conventions.md](/docs/engineering/backend-conventions)).
+The single server-side deployable that owns all domain logic. Internally it is partitioned into the eight bounded contexts (next section), which integrate **in-process** — synchronously via commands/queries, asynchronously via in-process domain events — with no network boundary between them. It exposes the API the web app consumes, receives payment-provider events, and enqueues asynchronous work. Module boundaries and contracts (not distribution) enforce the discipline. Implementation conventions: Request → Manager → Validator, `app/domains/`, explicit routes ([../engineering/backend-conventions.md](/docs/engineering/backend-conventions)).
 
 ## PostgreSQL
 The single relational database shared by all contexts. Each context owns its own tables and exposes them only through commands, queries, and events — never direct cross-context table access. The single shared database is what makes the one deliberate cross-context shared transaction possible (seat reservation, CR-1) and keeps the hottest read paths (discovery, pricing) free of cross-context chatter. It is the system of record for all domain facts, including the immutable Booking snapshots.
@@ -368,7 +369,7 @@ Price crosses context boundaries only as a **computed value contract** (`PriceBr
 At checkout, Booking captures **immutable snapshots** of the facts it needs from upstream — the Price Snapshot, the Commission Snapshot, and the Cancellation Policy Snapshot — and thereafter owns them as Booking facts (`INV-1`, `PAY-2`, `PAY-4`). This is the integration mechanism that decouples a Booking's commercial terms from later upstream edits: Catalog may change a listing's price or policy and Payments may change the Commission Rate, but a created Booking is unaffected (`BKG-8`, `INV-11`). Downstream contexts (Payments, refunds) **read** the snapshot and never mutate it. See the [Snapshot Pattern](#snapshot-pattern) principle.
 
 ## Payment Flows
-Booking and Payments are joined along the **money-facts vs money-movement** seam ([./payments-architecture.md](/docs/architecture/payments-architecture)). Booking authors the immutable financial fact (the Commission Snapshot, in the same atomic transaction as creation and seat reservation); Payments reads that fact and moves the money against external rails. Charges, payouts, and refunds are computed from the snapshot, never a live rate (`PAY-6`, `FIN-6`). Settlement outcomes arrive asynchronously as webhooks and are authoritative (`FIN-11`); the payout/refund interlock (`FIN-5`, `PAY-8`) must hold across the async gap so the same funds are never both paid out and refunded (coupling risk CR-3). Corporate bank-transfer funds arrive off-Stripe by bank transfer and are reconciled manually by Admin (`PAY-9`). The capture model, charge topology, and payout-queue semantics that shape these flows are unresolved — see [Open Architectural Decisions](#open-architectural-decisions).
+Booking and Payments are joined along the **money-facts vs money-movement** seam ([./payments-architecture.md](/docs/architecture/payments-architecture)). Booking authors the immutable financial fact (the Commission Snapshot, in the same atomic transaction as creation and seat reservation); Payments reads that fact and instructs movement against the external rail — it never holds funds itself (`INV-13`). Charges, settlements, and refunds are computed from the snapshot, never a live rate (`PAY-6`, `FIN-6`). Settlement outcomes arrive asynchronously as provider events and are authoritative (`FIN-11`); the settlement/refund interlock (`FIN-5`, `PAY-8`) must hold across the async gap so the same funds are never both settled and refunded (coupling risk CR-3). Corporate bank-transfer funds are collected by the payment provider through a per-transaction virtual account and confirmed by provider event (`PAY-9`). Custody sits with the provider while control of transaction completion stays with Red Cab (`PAY-15`, `PAY-16`) — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) and [Open Architectural Decisions](#open-architectural-decisions).
 
 ## The one shared transaction
 The single place two contexts share a transaction is **CheckoutSession↔Catalog seat reservation** (CR-1): CheckoutSession creation decrements Catalog's `available_seats` through a *guarded reserve command* within the same transaction, because both run in the same database. Booking materialization on payment success copies the session's hold. This is the deliberate, documented exception to "no shared transactions," and it exists solely to uphold the atomic-overbooking invariant (`CON-1`, `CON-2`, `BKG-9`). It must never become a network call without a redesign (a saga). Everywhere else, contexts integrate by event or by id-reference only.
@@ -379,8 +380,14 @@ The single place two contexts share a transaction is **CheckoutSession↔Catalog
 
 The third-party rails Red Cab depends on, and the responsibility split with each.
 
-## Stripe Connect
-The card-payment and marketplace-payout rail for the B2C path. **Stripe is responsible for** card authorization/capture, holding funds, PCI scope, transferring the Provider's net share to their connected account, executing refunds, connected-account KYC, and emitting settlement truth via webhooks. **Payments (platform) is responsible for** initiating charge intents for the snapshotted gross, encoding commission as the application fee equal to the snapshotted `commission_amount` (so Stripe's split matches the snapshot, `INV-2`), initiating payouts/refunds against the correct Booking, and reconciling webhooks back to internal state (`FIN-11`). A Provider must have a valid connected account before any payout; an invalid/restricted account is a payout-failure condition. The capture model (`AMB-001`), charge topology and merchant-of-record (`AMB-002`/`AMB-032`), auto-transfer-vs-queue (`AMB-003`), clearing period (`AMB-004`), and disbursement/failure states (`AMB-005`) are all open.
+## Payment provider
+The card-payment and marketplace-settlement rail for the B2C path, and — via per-transaction virtual accounts — for the Corporate transfer path (`PAY-9`).
+
+**The provider is responsible for** being the legal recipient of funds, card authorization/capture, fund custody, PCI scope, sub-merchant KYC, splitting and releasing funds on instruction, executing refunds, and emitting settlement truth via events. **Payments (platform) is responsible for** initiating collection for the snapshotted gross, recording the completion determination (`PAY-16`), instructing settlement release and the platform fee equal to the snapshotted `commission_amount` (so the provider's split matches the snapshot, `INV-2`, `FIN-12`), initiating refunds against the correct Booking, and reconciling provider events back to internal state (`FIN-11`).
+
+Custody and control are **separate axes**: Red Cab never holds funds (`INV-13`) yet remains the sole authority over when a transaction completes and settlement releases (`PAY-15`) — both conditions of the transaction-platform exemption ([ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)). A Provider must have a verified **Provider Merchant Account** before any settlement; an invalid or restricted account is a settlement-failure condition.
+
+Open: cross-border exemption applicability (`AMB-037`, P0), provider custody/release mechanics and selection (`AMB-040`, P0), clawback for post-settlement refunds (`AMB-038`), capture timing (`AMB-039`).
 
 ## Email
 The transactional and scheduled email rail, and the MVP notification channel. Carries account verification, booking-confirmation and lifecycle notifications (confirmation, cancellation, refund), completion review links, and time-based alerts. All messages render in the recipient's stored Language Preference (`OPR-9`) and confirmation notifications meet the 60-second SLA (`OPR-8`). Dispatch is asynchronous, idempotent per (event, recipient, channel), and decoupled from request latency.
@@ -437,7 +444,7 @@ Listed below: **remaining open items** by the architectural seam they most affec
 
 ## Corporate
 - **`AMB-027` — corporate pre-payment state (P1)** and **`AMB-028` — Corporate seat-hold timing (P1).** The accepted-quotation-awaiting-transfer state conflicts with `BKG-2`; until resolved the Corporate→Booking contract is provisional (coupling risk CR-7). The ACL boundary keeps any resolution from rippling into Booking.
-- **`AMB-029` — off-Stripe provider settlement (P1)**, **`AMB-031` — formal-document character rendering (P1)**, **`AMB-030` — manual bank-transfer reconciliation (P2).**
+- **`AMB-037` — cross-border exemption applicability (P0, highest severity)**, **`AMB-040` — provider custody/release and selection (P0)**, **`AMB-038` — clawback mechanism (P1)**, **`AMB-039` — capture timing (P1)**, **`AMB-031` — formal-document character rendering (P1).** *(`AMB-029` and `AMB-030` resolved 2026-08-30 via provider-collected virtual accounts.)*
 
 ## Notifications & operations
 - **`AMB-034` — SMS provider & phone-verification scope (P1).** Whether SMS is in MVP and how it is gated.

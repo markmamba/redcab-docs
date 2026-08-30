@@ -15,7 +15,7 @@ Defines system structure and integration patterns for the Red Cab Marketplace.
 | [Overview](/docs/architecture/overview) | Top-level architectural guide |
 | [Bounded Contexts](/docs/architecture/bounded-contexts) | Strategic DDD context map |
 | [Booking State Machine](/docs/architecture/booking-state-machine) | Booking lifecycle and transitions |
-| [Payments Architecture](/docs/architecture/payments-architecture) | Commission, payouts, refunds, Stripe |
+| [Payments Architecture](/docs/architecture/payments-architecture) | Custody, control, commission, settlement, refunds |
 | [API Design](/docs/architecture/api-design) | REST conventions and contracts |
 | [Data Model](/docs/architecture/data-model) | Storage model and relationships |
 | [Tech Stack](/docs/architecture/tech-stack) | Technology choices and rationale |

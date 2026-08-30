@@ -7,7 +7,8 @@ description: Architecture decision record 009.
 
 ## TL;DR
 
-- External systems (Stripe, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
 
 ## About this document
@@ -23,7 +24,8 @@ ADR for external systems integration.
 
 ## TL;DR
 
-- External systems (Stripe, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
 
 ## About this document
@@ -39,7 +41,8 @@ ADR for external systems integration.
 
 ## TL;DR
 
-- External systems (Stripe, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
 
 ## About this document
@@ -55,7 +58,8 @@ ADR for external systems integration.
 
 ## TL;DR
 
-- External systems (Stripe, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
 
 ## About this document
@@ -71,7 +75,8 @@ ADR for external systems integration.
 
 ## TL;DR
 
-- External systems (Stripe, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
 
 ## About this document
@@ -87,7 +92,8 @@ ADR for external systems integration.
 
 ## TL;DR
 
-- External systems (Stripe, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
 
 ## About this document
@@ -103,7 +109,8 @@ ADR for external systems integration.
 
 ## TL;DR
 
-- External systems (Stripe, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
+- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation).
 - Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
 
 ## About this document
