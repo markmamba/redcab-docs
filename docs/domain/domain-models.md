@@ -221,9 +221,9 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 ### Aggregates
 - **Payment** (root: `Payment` / charge record)
   - *Purpose:* represent the buyer-side capture **held by the payment provider**, keyed to CheckoutSession then Booking. Red Cab holds no funds and no balance is modeled here (`INV-13`, `PAY-13`).
-  - *Invariants:* failed payment yields no Booking (`PAY-5`, `FIN-9`); amount equals CheckoutSession snapshotted gross; every movement traceable (`FIN-3`); idempotent (`FIN-10`). Separate Charges & Transfers on Platform account (`PAY-13`).
+  - *Invariants:* failed payment yields no Booking (`PAY-5`, `FIN-9`); amount equals CheckoutSession snapshotted gross; every movement traceable (`FIN-3`); idempotent (`FIN-10`). Funds held by the licensed payment provider; commission reaches Red Cab only as a provider-routed platform fee equal to the snapshotted `commission_amount` (`PAY-13`, `INV-13`, [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)).
   - *Lifecycle:* initiated → captured → (refunded).
-- **ProviderConnectedAccount** (root: `ProviderConnectedAccount`)
+- **ProviderMerchantAccount** (root: `ProviderMerchantAccount`)
   - *Purpose:* the Provider's sub-merchant destination with the configured payment provider for receiving net settlement; gates listing publish and settlement initiation.
   - *Invariants:* one account per Provider; publish requires `status = verified` with settlement enabled (`INV-12`, `LC-12`); restricted accounts cause settlement failure (`LC-14`, `PAY-14`). State converges to verified provider events (`FIN-11`).
   - *Lifecycle:* `onboarding → verified | restricted | disabled`.
@@ -395,7 +395,7 @@ These are tracked in [../ambiguities/open-questions.md](/docs/ambiguities/open-q
 - **Provider mid-flight status change (`AMB-026`).** Effect of suspension/expiry on confirmed Bookings; the boundary rule (no historical mutation) holds regardless.
 - **Identity scope (`AMB-021/022`), SMS scope (`AMB-034`).** None alter aggregate boundaries; they refine value objects and contracts within the owning context.
 
-**Resolved (Decision Log 2026-07-29):** capture at checkout (`AMB-001`); Separate Charges & Transfers (`AMB-002`); platform payout queue (`AMB-003/004/005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); seat restoration idempotency (`AMB-012`); District→Area discovery (`AMB-020`); PRD vehicle taxonomy (`AMB-023`); MoR/seller-of-record (`AMB-032`); B2C tax-inclusive / Corporate itemized tax (`AMB-033`).
+**Resolved (Decision Log):** platform payout queue (`AMB-003/004/005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); seat restoration idempotency (`AMB-012`); District→Area discovery (`AMB-020`); PRD vehicle taxonomy (`AMB-023`); B2C tax-inclusive / Corporate itemized tax (`AMB-033`). **Superseded by [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) (pending counsel):** `AMB-001` custody element, `AMB-002`, `AMB-032` — sub-merchant settlement with deferred release; Provider merchant-of-record; capture timing reopened as `AMB-039`.
 
 No deferred decision changes the aggregate boundaries defined above; each affects value objects, lifecycle detail, or cross-context contracts within a single owning context — which is the point of drawing the boundaries where we did.
 

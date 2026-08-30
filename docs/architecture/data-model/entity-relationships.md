@@ -65,7 +65,7 @@ erDiagram
 ### 6.5 Payments & Payouts
 - A **Payment** records the buyer-side capture **held by the payment provider** for one CheckoutSession then Booking; its amount equals the snapshotted gross (`FIN-3`, `PAY-13`). No Red Cab balance is represented (`INV-13`).
 - A **ProviderMerchantAccount** belongs to exactly one Provider (`provider_id`, 1:1); mirrors provider sub-merchant state and exposes a derived `status` for publish and settlement gating (`INV-12`, `LC-12`, `PAY-14`).
-- A **PayoutQueueEntry** carries the frozen Net Payout Amount for one Booking after completion; entry lifecycle is `QUEUED → PROCESSING → DISBURSED | FAILED` (`LC-13`, `LC-14`). Snapshots the destination `stripe_account_id` at transfer initiation (`FIN-3`).
+- A **PayoutQueueEntry** carries the frozen Net Payout Amount for one Booking after completion; entry lifecycle is `QUEUED → PROCESSING → DISBURSED | FAILED` (`LC-13`, `LC-14`). Snapshots the destination Provider Merchant Account reference at settlement-release initiation (`provider` discriminator + opaque `provider_ref`; `FIN-3`).
 - A **Refund** records a return of funds for one Booking, computed from the snapshot (`PAY-6`).
 - A **CommissionRateSetting** is the single platform-wide rate, read at checkout to populate a Booking's snapshot; it owns no per-Booking fact (`PAY-2`).
 - A **ReconciliationRecord** records a bank-transfer receipt fact for a corporate Booking (`PAY-9`).
