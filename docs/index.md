@@ -7,8 +7,8 @@ description: Planning, architecture, domain, and implementation guidance for the
 ## TL;DR
 
 - **Authoritative planning foundation** for Red Cab: B2C/Corporate marketplace for verified Japanese transport and tour providers.
-- Read in order: Business Rules → Requirements → Domain → Architecture → Engineering → Ambiguities → Roadmap.
-- Precedence: Business Rules > Requirements > Domain > Architecture > ADRs > Engineering > Roadmap.
+- Read in order: Business Rules → Requirements → Domain → Architecture → Engineering → **Implementation Specs** → Ambiguities → Roadmap.
+- Precedence: Business Rules > Requirements > Domain > Architecture > ADRs > Engineering > **Implementation Specs** > Code.
 
 ## About this document
 
@@ -20,6 +20,7 @@ Site home and documentation reading order for Red Cab Marketplace.
 | Requirements | [Requirements](/docs/requirements) |
 | Architecture | [Architecture](/docs/architecture) |
 | Engineering | [Engineering](/docs/engineering) |
+| Implementation specs | [Specs](/docs/specs/) |
 | Roadmap | [Phasing Roadmap](/docs/roadmap) |
 
 ---
