@@ -26,20 +26,20 @@ Functional requirements for **CAT — Catalog & Inventory**.
 ## CAT — Catalog & Inventory
 *(Includes Geography, Listings, Pricing, Availability, Search modules. Price is computed only via the Pricing authority, PRC-1.)*
 
-### FR-CAT-001 — District/Area management
-The system **shall** provide Admin with Districts and Areas seeded from official Japanese administrative codes (全国地方公共団体コード), and **shall** allow Admin to edit labels, reorder, and deactivate seeded Districts and Areas. Each District and Area **shall** carry English and Japanese labels per `NFR-I18N-003`. Admin create of new Districts/Areas remains available for exceptional cases.
-- Source: B-05, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data). Governs: FR-CAT-003, NFR-I18N-003. Status: Approved.
+### FR-CAT-001 — Geography management
+The system **shall** provide Admin with an administrative geography tree (`catalog_countries` + `catalog_geographies`) seeded from official Japanese administrative codes (全国地方公共団体コード) with `code_system` and `external_code` as the idempotent upsert key, and **shall** allow Admin to edit labels, reorder, deactivate, and archive nodes with a successor on merger. Each discovery root (District) and listable node (Area) **shall** carry English and Japanese labels per `NFR-I18N-003`. Admin create of new nodes remains available for exceptional cases.
+- Source: B-05, [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree). Governs: FR-CAT-003, FR-CAT-033, FR-CAT-034, NFR-I18N-003. Status: Approved.
 
-### FR-CAT-002 — District deactivation cascade
-When Admin deactivates a District with active Listings, the system **shall** require confirmation stating the affected count and **shall** set those Listings to Unlisted without deleting them.
+### FR-CAT-002 — Geography deactivation cascade
+When Admin deactivates or archives a geography node with active Listings anywhere in its subtree (`path` prefix), the system **shall** require confirmation stating the affected count and **shall** set those Listings to Unlisted without deleting them.
 - Source: B-05. Governs: OPR-10, INV-11. Status: Approved.
 
 ### FR-CAT-003 — Discovery of districts and areas
-The system **shall** present only Districts and Areas that have at least one Published Listing, and **shall** indicate when an area has no available services.
+The system **shall** present only discovery roots (Districts) and listable nodes (Areas) whose subtree contains at least one Published Listing, and **shall** indicate when an area has no available services.
 - Source: B-01, B-02. Governs: INV-8. Status: Approved.
 
 ### FR-CAT-004 — Primary discovery navigation
-The system **shall** allow Tourists to discover services through the location hierarchy (District then Area). Service type **shall** be available as a filter, not as the primary navigation axis.
+The system **shall** allow Tourists to discover services through the location hierarchy (District then Area). The two-level navigation is a projection of a deeper administrative tree. Service type **shall** be available as a filter, not as the primary navigation axis.
 - Source: B-01–B-03. Status: Approved (Decision Log `AMB-020`).
 
 ### FR-CAT-005 — Service list presentation
@@ -151,7 +151,15 @@ When a Tourist books a per-vehicle (flat-rate) listing against a slot, the syste
 - Source: E-02. Governs: CON-6. Status: Approved.
 
 ### FR-CAT-032 — Near-me Area discovery
-The system **shall** allow Tourists to discover Areas ranked by distance from the user's geolocation, **shall** include only Areas with at least one Published Listing (`INV-8`), and **shall** use Area centroids (city-hall coordinates) for distance calculation without a spatial database extension.
-- Source: [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data). Governs: INV-8. Status: Approved.
+The system **shall** allow Tourists to discover Areas (listable geography nodes) ranked by distance from the user's geolocation, **shall** include only nodes whose subtree has at least one Published Listing (`INV-8`), and **shall** use listable-node centroids (city-hall coordinates) for distance calculation without a spatial database extension.
+- Source: [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree). Governs: INV-8. Status: Approved.
+
+### FR-CAT-033 — Listing attaches to listable node
+The system **shall** allow a Listing to attach only to a geography node with `is_listable = true`. The system **shall** reject create/update when the submitted geography node is a discovery root without listable children (e.g. a designated city node).
+- Source: [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree). Governs: INV-8. Status: Approved.
+
+### FR-CAT-034 — Archived geography successor
+When Admin archives a geography node by merger, the system **shall** require a successor geography node and **shall** expose the successor for redirect resolution. Historical Bookings referencing Listings at the archived node **shall** be preserved (`INV-11`).
+- Source: [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree). Governs: INV-11. Status: Approved.
 
 ---

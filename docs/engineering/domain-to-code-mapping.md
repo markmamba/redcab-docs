@@ -69,19 +69,20 @@ Geography, Listings, Pricing, Availability, and Search are **modules inside `cat
 
 ```
 app/domains/catalog/
-  district.rb
-  area.rb
+  geography.rb        # Catalog::Geography — replaces district.rb / area.rb at persistence layer
   listing.rb
   pricing_policy.rb
   availability_slot.rb
-  geography/          # seed task, near-me query
+  geography/          # seed task, near-me query, slug resolver
+  districts/          # marketplace API surface (reads Catalog::Geography)
+  areas/              # marketplace API surface (reads Catalog::Geography)
   listings/           # action classes
   pricing/
   availability/
   search/             # query-only managers
 ```
 
-`catalog.dbml` is authoritative for geography storage shape: `prefecture_code`, `municipality_code`, `name_kana`, `kind`, `latitude`, `longitude`, `timezone` (on Areas). See [Geography](/docs/architecture/geography) and [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model).
+`catalog.dbml` is authoritative for geography storage shape: `catalog_countries` + `catalog_geographies` tree (`level`, `code_system`, `external_code`, `path`, `is_discovery_root`, `is_listable`, `discovery_root_id`, `successor_geography_id`, `name_kana`, `latitude`, `longitude`, `timezone` on every node). See [Geography](/docs/architecture/geography), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree), and [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model). **Target model** — shipped schema catches up in epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
 
 Shared datetime utilities: `app/shared/date_time_utils.rb` — see [Date / Time / Timezone](/docs/engineering/datetime-and-timezones).
 

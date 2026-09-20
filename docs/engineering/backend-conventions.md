@@ -316,11 +316,11 @@ Ask: **did the system create this time, or did a person pick it?**
 | Kind | When | DB column | Wire format | Parse / format |
 | --- | --- | --- | --- | --- |
 | **Instant** | System-created (`created_at`, `captured_at`) | `timestamptz` | ISO-8601 with offset (responses only) | `Time.current` on write; `Time.zone.parse` for external webhooks only |
-| **Person-picked civil date** | User picks a calendar day (seasonal range, license date) | `timestamptz` anchored, or `date` if zone-free | `YYYY-MM-DD` | `DateTimeUtils.parse_civil_date(date_string:, timezone:)` with listing Area or booking snapshot timezone |
-| **Person-picked local datetime** | User picks slot start/end | `timestamptz` | Naive `YYYY-MM-DDTHH:mm` per endpoint contract | Anchor in listing Area timezone on write |
+| **Person-picked civil date** | User picks a calendar day (seasonal range, license date) | `timestamptz` anchored, or `date` if zone-free | `YYYY-MM-DD` | `DateTimeUtils.parse_civil_date(date_string:, timezone:)` with listing geography or booking snapshot timezone |
+| **Person-picked local datetime** | User picks slot start/end | `timestamptz` | Naive `YYYY-MM-DDTHH:mm` per endpoint contract | Anchor in listing geography timezone on write |
 | **Zone-free civil date** | Same calendar day everywhere (rare) | `date` | `YYYY-MM-DD` | Date-only, no conversion |
 
-**Service timezone** resolves from `listing.area.timezone` (live catalog) or `booking.service_timezone` (snapshotted). Never hardcode `Asia/Tokyo` in domain code. App clock is UTC. See [Frontend Conventions — Date and time](/docs/engineering/frontend-conventions#date-and-time).
+**Service timezone** resolves from `listing.geography.timezone` (live catalog) or `booking.service_timezone` (snapshotted). Never hardcode `Asia/Tokyo` in domain code. App clock is UTC. See [Date / Time / Timezone](/docs/engineering/datetime-and-timezones) and [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree).
 
 ---
 

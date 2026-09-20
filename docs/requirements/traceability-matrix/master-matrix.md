@@ -60,10 +60,10 @@ Four-way mapping table for all requirements.
 ### 1.3 CAT — Catalog & Inventory
 | Req ID | Source | Governs (rules / context) | Acceptance criterion (observable) |
 | --- | --- | --- | --- |
-| FR-CAT-001 | B-05, ADR-013 | CAT (Geography) | Districts and Areas are seeded from official administrative codes; Admin can edit labels, reorder, and deactivate. |
-| FR-CAT-002 | B-05 | OPR-10, INV-11; CAT | Deactivating a District with active listings requires count-stating confirmation and sets them Unlisted, not deleted. |
-| FR-CAT-003 | B-01, B-02 | INV-8; CAT | Only Districts/Areas with ≥1 Published listing appear; empty areas are indicated. |
-| FR-CAT-004 | B-01–B-03 | CAT | Tourists discover services through District→Area. |
+| FR-CAT-001 | B-05, ADR-013, ADR-016 | CAT (Geography) | Geography tree seeded from official administrative codes with upsert key; Admin can edit labels, reorder, deactivate, and archive with successor. |
+| FR-CAT-002 | B-05 | OPR-10, INV-11; CAT | Deactivating/archiving a geography node with subtree listings requires count-stating confirmation and sets them Unlisted, not deleted. |
+| FR-CAT-003 | B-01, B-02 | INV-8; CAT | Only discovery roots/Areas with ≥1 Published listing in subtree appear; empty areas are indicated. |
+| FR-CAT-004 | B-01–B-03 | CAT | Tourists discover services through District→Area (projection of deeper tree). |
 | FR-CAT-005 | B-03 | PRC (starting price), REV (rating); CAT | Each Published listing in an Area shows name, provider, photo, starting price, type, rating, review count. |
 | FR-CAT-006 | B-03, E-11 | CON-3; CAT | A date-fully-booked listing is shown marked fully booked, not hidden. |
 | FR-CAT-007 | B-04 | CAT | Detail shows description, gallery, breakdown, provider, type, location, availability, policy, reviews; type attrs for guides/buses. |
@@ -107,7 +107,9 @@ Four-way mapping table for all requirements.
 | FR-CAT-029 | C-09 | CON-4; CAT | Provider asset registration. |
 | FR-CAT-030 | architecture | INV-12, LC-12; CAT | Publish requires verified Provider Merchant Account. |
 | FR-CAT-031 | E-02 | CON-6; CAT | Per-vehicle booking consumes full slot capacity. |
-| FR-CAT-032 | ADR-013 | INV-8; CAT | Near-me ranks Areas with published listings by distance to city-hall centroid; no spatial DB extension. |
+| FR-CAT-032 | ADR-013, ADR-016 | INV-8; CAT | Near-me ranks listable nodes with published listings in subtree by distance to city-hall centroid; no spatial DB extension. |
+| FR-CAT-033 | ADR-016 | INV-8; CAT | Listing attaches only to `is_listable` geography nodes; non-leaf rejected on create/update. |
+| FR-CAT-034 | ADR-016 | INV-11; CAT | Archived geography requires successor; redirects resolve via successor reference; historical bookings preserved. |
 | FR-BKG-009 | E-09 | LC-5; BKG | Confirmed→Completed only after service time has passed and is marked delivered. |
 | FR-BKG-010 | E-09, E-12 | CON-5, PAY-6; BKG | Tourist cancel of an eligible booking restores seats; refund derives from the snapshotted policy. |
 | FR-BKG-011 | E-12 | PAY-7, CON-5; BKG | Provider/Admin cancel restores seats and grants a 100% refund regardless of policy. |

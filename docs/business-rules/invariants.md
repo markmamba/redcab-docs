@@ -44,10 +44,10 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **INV-5** [Reviews] A Review MUST exist only for a Booking that reached `COMPLETED`, and at most one Review per Booking. (`F-01`)
 - **INV-6** [Onboarding] A Provider whose **Provider Status** is not `Approved` MUST have zero tourist-visible Listings. (`1.4`, `C-01`)
 - **INV-7** [Onboarding] A Listing belonging to a Provider with an expired License MUST NOT be in `Published` status. (`A-06`)
-- **INV-8** [Catalog] A District or Area with zero `Published` Listings MUST NOT be presented to Tourists. (`B-01`, `B-02`)
+- **INV-8** [Catalog] A discovery root (District) or listable node (Area) with zero `Published` Listings anywhere in its subtree MUST NOT be presented to Tourists. Derived at query time, never stored. (`B-01`, `B-02`, [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree))
 - **INV-9** [Identity] **Provider Type** MUST be immutable after registration except by explicit Admin action. (`A-03`)
 - **INV-10** [Catalog] A Listing MUST NOT be `Published` with zero Photos. (`C-02`)
-- **INV-11** [Booking] Historical Booking data MUST be preserved when a Listing is Paused, Unlisted, or its District deactivated — never deleted. (`C-11`, `B-05`)
+- **INV-11** [Booking] Historical Booking data MUST be preserved when a Listing is Paused, Unlisted, or its geography node archived/deactivated — never deleted. Archived geography MUST record `successor_geography_id` when retired by merger. (`C-11`, `B-05`, `FR-CAT-034`, [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree))
 - **INV-12** [Onboarding/Payments] A Listing MUST NOT be `Published` unless its Provider has an active, verified **Provider Merchant Account** with the configured payment provider. (`LC-12`)
 - **INV-13** [Payments/Legal] Red Cab MUST NOT be the legal recipient or holder of Tourist or Corporate Client funds for the service portion of a transaction, at any point, on any payment rail. (`PAY-13`, `PAY-9`, [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) C1)
 
@@ -149,8 +149,8 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **OPR-7** [Reviews] The Review Link is valid for 14 days from completion; after expiry no Review may be submitted. (`F-01`, `F2`)
 - **OPR-8** [Notifications] Booking confirmation notifications to Tourist and Provider MUST be dispatched within 60 seconds of the triggering event. (`G-01`, `G-02`)
 - **OPR-9** [Notifications] Notifications MUST be rendered in the recipient's stored **Language Preference** (Tourist default EN; Provider/Client Portal default JA). (`G-03`, `G-04`)
-- **OPR-10** [Catalog] Deactivating a District MUST set all its Listings to `Unlisted` (not deleted), after an explicit Admin confirmation that states the affected count. (`B-05`)
-- **OPR-11** [Catalog/Booking] All service windows, cancellation-tier cutoffs, and completion timers MUST be evaluated in the **Service Timezone** — the Listing's Area timezone for catalog operations; the snapshotted `service_timezone` on CheckoutSession/Booking for in-flight and historical orders (`ADR-014`). Persisted timestamps MUST use UTC (`TIMESTAMPTZ`). Domain code MUST NOT hardcode an IANA zone or numeric offset.
+- **OPR-10** [Catalog] Deactivating or archiving a geography node MUST set all Listings in its subtree (`path` prefix match) to `Unlisted` (not deleted), after an explicit Admin confirmation that states the affected count. (`B-05`, `FR-CAT-002`, [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree))
+- **OPR-11** [Catalog/Booking] All service windows, cancellation-tier cutoffs, and completion timers MUST be evaluated in the **Service Timezone** — the Listing's geography timezone for catalog operations; the snapshotted `service_timezone` on CheckoutSession/Booking for in-flight and historical orders (`ADR-014`). Persisted timestamps MUST use UTC (`TIMESTAMPTZ`). Domain code MUST NOT hardcode an IANA zone or numeric offset.
 - **OPR-12** [Booking] A `CONFIRMED` Booking MUST auto-transition to `COMPLETED` 24 hours after the Slot's scheduled **end time** in the Booking's snapshotted **Service Timezone** if the Provider has not marked it delivered and the Booking has not been cancelled. The resulting completion determination MUST be attributed to an explicit system actor with `elapsed_time` as its recorded basis (`PAY-16`); anonymous completion is forbidden.
 
 ---

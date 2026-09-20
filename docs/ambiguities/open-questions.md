@@ -269,11 +269,11 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Risk if unresolved:** Core navigation rework after build.
 
 ### AMB-036 — Geography administrative model and spatial strategy
-- **Status:** **RESOLVED** — see Decision Log (2026-08-15).
+- **Status:** **RESOLVED** — see Decision Log (2026-08-15); storage clause partially superseded 2026-09-20 ([ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)).
 - **Sources:** geography design review (administrative vs tourism taxonomy; GeoJSON/PostGIS evaluation).
 - **Classification:** Business (Engineering).
 - **Question:** What do District/Area represent editorially? Use GeoJSON/PostGIS for boundaries, lookup, and map features?
-- **Decision:** District = prefecture or designated city; Area = municipality/ward. Seed from official codes + city-hall points. No PostGIS at Phase 1. Tourism tags are a future layer on Listings.
+- **Decision:** District/Area are discovery *roles* on an administrative tree (`catalog_geographies`); C1 = 67 discovery roots (47 prefectures + 20 designated cities). Seed from official codes + city-hall points. No PostGIS at Phase 1. Tourism tags are a future layer on Listings. Designated cities as top-level navigation is a presentation rule, not a storage rule.
 - **Impact:** Shapes Catalog schema, seed pipeline, discovery IA, and map features.
 - **Affected contexts:** Catalog & Inventory (Geography, Search).
 - **Priority:** P0.
@@ -529,8 +529,8 @@ Low-effort confirmations from the PRD Appendix already encoded as baseline rules
 | AMB-023 | Canonical vehicle taxonomy: **PRD set** — Alphard, HiAce, Sedan, Limousine (private car); 20/40/50-seat bands (charter bus). Stored on `provider_assets.vehicle_category`. | Business + Engineering | 2026-07-29 | `glossary.md`, `domain-models.md` |
 | AMB-032 | ~~**Platform merchant-of-record** for card charges; **Provider seller-of-record** for underlying service.~~ **Reversed 2026-08-30** — see below. | Legal + Finance | 2026-07-29 | `payments-architecture.md`, `glossary.md` |
 | AMB-033 | **B2C prices tax-inclusive**; **corporate documents itemize 10% consumption tax** separately (`PAY-12`, `PAY-10`). | Finance + Legal | 2026-07-29 | [Business Rules](/docs/business-rules/invariants), `glossary.md` |
-| AMB-036 | Geography: administrative seed (codes + centroids); designated cities as Districts; no PostGIS Phase 1; tourism tags on Listings later | Product + Engineering | 2026-08-15 | [Geography](/docs/architecture/geography), [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data) |
-| — | **Service timezone:** IANA zone on `catalog_areas`; snapshotted on CheckoutSession/Booking; Phase 1 Japan seed `Asia/Tokyo`; no hardcoded zones in domain code | Product + Engineering | 2026-08-23 | [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [Date / Time / Timezone](/docs/engineering/datetime-and-timezones), `glossary.md`, `invariants.md` (`OPR-11`, `OPR-12`) |
+| AMB-036 | Geography: administrative seed (codes + centroids); C1 discovery roots (67); tree storage per [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree); no PostGIS Phase 1; tourism tags on Listings later. *Storage clause "designated cities as Districts" superseded — presentation rule only.* | Product + Engineering | 2026-08-15 | [Geography](/docs/architecture/geography), [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree) |
+| — | **Service timezone:** IANA zone on `catalog_geographies`; snapshotted on CheckoutSession/Booking; Phase 1 Japan seed `Asia/Tokyo` from `catalog_countries.default_timezone`; no hardcoded zones in domain code | Product + Engineering | 2026-08-23 | [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree), [Date / Time / Timezone](/docs/engineering/datetime-and-timezones), `glossary.md`, `invariants.md` (`OPR-11`, `OPR-12`) |
 
 ### Revisions — 2026-08-30 (payment custody and control)
 
@@ -545,3 +545,11 @@ Driven by the legal payment-flow memos (August 2026) and the objective of qualif
 | AMB-030 | **Resolved / superseded.** Corporate transfer receipt is confirmed by the payment provider, not by manual Admin entry — manual confirmation presumed funds in a Red Cab account, which `INV-13` forbids. | Finance + Engineering (pending Legal) | 2026-08-30 | [Business Rules](/docs/business-rules/invariants) (`PAY-9`), `pay.md` (`FR-PAY-014`) |
 | AMB-032 | **Reversed.** The **Provider** is merchant-of-record for the underlying service; Red Cab is merchant-of-record for nothing. Post-settlement refund and dispute liability sits with the Provider (`FIN-14`), recovered by clawback (`AMB-038`). | Legal + Finance (pending counsel opinion) | 2026-08-30 | [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation), [Business Rules](/docs/business-rules/invariants) (`PAY-13`), [Payments Architecture](/docs/architecture/payments-architecture) |
 | — | **New open questions raised:** `AMB-037` cross-border carve-back (P0, highest severity), `AMB-038` clawback mechanism, `AMB-039` capture timing and lead time, `AMB-040` custody location and release control per provider (P0). | Engineering | 2026-08-30 | [Open Questions](/docs/ambiguities/open-questions), [Payments Architecture](/docs/architecture/payments-architecture) |
+
+### Revisions — 2026-09-20 (geography administrative tree)
+
+Driven by [Geography data model review](/docs/roadmap/notes/geography-data-model-review) and locked Option C / C1 decisions. Recorded in [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree).
+
+| AMB ID | Revision | Decided by | Date | Docs updated |
+| --- | --- | --- | --- | --- |
+| AMB-036 | **Partially superseded.** Storage moves to `catalog_countries` + `catalog_geographies` tree ([ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)). **C1 locked:** 67 discovery roots (47 prefectures + 20 designated cities). Clause "designated cities as Districts; wards as Areas" remains true as *navigation/presentation*; false as *storage*. Official-code seed, no PostGIS, haversine near-me, tourism-tags-on-Listings, `INV-8`, `PRC-1`, `BKG-11` unchanged. No `/jp` URL prefix. | Product + Engineering | 2026-09-20 | [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree), [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data) (partial supersede), [Geography](/docs/architecture/geography), `glossary.md`, `invariants.md`, `cat.md`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model) |

@@ -42,7 +42,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Platform Admin** — internal Red Cab staff with full override access. Authenticates via a **separate Admin principal** (`Identities::Admin` / `admin_users`); Admin is **not** a value on marketplace `Account.role`.
 - **Platform** — Red Cab itself, the technology intermediary that earns commission.
 - **Money / JPY minor units** — all monetary values are integers in Japanese Yen (JPY has no decimal subunit in practice; stored as whole yen). No floats for money. Commission rounding uses `FLOOR(gross × rate)`; `net = gross − commission` (`PAY-11`).
-- **Service Timezone** — the IANA timezone of the **Area** where a Listing is located (`catalog_areas.timezone`, e.g. `Asia/Tokyo`). Slot windows, cancellation-tier cutoffs, and completion timers are evaluated in this zone; **CheckoutSession / Booking** snapshoot `service_timezone` at session creation so historical orders are immune to later Area edits ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)). Persisted instants use `TIMESTAMPTZ` (UTC storage). Phase 1 Japan seeds all Areas as `Asia/Tokyo`.
+- **Service Timezone** — the IANA timezone of the **listable geography node** where a Listing is located (`catalog_geographies.timezone`, e.g. `Asia/Tokyo`; seeded from `catalog_countries.default_timezone`). Slot windows, cancellation-tier cutoffs, and completion timers are evaluated in this zone; **CheckoutSession / Booking** snapshoot `service_timezone` at session creation so historical orders are immune to later geography edits ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)). Persisted instants use `TIMESTAMPTZ` (UTC storage). Phase 1 Japan seeds all nodes as `Asia/Tokyo`.
 - **Snapshot** — an immutable copy of a value (price, commission rate, cancellation policy, fulfillment payload) frozen at a defined instant (CheckoutSession creation) so later changes never alter an in-flight or historical record. See [Business Rules](/docs/business-rules/invariants).
 - **Domain Event** — a past-tense, in-process notification (e.g. `ProviderApproved`, `BookingCompleted`) that decouples contexts; consumed by Notifications and cross-context cascades.
 - **Bounded Context** — a logical module boundary with its own ubiquitous language; in this project a namespaced module inside one modular-monolith Rails app.
@@ -69,9 +69,15 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 
 > Owns geography taxonomy, listings, pricing configuration + calculation authority, availability/seat inventory, and provider assets. Internal modules: **Geography**, **Listings**, **Pricing**, **Availability**, **Search**.
 
-- **District** — top-level geographic navigation unit: a Japanese **prefecture** (都道府県) **or designated city** (政令指定都市 — `AMB-036`). Carries EN + JA labels, slug, optional centroid. Shown only if it has ≥1 published listing in any child Area (`B-01`, `B-05`, `INV-8`).
-- **Area** — second-level unit: a **municipality** (市町村) or **ward** (区) within a designated city. Each Listing is located in exactly one Area. Carries a **Service Timezone** (IANA string). Shown only if it has ≥1 published listing (`B-02`, `INV-8`). Seeded from official administrative codes (`ADR-013`, `ADR-014`).
-- **Municipality code** — 5-digit 全国地方公共団体コード (JIS X 0402); stable seed key for Areas.
+- **District** — a geography node **presented as a top-level navigation unit** — a node with `is_discovery_root = true` ([ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)). Phase 1 Japan (C1): 47 prefectures + 20 designated cities. Carries EN + JA labels and slug. Shown only if its subtree has ≥1 published listing (`B-01`, `B-05`, `INV-8`). In URLs and JSON payloads, maps to `{districtSlug}` / `district_id`.
+- **Area** — a **listable geography node** (`is_listable = true`) within a District's discovery namespace. Each Listing attaches to exactly one Area (`FR-CAT-033`). Carries a **Service Timezone** (IANA string). Shown only if its subtree has ≥1 published listing (`B-02`, `INV-8`). In URLs and JSON payloads, maps to `{areaSlug}` / `area_id`.
+- **Subdivision** — administrative `level` for a prefecture (都道府県). Storage term; may also be a discovery root.
+- **Municipality** — administrative `level` for a city, town, village, or Tokyo 特別区. May be a discovery root (designated city), a listable leaf, or an intermediate node.
+- **Ward** — administrative `level` for an 行政区 of a designated city. Always a listable leaf when present.
+- **Discovery root** — synonym for a District in storage: `is_discovery_root = true`.
+- **Listable node** — synonym for an Area in storage: `is_listable = true`; the only nodes a Listing may attach to.
+- **Successor geography** — when a node is archived by merger (`INV-11`), the surviving node referenced by `successor_geography_id` — drives redirects and Listing re-placement (`FR-CAT-034`).
+- **External code** — official administrative code (2-digit prefecture or 5-digit 全国地方公共団体コード, JIS X 0402); stable seed upsert key with `code_system`.
 - **Tourism tag** — *(future)* curated discovery label (Ginza, Fuji Five Lakes) attached to Listings, not an Area.
 - **Listing (Service Listing)** — a bookable service published by a Provider, typed by Provider Type, with photos, pricing, location, and availability (`C-01`).
 - **Listing Status** — `Draft | Published | Paused/Unpublished | Unlisted`. Published = visible to tourists; Unlisted = hidden by Admin/geography action; historical bookings always preserved (`C-11`, `B-05`).
@@ -86,7 +92,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Cancellation Policy** — up to 4 tiers of `(hours before service, refund %)`; Platform Default applies if none set; immutable for confirmed bookings (`C-08`).
 - **Pricing (module)** — the single authority that computes a **Price Breakdown** via `calculate_quote(listing, params, at:)`. No other context computes price.
 - **Price Breakdown / Quote** — computed result: base price, tier/duration/seasonal adjustments, extra charges, total (tax-inclusive for B2C). Distinct from a corporate **Quotation**.
-- **Availability Slot (Slot)** — a bookable window: date, start time, end time, max capacity, bound to a specific Provider Asset (`C-09`). Times authored and displayed in the Listing's **Service Timezone** (from its Area).
+- **Availability Slot (Slot)** — a bookable window: date, start time, end time, max capacity, bound to a specific Provider Asset (`C-09`). Times authored and displayed in the Listing's **Service Timezone** (from its listable geography node).
 - **Seat Counter / available_seats** — remaining capacity on a slot; owned here, decremented transactionally during CheckoutSession seat hold (`E-11`).
 - **Fully Booked** — slot with `available_seats = 0`; shown but not bookable (`B-03`, `E-11`).
 - **Search / Filter / Sort** — discovery over published listings by date, type, language, group size, price; sorts: Recommended / Price / Rating / Reviews / Newest (`D-01..D-05`). Primary navigation: **District → Area** hierarchy; service type is a filter (`D-02`).

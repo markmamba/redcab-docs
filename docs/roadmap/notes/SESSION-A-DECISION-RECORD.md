@@ -10,7 +10,8 @@ description: Architecture decision record resolving AMB-022, the public tourist 
 - `AMB-022` is **RESOLVED — Option A**: public browse of districts, areas, listings and indicative pricing; authentication is required only at checkout initiation.
 - Canonical public path family is **`/districts/{districtSlug}/areas/{areaSlug}/listings/{listingUuid}`** per [Geography](/docs/architecture/geography). `/discover` is rejected outright.
 - District and Area URL segments are **slugs**; the Listing segment stays a **UUID** for Phase 1 (no listing slug column exists).
-- Slug segments **require API work** — all four marketplace geography lookups resolve `find_by(uuid:)` today. This is split out of web issue #60 into new `red-cab-api` issues.
+- Slug segments **require API work** — all four marketplace geography lookups resolve `find_by(uuid:)` today. Delivered by geography epic [red-cab-api#130](https://github.com/markmamba/red-cab-api/issues/130) ([ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)); blocks web issue #60.
+- **URL family unchanged** by the geography tree redesign — `/districts/{districtSlug}/areas/{areaSlug}/listings` is a projection of `catalog_geographies`, not a storage shape change.
 - The public funnel currently uses `clientLoader`, so crawlers receive an empty shell. Moving to server `loader` is a **P0 SEO blocker**, not polish.
 
 ## About this document
@@ -22,6 +23,8 @@ Output of **Session A** of a two-session planning pair. This is a decision recor
 | Track plan | [Tourist UI — Pre–Phase 2](/docs/roadmap/tourist-ui-pre-phase-2) |
 | Ambiguity register | [Open Questions](/docs/ambiguities/open-questions) (`AMB-022`) |
 | URL hierarchy source | [Geography — Discovery and search](/docs/architecture/geography) |
+| Geography tree ADR | [ADR-016: Geography Administrative Tree](/docs/architecture/decisions/adr-016-geography-administrative-tree) — storage change; Session A URL family preserved |
+| Geography epic | [red-cab-api#130](https://github.com/markmamba/red-cab-api/issues/130) — slug resolution, ancestors on listing payload |
 | Frontend conventions | [Frontend Conventions](/docs/engineering/frontend-conventions) |
 | Code mapping | [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping) |
 
@@ -236,7 +239,7 @@ Green is unauthenticated and indexable; red requires a tourist JWT and is `noind
 
 | Proposed issue | Repo | Depends on | Notes |
 | --- | --- | --- | --- |
-| **API-1** — resolve marketplace district and area path segments by slug | `red-cab-api` | — | Rename route params to `:district_slug` / `:area_slug` in `marketplace_routes.rb`; introduce one geography resolver service; replace the four `find_by(uuid:)` lookups; temporary UUID fallback in the resolver so legacy redirects and the web cutover are not simultaneous. **Blocks #60** |
+| **API-1** — resolve marketplace district and area path segments by slug | `red-cab-api` | — | Tracked as geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130). Rename route params to `:district_slug` / `:area_slug` in `marketplace_routes.rb`; introduce one geography resolver service against `catalog_geographies`; replace the four `find_by(uuid:)` lookups; temporary UUID fallback in the resolver so legacy redirects and the web cutover are not simultaneous. **Blocks #60** |
 | **API-2** — embed district in marketplace area and listing payloads | `red-cab-api` | — | Add a district embed (uuid, slug, names) to `MarketplaceAreaEmbeddedSerializer` / listing detail DTO so the web can build canonical paths and breadcrumbs from a listing payload. **Blocks #60** (parallel with API-1) |
 | **API-3** — remove the UUID fallback from marketplace geography resolution | `red-cab-api` | API-1, #60 deployed | Deprecation cleanup in the PR-08 style; slug-only afterwards |
 | **WEB-1** — remove legacy `/account/discover` redirects | `red-cab-web` | #60 shipped one release | Drops the legacy tier from the redirect matrix |

@@ -39,7 +39,7 @@ Source coverage from the PRD/meeting notes (upstream direction). Every PRD story
 | B-02 | FR-CAT-003, -004 | CAT |
 | B-03 | FR-CAT-004, -005, -006, -021; NFR-PERF-001 | CAT |
 | B-04 | FR-CAT-007, -008; NFR-AVAIL-002 | CAT |
-| B-05 | FR-CAT-001, -002; NFR-I18N-003; NFR-PRIV-003 | CAT |
+| B-05 | FR-CAT-001, -002, -033; NFR-I18N-003; NFR-PRIV-003 | CAT |
 | C-01 | FR-CAT-009, -010 | CAT |
 | C-02 | FR-CAT-011, -012; NFR-SEC-006 | CAT |
 | C-03 | FR-CAT-013 | CAT |
@@ -50,7 +50,7 @@ Source coverage from the PRD/meeting notes (upstream direction). Every PRD story
 | C-08 | FR-CAT-018 | CAT |
 | C-09 | FR-CAT-019 | CAT |
 | C-10 | FR-CAT-020 | CAT |
-| C-11 | FR-CAT-022; FR-BKG-015; NFR-PRIV-003; NFR-AUD-002 | CAT, BKG |
+| C-11 | FR-CAT-022, -034; FR-BKG-015; NFR-PRIV-003; NFR-AUD-002 | CAT, BKG |
 | D-01 | FR-CAT-023 | CAT |
 | D-02 | FR-CAT-024 | CAT |
 | D-03 | FR-CAT-025; NFR-I18N-004 | CAT |
