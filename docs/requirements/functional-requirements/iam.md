@@ -70,7 +70,7 @@ If a Tourist dismisses language selection without choosing, the system **shall**
 
 ### FR-IAM-012 — Guest browsing scope
 Unauthenticated Visitors **may** browse public discovery content; the system **shall** require an authenticated Tourist or Corporate Account to initiate a booking.
-- Source: 1.1, B-01, meeting-notes. Status: Provisional (AMB-022).
+- Source: 1.1, B-01, meeting-notes. Status: Approved (Decision Log AMB-022).
 
 ### FR-IAM-013 — Corporate account registration
 The system **shall** allow registration of a Corporate/Group Account capturing organization identity and group-size range, and **shall** record the account type as Corporate.

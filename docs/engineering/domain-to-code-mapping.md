@@ -36,14 +36,14 @@ Red Cab has four external roles ([../architecture/api-design.md](/docs/architect
 ### Notes
 
 - **`marketplace/`** serves optional-auth discovery: geography, listings, `calculate_quote`, availability reads. Uses optional auth (try JWT, proceed if absent).
-- **`tourists/`** serves authenticated B2C booking lifecycle, payments visibility, and reviews. Booking initiation requires auth regardless of guest browsing scope (`AMB-022`).
+- **`tourists/`** serves authenticated B2C booking lifecycle, payments visibility, and reviews. Booking initiation requires auth at checkout per `NFR-SEC-005` (guest browse is unauthenticated per `AMB-022`).
 - **`corporate/`** serves corporate quotation requests, document views, manifest submission. Enters Booking only via accepted quotation (ACL).
 - **`providers/`** serves onboarding, catalog authoring, incoming bookings, review responses. Gated by Provider Status conformist read.
 - **`team/`** serves Admin operations across all contexts. Independent admin identity, separate from tourist/user accounts.
 
 ### Visitor / guest browsing
 
-If `AMB-022` resolves to allow unauthenticated discovery, those endpoints live under `marketplace/` with optional auth. They do **not** get a separate actor namespace.
+Guest discovery is unauthenticated (`AMB-022` resolved, Option A). Those endpoints live under `marketplace/` with optional auth. They do **not** get a separate actor namespace.
 
 ---
 
@@ -116,11 +116,13 @@ Map Red Cab consumer surfaces to React Router route files — one `*.routes.js` 
 
 | Surface | Layout | Route group file | URL prefix | Auth HOC |
 | --- | --- | --- | --- | --- |
-| Tourist App (public) | `TouristPublicLayout` | `marketplace.routes.js` | `/`, `/areas`, `/listings` | None / optional |
-| Tourist App (private) | `TouristDashboardLayout` | `tourist.routes.js` | `/account/bookings`, `/account/reviews` | `withTouristAuth` |
+| Tourist App (public) | `TouristPublicLayout` | `marketplace.routes.js` | `/`, `/districts`, `/districts/:districtSlug/areas/:areaSlug/listings`, `/listings/:listingUuid` (resolver) | None |
+| Tourist App (private) | `TouristDashboardLayout` | `tourist.routes.js` | `/account`, `/account/checkout`, `/account/bookings`, `/account/reviews` | `withTouristAuth` |
 | Client Portal (Corporate) | `CorporateLayout` | `corporate.routes.js` | `/corporate` | `withCorporateAuth` |
 | Provider Portal | `ProviderLayout` | `provider.routes.js` | `/providers` | `withProviderAuth` |
 | Admin Panel | `TeamLayout` | `team.routes.js` | `/team` | Team admin auth (independent) |
+
+Public catalog pages use server `loader` and `index, follow` robots per [spec #56](/docs/specs/tourist-web-56-tourist-access-and-route-contract). Checkout and account routes remain in `tourist.routes.js` with `withTouristAuth`.
 
 ### API client naming
 

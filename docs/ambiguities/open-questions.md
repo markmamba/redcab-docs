@@ -33,9 +33,9 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 
 ## Priority index
 - **P0 (blockers):** AMB-021, **AMB-037** (cross-border exemption — highest severity), **AMB-040** (provider custody/release)
-- **P1 (pre-ship):** AMB-001, AMB-006, AMB-008, AMB-009, AMB-010, AMB-013, AMB-014, AMB-022, AMB-024, AMB-025, AMB-026, AMB-038, AMB-039
+- **P1 (pre-ship):** AMB-001, AMB-006, AMB-008, AMB-009, AMB-010, AMB-013, AMB-014, AMB-024, AMB-025, AMB-026, AMB-038, AMB-039
 - **P2 (confirmation / later):** AMB-015 through AMB-019, AMB-027, AMB-028, AMB-031, AMB-034, AMB-035
-- **RESOLVED (Decision Log):** AMB-003 (reaffirmed), AMB-004, AMB-005, AMB-007, AMB-011, AMB-012, AMB-020, AMB-023, AMB-029, AMB-030, AMB-033, AMB-036
+- **RESOLVED (Decision Log):** AMB-003 (reaffirmed), AMB-004, AMB-005, AMB-007, AMB-011, AMB-012, AMB-020, AMB-022, AMB-023, AMB-029, AMB-030, AMB-033, AMB-036
 - **REVERSED (superseded by [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation)):** AMB-001 (custody element), AMB-002, AMB-032
 
 ---
@@ -291,6 +291,7 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Risk if unresolved:** Blocks the foundation context.
 
 ### AMB-022 — Guest (unauthenticated) access scope
+- **Status:** **RESOLVED** — see Decision Log (2026-09-20). Option A: public browse of districts, areas, listings, and indicative pricing; authentication required only at checkout initiation.
 - **Sources:** planning conflict (`1.1`/`B-01` require login & hide pricing vs meeting-notes "Guest Website").
 - **Classification:** Business (Product).
 - **Question:** May Visitors browse listings and see pricing without an account, or is the homepage login-gated?
@@ -524,6 +525,7 @@ Low-effort confirmations from the PRD Appendix already encoded as baseline rules
 | AMB-011 | B2C card path **enters `CONFIRMED` on payment success** (`BKG-10`); no `PENDING` on happy path. Auto-confirm timer N/A for B2C. | Product + Engineering | 2026-07-29 | `booking-state-machine.md`, [Business Rules](/docs/business-rules/invariants) |
 | AMB-012 | Seat restoration **idempotent** on cancellation/session expiry; skipped for elapsed slots; per-vehicle restores full capacity unit (`CON-5`, `CON-6`). | Engineering | 2026-07-29 | [Business Rules](/docs/business-rules/invariants) (`CON-5`) |
 | AMB-020 | Primary discovery navigation: **District → Area** hierarchy. Service type is a **filter** (`D-02`), not primary IA. | Product Owner | 2026-07-29 | `glossary.md`, `functional-requirements.md`, `phasing.md` |
+| AMB-022 | **Option A — public browse, auth at checkout only.** Visitors may browse catalog content and see indicative pricing without an account. No partial gate, no price masking. Canonical public URLs: `/districts/{districtSlug}/areas/{areaSlug}/listings[/{listingUuid}]`. `/discover` rejected. | Product Owner | 2026-09-20 | [Spec #56](/docs/specs/tourist-web-56-tourist-access-and-route-contract), [Session A record](/docs/roadmap/notes/SESSION-A-DECISION-RECORD), `iam.md` (`FR-IAM-012`), `non-functional-requirements.md` (`NFR-SEC-005`), `tourist-ui-pre-phase-2.md`, `domain-to-code-mapping.md` |
 | AMB-023 | Canonical vehicle taxonomy: **PRD set** — Alphard, HiAce, Sedan, Limousine (private car); 20/40/50-seat bands (charter bus). Stored on `provider_assets.vehicle_category`. | Business + Engineering | 2026-07-29 | `glossary.md`, `domain-models.md` |
 | AMB-032 | ~~**Platform merchant-of-record** for card charges; **Provider seller-of-record** for underlying service.~~ **Reversed 2026-08-30** — see below. | Legal + Finance | 2026-07-29 | `payments-architecture.md`, `glossary.md` |
 | AMB-033 | **B2C prices tax-inclusive**; **corporate documents itemize 10% consumption tax** separately (`PAY-12`, `PAY-10`). | Finance + Legal | 2026-07-29 | [Business Rules](/docs/business-rules/invariants), `glossary.md` |

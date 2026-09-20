@@ -193,14 +193,13 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 ### Resolved decisions applied in Phase 1
 
-Phase 1 implementation follows the Decision Log in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions). **Payment custody and topology** (`AMB-001` custody element, `AMB-002`, `AMB-032`) are superseded by [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) (provisional, pending counsel): sub-merchant settlement with deferred platform-triggered release; funds held by the licensed payment provider; Provider merchant-of-record. **Still applied:** platform-controlled payout queue after completion (`AMB-003`–`005`); snapshots at CheckoutSession creation (`AMB-007`); B2C enters `CONFIRMED` on payment success (`AMB-011`); District → Area discovery (`AMB-020`); PRD vehicle taxonomy on `provider_assets` (`AMB-023`). **Reopened:** capture timing (`AMB-039`).
+Phase 1 implementation follows the Decision Log in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions). **Payment custody and topology** (`AMB-001` custody element, `AMB-002`, `AMB-032`) are superseded by [ADR-015](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) (provisional, pending counsel): sub-merchant settlement with deferred platform-triggered release; funds held by the licensed payment provider; Provider merchant-of-record. **Still applied:** platform-controlled payout queue after completion (`AMB-003`–`005`); snapshots at CheckoutSession creation (`AMB-007`); B2C enters `CONFIRMED` on payment success (`AMB-011`); District → Area discovery (`AMB-020`); public guest browse with auth at checkout only (`AMB-022`); PRD vehicle taxonomy on `provider_assets` (`AMB-023`). **Reopened:** capture timing (`AMB-039`).
 
 ### Open decisions for Phase 1
 
 | AMB     | Topic              | Working assumption                                           |
 | ------- | ------------------ | ------------------------------------------------------------ |
 | AMB-021 | Auth methods       | Email/password + Google OAuth at launch                      |
-| AMB-022 | Guest browsing     | Defer guest-scope UI; IAM supports optional-auth marketplace namespace |
 ### Exit criteria
 
 **Both repos**

@@ -82,35 +82,47 @@ Plan and implement in this sequence. Skipping a step causes rework.
 
 **Output:** written decisions + route map (can live in this doc or a linked spec under `docs/specs/` when implementation starts).
 
-### A1 — Access model (plan first)
+### A1 — Access model (locked)
 
-Resolve how public vs authenticated surfaces work. Everything else depends on this.
+**Locked (`AMB-022` resolved — Option A, 2026-09-20):** Public browse of districts, areas, listings, and indicative pricing. Authentication required only at checkout initiation. Full contract: [tourist-web-56-tourist-access-and-route-contract](/docs/specs/tourist-web-56-tourist-access-and-route-contract).
 
 | Decision | Current `red-cab-web` | Requirements / ambiguity |
 | --- | --- | --- |
-| Guest discovery | Discover under `/account/discover` with `withTouristAuth` | `FR-IAM-012`: visitors may browse; account required to **book** only |
+| Guest discovery | Discover under `/account/discover` with `withTouristAuth` | `FR-IAM-012` Approved: visitors may browse; account required to **book** only |
 | Homepage role | Placeholder at `/` | Entry to discover; SEO landing (`index, follow`) |
 | Booking gate | Checkout requires tourist auth | Correct |
 | Account-only pages | `/account`, `/account/bookings`, checkout | Stay auth-gated; `noindex, nofollow` |
 
-**Working assumption (until `AMB-022` is resolved):** public browse of districts, areas, listings, and indicative pricing; sign-in required at checkout initiation.
+**Canonical route map** (route file: `marketplace.routes.js`; discover subtree moves out of `tourist.routes.js` in `#60`):
 
-**Target route map (provisional):**
-
-| Surface | Proposed path | Auth | SEO |
+| Surface | Path | Auth | SEO |
 | --- | --- | --- | --- |
 | Home | `/` | Optional | `index, follow` |
-| Discover — districts | `/discover` | Optional | `index, follow` |
-| Discover — areas | `/discover/:districtId` | Optional | `index, follow` |
-| Discover — listings | `/discover/:districtId/:areaId` | Optional | `index, follow` |
-| Listing detail | `/discover/:districtId/:areaId/:listingId` | Optional | `index, follow` |
+| Districts index | `/districts` | None | `index, follow` |
+| Areas in district | `/districts/:districtSlug` | None | `index, follow` |
+| Listings in area | `/districts/:districtSlug/areas/:areaSlug/listings` | None | `index, follow` |
+| Listing detail | `/districts/:districtSlug/areas/:areaSlug/listings/:listingUuid` | None | `index, follow` |
+| Listing resolver alias | `/listings/:listingUuid` | None | `noindex, nofollow` (302 → canonical) |
+| Login / sign-up | `/login`, `/sign-up` | None | per existing rules |
 | Checkout | `/account/checkout` | Required (tourist) | `noindex, nofollow` |
 | Checkout return | `/account/checkout/return` | Required | `noindex, nofollow` |
 | Bookings list | `/account/bookings` | Required | `noindex, nofollow` |
 | Booking detail | `/account/bookings/:bookingId` | Required | `noindex, nofollow` |
 | Account | `/account` | Required | `noindex, nofollow` |
+| Sitemap | `/sitemap.xml` | None | n/a (`#57`) |
 
-> **Migration note:** Today discover lives at `/account/discover/…`. Milestone B may introduce public `/discover/…` and redirect old URLs, or keep account-prefixed paths if product rejects guest browse — **decide in A1 before coding.**
+> **Redirect / migration** (implemented in `#60`; full matrix in [spec #56](/docs/specs/tourist-web-56-tourist-access-and-route-contract#redirect--migration)):
+>
+> | Old path | New path | Redirect |
+> | --- | --- | --- |
+> | `/account/discover` | `/districts` | 301 |
+> | `/account/discover/:districtId` | `/districts/{slug}` | 301 |
+> | `/account/discover/:districtId/:areaId` | `/districts/{d}/areas/{a}/listings` | 301 |
+> | `/account/discover/:districtId/:areaId/:listingId` | `/districts/{d}/areas/{a}/listings/{listingUuid}` | 301 |
+> | `/discover`, `/discover/*` | `/districts` | 301 (defensive) |
+> | `/listings/:listingUuid` | canonical nested listing path | 302 |
+>
+> Legacy `/account/discover/*` redirects accept UUID segments during the `API-1` transition window. Retained one release after cutover, then removed by `WEB-1`.
 
 ### A2 — Information architecture
 

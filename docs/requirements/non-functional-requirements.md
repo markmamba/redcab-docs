@@ -133,7 +133,7 @@ The system **shall** confine each authenticated Actor to the surfaces permitted 
 
 ### NFR-SEC-005 — Authenticated booking initiation
 The system **shall** require an authenticated Tourist or Corporate Account to initiate a booking, regardless of guest browsing scope.
-- Source: 1.1, B-01. Governs: relates FR-IAM-012. Status: Provisional (AMB-022).
+- Source: 1.1, B-01. Governs: relates FR-IAM-012. Status: Approved (Decision Log AMB-022).
 
 ### NFR-SEC-006 — Upload constraints
 The system **shall** reject uploaded documents and photos that exceed the published size limit or fall outside the permitted formats.
@@ -262,7 +262,6 @@ These NFRs depend on open decisions and cannot reach Approved until the cited it
 - AMB-016 (lockout params): NFR-TIME-008, NFR-SEC-002.
 - AMB-019 (review window): NFR-TIME-007.
 - AMB-021 (auth methods): NFR-SEC-007.
-- AMB-022 (guest scope): NFR-SEC-005.
 - AMB-024 (language defaults / supported languages): NFR-I18N-002, NFR-I18N-004.
 - AMB-025 (currency): NFR-I18N-005.
 - AMB-031 (PDF rendering): NFR-I18N-006, NFR-COMP-003.
