@@ -18,6 +18,7 @@ Roadmap overview — scope, dependency order, phase index, context matrix, and a
 | --- | --- |
 | Phase 0 | [Foundation](/docs/roadmap/phase-0-foundation) |
 | Phase 1 | [MVP](/docs/roadmap/phase-1-mvp) |
+| Tourist UI (pre–Phase 2) | [Tourist UI](/docs/roadmap/tourist-ui-pre-phase-2) |
 | Phase 2 | [Marketplace depth](/docs/roadmap/phase-2-marketplace-depth) |
 | Phase 3 | [Corporate + packages](/docs/roadmap/phase-3-corporate-packages) |
 | Requirements | [Requirements](/docs/requirements) |
@@ -123,6 +124,7 @@ Within each Phase 1–3 context slice, build in order: **DBML → migrations →
 | --- | --- | --- | --- |
 | **0** | [Foundation](/docs/roadmap/phase-0-foundation) | Runnable repos, IAM + profiles, event bus | IAM, profiles, NOT stub, engineering scaffold |
 | **1** | [MVP — B2C happy path](/docs/roadmap/phase-1-mvp) | End-to-end tourist booking + payout | PRV, CAT (basic), BKG, PAY, NOT |
+| **1b** | [Tourist UI — pre–Phase 2](/docs/roadmap/tourist-ui-pre-phase-2) | Tourist marketplace UX, funnel, Phase 2 UI slots | red-cab-web (Tourist App) |
 | **2** | [Marketplace depth](/docs/roadmap/phase-2-marketplace-depth) | Reviews, pricing, search, refunds | REV, CAT (advanced), BKG, PRV automation |
 | **3** | [Corporate + packages](/docs/roadmap/phase-3-corporate-packages) | Quotations, invoices, bank transfer | COR, BKG manifests, PAY reconciliation |
 | **v2** | [Post-baseline](/docs/roadmap/v2-post-baseline) | Unscheduled backlog | Ambiguity register |

@@ -20,11 +20,12 @@ Phase 1 scope, DBML gates, deliverables by repo/context, and exit criteria.
 | Roadmap overview | [Phasing Roadmap](/docs/roadmap) |
 | Prior phase | [Phase 0](/docs/roadmap/phase-0-foundation) |
 | Next phase | [Phase 2](/docs/roadmap/phase-2-marketplace-depth) |
+| Tourist UI (before Phase 2) | [Tourist UI — pre–Phase 2](/docs/roadmap/tourist-ui-pre-phase-2) |
 | Resolved decisions | [Open Questions](/docs/ambiguities/open-questions) (Decision Log) |
 
 ---
 
-| [← Phase 0](/docs/roadmap/phase-0-foundation) | [Phase 2 →](/docs/roadmap/phase-2-marketplace-depth) |
+| [← Phase 0](/docs/roadmap/phase-0-foundation) | [Tourist UI →](/docs/roadmap/tourist-ui-pre-phase-2) |
 
 ---
 

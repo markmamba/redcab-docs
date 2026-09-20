@@ -19,12 +19,13 @@ Phase 2 scope, schema gates, deliverables, and exit criteria.
 | --- | --- |
 | Roadmap overview | [Phasing Roadmap](/docs/roadmap) |
 | Prior phase | [Phase 1](/docs/roadmap/phase-1-mvp) |
+| Tourist UI (complete first) | [Tourist UI — pre–Phase 2](/docs/roadmap/tourist-ui-pre-phase-2) |
 | Next phase | [Phase 3](/docs/roadmap/phase-3-corporate-packages) |
 | Reviews context | [Reviews & Ratings](/docs/architecture/bounded-contexts/reviews) |
 
 ---
 
-| [← Phase 1](/docs/roadmap/phase-1-mvp) | [Phase 3 →](/docs/roadmap/phase-3-corporate-packages) |
+| [← Tourist UI](/docs/roadmap/tourist-ui-pre-phase-2) | [Phase 3 →](/docs/roadmap/phase-3-corporate-packages) |
 
 ---
 
@@ -33,6 +34,8 @@ Phase 2 scope, schema gates, deliverables, and exit criteria.
 ### Goal
 
 Feature-competitive B2C marketplace: reviews, flexible pricing, search/filter, refunds, and operational automation.
+
+> **Tourist UI gate:** Complete [Tourist UI — pre–Phase 2](/docs/roadmap/tourist-ui-pre-phase-2) (Milestones A–D) before wiring Phase 2 feature UI on tourist surfaces — IA, shells, funnel pages, and placeholder slots should be in place first.
 
 ### How to proceed (DBML-first)
 
