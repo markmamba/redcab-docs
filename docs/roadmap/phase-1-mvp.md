@@ -101,8 +101,8 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 **red-cab-api**
 
-- [ ] Geography module: District / Area hierarchy seeded from official administrative codes; EN/JA/kana labels; city-hall centroids; **Area `timezone`** (`Asia/Tokyo` for Japan seed); admin curate/deactivate ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), `AMB-036`)
-- [ ] Geography seed task: idempotent upsert from 総務省 code CSV + government-office coordinates (~1,750 Areas)
+- [ ] Geography module: `catalog_countries` + `catalog_geographies` administrative tree; discovery roles (67 C1 roots); listable-leaf rule; EN/JA/kana labels; city-hall centroids on listable nodes; **`timezone` on every node** (`Asia/Tokyo` for Japan seed); admin curate/deactivate/archive with successor ([ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data), [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree), `AMB-036`)
+- [ ] Geography seed task: idempotent upsert from 総務省 code CSV + government-office coordinates (~1,900 listable nodes); derive `path`, `discovery_root_id`, `is_listable`
 - [ ] Listings module: create, configure, publish (≥1 photo, `INV-10`; publish blocked without a verified Provider Merchant Account — `INV-12`)
 - [ ] Provider Asset module: register vehicles/guides (`provider_assets`); slots bound to `asset_id` (`CON-4`)
 - [ ] Availability module: slots, seat counter, overlap prevention per asset; per-vehicle bookings consume 100% slot capacity (`CON-6`)

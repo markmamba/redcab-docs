@@ -134,7 +134,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 
 ### Context overview
 - **Responsibility:** geography taxonomy, listings, pricing configuration + the sole price-calculation authority, and availability/seat inventory. Internal modules: Geography, Listings, Pricing, Availability, Search.
-- **Source of truth for:** District/Area, Listing content & status, PricingPolicy configuration, **ProviderAsset** registry, AvailabilitySlot and its seat counter, Rating Score *display* (the score itself is owned by Reviews).
+- **Source of truth for:** Geography (country + administrative tree; District/Area as discovery roles), Listing content & status, PricingPolicy configuration, **ProviderAsset** registry, AvailabilitySlot and its seat counter, Rating Score *display* (the score itself is owned by Reviews).
 - **Dependencies:** upstream Onboarding (status), Identity; downstream Booking and Corporate (pricing + availability), Notifications.
 
 ### Aggregates
@@ -144,7 +144,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
   - *Lifecycle:* active → retired (soft); historical Slots/Bookings preserved.
 - **Listing** (root: `Listing`)
   - *Purpose:* a bookable service with type-specific attributes, photos, location, and a reference to its pricing policy.
-  - *Invariants:* cannot be `Published` with zero photos (`INV-10`); cannot be `Published` without the Provider's Merchant Account verified (`INV-12`, `LC-12`); a District/Area with zero published listings is not shown (`INV-8`); listing edits must not retroactively affect confirmed Bookings (`BKG-8`, enforced because Booking holds snapshots).
+  - *Invariants:* cannot be `Published` with zero photos (`INV-10`); cannot be `Published` without the Provider's Merchant Account verified (`INV-12`, `LC-12`); must attach to a listable geography node (`FR-CAT-033`); discovery roots/areas with zero published listings in subtree are not shown (`INV-8`); listing edits must not retroactively affect confirmed Bookings (`BKG-8`, enforced because Booking holds snapshots).
   - *Lifecycle:* `Draft → Published → Paused/Unpublished → Unlisted`; only `Published` is tourist-visible (`LC-10`). Paused/Unlisted preserve history (`INV-11`).
 - **PricingPolicy** (root: `PricingPolicy`)
   - *Purpose:* hold the pricing configuration (mode, group tiers, duration, seasonal overrides, extra charges) and the Cancellation Policy, and to be the basis for the single calculation authority.
@@ -157,17 +157,19 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
   - *Transactionally consistent:* the seat counter and its decrement/restoration (decrement on CheckoutSession creation; per-vehicle bookings set `available_seats = 0` per `CON-6` — see §5 and CR-1).
 
 ### Entities
-- **District**, **Area** (Geography — identity-bearing reference data seeded from Japanese administrative codes), **Photo**, **PricingTier**, **SeasonalOverride**, **ExtraCharge**, **CancellationPolicyTier**.
-  - *District kinds:* `prefecture | designated_city` (`AMB-036`). Designated cities (Yokohama, Osaka, …) are Districts; their wards are Areas.
-  - *Attributes:* `slug`, `name_en` (bare romanized), `name_ja` (official with suffix), `name_kana` (Areas), `prefecture_code`, `municipality_code` (Areas; District when `designated_city`), `latitude`/`longitude` (city-hall centroid), `display_order`, `status`.
-  - *Label rule:* `name_en` bare ("Shinjuku"); `name_ja` with suffix ("新宿区"); ambiguity resolved by parent District at render.
+- **Country**, **Geography** (Geography module — identity-bearing reference data seeded from Japanese administrative codes; [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)), **Photo**, **PricingTier**, **SeasonalOverride**, **ExtraCharge**, **CancellationPolicyTier**.
+  - *Levels:* `subdivision | municipality | ward` — administrative fact on `catalog_geographies`.
+  - *Roles:* `is_discovery_root` (District in UI/URLs), `is_listable` (Area in UI/URLs; Listing attachment point).
+  - *Attributes:* `country_id`, `parent_id`, `discovery_root_id`, `successor_geography_id`, `level`, `code_system`, `external_code`, `path`, `slug`, `name_en` (bare romanized), `name_ja` (official with suffix), `name_kana`, `latitude`/`longitude` (city-hall centroid on listable nodes), `timezone`, `display_order`, `status`, `archived_at`.
+  - *Label rule:* `name_en` bare ("Shinjuku"); `name_ja` with suffix ("新宿区"); ambiguity resolved by discovery root at render.
   - *Not stored:* boundary polygons, PostGIS geometry, GeoJSON.
+  - *API vocabulary:* marketplace endpoints and JSON payloads retain District/Area naming; persistence uses `Catalog::Geography`.
 
 ### Value objects
-- **GeoArea** (district/area labels EN/JA/kana + slug), **Capacity**, **DateRange**, **TimeWindow**, **Money** (configured prices), **PriceBreakdown** (the computed result of `calculate_quote`), **AvailabilitySnapshot** (point-in-time view for consumers).
+- **GeoArea** (discovery-root/listable-node labels EN/JA/kana + slug + ancestors), **Capacity**, **DateRange**, **TimeWindow**, **Money** (configured prices), **PriceBreakdown** (the computed result of `calculate_quote`), **AvailabilitySnapshot** (point-in-time view for consumers).
 
 ### Domain events
-- `ListingPublished`, `ListingPaused`, `ListingUnlisted`, `SlotCapacityChanged`. Consumes `LicenseExpired/Renewed` (pause/restore), district-deactivation cascade (`OPR-10`), `RatingRecalculated` (display).
+- `ListingPublished`, `ListingPaused`, `ListingUnlisted`, `SlotCapacityChanged`. Consumes `LicenseExpired/Renewed` (pause/restore), geography subtree deactivation cascade (`OPR-10`), `RatingRecalculated` (display).
 
 ### Cross-context references
 - Publishes **PriceBreakdown** and **AvailabilitySnapshot** as value contracts; consumers must never recompute price (`PRC-1`, CR-2).

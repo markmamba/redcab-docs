@@ -9,12 +9,12 @@ description: Engineering conventions for instants, civil dates, and service time
 - Ask: **did the system create this time, or did a person pick it?**
 - **System-created** → `timestamptz` instant (`Time.current`); frontend never sends it.
 - **Person-picked** → bare `YYYY-MM-DD` or naive local datetime; server anchors once in the **service timezone**.
-- **Service timezone** comes from `listing.area.timezone` (live) or `booking.service_timezone` (snapshotted); never hardcode `Asia/Tokyo` in domain code.
+- **Service timezone** comes from `listing.geography.timezone` (live) or `booking.service_timezone` (snapshotted); never hardcode `Asia/Tokyo` in domain code.
 - Use **`DateTimeUtils`** on API and web; app clock is **UTC**.
 
 ## About this document
 
-Single source of truth for date/time engineering rules. Business meaning of Service Timezone: [Glossary](/docs/business-rules/glossary). ADR: [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model).
+Single source of truth for date/time engineering rules. Business meaning of Service Timezone: [Glossary](/docs/business-rules/glossary). ADRs: [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree) (`catalog_geographies.timezone`, seeded from `catalog_countries.default_timezone`).
 
 | Topic | Document |
 | --- | --- |
@@ -28,15 +28,15 @@ Single source of truth for date/time engineering rules. Business meaning of Serv
 
 | Context | Source | Example use |
 | --- | --- | --- |
-| Catalog (pre-booking) | `Catalog::Listing` → `area.timezone` | Slot "not in past", seasonal override windows |
+| Catalog (pre-booking) | `Catalog::Listing` → `geography.timezone` | Slot "not in past", seasonal override windows |
 | Checkout / Booking | `service_timezone` snapshotted on CheckoutSession, copied to Booking | Cancellation cutoffs, auto-complete timer, hold expiry |
-| Display (web) | Area `timezone` from API payload, or booking snapshot on order detail | `DateTimeUtils.format`, slot pickers |
+| Display (web) | Geography `timezone` from API payload, or booking snapshot on order detail | `DateTimeUtils.format`, slot pickers |
 
 **Rules:**
 
-- Every `catalog_areas` row MUST have a valid IANA timezone. Missing timezone is a data bug — fail loud in validators.
+- Every `catalog_geographies` row MUST have a valid IANA timezone, seeded from `catalog_countries.default_timezone` at ingest ([ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)). Missing timezone is a data bug — fail loud in validators.
 - NEVER hardcode `'Asia/Tokyo'`, `'JST'`, or numeric offsets in domain Managers, Validators, or Services.
-- Phase 1 Japan seed sets all Areas to `Asia/Tokyo`; behavior matches legacy JST without hardcoding.
+- Phase 1 Japan seed sets `catalog_countries.default_timezone = Asia/Tokyo` and propagates to every geography node; behavior matches legacy JST without hardcoding.
 
 ---
 
@@ -61,7 +61,7 @@ Location (when implemented): `app/shared/date_time_utils.rb`.
 # Person-picked civil date — anchor midnight in the service timezone
 DateTimeUtils.parse_civil_date(
   date_string: request.starts_on,
-  timezone:    listing.area.timezone
+  timezone:    listing.geography.timezone
 )
 
 # Display in mailers / admin
@@ -84,11 +84,11 @@ time.in_time_zone(service_timezone).to_date
 
 Location: `red-cab-web/app/utils/date-time-utils.js`.
 
-- **Display:** `DateTimeUtils.format(instant, { timezone })` — `timezone` required; pass Area or booking snapshot from API.
+- **Display:** `DateTimeUtils.format(instant, { timezone })` — `timezone` required; pass geography or booking snapshot from API.
 - **Submit:** `DateTimeUtils.toApiString(formValue, { timezone })` in the submit handler only.
 - **Edit forms:** `DateTimeUtils.toFormValue(apiValue, { timezone })`.
 
-Do not use `PROVIDER_PROFILE_DISPLAY_TIMEZONE` or other hardcoded constants for slot or booking UI — read `timezone` from the listing's embedded Area or the booking payload.
+Do not use `PROVIDER_PROFILE_DISPLAY_TIMEZONE` or other hardcoded constants for slot or booking UI — read `timezone` from the listing's embedded geography or the booking payload.
 
 ---
 
@@ -104,15 +104,15 @@ Do not use `PROVIDER_PROFILE_DISPLAY_TIMEZONE` or other hardcoded constants for 
 
 | Field / rule | Resolution |
 | --- | --- |
-| Availability slot start/end (authoring) | Listing Area timezone |
+| Availability slot start/end (authoring) | Listing geography timezone |
 | Cancellation tier `hours_before_service` vs slot start | Snapshotted `service_timezone` on booking |
-| Checkout session `expires_at` sweep | Snapshotted or listing Area at creation |
+| Checkout session `expires_at` sweep | Snapshotted or listing geography at creation |
 | Auto-complete 24h after slot end | Snapshotted `service_timezone` |
 | `available_for_payout_at` clearing gate | Snapshotted `service_timezone` |
-| Seasonal override date ranges (when implemented) | Listing Area timezone |
+| Seasonal override date ranges (when implemented) | Listing geography timezone |
 
 ---
 
 ## Phase 1 Japan note
 
-All seeded Areas use `Asia/Tokyo`. Tests SHOULD include at least one non-Japan IANA zone to prove the model is not Japan-coupled (e.g. `Pacific/Honolulu` or `Asia/Singapore`).
+All seeded geography nodes inherit `Asia/Tokyo` from the Japan country row. Tests SHOULD include at least one non-Japan IANA zone to prove the model is not Japan-coupled (e.g. `Pacific/Honolulu` or `Asia/Singapore`).

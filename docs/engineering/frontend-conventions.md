@@ -292,7 +292,7 @@ return (
 - `DateField` holds naive wall-clock values; RHF carries them untouched
 - Convert in exactly one place — the submit handler — via `DateTimeUtils.toApiString(value, { timezone })`
 - Edit forms: `DateTimeUtils.toFormValue(apiValue, { timezone })`
-- **`timezone` is required** on every `DateTimeUtils` call — pass the Listing's embedded Area `timezone` from the API, or `service_timezone` on booking/order payloads. Do not hardcode `Asia/Tokyo` or use display-only constants for slot or cancellation UI (`OPR-11`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model)).
+- **`timezone` is required** on every `DateTimeUtils` call — pass the Listing's embedded geography `timezone` from the API, or `service_timezone` on booking/order payloads. Do not hardcode `Asia/Tokyo` or use display-only constants for slot or cancellation UI (`OPR-11`, [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)).
 - Geography centroids are for map display and near-me only — not a timezone source.
 - See [Date / Time / Timezone](/docs/engineering/datetime-and-timezones) for the full classification test and anti-patterns.
 

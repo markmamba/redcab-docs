@@ -6,6 +6,9 @@ repos:
 status: draft
 phase: 1
 context: CAT
+depends_on:
+  - "red-cab-api#130 (geography administrative tree — ancestors on listing payload)"
+  - "tourist-web-56"
 ---
 
 > **Outline only.** Full spec to be written from this skeleton once `#56` is approved. Do not treat any bullet below as final design — expand and cite governing docs before implementation.
