@@ -7,6 +7,7 @@ status: approved
 phase: 1
 context: IAM
 depends_on:
+  - "docs/specs/geography-administrative-tree.md"
   - "red-cab-api#130 (geography administrative tree — slug resolution; URL family unchanged)"
 ---
 

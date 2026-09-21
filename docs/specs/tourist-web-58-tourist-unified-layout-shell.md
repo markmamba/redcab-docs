@@ -7,6 +7,7 @@ status: draft
 phase: 1
 context: CAT
 depends_on:
+  - "docs/specs/geography-administrative-tree.md"
   - "red-cab-api#130 (geography administrative tree — sequence before implementation)"
   - "tourist-web-56"
 ---
