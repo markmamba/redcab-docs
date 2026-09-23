@@ -76,8 +76,8 @@ Roadmap note, not a decision. It proposes amendments to [Geography](/docs/archit
 
 ### 1.8 Secondary observations
 
-- Marketplace managers resolve geography with `find_by(uuid:)` (`Catalog::Districts::MarketplaceShowManager:19`, `Catalog::Areas::MarketplaceIndexManager:29`), while `slug` is serialized but never used as a lookup key. Session A §5 already books this as an API gap; it is listed here because the redesign should land slug resolution in the same pass rather than twice.
-- `MarketplaceAreaEmbeddedSerializer` carries no district, so `red-cab-web` cannot build a listing's canonical path from the listing payload alone. A tree with an ancestor array solves this and the breadcrumb requirement of `tourist-web-57` together.
+- Marketplace managers resolve geography with `find_by(uuid:)` (`Catalog::Districts::MarketplaceShowManager:19`, `Catalog::Areas::MarketplaceIndexManager:29`), while `slug` is serialized but never used as a lookup key. Session A §5 booked this as an API gap — **delivered** in [`red-cab-api#134`](/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) (`API-1`/`API-2` aliases). Listed here because the redesign landed slug resolution in the same pass rather than twice.
+- `MarketplaceAreaEmbeddedSerializer` carried no district, so `red-cab-web` could not build a listing's canonical path from the listing payload alone. A tree with an ancestor array solves this and the breadcrumb requirement of `tourist-web-57` together — **delivered** in [`#134`](/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors).
 - `Catalog::District.discoverable` nests a `joins(:listings).select(:district_id).distinct` subquery per request. Correct, and fine at 67 roots; worth revisiting only if the areas-in-district page becomes hot.
 
 ---
@@ -327,7 +327,7 @@ Reserved for later, non-breaking: a `/jp` country prefix (only when country two 
 | 1 | `:district_id` / `:area_id` route params → `:district_slug` / `:area_slug`, resolved by slug | Marketplace read endpoints | Breaking | Already mandated by Session A §5; land both in one pass. Temporary UUID fallback in one resolver, removed by a deprecation issue |
 | 2 | Provider listing create/update `area_id` now accepts a geography UUID and **rejects non-listable nodes** | Provider write endpoints | Breaking behavior, same field name | Keep the JSON key `area_id`; add a validator error naming the valid children when a non-leaf is submitted |
 | 3 | `catalog_listings.area_id` → `geography_id` | Internal | Not breaking | Column rename only; no payload key changes |
-| 4 | Area payloads gain `latitude`, `longitude`, and `district` / ancestors | Marketplace read endpoints | Additive | Closes the Session A §5 breadcrumb gap and `tourist-web-57` |
+| 4 | Area payloads gain `latitude`, `longitude`, and `district` / ancestors | Marketplace read endpoints | Additive | **Delivered** in [`#134`](/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors); breadcrumb UX contract in [`web-57`](/docs/engineering/specs/cat/web-57-tourist-ia-breadcrumbs-deep-links) |
 | 5 | `GET /marketplace/catalog/areas/near` | New | Additive | Implements `FR-CAT-032`, currently unimplementable |
 | 6 | Team geography endpoints (list, update labels, reorder, archive with successor) | New | Additive | Implements the curate half of `FR-CAT-001` and gives `INV-11` a mechanism |
 | 7 | Archived geography returns `301`-equivalent successor reference instead of `404` | Marketplace read endpoints | Behavior change | New; nothing depends on the current `404` |
