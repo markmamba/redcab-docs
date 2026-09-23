@@ -1,0 +1,186 @@
+[
+  {
+    "from": "/docs/specs/12-checkout-payment-step",
+    "to": "/docs/engineering/specs/pay/web-12-checkout-payment-step"
+  },
+  {
+    "from": "/docs/specs/13-admin-commission-rate-ui",
+    "to": "/docs/engineering/specs/pay/web-13-admin-commission-rate-ui"
+  },
+  {
+    "from": "/docs/specs/70-provider-merchant-onboarding",
+    "to": "/docs/engineering/specs/pay/api-70-provider-merchant-onboarding"
+  },
+  {
+    "from": "/docs/specs/71-payment-attempt-checkout",
+    "to": "/docs/engineering/specs/pay/api-71-payment-attempt-checkout"
+  },
+  {
+    "from": "/docs/specs/72-charge-snapshot-reconciliation",
+    "to": "/docs/engineering/specs/pay/api-72-charge-snapshot-reconciliation"
+  },
+  {
+    "from": "/docs/specs/131-migrate-geography-schema",
+    "to": "/docs/engineering/specs/cat/geography/api-131-migrate-geography-schema"
+  },
+  {
+    "from": "/docs/specs/132-seed-japan-geography",
+    "to": "/docs/engineering/specs/cat/geography/api-132-seed-japan-geography"
+  },
+  {
+    "from": "/docs/specs/133-refactor-geography-domain-layer",
+    "to": "/docs/engineering/specs/cat/geography/api-133-refactor-geography-domain-layer"
+  },
+  {
+    "from": "/docs/specs/134-marketplace-geography-slug-and-ancestors",
+    "to": "/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors"
+  },
+  {
+    "from": "/docs/specs/135-near-me-areas-endpoint",
+    "to": "/docs/engineering/specs/cat/geography/api-135-near-me-areas-endpoint"
+  },
+  {
+    "from": "/docs/specs/136-team-geography-admin-endpoints",
+    "to": "/docs/engineering/specs/cat/geography/api-136-team-geography-admin-endpoints"
+  },
+  {
+    "from": "/docs/specs/geography-administrative-tree",
+    "to": "/docs/engineering/specs/cat/geography/docs-13-geography-administrative-tree"
+  },
+  {
+    "from": "/docs/specs/tourist-web-56-tourist-access-and-route-contract",
+    "to": "/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract"
+  },
+  {
+    "from": "/docs/specs/tourist-web-57-tourist-ia-breadcrumbs-deep-links",
+    "to": "/docs/engineering/specs/cat/web-57-tourist-ia-breadcrumbs-deep-links"
+  },
+  {
+    "from": "/docs/specs/tourist-web-58-tourist-unified-layout-shell",
+    "to": "/docs/engineering/specs/platform/web-58-tourist-unified-layout-shell"
+  },
+  {
+    "from": "/docs/specs/README",
+    "to": "/docs/engineering/specs/README"
+  },
+  {
+    "from": "/docs/specs/_template",
+    "to": "/docs/engineering/specs/_template"
+  },
+  {
+    "from": "/docs/specs/geography-administrative-tree",
+    "to": "/docs/engineering/specs/cat/geography/docs-13-geography-administrative-tree"
+  },
+  {
+    "from": "/docs/roadmap/notes/SESSION-A-DECISION-RECORD",
+    "to": "/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture"
+  },
+  {
+    "from": "/docs/roadmap/notes/geography-data-model-review",
+    "to": "/docs/engineering/specs/cat/geography/design-review-data-model"
+  },
+  {
+    "from": "/docs/roadmap/notes/index",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/index"
+  },
+  {
+    "from": "/docs/roadmap/notes/pr-01-restore-account-current-route",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/pr-01-restore-account-current-route"
+  },
+  {
+    "from": "/docs/roadmap/notes/pr-02-iam-security-fixes",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/pr-02-iam-security-fixes"
+  },
+  {
+    "from": "/docs/roadmap/notes/pr-03-session-cookie-manager-thread-safety",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/pr-03-session-cookie-manager-thread-safety"
+  },
+  {
+    "from": "/docs/roadmap/notes/pr-04-account-current-patch",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/pr-04-account-current-patch"
+  },
+  {
+    "from": "/docs/roadmap/notes/pr-05-actor-base-controllers",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/pr-05-actor-base-controllers"
+  },
+  {
+    "from": "/docs/roadmap/notes/pr-06-session-surface-symmetry",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/pr-06-session-surface-symmetry"
+  },
+  {
+    "from": "/docs/roadmap/notes/pr-07-oauth-account-provisioning",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/pr-07-oauth-account-provisioning"
+  },
+  {
+    "from": "/docs/roadmap/notes/pr-08-deprecations",
+    "to": "/docs/engineering/specs/iam/iam-audit-2026-08/pr-08-deprecations"
+  },
+  {
+    "from": "/docs/business-rules/",
+    "to": "/docs/product/business-rules/"
+  },
+  {
+    "from": "/docs/requirements/",
+    "to": "/docs/product/requirements/"
+  },
+  {
+    "from": "/docs/ambiguities/open-questions",
+    "to": "/docs/product/planning/open-questions"
+  },
+  {
+    "from": "/docs/roadmap/",
+    "to": "/docs/product/planning/roadmap/"
+  },
+  {
+    "from": "/docs/domain/",
+    "to": "/docs/architecture/domain/"
+  },
+  {
+    "from": "/docs/architecture/bounded-contexts/",
+    "to": "/docs/architecture/contexts/"
+  },
+  {
+    "from": "/docs/architecture/overview",
+    "to": "/docs/architecture/system/overview"
+  },
+  {
+    "from": "/docs/architecture/tech-stack",
+    "to": "/docs/architecture/system/tech-stack"
+  },
+  {
+    "from": "/docs/architecture/api-design",
+    "to": "/docs/architecture/system/api-design"
+  },
+  {
+    "from": "/docs/architecture/booking-state-machine",
+    "to": "/docs/architecture/patterns/booking-state-machine"
+  },
+  {
+    "from": "/docs/architecture/payments-architecture",
+    "to": "/docs/architecture/patterns/payments-architecture"
+  },
+  {
+    "from": "/docs/architecture/geography",
+    "to": "/docs/architecture/patterns/geography"
+  },
+  {
+    "from": "/docs/engineering/backend-conventions",
+    "to": "/docs/engineering/conventions/backend"
+  },
+  {
+    "from": "/docs/engineering/frontend-conventions",
+    "to": "/docs/engineering/conventions/frontend"
+  },
+  {
+    "from": "/docs/engineering/domain-to-code-mapping",
+    "to": "/docs/engineering/conventions/domain-to-code-mapping"
+  },
+  {
+    "from": "/docs/engineering/datetime-and-timezones",
+    "to": "/docs/engineering/conventions/datetime-and-timezones"
+  },
+  {
+    "from": "/docs/specs/",
+    "to": "/docs/engineering/specs/"
+  }
+]

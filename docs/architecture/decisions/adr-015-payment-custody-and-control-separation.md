@@ -18,11 +18,11 @@ ADR for the separation of fund custody from transaction control on the payment p
 
 | Topic | Document |
 | --- | --- |
-| Payments architecture | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payments architecture | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
 | Financial authority | [ADR-011: Financial Authority Model](/docs/architecture/decisions/adr-011-financial-authority-model) |
 | External systems | [ADR-009: External Systems Integration](/docs/architecture/decisions/adr-009-external-systems-integration) |
-| Rules | [Business Rules](/docs/business-rules/invariants) (`PAY-13`, `PAY-15`..`PAY-17`) |
-| Open items | [Open Questions](/docs/ambiguities/open-questions) (`AMB-037`..`AMB-040`) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) (`PAY-13`, `PAY-15`..`PAY-17`) |
+| Open items | [Open Questions](/docs/product/planning/open-questions) (`AMB-037`..`AMB-040`) |
 
 ---
 
@@ -136,7 +136,7 @@ Rejected because that is precisely what failed. The custody violation entered th
 - [ADR-011: Financial Authority Model](/docs/architecture/decisions/adr-011-financial-authority-model) — the money-facts versus money-movement seam, which holds unchanged; this ADR adds the custody/control axis it left open.
 - [ADR-006: Immutable Snapshot Strategy](/docs/architecture/decisions/adr-006-immutable-snapshot-strategy) — the frozen commercial basis from which the platform fee and refund amounts continue to derive.
 - [ADR-002: Technology Stack Selection](/docs/architecture/decisions/adr-002-technology-stack) — records Stripe Connect as the assumed rail; superseded on the payments dimension pending provider selection (`AMB-040`).
-- [Payments Architecture](/docs/architecture/payments-architecture) — the custody/control seam, flows, and financial invariants as implemented.
-- [Business Rules](/docs/business-rules/invariants) — `PAY-13` (custody), `PAY-15` (control), `PAY-16` (determination evidence), `PAY-17` (terms acceptance), `PAY-9` (corporate rail).
-- [Open Questions](/docs/ambiguities/open-questions) — `AMB-037` cross-border carve-back, `AMB-038` clawback mechanism, `AMB-039` capture timing, `AMB-040` custody location per provider; reversal of `AMB-002` and `AMB-032`.
-- [Booking State Machine](/docs/architecture/booking-state-machine) — where the completion determination sits in the lifecycle.
+- [Payments Architecture](/docs/architecture/patterns/payments-architecture) — the custody/control seam, flows, and financial invariants as implemented.
+- [Business Rules](/docs/product/business-rules/invariants) — `PAY-13` (custody), `PAY-15` (control), `PAY-16` (determination evidence), `PAY-17` (terms acceptance), `PAY-9` (corporate rail).
+- [Open Questions](/docs/product/planning/open-questions) — `AMB-037` cross-border carve-back, `AMB-038` clawback mechanism, `AMB-039` capture timing, `AMB-040` custody location per provider; reversal of `AMB-002` and `AMB-032`.
+- [Booking State Machine](/docs/architecture/patterns/booking-state-machine) — where the completion determination sits in the lifecycle.

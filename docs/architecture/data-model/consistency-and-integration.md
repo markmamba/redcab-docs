@@ -6,7 +6,7 @@ description: Conceptual data model for Red Cab Marketplace.
 
 ## 12. Data Consistency Rules
 
-These are the consistency guarantees the model must uphold, restated from [../domain/domain-models.md](/docs/domain/domain-models) §5 and the business rules. They are stated as guarantees over the data, not as mechanisms.
+These are the consistency guarantees the model must uphold, restated from [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §5 and the business rules. They are stated as guarantees over the data, not as mechanisms.
 
 1. **Intra-aggregate strong consistency.** Everything inside one aggregate is consistent within a single atomic change; nothing inside an aggregate is ever partially applied.
 2. **Atomic checkout unit.** CheckoutSession creation + Price/Commission snapshot freeze + seat decrement either all take effect or none do (`BKG-9`, `CON-1`). Booking materialization on payment success copies session facts. This is the one place two contexts (Booking and Catalog) share a transaction (CR-1).
@@ -27,7 +27,7 @@ These are the consistency guarantees the model must uphold, restated from [../do
 
 ## 13. Cross-Context Integration Constraints
 
-The model's integrity depends on constraints on *how* data crosses boundaries ([./bounded-contexts.md](/docs/architecture/bounded-contexts) "Boundary enforcement"; [./overview.md](/docs/architecture/overview) "Cross-Context Integration").
+The model's integrity depends on constraints on *how* data crosses boundaries ([./contexts/index](/docs/architecture/contexts) "Boundary enforcement"; [./overview.md](/docs/architecture/system/overview) "Cross-Context Integration").
 
 1. **No shared tables / no internal access.** A context's data is reachable only through its commands, queries, and published events. No context reads or writes another's internals.
 2. **Identity-only references.** Foreign aggregates are named by stable identifier; no aggregate embeds or co-owns another context's aggregate.

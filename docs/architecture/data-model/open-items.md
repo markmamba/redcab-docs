@@ -6,7 +6,7 @@ description: Conceptual data model for Red Cab Marketplace.
 
 ## 14. Open Ambiguities Affecting the Model
 
-The model is built to accommodate either resolution of each open decision and **never silently assumes one**. Each is tracked in [../ambiguities/open-questions.md](/docs/ambiguities/open-questions); resolutions flow back through that register's Decision Log and then into the affected docs. **None of the items below changes the aggregate or context boundaries defined in [./bounded-contexts.md](/docs/architecture/bounded-contexts) and [../domain/domain-models.md](/docs/domain/domain-models)** — each affects value-object shape, lifecycle detail, a cross-context contract, or an external-rail concern within a single owning context.
+The model is built to accommodate either resolution of each open decision and **never silently assumes one**. Each is tracked in [/docs/product/planning/open-questions](/docs/product/planning/open-questions); resolutions flow back through that register's Decision Log and then into the affected docs. **None of the items below changes the aggregate or context boundaries defined in [./contexts/index](/docs/architecture/contexts) and [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models)** — each affects value-object shape, lifecycle detail, a cross-context contract, or an external-rail concern within a single owning context.
 
 | Ambiguity | Effect on the conceptual model | Affected concepts |
 | --- | --- | --- |
@@ -27,4 +27,4 @@ The model is built to accommodate either resolution of each open decision and **
 | `AMB-031/033` — PDF rendering / consumption tax | Formal-document rendering and tax treatment on corporate documents | Quotation, Invoice (COR) |
 | `AMB-034` — SMS scope | Whether the SMS Channel is in MVP and phone verification is required | NotificationDispatch (NOT) |
 
-> Scope note (mirrors [./overview.md](/docs/architecture/overview) and [../domain/domain-models.md](/docs/domain/domain-models) §7): no deferred decision above moves an ownership boundary. The boundaries are drawn so that these open questions can be resolved **within** a single owning context — which is precisely why this conceptual data model can be reviewed and relied upon ahead of those resolutions.
+> Scope note (mirrors [./overview.md](/docs/architecture/system/overview) and [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §7): no deferred decision above moves an ownership boundary. The boundaries are drawn so that these open questions can be resolved **within** a single owning context — which is precisely why this conceptual data model can be reviewed and relied upon ahead of those resolutions.

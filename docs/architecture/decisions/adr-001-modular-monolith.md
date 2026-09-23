@@ -17,11 +17,11 @@ ADR recording the modular monolith decision — no new decision introduced here.
 
 | Topic | Document |
 | --- | --- |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
-| Open questions | [Open Questions](/docs/ambiguities/open-questions) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
+| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/contexts/coupling-risks) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
+| Open questions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -37,11 +37,11 @@ ADR recording the modular monolith decision — no new decision introduced here.
 
 | Topic | Document |
 | --- | --- |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
-| Open questions | [Open Questions](/docs/ambiguities/open-questions) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
+| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/contexts/coupling-risks) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
+| Open questions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -57,11 +57,11 @@ ADR recording the modular monolith decision — no new decision introduced here.
 
 | Topic | Document |
 | --- | --- |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
-| Open questions | [Open Questions](/docs/ambiguities/open-questions) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
+| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/contexts/coupling-risks) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
+| Open questions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -77,11 +77,11 @@ ADR recording the modular monolith decision — no new decision introduced here.
 
 | Topic | Document |
 | --- | --- |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
-| Open questions | [Open Questions](/docs/ambiguities/open-questions) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
+| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/contexts/coupling-risks) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
+| Open questions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -97,11 +97,11 @@ ADR recording the modular monolith decision — no new decision introduced here.
 
 | Topic | Document |
 | --- | --- |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
-| Open questions | [Open Questions](/docs/ambiguities/open-questions) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
+| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/contexts/coupling-risks) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
+| Open questions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -117,11 +117,11 @@ ADR recording the modular monolith decision — no new decision introduced here.
 
 | Topic | Document |
 | --- | --- |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
-| Open questions | [Open Questions](/docs/ambiguities/open-questions) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
+| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/contexts/coupling-risks) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
+| Open questions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -137,11 +137,11 @@ ADR recording the modular monolith decision — no new decision introduced here.
 
 | Topic | Document |
 | --- | --- |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/bounded-contexts/coupling-risks) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
-| Open questions | [Open Questions](/docs/ambiguities/open-questions) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
+| Coupling risks (`CR-#`) | [Coupling Risks](/docs/architecture/contexts/coupling-risks) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
+| Open questions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -215,6 +215,6 @@ Rejected because:
 
 ## Related Documents
 
-- [overview.md](/docs/architecture/overview) — top-level architecture; the Modular Monolith First principle.
-- [bounded-contexts.md](/docs/architecture/bounded-contexts) — authoritative 6 core + 2 supporting structure, integration styles, and coupling-risk register.
-- [domain-models.md](/docs/domain/domain-models) — aggregate ownership, snapshot philosophy, and consistency/concurrency rules.
+- [overview.md](/docs/architecture/system/overview) — top-level architecture; the Modular Monolith First principle.
+- [contexts/index](/docs/architecture/contexts) — authoritative 6 core + 2 supporting structure, integration styles, and coupling-risk register.
+- [domain-models.md](/docs/architecture/domain/domain-models) — aggregate ownership, snapshot philosophy, and consistency/concurrency rules.

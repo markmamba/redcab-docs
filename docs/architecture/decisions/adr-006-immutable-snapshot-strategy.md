@@ -17,7 +17,7 @@ ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
 | Topic | Document |
 | --- | --- |
 | Snapshots | [Immutable Snapshots](/docs/architecture/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payments | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
 
 ---
 
@@ -33,7 +33,7 @@ ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
 | Topic | Document |
 | --- | --- |
 | Snapshots | [Immutable Snapshots](/docs/architecture/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payments | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
 
 ---
 
@@ -49,7 +49,7 @@ ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
 | Topic | Document |
 | --- | --- |
 | Snapshots | [Immutable Snapshots](/docs/architecture/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payments | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
 
 ---
 
@@ -65,7 +65,7 @@ ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
 | Topic | Document |
 | --- | --- |
 | Snapshots | [Immutable Snapshots](/docs/architecture/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payments | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
 
 ---
 
@@ -81,7 +81,7 @@ ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
 | Topic | Document |
 | --- | --- |
 | Snapshots | [Immutable Snapshots](/docs/architecture/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payments | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
 
 ---
 
@@ -97,7 +97,7 @@ ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
 | Topic | Document |
 | --- | --- |
 | Snapshots | [Immutable Snapshots](/docs/architecture/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payments | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
 
 ---
 
@@ -113,7 +113,7 @@ ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
 | Topic | Document |
 | --- | --- |
 | Snapshots | [Immutable Snapshots](/docs/architecture/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/architecture/payments-architecture) |
+| Payments | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
 
 ---
 
@@ -148,7 +148,7 @@ The immutable-snapshot strategy is fixed as already established:
 - **Corrections create new facts; they never edit old facts.** A change to a settled transaction is expressed as a *new* immutable fact that supersedes, not a mutation of the frozen one — a refund is a new money movement, not an edit of the original charge or the snapshot it was computed from (`PAY-6`, `PAY-8`). The historical snapshot remains intact as the basis the correction was computed against.
 - **corporate quotations become bookings by snapshotting, like every other Booking.** When an `Accepted` Quotation converts into a Booking (`LC-11`), that Booking freezes its own snapshots at creation exactly as a B2C checkout does, through the anti-corruption boundary that translates corporate vocabulary into Booking's language (per [ADR-004](./adr-004-context-integration-model)). The corporate order thereby holds the same permanent, auditable commercial truth as any other Booking.
 
-This decision records *why the architecture already freezes immutable business snapshots*; it changes nothing about which facts are snapshotted, the aggregate that owns them, the moment they are frozen, or the contexts that consume them, all of which remain as locked in [../overview.md](/docs/architecture/overview), [../bounded-contexts.md](/docs/architecture/bounded-contexts), [../../domain/domain-models.md](/docs/domain/domain-models), and [../../business-rules/business-rules.md](/docs/business-rules/invariants).
+This decision records *why the architecture already freezes immutable business snapshots*; it changes nothing about which facts are snapshotted, the aggregate that owns them, the moment they are frozen, or the contexts that consume them, all of which remain as locked in [/docs/architecture/system/overview](/docs/architecture/system/overview), [../contexts/index](/docs/architecture/contexts), [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models), and [../../product/business-rules/invariants](/docs/product/business-rules/invariants).
 
 ## Consequences
 
@@ -202,7 +202,7 @@ Rejected because keeping orders "in sync" with the present is the opposite of wh
 - [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes Booking the one home for the immutable money facts it freezes.
 - [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the published-contract, identity-only integration model within which snapshotting decouples Booking from later upstream edits.
 - [ADR-005-single-pricing-authority.md](./adr-005-single-pricing-authority) — the single pricing authority whose computed result the Price Snapshot freezes for the life of the Booking.
-- [overview.md](/docs/architecture/overview) — top-level architecture, the Snapshot Pattern and Booking Snapshots sections, and the money-facts / money-movement seam.
-- [bounded-contexts.md](/docs/architecture/bounded-contexts) — authoritative context structure, Booking's ownership of the frozen snapshots, the Commission Snapshot value contract, and the coupling-risk register.
-- [api-design.md](/docs/architecture/api-design) — how the snapshotting boundaries and the contracts crossing them are expressed at the platform edge.
-- [domain-models.md](/docs/domain/domain-models) — aggregate ownership, the snapshot philosophy, immutable-vs-mutable facts, and the aggregate-boundary rules that keep snapshots owned by Booking.
+- [overview.md](/docs/architecture/system/overview) — top-level architecture, the Snapshot Pattern and Booking Snapshots sections, and the money-facts / money-movement seam.
+- [contexts/index](/docs/architecture/contexts) — authoritative context structure, Booking's ownership of the frozen snapshots, the Commission Snapshot value contract, and the coupling-risk register.
+- [api-design.md](/docs/architecture/system/api-design) — how the snapshotting boundaries and the contracts crossing them are expressed at the platform edge.
+- [domain-models.md](/docs/architecture/domain/domain-models) — aggregate ownership, the snapshot philosophy, immutable-vs-mutable facts, and the aggregate-boundary rules that keep snapshots owned by Booking.

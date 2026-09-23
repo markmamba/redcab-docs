@@ -17,14 +17,14 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 | Topic | Document |
 | --- | --- |
-| Terminology | [Glossary](/docs/business-rules/glossary) |
-| Rules | [Business Rules](/docs/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/payments-architecture) |
-| Context ownership | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/domain/domain-models) |
-| Principles | [Architecture Overview](/docs/architecture/overview) |
-| Lifecycle | [Booking State Machine](/docs/architecture/booking-state-machine) |
-| Open decisions | [Open Questions](/docs/ambiguities/open-questions) |
+| Terminology | [Glossary](/docs/product/business-rules/glossary) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) |
+| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
+| Context ownership | [Bounded Contexts](/docs/architecture/contexts) |
+| Aggregates | [Domain Models](/docs/architecture/domain/domain-models) |
+| Principles | [Architecture Overview](/docs/architecture/system/overview) |
+| Lifecycle | [Booking State Machine](/docs/architecture/patterns/booking-state-machine) |
+| Open decisions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -41,14 +41,14 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 | Topic | Document |
 | --- | --- |
-| Terminology | [Glossary](/docs/business-rules/glossary) |
-| Rules | [Business Rules](/docs/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/payments-architecture) |
-| Context ownership | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/domain/domain-models) |
-| Principles | [Architecture Overview](/docs/architecture/overview) |
-| Lifecycle | [Booking State Machine](/docs/architecture/booking-state-machine) |
-| Open decisions | [Open Questions](/docs/ambiguities/open-questions) |
+| Terminology | [Glossary](/docs/product/business-rules/glossary) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) |
+| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
+| Context ownership | [Bounded Contexts](/docs/architecture/contexts) |
+| Aggregates | [Domain Models](/docs/architecture/domain/domain-models) |
+| Principles | [Architecture Overview](/docs/architecture/system/overview) |
+| Lifecycle | [Booking State Machine](/docs/architecture/patterns/booking-state-machine) |
+| Open decisions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -65,14 +65,14 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 | Topic | Document |
 | --- | --- |
-| Terminology | [Glossary](/docs/business-rules/glossary) |
-| Rules | [Business Rules](/docs/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/payments-architecture) |
-| Context ownership | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/domain/domain-models) |
-| Principles | [Architecture Overview](/docs/architecture/overview) |
-| Lifecycle | [Booking State Machine](/docs/architecture/booking-state-machine) |
-| Open decisions | [Open Questions](/docs/ambiguities/open-questions) |
+| Terminology | [Glossary](/docs/product/business-rules/glossary) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) |
+| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
+| Context ownership | [Bounded Contexts](/docs/architecture/contexts) |
+| Aggregates | [Domain Models](/docs/architecture/domain/domain-models) |
+| Principles | [Architecture Overview](/docs/architecture/system/overview) |
+| Lifecycle | [Booking State Machine](/docs/architecture/patterns/booking-state-machine) |
+| Open decisions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -89,14 +89,14 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 | Topic | Document |
 | --- | --- |
-| Terminology | [Glossary](/docs/business-rules/glossary) |
-| Rules | [Business Rules](/docs/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/payments-architecture) |
-| Context ownership | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/domain/domain-models) |
-| Principles | [Architecture Overview](/docs/architecture/overview) |
-| Lifecycle | [Booking State Machine](/docs/architecture/booking-state-machine) |
-| Open decisions | [Open Questions](/docs/ambiguities/open-questions) |
+| Terminology | [Glossary](/docs/product/business-rules/glossary) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) |
+| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
+| Context ownership | [Bounded Contexts](/docs/architecture/contexts) |
+| Aggregates | [Domain Models](/docs/architecture/domain/domain-models) |
+| Principles | [Architecture Overview](/docs/architecture/system/overview) |
+| Lifecycle | [Booking State Machine](/docs/architecture/patterns/booking-state-machine) |
+| Open decisions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -113,14 +113,14 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 | Topic | Document |
 | --- | --- |
-| Terminology | [Glossary](/docs/business-rules/glossary) |
-| Rules | [Business Rules](/docs/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/payments-architecture) |
-| Context ownership | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/domain/domain-models) |
-| Principles | [Architecture Overview](/docs/architecture/overview) |
-| Lifecycle | [Booking State Machine](/docs/architecture/booking-state-machine) |
-| Open decisions | [Open Questions](/docs/ambiguities/open-questions) |
+| Terminology | [Glossary](/docs/product/business-rules/glossary) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) |
+| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
+| Context ownership | [Bounded Contexts](/docs/architecture/contexts) |
+| Aggregates | [Domain Models](/docs/architecture/domain/domain-models) |
+| Principles | [Architecture Overview](/docs/architecture/system/overview) |
+| Lifecycle | [Booking State Machine](/docs/architecture/patterns/booking-state-machine) |
+| Open decisions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -137,14 +137,14 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 | Topic | Document |
 | --- | --- |
-| Terminology | [Glossary](/docs/business-rules/glossary) |
-| Rules | [Business Rules](/docs/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/payments-architecture) |
-| Context ownership | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/domain/domain-models) |
-| Principles | [Architecture Overview](/docs/architecture/overview) |
-| Lifecycle | [Booking State Machine](/docs/architecture/booking-state-machine) |
-| Open decisions | [Open Questions](/docs/ambiguities/open-questions) |
+| Terminology | [Glossary](/docs/product/business-rules/glossary) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) |
+| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
+| Context ownership | [Bounded Contexts](/docs/architecture/contexts) |
+| Aggregates | [Domain Models](/docs/architecture/domain/domain-models) |
+| Principles | [Architecture Overview](/docs/architecture/system/overview) |
+| Lifecycle | [Booking State Machine](/docs/architecture/patterns/booking-state-machine) |
+| Open decisions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -161,14 +161,14 @@ Conceptual data model derived from the approved DDD design — semantics only, n
 
 | Topic | Document |
 | --- | --- |
-| Terminology | [Glossary](/docs/business-rules/glossary) |
-| Rules | [Business Rules](/docs/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/payments-architecture) |
-| Context ownership | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/domain/domain-models) |
-| Principles | [Architecture Overview](/docs/architecture/overview) |
-| Lifecycle | [Booking State Machine](/docs/architecture/booking-state-machine) |
-| Open decisions | [Open Questions](/docs/ambiguities/open-questions) |
+| Terminology | [Glossary](/docs/product/business-rules/glossary) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) |
+| Financial rules (`FIN-`) | [Payments Architecture](/docs/architecture/patterns/payments-architecture) |
+| Context ownership | [Bounded Contexts](/docs/architecture/contexts) |
+| Aggregates | [Domain Models](/docs/architecture/domain/domain-models) |
+| Principles | [Architecture Overview](/docs/architecture/system/overview) |
+| Lifecycle | [Booking State Machine](/docs/architecture/patterns/booking-state-machine) |
+| Open decisions | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -184,27 +184,27 @@ This document gives a single conceptual picture of **what data the Red Cab domai
 What this document is **not**:
 
 - Not a schema. It defines no tables, columns, keys, indexes, or types.
-- Not an implementation guide. It contains no SQL, no migrations, no ORM/Rails concepts, and no storage technology choices. For DBML tables, migrations, and `app/domains/` layout, see [../engineering/backend-conventions.md](/docs/engineering/backend-conventions) and [../engineering/domain-to-code-mapping.md](/docs/engineering/domain-to-code-mapping).
+- Not an implementation guide. It contains no SQL, no migrations, no ORM/Rails concepts, and no storage technology choices. For DBML tables, migrations, and `app/domains/` layout, see [../engineering/backend-conventions.md](/docs/engineering/conventions/backend) and [../engineering/domain-to-code-mapping.md](/docs/engineering/conventions/domain-to-code-mapping).
 - Not a place where invariants, ownership, contexts, or ambiguities are created, changed, or resolved. Those live in the authoritative documents above; this model **conforms** to them.
 
-The model deliberately describes **aggregates as consistency boundaries, not storage units** (per [../domain/domain-models.md](/docs/domain/domain-models) §1). Two concepts that may be "consistent a moment later" belong to different aggregates — and usually different contexts — even if a database could store them together.
+The model deliberately describes **aggregates as consistency boundaries, not storage units** (per [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §1). Two concepts that may be "consistent a moment later" belong to different aggregates — and usually different contexts — even if a database could store them together.
 
 ---
 
 ## 2. Relationship to Other Planning Documents
 
-This conceptual data model is **downstream of, and subordinate to**, the strategic design. Where it overlaps any authoritative document, that document governs and this model conforms (mirroring the precedence rule in [../requirements/README.md](/docs/requirements) §9).
+This conceptual data model is **downstream of, and subordinate to**, the strategic design. Where it overlaps any authoritative document, that document governs and this model conforms (mirroring the precedence rule in [/docs/product/requirements](/docs/product/requirements) §9).
 
 | Authoritative source | What this model takes from it (and never overrides) |
 | --- | --- |
-| [../business-rules/glossary.md](/docs/business-rules/glossary) | The exact names and meanings of every concept (Booking, Listing, Slot, Snapshot, Provider, etc.). Entity names here are glossary terms. |
-| [../business-rules/business-rules.md](/docs/business-rules/invariants) | The invariants (`INV-`), lifecycle constraints (`LC-`), pricing authority (`PRC-`), payment rules (`PAY-`), booking rules (`BKG-`), concurrency guarantees (`CON-`), operational rules (`OPR-`) that the relationships and immutable structures must uphold. |
-| [./bounded-contexts.md](/docs/architecture/bounded-contexts) | The 6 core + 2 supporting contexts and their ownership boundaries, integration contracts, and the one shared-transaction exception (CR-1). |
-| [./overview.md](/docs/architecture/overview) | The architecture principles — Single Pricing Authority, Snapshot Pattern, Atomic Capacity Reservation, Money Facts vs Money Movement, Modular Monolith First. |
-| [../domain/domain-models.md](/docs/domain/domain-models) | The aggregate definitions, roots, entities, value objects, and source-of-truth ownership per context. This model visualizes and relates those aggregates; it does not redefine them. |
-| [./payments-architecture.md](/docs/architecture/payments-architecture) | The money-facts vs money-movement seam and the financial invariants (`FIN-`). |
-| [./booking-state-machine.md](/docs/architecture/booking-state-machine) | The authoritative Booking lifecycle whose state is a Booking-owned mutable fact here. |
-| [../ambiguities/open-questions.md](/docs/ambiguities/open-questions) | The open decisions; this model references `AMB-###` items in §14 and never resolves them. |
+| [/docs/product/business-rules/glossary](/docs/product/business-rules/glossary) | The exact names and meanings of every concept (Booking, Listing, Slot, Snapshot, Provider, etc.). Entity names here are glossary terms. |
+| [../product/business-rules/invariants](/docs/product/business-rules/invariants) | The invariants (`INV-`), lifecycle constraints (`LC-`), pricing authority (`PRC-`), payment rules (`PAY-`), booking rules (`BKG-`), concurrency guarantees (`CON-`), operational rules (`OPR-`) that the relationships and immutable structures must uphold. |
+| [./contexts/index](/docs/architecture/contexts) | The 6 core + 2 supporting contexts and their ownership boundaries, integration contracts, and the one shared-transaction exception (CR-1). |
+| [./overview.md](/docs/architecture/system/overview) | The architecture principles — Single Pricing Authority, Snapshot Pattern, Atomic Capacity Reservation, Money Facts vs Money Movement, Modular Monolith First. |
+| [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) | The aggregate definitions, roots, entities, value objects, and source-of-truth ownership per context. This model visualizes and relates those aggregates; it does not redefine them. |
+| [./payments-architecture.md](/docs/architecture/patterns/payments-architecture) | The money-facts vs money-movement seam and the financial invariants (`FIN-`). |
+| [./booking-state-machine.md](/docs/architecture/patterns/booking-state-machine) | The authoritative Booking lifecycle whose state is a Booking-owned mutable fact here. |
+| [/docs/product/planning/open-questions](/docs/product/planning/open-questions) | The open decisions; this model references `AMB-###` items in §14 and never resolves them. |
 
 Diagrammatically, this model sits beneath strategic design and beside the requirements:
 
@@ -212,7 +212,7 @@ Diagrammatically, this model sits beneath strategic design and beside the requir
 graph TD
   Glossary[glossary.md] --> DM[domain-models.md - aggregates]
   Rules[business-rules.md - invariants] --> DM
-  BC[bounded-contexts.md - ownership] --> DM
+  BC[contexts/index - ownership] --> DM
   Overview[overview.md - principles] --> DM
   Pay[payments-architecture.md - FIN] --> DM
   SM[booking-state-machine.md - lifecycle] --> DM
@@ -224,7 +224,7 @@ graph TD
 
 ## 3. Modeling Principles
 
-These principles are inherited from [../domain/domain-models.md](/docs/domain/domain-models) §1–2 and [./overview.md](/docs/architecture/overview); they govern every relationship and structure shown later.
+These principles are inherited from [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §1–2 and [./overview.md](/docs/architecture/system/overview); they govern every relationship and structure shown later.
 
 1. **Aggregates are consistency boundaries.** Everything inside an aggregate is kept consistent within one atomic change; everything outside is reconciled asynchronously and is only eventually consistent. Aggregates are kept small — they contain only what must change together to uphold an invariant.
 2. **One owner per concept.** Every concept has exactly one owning context that is its source of truth. No concept is co-owned. Other contexts hold a **reference by identity** or an **immutable snapshot**, never a second writable copy.
@@ -238,7 +238,7 @@ These principles are inherited from [../domain/domain-models.md](/docs/domain/do
 ---
 ## 4. Context Ownership Boundaries
 
-The domain data is partitioned across the locked **6 core + 2 supporting** bounded contexts ([./bounded-contexts.md](/docs/architecture/bounded-contexts)). Each context is the **single source of truth** for its own concepts; every other context that needs those facts holds them by **identity reference** or **snapshot**. The table states the authoritative owner of each concept exactly as fixed in [../domain/domain-models.md](/docs/domain/domain-models) §3.
+The domain data is partitioned across the locked **6 core + 2 supporting** bounded contexts ([./contexts/index](/docs/architecture/contexts)). Each context is the **single source of truth** for its own concepts; every other context that needs those facts holds them by **identity reference** or **snapshot**. The table states the authoritative owner of each concept exactly as fixed in [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §3.
 
 | Context (code) | Type | Source of truth for (owned concepts) |
 | --- | --- | --- |
@@ -251,7 +251,7 @@ The domain data is partitioned across the locked **6 core + 2 supporting** bound
 | Reviews & Ratings (`REV`) | core | Review content & moderation state, RatingSummary (the authoritative score) |
 | Notifications (`NOT`) | supporting | Notification dispatch records and templates only |
 
-Boundary rules that the model holds to (from [./bounded-contexts.md](/docs/architecture/bounded-contexts) "Boundary enforcement summary"):
+Boundary rules that the model holds to (from [./contexts/index](/docs/architecture/contexts) "Boundary enforcement summary"):
 
 - A context's data is reachable from outside **only** through its published commands, queries, and events — never by another context reading or writing its internals.
 - The **only** place two contexts participate in one transaction is **CheckoutSession ↔ Catalog seat reservation** (CR-1): CheckoutSession creation invokes Catalog's guarded reserve to decrement `available_seats` co-transactionally. Booking materialization follows payment success and copies the session's hold. This is the single documented exception; everywhere else integration is by event or identity reference.
@@ -288,18 +288,18 @@ graph TD
 
 ## 2. Relationship to Other Planning Documents
 
-This conceptual data model is **downstream of, and subordinate to**, the strategic design. Where it overlaps any authoritative document, that document governs and this model conforms (mirroring the precedence rule in [../requirements/README.md](/docs/requirements) §9).
+This conceptual data model is **downstream of, and subordinate to**, the strategic design. Where it overlaps any authoritative document, that document governs and this model conforms (mirroring the precedence rule in [/docs/product/requirements](/docs/product/requirements) §9).
 
 | Authoritative source | What this model takes from it (and never overrides) |
 | --- | --- |
-| [../business-rules/glossary.md](/docs/business-rules/glossary) | The exact names and meanings of every concept (Booking, Listing, Slot, Snapshot, Provider, etc.). Entity names here are glossary terms. |
-| [../business-rules/business-rules.md](/docs/business-rules/invariants) | The invariants (`INV-`), lifecycle constraints (`LC-`), pricing authority (`PRC-`), payment rules (`PAY-`), booking rules (`BKG-`), concurrency guarantees (`CON-`), operational rules (`OPR-`) that the relationships and immutable structures must uphold. |
-| [./bounded-contexts.md](/docs/architecture/bounded-contexts) | The 6 core + 2 supporting contexts and their ownership boundaries, integration contracts, and the one shared-transaction exception (CR-1). |
-| [./overview.md](/docs/architecture/overview) | The architecture principles — Single Pricing Authority, Snapshot Pattern, Atomic Capacity Reservation, Money Facts vs Money Movement, Modular Monolith First. |
-| [../domain/domain-models.md](/docs/domain/domain-models) | The aggregate definitions, roots, entities, value objects, and source-of-truth ownership per context. This model visualizes and relates those aggregates; it does not redefine them. |
-| [./payments-architecture.md](/docs/architecture/payments-architecture) | The money-facts vs money-movement seam and the financial invariants (`FIN-`). |
-| [./booking-state-machine.md](/docs/architecture/booking-state-machine) | The authoritative Booking lifecycle whose state is a Booking-owned mutable fact here. |
-| [../ambiguities/open-questions.md](/docs/ambiguities/open-questions) | The open decisions; this model references `AMB-###` items in §14 and never resolves them. |
+| [/docs/product/business-rules/glossary](/docs/product/business-rules/glossary) | The exact names and meanings of every concept (Booking, Listing, Slot, Snapshot, Provider, etc.). Entity names here are glossary terms. |
+| [../product/business-rules/invariants](/docs/product/business-rules/invariants) | The invariants (`INV-`), lifecycle constraints (`LC-`), pricing authority (`PRC-`), payment rules (`PAY-`), booking rules (`BKG-`), concurrency guarantees (`CON-`), operational rules (`OPR-`) that the relationships and immutable structures must uphold. |
+| [./contexts/index](/docs/architecture/contexts) | The 6 core + 2 supporting contexts and their ownership boundaries, integration contracts, and the one shared-transaction exception (CR-1). |
+| [./overview.md](/docs/architecture/system/overview) | The architecture principles — Single Pricing Authority, Snapshot Pattern, Atomic Capacity Reservation, Money Facts vs Money Movement, Modular Monolith First. |
+| [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) | The aggregate definitions, roots, entities, value objects, and source-of-truth ownership per context. This model visualizes and relates those aggregates; it does not redefine them. |
+| [./payments-architecture.md](/docs/architecture/patterns/payments-architecture) | The money-facts vs money-movement seam and the financial invariants (`FIN-`). |
+| [./booking-state-machine.md](/docs/architecture/patterns/booking-state-machine) | The authoritative Booking lifecycle whose state is a Booking-owned mutable fact here. |
+| [/docs/product/planning/open-questions](/docs/product/planning/open-questions) | The open decisions; this model references `AMB-###` items in §14 and never resolves them. |
 
 Diagrammatically, this model sits beneath strategic design and beside the requirements:
 
@@ -307,7 +307,7 @@ Diagrammatically, this model sits beneath strategic design and beside the requir
 graph TD
   Glossary[glossary.md] --> DM[domain-models.md - aggregates]
   Rules[business-rules.md - invariants] --> DM
-  BC[bounded-contexts.md - ownership] --> DM
+  BC[contexts/index - ownership] --> DM
   Overview[overview.md - principles] --> DM
   Pay[payments-architecture.md - FIN] --> DM
   SM[booking-state-machine.md - lifecycle] --> DM
@@ -319,7 +319,7 @@ graph TD
 
 ## 3. Modeling Principles
 
-These principles are inherited from [../domain/domain-models.md](/docs/domain/domain-models) §1–2 and [./overview.md](/docs/architecture/overview); they govern every relationship and structure shown later.
+These principles are inherited from [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §1–2 and [./overview.md](/docs/architecture/system/overview); they govern every relationship and structure shown later.
 
 1. **Aggregates are consistency boundaries.** Everything inside an aggregate is kept consistent within one atomic change; everything outside is reconciled asynchronously and is only eventually consistent. Aggregates are kept small — they contain only what must change together to uphold an invariant.
 2. **One owner per concept.** Every concept has exactly one owning context that is its source of truth. No concept is co-owned. Other contexts hold a **reference by identity** or an **immutable snapshot**, never a second writable copy.
@@ -334,7 +334,7 @@ These principles are inherited from [../domain/domain-models.md](/docs/domain/do
 
 ## 4. Context Ownership Boundaries
 
-The domain data is partitioned across the locked **6 core + 2 supporting** bounded contexts ([./bounded-contexts.md](/docs/architecture/bounded-contexts)). Each context is the **single source of truth** for its own concepts; every other context that needs those facts holds them by **identity reference** or **snapshot**. The table states the authoritative owner of each concept exactly as fixed in [../domain/domain-models.md](/docs/domain/domain-models) §3.
+The domain data is partitioned across the locked **6 core + 2 supporting** bounded contexts ([./contexts/index](/docs/architecture/contexts)). Each context is the **single source of truth** for its own concepts; every other context that needs those facts holds them by **identity reference** or **snapshot**. The table states the authoritative owner of each concept exactly as fixed in [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §3.
 
 | Context (code) | Type | Source of truth for (owned concepts) |
 | --- | --- | --- |
@@ -347,7 +347,7 @@ The domain data is partitioned across the locked **6 core + 2 supporting** bound
 | Reviews & Ratings (`REV`) | core | Review content & moderation state, RatingSummary (the authoritative score) |
 | Notifications (`NOT`) | supporting | Notification dispatch records and templates only |
 
-Boundary rules that the model holds to (from [./bounded-contexts.md](/docs/architecture/bounded-contexts) "Boundary enforcement summary"):
+Boundary rules that the model holds to (from [./contexts/index](/docs/architecture/contexts) "Boundary enforcement summary"):
 
 - A context's data is reachable from outside **only** through its published commands, queries, and events — never by another context reading or writing its internals.
 - The **only** place two contexts participate in one transaction is **CheckoutSession ↔ Catalog seat reservation** (CR-1): CheckoutSession creation invokes Catalog's guarded reserve to decrement `available_seats` co-transactionally. Booking materialization follows payment success and copies the session's hold. This is the single documented exception; everywhere else integration is by event or identity reference.

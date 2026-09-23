@@ -18,9 +18,9 @@ ADR for how operational wall-clock rules (slot windows, cancellation cutoffs, co
 
 | Topic | Document |
 | --- | --- |
-| Geography storage | [Geography](/docs/architecture/geography), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree), [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data) |
+| Geography storage | [Geography](/docs/architecture/patterns/geography), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree), [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data) |
 | Snapshots | [Immutable Snapshots](/docs/architecture/data-model/snapshots), [ADR-006](/docs/architecture/decisions/adr-006-immutable-snapshot-strategy) |
-| Engineering rules | [Date / Time / Timezone](/docs/engineering/datetime-and-timezones) |
+| Engineering rules | [Date / Time / Timezone](/docs/engineering/conventions/datetime-and-timezones) |
 
 ---
 
@@ -43,7 +43,7 @@ Prior art: JodApp stores `timezone` on leaf `geo_areas` and resolves operational
 3. **Evaluate operational wall-clock rules** (slot authoring, cancellation tier cutoffs, checkout hold expiry, auto-completion, payout clearing gates) in the **snapshotted service timezone** for in-flight and historical bookings; in the **listing's geography timezone** for pre-booking catalog operations.
 4. **Seed Phase 1 Japan** with `catalog_countries.default_timezone = Asia/Tokyo`; propagate to every geography node on seed. No separate country-level resolution at runtime.
 5. **App clock** runs in **UTC** (`config.time_zone = 'UTC'`). Never use `Time.now` or bare `.to_date` for business comparisons — derive calendar days in the resolved service timezone.
-6. **Shared utilities:** backend `DateTimeUtils` (`parse_civil_date`, `format`); frontend `DateTimeUtils` (`format`, `toApiString`, `toFormValue`) — see [Date / Time / Timezone](/docs/engineering/datetime-and-timezones).
+6. **Shared utilities:** backend `DateTimeUtils` (`parse_civil_date`, `format`); frontend `DateTimeUtils` (`format`, `toApiString`, `toFormValue`) — see [Date / Time / Timezone](/docs/engineering/conventions/datetime-and-timezones).
 
 ## Rationale
 

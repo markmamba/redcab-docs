@@ -16,9 +16,9 @@ ADR for bounded context architecture.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
 
 ---
 
@@ -33,9 +33,9 @@ ADR for bounded context architecture.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
 
 ---
 
@@ -50,9 +50,9 @@ ADR for bounded context architecture.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
 
 ---
 
@@ -67,9 +67,9 @@ ADR for bounded context architecture.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
 
 ---
 
@@ -84,9 +84,9 @@ ADR for bounded context architecture.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
 
 ---
 
@@ -101,9 +101,9 @@ ADR for bounded context architecture.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
 
 ---
 
@@ -118,9 +118,9 @@ ADR for bounded context architecture.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
 
 ---
 
@@ -143,7 +143,7 @@ Different capabilities also **enforce different invariants**, and an invariant c
 
 These invariants share a structural requirement: **a single source of truth per concept**. Price is computed in exactly one place (`PRC-1`); provider right-to-operate is decided in one place; the revenue split is frozen in one place. When a concept has one owner, **business logic cannot be duplicated** across modules and then drift, and **ownership ambiguity** — the question "who is allowed to change this?" having more than one answer — cannot arise.
 
-Finally, the partitioning exists to support **modular-monolith discipline**. Because there is no network boundary between modules to mechanically enforce separation, boundaries must be expressed as explicit ownership and published contracts. The same partitioning bounds the coupling risks already catalogued in [../bounded-contexts.md](/docs/architecture/bounded-contexts) (`CR-1` through `CR-7`): the single deliberate shared-transaction seam (`CR-1`), pricing-authority leakage (`CR-2`), the payout/refund race (`CR-3`), cross-context cascades that must be events not direct writes (`CR-4`), notification fan-out (`CR-5`), Identity as universal upstream (`CR-6`), and the provisional corporate pre-payment lifecycle (`CR-7`). Each risk is a coupling that the boundary either forbids outright or confines to one documented place.
+Finally, the partitioning exists to support **modular-monolith discipline**. Because there is no network boundary between modules to mechanically enforce separation, boundaries must be expressed as explicit ownership and published contracts. The same partitioning bounds the coupling risks already catalogued in [../contexts/index](/docs/architecture/contexts) (`CR-1` through `CR-7`): the single deliberate shared-transaction seam (`CR-1`), pricing-authority leakage (`CR-2`), the payout/refund race (`CR-3`), cross-context cascades that must be events not direct writes (`CR-4`), notification fan-out (`CR-5`), Identity as universal upstream (`CR-6`), and the provisional corporate pre-payment lifecycle (`CR-7`). Each risk is a coupling that the boundary either forbids outright or confines to one documented place.
 
 ## Decision
 
@@ -171,7 +171,7 @@ The partitioning is governed by these rules, all already established:
 - **Cross-context table access is forbidden** — no context reads or writes another context's tables. The single deliberate exception is the guarded co-transactional seat-reservation seam (`CR-1`), which is a guarded *command*, not raw table access, and is documented as the only shared-transaction point in the system.
 - **Ownership is singular and explicit** — every concept has exactly one owning context; there is no shared-write concept and no concept owned by committee.
 
-This decision records *why responsibility is divided this way*; it changes nothing about the contexts, their ownership, their aggregates, or their integration styles, all of which remain as locked in [../bounded-contexts.md](/docs/architecture/bounded-contexts).
+This decision records *why responsibility is divided this way*; it changes nothing about the contexts, their ownership, their aggregates, or their integration styles, all of which remain as locked in [../contexts/index](/docs/architecture/contexts).
 
 ## Consequences
 
@@ -212,8 +212,8 @@ Rejected because it conflicts with [ADR-001-modular-monolith.md](./adr-001-modul
 
 ## Related Documents
 
-- [bounded-contexts.md](/docs/architecture/bounded-contexts) — authoritative 6 core + 2 supporting structure, ownership boundaries, integration contracts, domain events, and the `CR-1`–`CR-7` coupling-risk register.
+- [contexts/index](/docs/architecture/contexts) — authoritative 6 core + 2 supporting structure, ownership boundaries, integration contracts, domain events, and the `CR-1`–`CR-7` coupling-risk register.
 - [ADR-001-modular-monolith.md](./adr-001-modular-monolith) — the single-deployable, single-database decision this partitioning lives inside.
-- [overview.md](/docs/architecture/overview) — top-level architecture and principles.
-- [domain-models.md](/docs/domain/domain-models) — aggregate ownership, snapshot philosophy, and consistency rules.
-- [api-design.md](/docs/architecture/api-design) — how the published surfaces are exposed at the platform edge.
+- [overview.md](/docs/architecture/system/overview) — top-level architecture and principles.
+- [domain-models.md](/docs/architecture/domain/domain-models) — aggregate ownership, snapshot philosophy, and consistency rules.
+- [api-design.md](/docs/architecture/system/api-design) — how the published surfaces are exposed at the platform edge.

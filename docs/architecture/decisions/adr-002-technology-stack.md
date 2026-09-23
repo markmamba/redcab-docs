@@ -17,8 +17,8 @@ ADR for locked technology stack selection.
 
 | Topic | Document |
 | --- | --- |
-| Tech stack detail | [Technology Stack](/docs/architecture/tech-stack) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
+| Tech stack detail | [Technology Stack](/docs/architecture/system/tech-stack) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
 | Engineering | [Engineering](/docs/engineering) |
 
 ---
@@ -35,8 +35,8 @@ ADR for locked technology stack selection.
 
 | Topic | Document |
 | --- | --- |
-| Tech stack detail | [Technology Stack](/docs/architecture/tech-stack) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
+| Tech stack detail | [Technology Stack](/docs/architecture/system/tech-stack) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
 | Engineering | [Engineering](/docs/engineering) |
 
 ---
@@ -53,8 +53,8 @@ ADR for locked technology stack selection.
 
 | Topic | Document |
 | --- | --- |
-| Tech stack detail | [Technology Stack](/docs/architecture/tech-stack) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
+| Tech stack detail | [Technology Stack](/docs/architecture/system/tech-stack) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
 | Engineering | [Engineering](/docs/engineering) |
 
 ---
@@ -71,8 +71,8 @@ ADR for locked technology stack selection.
 
 | Topic | Document |
 | --- | --- |
-| Tech stack detail | [Technology Stack](/docs/architecture/tech-stack) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
+| Tech stack detail | [Technology Stack](/docs/architecture/system/tech-stack) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
 | Engineering | [Engineering](/docs/engineering) |
 
 ---
@@ -89,8 +89,8 @@ ADR for locked technology stack selection.
 
 | Topic | Document |
 | --- | --- |
-| Tech stack detail | [Technology Stack](/docs/architecture/tech-stack) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
+| Tech stack detail | [Technology Stack](/docs/architecture/system/tech-stack) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
 | Engineering | [Engineering](/docs/engineering) |
 
 ---
@@ -107,8 +107,8 @@ ADR for locked technology stack selection.
 
 | Topic | Document |
 | --- | --- |
-| Tech stack detail | [Technology Stack](/docs/architecture/tech-stack) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
+| Tech stack detail | [Technology Stack](/docs/architecture/system/tech-stack) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
 | Engineering | [Engineering](/docs/engineering) |
 
 ---
@@ -125,8 +125,8 @@ ADR for locked technology stack selection.
 
 | Topic | Document |
 | --- | --- |
-| Tech stack detail | [Technology Stack](/docs/architecture/tech-stack) |
-| Overview | [Architecture Overview](/docs/architecture/overview) |
+| Tech stack detail | [Technology Stack](/docs/architecture/system/tech-stack) |
+| Overview | [Architecture Overview](/docs/architecture/system/overview) |
 | Engineering | [Engineering](/docs/engineering) |
 
 ---
@@ -149,7 +149,7 @@ Red Cab is a two-sided marketplace earning a commission per booking, with two de
 
 ## Decision
 
-The stack is recorded as already locked in [../tech-stack.md](/docs/architecture/tech-stack):
+The stack is recorded as already locked in [../tech-stack.md](/docs/architecture/system/tech-stack):
 
 - **Ruby on Rails (API mode) backend** — a single deployable hosting the 6 core + 2 supporting contexts as in-process logical modules; synchronous commands/queries where an invariant must hold within the operation, asynchronous domain events for cross-context reactions.
 - **React Router v7 (SSR) frontend** — one web application presenting three role-confined surfaces (Tourist App, Client Portal, Admin Panel) over an authenticated session; it holds no financial truth and never computes price, consuming the `PriceBreakdown` from the single pricing authority (`PRC-1`). JavaScript, not TypeScript.
@@ -171,7 +171,7 @@ The architecture intentionally locks categories of capability (background jobs, 
 - **Good architecture alignment.** The chosen technologies directly realize the architectural principles already established: Rails and PostgreSQL support the modular-monolith and atomic-checkout requirements,
 React Router supports the role-confined web surface,
 and a licensed payment provider realizes the marketplace payment and settlement rail (vendor open, `AMB-040`).
-Implementation conventions are documented in [../../engineering/README.md](/docs/engineering).
+Implementation conventions are documented in [/docs/engineering](/docs/engineering).
 
 ### Negative
 
@@ -202,5 +202,5 @@ Rejected because:
 ## Related Documents
 
 - [ADR-001-modular-monolith.md](./adr-001-modular-monolith) — the modular-monolith decision this stack realizes.
-- [overview.md](/docs/architecture/overview) — container view and architecture principles.
-- [tech-stack.md](/docs/architecture/tech-stack) — the authoritative record of the locked technology choices.
+- [overview.md](/docs/architecture/system/overview) — container view and architecture principles.
+- [tech-stack.md](/docs/architecture/system/tech-stack) — the authoritative record of the locked technology choices.

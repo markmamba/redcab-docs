@@ -6,14 +6,14 @@ description: Architecture Decision Records (ADRs) for Red Cab Marketplace.
 
 ## TL;DR
 
-- Fifteen **accepted** architecture decision records (ADR-001–014, ADR-016) documenting choices already established in the planning set.
+- Seventeen architecture decision records (ADR-001–017) documenting choices already established in the planning set.
 - ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, geography administrative tree, and service timezone.
 - **ADR-015 is Proposed**, not Accepted — it records the payment custody/control separation pending legal counsel opinion.
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
 
-Index of architecture decision records. Each ADR is authoritative for its decision; unresolved detail remains in [Open Questions](/docs/ambiguities/open-questions).
+Index of architecture decision records. Each ADR is authoritative for its decision; unresolved detail remains in [Open Questions](/docs/product/planning/open-questions).
 
 ---
 
@@ -37,3 +37,4 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-014 | [ADR-014: Service Timezone Model](/docs/architecture/decisions/adr-014-service-timezone-model) | Accepted |
 | ADR-015 | [ADR-015: Payment Custody and Control Separation](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) | **Proposed** — pending counsel |
 | ADR-016 | [ADR-016: Geography Administrative Tree](/docs/architecture/decisions/adr-016-geography-administrative-tree) | Accepted |
+| ADR-017 | [ADR-017: Tourist UI public URL architecture](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture) | Accepted |

@@ -16,8 +16,8 @@ ADR for single pricing authority (`PRC-1`, `CR-2`).
 
 | Topic | Document |
 | --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/business-rules/invariants) |
+| Catalog context | [Catalog & Inventory](/docs/architecture/contexts/catalog) |
+| Business rules | [Business Rules](/docs/product/business-rules/invariants) |
 
 ---
 
@@ -32,8 +32,8 @@ ADR for single pricing authority (`PRC-1`, `CR-2`).
 
 | Topic | Document |
 | --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/business-rules/invariants) |
+| Catalog context | [Catalog & Inventory](/docs/architecture/contexts/catalog) |
+| Business rules | [Business Rules](/docs/product/business-rules/invariants) |
 
 ---
 
@@ -48,8 +48,8 @@ ADR for single pricing authority (`PRC-1`, `CR-2`).
 
 | Topic | Document |
 | --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/business-rules/invariants) |
+| Catalog context | [Catalog & Inventory](/docs/architecture/contexts/catalog) |
+| Business rules | [Business Rules](/docs/product/business-rules/invariants) |
 
 ---
 
@@ -64,8 +64,8 @@ ADR for single pricing authority (`PRC-1`, `CR-2`).
 
 | Topic | Document |
 | --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/business-rules/invariants) |
+| Catalog context | [Catalog & Inventory](/docs/architecture/contexts/catalog) |
+| Business rules | [Business Rules](/docs/product/business-rules/invariants) |
 
 ---
 
@@ -80,8 +80,8 @@ ADR for single pricing authority (`PRC-1`, `CR-2`).
 
 | Topic | Document |
 | --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/business-rules/invariants) |
+| Catalog context | [Catalog & Inventory](/docs/architecture/contexts/catalog) |
+| Business rules | [Business Rules](/docs/product/business-rules/invariants) |
 
 ---
 
@@ -96,8 +96,8 @@ ADR for single pricing authority (`PRC-1`, `CR-2`).
 
 | Topic | Document |
 | --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/business-rules/invariants) |
+| Catalog context | [Catalog & Inventory](/docs/architecture/contexts/catalog) |
+| Business rules | [Business Rules](/docs/product/business-rules/invariants) |
 
 ---
 
@@ -112,8 +112,8 @@ ADR for single pricing authority (`PRC-1`, `CR-2`).
 
 | Topic | Document |
 | --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/business-rules/invariants) |
+| Catalog context | [Catalog & Inventory](/docs/architecture/contexts/catalog) |
+| Business rules | [Business Rules](/docs/product/business-rules/invariants) |
 
 ---
 
@@ -147,7 +147,7 @@ Pricing ownership and the single calculation point are fixed as already establis
 - **The frontend never computes price.** The client renders the Price Breakdown returned by the authority and holds no financial truth.
 - **Search, filter, and display share the authority.** Listing display, search filtering, and checkout all consume the same authoritative pricing result, so the same inputs always yield the same price (`PRC-1`, `PRC-2`), closing the `CR-2` leakage risk.
 
-This decision records *why pricing is owned and computed this way*; it changes nothing about the pricing rules, the owning context, the value contract, or the consumers, all of which remain as locked in [../overview.md](/docs/architecture/overview), [../bounded-contexts.md](/docs/architecture/bounded-contexts), and [../../business-rules/business-rules.md](/docs/business-rules/invariants).
+This decision records *why pricing is owned and computed this way*; it changes nothing about the pricing rules, the owning context, the value contract, or the consumers, all of which remain as locked in [/docs/architecture/system/overview](/docs/architecture/system/overview), [../contexts/index](/docs/architecture/contexts), and [../../product/business-rules/invariants](/docs/product/business-rules/invariants).
 
 ## Consequences
 
@@ -200,7 +200,7 @@ Rejected because it reintroduces exactly the ownership ambiguity and drift the a
 
 - [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes Catalog & Inventory the one home for pricing.
 - [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the published-contract integration model by which the Price Breakdown crosses boundaries as a value contract.
-- [overview.md](/docs/architecture/overview) — top-level architecture, the Pricing Authority section, and the Single Pricing Authority principle.
-- [bounded-contexts.md](/docs/architecture/bounded-contexts) — authoritative context structure, Catalog & Inventory's pricing ownership, the `PriceBreakdown` value contract, and the `CR-2` coupling risk.
-- [api-design.md](/docs/architecture/api-design) — how the single pricing authority and its value contract are exposed at the platform edge.
-- [domain-models.md](/docs/domain/domain-models) — aggregate ownership, the snapshot philosophy, and pricing-as-computed-value-contract.
+- [overview.md](/docs/architecture/system/overview) — top-level architecture, the Pricing Authority section, and the Single Pricing Authority principle.
+- [contexts/index](/docs/architecture/contexts) — authoritative context structure, Catalog & Inventory's pricing ownership, the `PriceBreakdown` value contract, and the `CR-2` coupling risk.
+- [api-design.md](/docs/architecture/system/api-design) — how the single pricing authority and its value contract are exposed at the platform edge.
+- [domain-models.md](/docs/architecture/domain/domain-models) — aggregate ownership, the snapshot philosophy, and pricing-as-computed-value-contract.

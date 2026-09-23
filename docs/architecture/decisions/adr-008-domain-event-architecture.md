@@ -16,8 +16,8 @@ ADR for domain event architecture.
 
 | Topic | Document |
 | --- | --- |
-| Event catalog | [Domain Events](/docs/architecture/bounded-contexts/domain-events) |
-| Integration | [API Design](/docs/architecture/api-design) |
+| Event catalog | [Domain Events](/docs/architecture/contexts/domain-events) |
+| Integration | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -32,8 +32,8 @@ ADR for domain event architecture.
 
 | Topic | Document |
 | --- | --- |
-| Event catalog | [Domain Events](/docs/architecture/bounded-contexts/domain-events) |
-| Integration | [API Design](/docs/architecture/api-design) |
+| Event catalog | [Domain Events](/docs/architecture/contexts/domain-events) |
+| Integration | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -48,8 +48,8 @@ ADR for domain event architecture.
 
 | Topic | Document |
 | --- | --- |
-| Event catalog | [Domain Events](/docs/architecture/bounded-contexts/domain-events) |
-| Integration | [API Design](/docs/architecture/api-design) |
+| Event catalog | [Domain Events](/docs/architecture/contexts/domain-events) |
+| Integration | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -64,8 +64,8 @@ ADR for domain event architecture.
 
 | Topic | Document |
 | --- | --- |
-| Event catalog | [Domain Events](/docs/architecture/bounded-contexts/domain-events) |
-| Integration | [API Design](/docs/architecture/api-design) |
+| Event catalog | [Domain Events](/docs/architecture/contexts/domain-events) |
+| Integration | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -80,8 +80,8 @@ ADR for domain event architecture.
 
 | Topic | Document |
 | --- | --- |
-| Event catalog | [Domain Events](/docs/architecture/bounded-contexts/domain-events) |
-| Integration | [API Design](/docs/architecture/api-design) |
+| Event catalog | [Domain Events](/docs/architecture/contexts/domain-events) |
+| Integration | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -96,8 +96,8 @@ ADR for domain event architecture.
 
 | Topic | Document |
 | --- | --- |
-| Event catalog | [Domain Events](/docs/architecture/bounded-contexts/domain-events) |
-| Integration | [API Design](/docs/architecture/api-design) |
+| Event catalog | [Domain Events](/docs/architecture/contexts/domain-events) |
+| Integration | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -112,8 +112,8 @@ ADR for domain event architecture.
 
 | Topic | Document |
 | --- | --- |
-| Event catalog | [Domain Events](/docs/architecture/bounded-contexts/domain-events) |
-| Integration | [API Design](/docs/architecture/api-design) |
+| Event catalog | [Domain Events](/docs/architecture/contexts/domain-events) |
+| Integration | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -123,11 +123,11 @@ Accepted
 
 ## Context
 
-Per [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context; per [ADR-004-context-integration-model.md](./adr-004-context-integration-model), contexts collaborate only through published contracts — commands, queries, and domain events — and identity-only references; per [ADR-006-immutable-snapshot-strategy.md](./adr-006-immutable-snapshot-strategy), a Booking freezes the commercial facts it depends on as immutable, write-once truth; and per [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries), transactional consistency stops at the context edge and everything across boundaries is reconciled asynchronously. Those decisions answer *how ownership is divided, how contexts cooperate, why history is frozen, and where consistency begins and ends*. [ADR-004](./adr-004-context-integration-model) named domain events as one of the three published-contract styles and [ADR-007](./adr-007-transaction-and-consistency-boundaries) established that they are what carries cross-context reactions once the async gap is crossed — but neither states, on its own, *why the architecture reaches for a domain event at all*, and *what a domain event is required to mean* so that it can do that job without re-coupling the contexts the prior decisions worked to separate. Because the entire asynchronous spine of the system rests on that meaning, the reasoning behind it deserves to be recorded explicitly. This ADR records that reasoning; it changes nothing about which events exist, who publishes them, who consumes them, or when they are emitted, all of which remain as locked in [../bounded-contexts.md](/docs/architecture/bounded-contexts) and [../../domain/domain-models.md](/docs/domain/domain-models).
+Per [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context; per [ADR-004-context-integration-model.md](./adr-004-context-integration-model), contexts collaborate only through published contracts — commands, queries, and domain events — and identity-only references; per [ADR-006-immutable-snapshot-strategy.md](./adr-006-immutable-snapshot-strategy), a Booking freezes the commercial facts it depends on as immutable, write-once truth; and per [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries), transactional consistency stops at the context edge and everything across boundaries is reconciled asynchronously. Those decisions answer *how ownership is divided, how contexts cooperate, why history is frozen, and where consistency begins and ends*. [ADR-004](./adr-004-context-integration-model) named domain events as one of the three published-contract styles and [ADR-007](./adr-007-transaction-and-consistency-boundaries) established that they are what carries cross-context reactions once the async gap is crossed — but neither states, on its own, *why the architecture reaches for a domain event at all*, and *what a domain event is required to mean* so that it can do that job without re-coupling the contexts the prior decisions worked to separate. Because the entire asynchronous spine of the system rests on that meaning, the reasoning behind it deserves to be recorded explicitly. This ADR records that reasoning; it changes nothing about which events exist, who publishes them, who consumes them, or when they are emitted, all of which remain as locked in [../contexts/index](/docs/architecture/contexts) and [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models).
 
 The philosophical core of the decision is two sentences: **a domain event records that a business fact has already happened; other bounded contexts may react to that fact, but they never participate in creating it.** An event is not a request, an instruction, or an invitation to collaborate on a change in flight — it is the announcement of a change that is already complete, already committed, and already true within the context that owns it. Everything the architecture asks of domain events follows from that single distinction between a *fact that has occurred* and a *request for something to occur*.
 
-The dominant force is that **a domain event represents a completed business fact**. [ADR-007](./adr-007-transaction-and-consistency-boundaries) fixed that a transaction protects an invariant within the single context that owns the state behind it, and that what must be true together lives together in one aggregate under one root. An event is the outward expression of a transition that has already satisfied those invariants inside its owner: a Booking has been created, a Booking has completed, a payment has succeeded, a Provider has been approved, a review has been approved. Each is stated as an accomplished fact about the past, and each is true regardless of what any downstream context does next. Because the fact is already settled inside its owner before it is ever announced, no consumer can invalidate it, renegotiate it, or roll it back — a consumer can only decide how to react to a truth it did not author. This is precisely why the domain-events catalog in [../bounded-contexts.md](/docs/architecture/bounded-contexts) and the shared modeling rules in [../../domain/domain-models.md](/docs/domain/domain-models) require every event to be **past-tense**: the tense is not a naming convention but a statement of what an event is permitted to be.
+The dominant force is that **a domain event represents a completed business fact**. [ADR-007](./adr-007-transaction-and-consistency-boundaries) fixed that a transaction protects an invariant within the single context that owns the state behind it, and that what must be true together lives together in one aggregate under one root. An event is the outward expression of a transition that has already satisfied those invariants inside its owner: a Booking has been created, a Booking has completed, a payment has succeeded, a Provider has been approved, a review has been approved. Each is stated as an accomplished fact about the past, and each is true regardless of what any downstream context does next. Because the fact is already settled inside its owner before it is ever announced, no consumer can invalidate it, renegotiate it, or roll it back — a consumer can only decide how to react to a truth it did not author. This is precisely why the domain-events catalog in [../contexts/index](/docs/architecture/contexts) and the shared modeling rules in [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) require every event to be **past-tense**: the tense is not a naming convention but a statement of what an event is permitted to be.
 
 The second force is that **only committed state changes may publish events**. An event is a fact about the past; a change that has not committed is not yet a fact, and announcing it would be announcing something that might never become true. [ADR-007](./adr-007-transaction-and-consistency-boundaries) established that a state-changing command validates and commits within one context and that its synchronous response carries only its own guarded outcome, never the reactions it may trigger. A domain event is therefore emitted *of* a transition that has already taken effect, downstream of the consistency boundary that made it true — never in place of it and never before it. This ordering is what keeps the async spine honest: a consumer that receives `BookingCompleted` may rely on the Booking genuinely being complete (`LC-1..6`), and a consumer that receives `PaymentSucceeded` may rely on the money movement genuinely having occurred (`FIN-9`, `FIN-11`). If uncommitted or speculative changes could emit events, the past-tense guarantee would be a lie and every reaction built on it would be building on sand.
 
@@ -145,16 +145,16 @@ Together these forces reinforce, rather than extend, the three published-contrac
 
 The domain-event model is fixed as already established:
 
-- **A domain event is a completed business fact.** Every event announces a transition that has already taken effect and already satisfied its owner's invariants; it is a statement about the past, true independently of any consumer, and it is named in the **past tense** for exactly that reason (`BookingCompleted`, `ProviderApproved`, `PaymentSucceeded`, `RatingRecalculated`; [glossary](/docs/business-rules/glossary) *Domain Event*, [domain-models.md](/docs/domain/domain-models) §2).
+- **A domain event is a completed business fact.** Every event announces a transition that has already taken effect and already satisfied its owner's invariants; it is a statement about the past, true independently of any consumer, and it is named in the **past tense** for exactly that reason (`BookingCompleted`, `ProviderApproved`, `PaymentSucceeded`, `RatingRecalculated`; [glossary](/docs/product/business-rules/glossary) *Domain Event*, [domain-models.md](/docs/architecture/domain/domain-models) §2).
 - **Only committed state changes publish events.** An event is emitted of a transition that has already committed within the owning context's consistency boundary ([ADR-007](./adr-007-transaction-and-consistency-boundaries)); an uncommitted or speculative change is not yet a fact and does not announce one. The synchronous outcome of a command belongs to the caller; the event is what the rest of the system learns afterward (per [ADR-004](./adr-004-context-integration-model)).
-- **Events describe facts, never requests.** An event states *what happened*, not *what should now be done* and never names a doer; it carries identities and immutable facts, never a reference to another context's live aggregate and never an instruction ([domain-models.md](/docs/domain/domain-models) §2, §6).
+- **Events describe facts, never requests.** An event states *what happened*, not *what should now be done* and never names a doer; it carries identities and immutable facts, never a reference to another context's live aggregate and never an instruction ([domain-models.md](/docs/architecture/domain/domain-models) §2, §6).
 - **Events coordinate bounded contexts across consistency boundaries.** Cross-context reactions where consistency is not immediate — payout queuing on completion, review eligibility on completion, the license/district cascades, notification fan-out — are carried by domain events, joining independently-committed steps into a process without any shared transaction (`INV-5`, `LC-6`, `INV-7`, `OPR-3`, `OPR-8`, `OPR-10`; [ADR-007](./adr-007-transaction-and-consistency-boundaries)).
 - **Downstream contexts react; they never participate in the originating transition.** A consumer reacts within its own boundary and its own transaction, after the fact, and its success or failure is never bound to the committed transition that emitted the event; a failed reaction is retried independently and never rolls back that transition (`FIN-11`, `CR-3`, `CR-4`).
 - **Events never transfer ownership.** Receiving an event grants the right to react, never authority over the emitter's state; the consumer cannot mutate or read the emitter's internals and remains bound by the identity-only, no-cross-context-write rules of [ADR-003](./adr-003-bounded-context-architecture) and [ADR-004](./adr-004-context-integration-model). A fact leaves its owner; ownership does not.
-- **Events support eventual consistency and are consumed idempotently.** Because a fact may be observed more than once and reactions settle after the fact, every consumer is idempotent so that reacting to one fact repeatedly is indistinguishable from reacting once (`FIN-10`; [domain-models.md](/docs/domain/domain-models) §5).
+- **Events support eventual consistency and are consumed idempotently.** Because a fact may be observed more than once and reactions settle after the fact, every consumer is idempotent so that reacting to one fact repeatedly is indistinguishable from reacting once (`FIN-10`; [domain-models.md](/docs/architecture/domain/domain-models) §5).
 - **Events reinforce the published contracts and complement commands and queries.** The domain event is the third of the three published-contract styles of [ADR-004](./adr-004-context-integration-model): commands ask for a guarded change, queries read without ownership, and events tell — after the fact — what already changed. All three are the only surfaces across which contexts integrate.
 
-This decision records *why the architecture publishes domain events and what they are required to mean*; it changes nothing about which events exist, their publishers, their consumers, or the moment they are emitted, all of which remain as locked in [../overview.md](/docs/architecture/overview), [../bounded-contexts.md](/docs/architecture/bounded-contexts), [../../domain/domain-models.md](/docs/domain/domain-models), and [../../business-rules/business-rules.md](/docs/business-rules/invariants).
+This decision records *why the architecture publishes domain events and what they are required to mean*; it changes nothing about which events exist, their publishers, their consumers, or the moment they are emitted, all of which remain as locked in [/docs/architecture/system/overview](/docs/architecture/system/overview), [../contexts/index](/docs/architecture/contexts), [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models), and [../../product/business-rules/invariants](/docs/product/business-rules/invariants).
 
 ## Consequences
 
@@ -170,7 +170,7 @@ This decision records *why the architecture publishes domain events and what the
 
 ### Negative
 
-- **Processes must be reasoned about as choreography of facts.** An end-to-end flow is a sequence of committed transitions and past-tense reactions, not one synchronous story; understanding it requires holding the whole event choreography and its ordering hazards in mind (`CR-3`, `CR-5`; [domain-models.md](/docs/domain/domain-models) §6).
+- **Processes must be reasoned about as choreography of facts.** An end-to-end flow is a sequence of committed transitions and past-tense reactions, not one synchronous story; understanding it requires holding the whole event choreography and its ordering hazards in mind (`CR-3`, `CR-5`; [domain-models.md](/docs/architecture/domain/domain-models) §6).
 - **Consumers must be idempotent by design.** Because a fact may be observed more than once and reactions may settle out of order, every consumer must be built so that reacting repeatedly to one fact is indistinguishable from reacting once (`FIN-10`), which is more demanding than a single synchronous call.
 - **No cross-context undo.** When a later reaction fails, the earlier committed fact is not reversed; correction must be expressed as a *new* fact — a compensating movement or a superseding transition within the owning context (`PAY-6`, `PAY-8`, `CON-5`) — never as a rollback of the fact that was already announced.
 - **The facts-not-requests discipline must be actively upheld.** With no network boundary to enforce it, an event can be quietly misused as a disguised instruction or a cross-context write; the model holds only as long as the team keeps events past-tense facts that transfer no ownership (`CR-4`).
@@ -208,7 +208,7 @@ Rejected because it transfers ownership through the back door the architecture e
 - [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the commands/queries/events model whose third style this decision explains, and the sync-vs-async rule of thumb that places reactions on the asynchronous spine.
 - [ADR-006-immutable-snapshot-strategy.md](./adr-006-immutable-snapshot-strategy) — the immutable facts events carry as identities and frozen values rather than live references.
 - [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries) — the consistency boundaries whose far side an event is published from, and the eventual-consistency model events coordinate.
-- [overview.md](/docs/architecture/overview) — top-level architecture, the Event-Driven principle, and the cross-context integration summary.
-- [bounded-contexts.md](/docs/architecture/bounded-contexts) — authoritative context structure, the domain-events catalog, the sync-vs-async interaction styles, and the `CR-1`–`CR-7` coupling-risk register.
-- [api-design.md](/docs/architecture/api-design) — how past-tense domain-event publication is expressed as an internal published contract at the platform edge.
-- [domain-models.md](/docs/domain/domain-models) — domain events as integration boundaries, the past-tense/idempotency modeling rules, and the domain-event flow overview.
+- [overview.md](/docs/architecture/system/overview) — top-level architecture, the Event-Driven principle, and the cross-context integration summary.
+- [contexts/index](/docs/architecture/contexts) — authoritative context structure, the domain-events catalog, the sync-vs-async interaction styles, and the `CR-1`–`CR-7` coupling-risk register.
+- [api-design.md](/docs/architecture/system/api-design) — how past-tense domain-event publication is expressed as an internal published contract at the platform edge.
+- [domain-models.md](/docs/architecture/domain/domain-models) — domain events as integration boundaries, the past-tense/idempotency modeling rules, and the domain-event flow overview.

@@ -6,7 +6,7 @@ description: Conceptual data model for Red Cab Marketplace.
 
 ## 9. Financial Ownership Boundaries
 
-Financial data is split along the **money-facts vs money-movement** seam ([./payments-architecture.md](/docs/architecture/payments-architecture); [./overview.md](/docs/architecture/overview) Money Facts vs Money Movement).
+Financial data is split along the **money-facts vs money-movement** seam ([./payments-architecture.md](/docs/architecture/patterns/payments-architecture); [./overview.md](/docs/architecture/system/overview) Money Facts vs Money Movement).
 
 - **Booking owns money *facts*.** The immutable Price/Commission/Cancellation snapshots — "what was owed, to whom, at what split" — are Booking-owned and never mutated by anyone, including Payments (`INV-1`, `FIN-2`).
 - **Payments owns money *movement* and *configuration*.** The Commission Rate setting, charges, captures, payouts, refunds, and reconciliation are Payments-owned. Payments **reads** the Booking's Commission Snapshot and **never authors or mutates it** (`FIN-3`, `FIN-5`).

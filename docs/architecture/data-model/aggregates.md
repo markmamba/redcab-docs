@@ -6,7 +6,7 @@ description: Conceptual data model for Red Cab Marketplace.
 
 ## 5. Aggregate Ownership by Bounded Context
 
-Each context owns a small set of **aggregates** (consistency boundaries addressed through a root). The following restates the aggregates fixed in [../domain/domain-models.md](/docs/domain/domain-models) §3 and [./bounded-contexts.md](/docs/architecture/bounded-contexts); this model does not add, remove, or re-home any aggregate.
+Each context owns a small set of **aggregates** (consistency boundaries addressed through a root). The following restates the aggregates fixed in [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §3 and [./contexts/index](/docs/architecture/contexts); this model does not add, remove, or re-home any aggregate.
 
 ### 5.1 Identity & Access (supporting)
 - **Account** (root) — the authenticatable marketplace identity behind Tourist, Corporate, and Provider Actors. Holds credentials/OAuth identities, Role assignment, Language Preference, and the lockout counter as one consistency boundary (`OPR-1`). Admin is **not** a Role on Account.

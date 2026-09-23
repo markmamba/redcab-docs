@@ -6,11 +6,11 @@ description: Conceptual data model for Red Cab Marketplace.
 
 ## 10. Lifecycle-Owned Data
 
-Some data is **mutable lifecycle state** owned by a single aggregate and changed only through guarded transitions defined by that aggregate's state model ([../domain/domain-models.md](/docs/domain/domain-models) §1; `LC-1..6`). No external context may force a transition it does not own.
+Some data is **mutable lifecycle state** owned by a single aggregate and changed only through guarded transitions defined by that aggregate's state model ([/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §1; `LC-1..6`). No external context may force a transition it does not own.
 
 | Lifecycle-owned state | Owning aggregate (context) | Allowed values / shape | Authority |
 | --- | --- | --- | --- |
-| **Booking State** | Booking (BKG) | B2C card path enters `CONFIRMED`; then `CONFIRMED → COMPLETED → PAYOUT_QUEUED`; Corporate may use `PENDING`; cancellations to `CANCELLED`; `COMPLETED → REFUNDED`; terminal states have no exit | [./booking-state-machine.md](/docs/architecture/booking-state-machine), `LC-1..6`, `BKG-10` |
+| **Booking State** | Booking (BKG) | B2C card path enters `CONFIRMED`; then `CONFIRMED → COMPLETED → PAYOUT_QUEUED`; Corporate may use `PENDING`; cancellations to `CANCELLED`; `COMPLETED → REFUNDED`; terminal states have no exit | [./booking-state-machine.md](/docs/architecture/patterns/booking-state-machine), `LC-1..6`, `BKG-10` |
 | **Provider Status** | ProviderApplication (PRV) | `Pending → Approved \| Rejected`; `Approved → Suspended ↔ Approved` | `LC-7`, `LC-9`, `INV-9` |
 | **License validity** | LicenseRecord (PRV) | valid → expiring-soon (≤30d) → expired → renewed | `OPR-3`, `INV-7` |
 | **Support trial** | SupportTrial (PRV) | active → expiring → expired | `OPR-2` |
@@ -24,6 +24,6 @@ Some data is **mutable lifecycle state** owned by a single aggregate and changed
 
 Rules for lifecycle-owned data:
 
-- **Each lifecycle fact records the instant it occurred** (e.g. `completed_at`); the context that owns the transition owns its timestamp ([../domain/domain-models.md](/docs/domain/domain-models) §2). Operational wall-clock rules (auto-complete, cancellation cutoffs) use the Booking's snapshotted **Service Timezone**; catalog authoring uses the Listing's geography timezone ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)). Persistence stores instants as UTC (`TIMESTAMPTZ`). Wall-clock auto-complete runs 24h after service end in the snapshotted service timezone (`OPR-12`).
+- **Each lifecycle fact records the instant it occurred** (e.g. `completed_at`); the context that owns the transition owns its timestamp ([/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §2). Operational wall-clock rules (auto-complete, cancellation cutoffs) use the Booking's snapshotted **Service Timezone**; catalog authoring uses the Listing's geography timezone ([ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model), [ADR-016](/docs/architecture/decisions/adr-016-geography-administrative-tree)). Persistence stores instants as UTC (`TIMESTAMPTZ`). Wall-clock auto-complete runs 24h after service end in the snapshotted service timezone (`OPR-12`).
 - **A committed transition is never rolled back by a failed downstream reaction**; the reaction is retried independently and idempotently.
 - **Mutable lifecycle state is distinct from immutable facts.** Snapshots and completed movements never change; only the lifecycle position advances along permitted transitions.

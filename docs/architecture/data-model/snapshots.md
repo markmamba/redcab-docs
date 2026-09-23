@@ -6,7 +6,7 @@ description: Conceptual data model for Red Cab Marketplace.
 
 ## 8. Immutable Snapshot Structures
 
-Snapshots are the model's central protection device: they make a record's commercial meaning permanent regardless of later upstream change ([./overview.md](/docs/architecture/overview) Snapshot Pattern; `INV-1`, `PAY-2`, `BKG-8`). A snapshot is **write-once**, **owned by the capturing aggregate**, and **read-only to everyone else**.
+Snapshots are the model's central protection device: they make a record's commercial meaning permanent regardless of later upstream change ([./overview.md](/docs/architecture/system/overview) Snapshot Pattern; `INV-1`, `PAY-2`, `BKG-8`). A snapshot is **write-once**, **owned by the capturing aggregate**, and **read-only to everyone else**.
 
 The canonical snapshots are captured by **CheckoutSession at session creation** and copied to **Booking** at materialization; thereafter owned as Booking facts:
 

@@ -19,11 +19,11 @@ ADR for the administrative geography tree inside Catalog. Supersedes the flat Di
 
 | Topic | Document |
 | --- | --- |
-| Geography design | [Geography](/docs/architecture/geography) |
+| Geography design | [Geography](/docs/architecture/patterns/geography) |
 | Prior ADR | [ADR-013: Geography Reference Data](/docs/architecture/decisions/adr-013-geography-reference-data) |
 | Service timezone | [ADR-014: Service Timezone Model](/docs/architecture/decisions/adr-014-service-timezone-model) |
-| Public URL contract | [Session A — Tourist UI access model](/docs/roadmap/notes/SESSION-A-DECISION-RECORD) |
-| Blueprint | [Geography data model review](/docs/roadmap/notes/geography-data-model-review) |
+| Public URL contract | [Session A — Tourist UI access model](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture) |
+| Blueprint | [Geography data model review](/docs/engineering/specs/cat/geography/design-review-data-model) |
 | Parent epic | [red-cab-api#130](https://github.com/markmamba/red-cab-api/issues/130) |
 
 ---
@@ -36,7 +36,7 @@ Accepted (2026-09-20)
 
 The flat `catalog_districts` / `catalog_areas` model treats prefectures and designated cities as siblings with no parent link — Yokohama is a sibling of Kanagawa, not a child. That breaks subtree cascade (`FR-CAT-002`, `OPR-10`), forces homonym slug workarounds into URLs, and cannot distinguish Tokyo's 特別区 (municipality-level) from Yokohama's 行政区 (ward-level) at the correct depth.
 
-[Session A](/docs/roadmap/notes/SESSION-A-DECISION-RECORD) froze the two-segment public URL family and District/Area vocabulary in payloads. Product locked **Option C** (country + self-referencing tree) and **C1** (67 discovery roots) before tourist-web-56/57/58 implementation.
+[Session A](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture) froze the two-segment public URL family and District/Area vocabulary in payloads. Product locked **Option C** (country + self-referencing tree) and **C1** (67 discovery roots) before tourist-web-56/57/58 implementation.
 
 [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data) remains authoritative for official-code seeding, no PostGIS, haversine near-me, and tourism-tags-on-Listings. Only its storage-shape decision is superseded here.
 
@@ -89,7 +89,7 @@ The decisions above describe the **target model**. The shipped API schema still 
 - `INV-8` (subtree discoverability — query-time, never stored), `INV-11` (successor on archive), `OPR-10` (`path` prefix cascade)
 - `FR-CAT-001`–`004`, `FR-CAT-033`, `FR-CAT-034`, `FR-CAT-032`, `NFR-I18N-003`, `AMB-020`
 - Partially supersedes [ADR-013](/docs/architecture/decisions/adr-013-geography-reference-data) Decision 2; amends [ADR-014](/docs/architecture/decisions/adr-014-service-timezone-model) timezone column placement
-- Session A URL family preserved — [SESSION-A-DECISION-RECORD](/docs/roadmap/notes/SESSION-A-DECISION-RECORD)
+- Session A URL family preserved — [SESSION-A-DECISION-RECORD](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture)
 - Does **not** amend `PRC-1` (pricing authority) or `BKG-11` (free-text pickup/dropoff)
 
 ## Related decisions

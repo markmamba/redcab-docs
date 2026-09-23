@@ -16,8 +16,8 @@ ADR for the context integration model.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| API contracts | [API Design](/docs/architecture/api-design) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| API contracts | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -32,8 +32,8 @@ ADR for the context integration model.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| API contracts | [API Design](/docs/architecture/api-design) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| API contracts | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -48,8 +48,8 @@ ADR for the context integration model.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| API contracts | [API Design](/docs/architecture/api-design) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| API contracts | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -64,8 +64,8 @@ ADR for the context integration model.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| API contracts | [API Design](/docs/architecture/api-design) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| API contracts | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -80,8 +80,8 @@ ADR for the context integration model.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| API contracts | [API Design](/docs/architecture/api-design) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| API contracts | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -96,8 +96,8 @@ ADR for the context integration model.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| API contracts | [API Design](/docs/architecture/api-design) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| API contracts | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -112,8 +112,8 @@ ADR for the context integration model.
 
 | Topic | Document |
 | --- | --- |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| API contracts | [API Design](/docs/architecture/api-design) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| API contracts | [API Design](/docs/architecture/system/api-design) |
 
 ---
 
@@ -138,7 +138,7 @@ These invariants do not all demand the same consistency. `INV-3` and `INV-1` mus
 
 The model is also shaped by the goals of **minimizing coupling** and **preserving the independent evolution of contexts**. Capabilities change on different axes — corporate quotation grows toward PO numbers and consolidated invoicing, Payments converges to an external rail's asynchronous truth, Reviews moves at its own cadence — and they must evolve behind stable contracts without forcing changes on one another. That requires **explicit published contracts**, **identity-only references** between contexts, and a hard rule **preventing cross-context table access**: a context that holds another's identifiers and asks across a published surface stays decoupled, while a context that reaches into another's tables welds the two together and makes both impossible to change in isolation.
 
-The same integration model bounds the coupling risks catalogued in [../bounded-contexts.md](/docs/architecture/bounded-contexts) (`CR-1` through `CR-7`): the single deliberate shared-transaction seam (`CR-1`), pricing-authority leakage (`CR-2`), the payout/refund race across the async gap (`CR-3`), cross-context cascades that must be events and not direct writes (`CR-4`), notification fan-out (`CR-5`), Identity as the universal upstream whose contract must stay minimal and stable (`CR-6`), and the provisional corporate pre-payment lifecycle (`CR-7`). Each is a coupling that the integration model either forbids outright, confines to one documented seam, or pushes onto the asynchronous spine.
+The same integration model bounds the coupling risks catalogued in [../contexts/index](/docs/architecture/contexts) (`CR-1` through `CR-7`): the single deliberate shared-transaction seam (`CR-1`), pricing-authority leakage (`CR-2`), the payout/refund race across the async gap (`CR-3`), cross-context cascades that must be events and not direct writes (`CR-4`), notification fan-out (`CR-5`), Identity as the universal upstream whose contract must stay minimal and stable (`CR-6`), and the provisional corporate pre-payment lifecycle (`CR-7`). Each is a coupling that the integration model either forbids outright, confines to one documented seam, or pushes onto the asynchronous spine.
 
 ## Decision
 
@@ -170,7 +170,7 @@ The relationships between contexts follow the already-established DDD strategic 
 - **Anti-Corruption Layer (ACL)** — Corporate → Booking, where Corporate translates its quotation vocabulary into Booking's command language at the call boundary so evolving corporate concepts never leak into Booking.
 - **Published Events** — Booking → Reviews (completion enables review) and every core context → Notifications, the asynchronous spine of cross-context reactions.
 
-This decision records *why contexts integrate the way they already do*; it changes nothing about the contexts, their contracts, their relationships, their events, or their interaction styles, all of which remain as locked in [../bounded-contexts.md](/docs/architecture/bounded-contexts) and [../api-design.md](/docs/architecture/api-design).
+This decision records *why contexts integrate the way they already do*; it changes nothing about the contexts, their contracts, their relationships, their events, or their interaction styles, all of which remain as locked in [../contexts/index](/docs/architecture/contexts) and [/docs/architecture/system/api-design](/docs/architecture/system/api-design).
 
 ## Consequences
 
@@ -222,7 +222,7 @@ Rejected because it cannot uphold the invariants that must hold *within* an oper
 
 - [ADR-001-modular-monolith.md](./adr-001-modular-monolith) — the single-deployable, single-database decision that makes in-process integration and the one shared-transaction seam possible.
 - [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture) — the bounded-context partitioning whose collaboration rules this integration model records.
-- [overview.md](/docs/architecture/overview) — top-level architecture, the cross-context integration summary, and the integration principles.
-- [bounded-contexts.md](/docs/architecture/bounded-contexts) — authoritative context structure, integration contracts, relationship patterns, the domain-events catalog, and the `CR-1`–`CR-7` coupling-risk register.
-- [api-design.md](/docs/architecture/api-design) — how the published surfaces and cross-context boundaries are expressed as contracts.
-- [domain-models.md](/docs/domain/domain-models) — aggregate ownership, identity-only references, snapshot philosophy, and consistency rules.
+- [overview.md](/docs/architecture/system/overview) — top-level architecture, the cross-context integration summary, and the integration principles.
+- [contexts/index](/docs/architecture/contexts) — authoritative context structure, integration contracts, relationship patterns, the domain-events catalog, and the `CR-1`–`CR-7` coupling-risk register.
+- [api-design.md](/docs/architecture/system/api-design) — how the published surfaces and cross-context boundaries are expressed as contracts.
+- [domain-models.md](/docs/architecture/domain/domain-models) — aggregate ownership, identity-only references, snapshot philosophy, and consistency rules.

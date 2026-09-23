@@ -19,9 +19,9 @@ ADR for geography reference data strategy inside Catalog.
 
 | Topic | Document |
 | --- | --- |
-| Geography design | [Geography](/docs/architecture/geography) |
-| Catalog context | [Catalog & Inventory](/docs/architecture/bounded-contexts/catalog) |
-| Open items | [Open Questions](/docs/ambiguities/open-questions) |
+| Geography design | [Geography](/docs/architecture/patterns/geography) |
+| Catalog context | [Catalog & Inventory](/docs/architecture/contexts/catalog) |
+| Open items | [Open Questions](/docs/product/planning/open-questions) |
 
 ---
 
@@ -63,7 +63,7 @@ Product decisions (Decision Log `AMB-036`):
 
 - Simple seed pipeline (CSV upsert); idempotent refresh on code revisions.
 - Map pins and near-me without spatial extension.
-- Clear evolution triggers documented in [Geography](/docs/architecture/geography).
+- Clear evolution triggers documented in [Geography](/docs/architecture/patterns/geography).
 
 **Negative**
 

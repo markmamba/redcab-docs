@@ -16,7 +16,7 @@ ADR for transaction and consistency boundaries.
 
 | Topic | Document |
 | --- | --- |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
 | Data consistency | [Consistency & Integration](/docs/architecture/data-model/consistency-and-integration) |
 
 ---
@@ -32,7 +32,7 @@ ADR for transaction and consistency boundaries.
 
 | Topic | Document |
 | --- | --- |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
 | Data consistency | [Consistency & Integration](/docs/architecture/data-model/consistency-and-integration) |
 
 ---
@@ -48,7 +48,7 @@ ADR for transaction and consistency boundaries.
 
 | Topic | Document |
 | --- | --- |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
 | Data consistency | [Consistency & Integration](/docs/architecture/data-model/consistency-and-integration) |
 
 ---
@@ -64,7 +64,7 @@ ADR for transaction and consistency boundaries.
 
 | Topic | Document |
 | --- | --- |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
 | Data consistency | [Consistency & Integration](/docs/architecture/data-model/consistency-and-integration) |
 
 ---
@@ -80,7 +80,7 @@ ADR for transaction and consistency boundaries.
 
 | Topic | Document |
 | --- | --- |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
 | Data consistency | [Consistency & Integration](/docs/architecture/data-model/consistency-and-integration) |
 
 ---
@@ -96,7 +96,7 @@ ADR for transaction and consistency boundaries.
 
 | Topic | Document |
 | --- | --- |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
 | Data consistency | [Consistency & Integration](/docs/architecture/data-model/consistency-and-integration) |
 
 ---
@@ -112,7 +112,7 @@ ADR for transaction and consistency boundaries.
 
 | Topic | Document |
 | --- | --- |
-| Contexts | [Bounded Contexts](/docs/architecture/bounded-contexts) |
+| Contexts | [Bounded Contexts](/docs/architecture/contexts) |
 | Data consistency | [Consistency & Integration](/docs/architecture/data-model/consistency-and-integration) |
 
 ---
@@ -127,11 +127,11 @@ Per [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architec
 
 The philosophical core of the decision is a single sentence: **a transaction protects business invariants within a bounded context.** Business processes in Red Cab routinely span several contexts — a purchase touches Catalog, Booking, and Payments; a completion touches Booking, Payments, and Reviews; a corporate order touches COR, Booking, and Payments — but **no transaction spans them.** A business process is a choreography of many owned steps; a transaction is the unit within one step where an invariant must hold or the step is invalid. Conflating the two — trying to make a whole cross-context process one atomic act — is precisely the failure this decision exists to prevent.
 
-The dominant force is that **an invariant can only be protected by the context that owns the state behind it**, and only within the boundary of the aggregate that guards it. The model already establishes that an aggregate *is* the unit of transactional consistency: everything inside it is kept consistent within a single atomic change, and everything outside is reconciled asynchronously and is only eventually consistent (per [domain-models.md](/docs/domain/domain-models) §1, §5). The high-value invariants each live wholly inside one owner — snapshot integrity in Booking (`INV-1`), inventory integrity in a single AvailabilitySlot owned by Catalog (`INV-3`), the frozen revenue split in Booking's snapshot (`INV-2`), review eligibility gated by an upstream completion fact (`INV-5`), and right-to-operate decided in one place (`INV-6`). Because each invariant is contained within a single owner, each can be upheld by a transaction that never has to reach across a boundary to do its job.
+The dominant force is that **an invariant can only be protected by the context that owns the state behind it**, and only within the boundary of the aggregate that guards it. The model already establishes that an aggregate *is* the unit of transactional consistency: everything inside it is kept consistent within a single atomic change, and everything outside is reconciled asynchronously and is only eventually consistent (per [domain-models.md](/docs/architecture/domain/domain-models) §1, §5). The high-value invariants each live wholly inside one owner — snapshot integrity in Booking (`INV-1`), inventory integrity in a single AvailabilitySlot owned by Catalog (`INV-3`), the frozen revenue split in Booking's snapshot (`INV-2`), review eligibility gated by an upstream completion fact (`INV-5`), and right-to-operate decided in one place (`INV-6`). Because each invariant is contained within a single owner, each can be upheld by a transaction that never has to reach across a boundary to do its job.
 
 The second force is that **the moment of purchase is the one place where two owned invariants must become true together**. At checkout the architecture requires that booking creation, snapshot freeze, and seat reservation take effect as one indivisible unit or not at all (`BKG-2`, `CON-1`), because snapshot integrity (`INV-1`) and inventory integrity (`INV-3`) are both true at the instant of creation or the purchase is invalid. This is the single case where a strongly-consistent operation legitimately draws on state owned by another context: Booking's checkout invokes Catalog's **guarded seat-reservation command** co-transactionally, the one deliberate shared-transaction seam in the system (`CR-1`). Everything about how this seam is bounded — a guarded command rather than reach-in access, singular, documented, never to be generalized — was fixed in [ADR-004](./adr-004-context-integration-model). This decision records *why* it is the sole exception: because it is the only point where two invariants that must hold together straddle a context line, and the atomic-overbooking guarantee (`CON-2`, `CON-3`) cannot be met by an after-the-fact reaction.
 
-The third force is that **most cross-context collaboration does not require, and must not claim, immediate consistency**. Payout queuing after completion, rating recalculation after moderation, listing pause after license expiry, geography subtree deactivation cascades, and every notification are reactions that are correct *a moment later* (per [ADR-004](./adr-004-context-integration-model); [domain-models.md](/docs/domain/domain-models) §5). Binding these into the transaction that triggers them would couple a committed business fact to the success of downstream and external work — contradicting the established rule that a failed reaction never rolls back the committed transition that emitted it (`FIN-11`), and dragging external-rail volatility into the order aggregate. Money movement in particular converges to an asynchronous external truth and must reconcile toward it, surfacing divergence rather than pretending it away (`FIN-10`, `FIN-11`); the payout/refund interlock must therefore hold *across* the async gap, not inside one transaction (`CR-3`, `FIN-5`, `PAY-8`).
+The third force is that **most cross-context collaboration does not require, and must not claim, immediate consistency**. Payout queuing after completion, rating recalculation after moderation, listing pause after license expiry, geography subtree deactivation cascades, and every notification are reactions that are correct *a moment later* (per [ADR-004](./adr-004-context-integration-model); [domain-models.md](/docs/architecture/domain/domain-models) §5). Binding these into the transaction that triggers them would couple a committed business fact to the success of downstream and external work — contradicting the established rule that a failed reaction never rolls back the committed transition that emitted it (`FIN-11`), and dragging external-rail volatility into the order aggregate. Money movement in particular converges to an asynchronous external truth and must reconcile toward it, surfacing divergence rather than pretending it away (`FIN-10`, `FIN-11`); the payout/refund interlock must therefore hold *across* the async gap, not inside one transaction (`CR-3`, `FIN-5`, `PAY-8`).
 
 The fourth force is that **queries establish no transactional ownership**. The pricing authority, availability reads, the Provider Status read, and the Commission Snapshot read are side-effect-free consumptions of owned state or computed value contracts (per [ADR-004](./adr-004-context-integration-model), [ADR-005](./adr-005-single-pricing-authority)). A reader depends on another context's published result but never enrolls that context's state in its own transaction and never acquires the right to change it. This is what keeps reading decoupled from writing: Payments reads the Commission Snapshot to move money and never authors or mutates it (`PAY-2`, [ADR-006](./adr-006-immutable-snapshot-strategy)); Catalog conforms to the Provider Status read without replicating verification logic (`INV-6`).
 
@@ -141,8 +141,8 @@ The final force is **evolution without re-architecture**. The system is one depl
 
 The transaction and consistency boundaries are fixed as already established:
 
-- **Each bounded context owns its own consistency boundary.** A context is transactionally consistent within its own aggregates and nowhere else; an invariant is upheld by the single context that owns the state behind it, within the aggregate that guards it (`INV-1`, `INV-3`, `INV-5`, `INV-6`; [domain-models.md](/docs/domain/domain-models) §1, §4).
-- **Transactional consistency is intentionally limited to a single consistency boundary.** What must be true together lives together in one aggregate under one root; if two facts may be consistent a moment later, they belong to different aggregates and are reconciled asynchronously (per [domain-models.md](/docs/domain/domain-models) §1, §5).
+- **Each bounded context owns its own consistency boundary.** A context is transactionally consistent within its own aggregates and nowhere else; an invariant is upheld by the single context that owns the state behind it, within the aggregate that guards it (`INV-1`, `INV-3`, `INV-5`, `INV-6`; [domain-models.md](/docs/architecture/domain/domain-models) §1, §4).
+- **Transactional consistency is intentionally limited to a single consistency boundary.** What must be true together lives together in one aggregate under one root; if two facts may be consistent a moment later, they belong to different aggregates and are reconciled asynchronously (per [domain-models.md](/docs/architecture/domain/domain-models) §1, §5).
 - **Cross-context operations do not form one shared transaction.** A business process that spans contexts is a choreography of individually-owned, committed steps, not a single atomic act. The sole deliberate exception is the guarded seat-reservation seam at checkout (`CR-1`), where snapshot integrity (`INV-1`) and inventory integrity (`INV-3`) must hold together at the instant of purchase (`BKG-2`, `CON-1`); it is a guarded command, singular and documented, and is never generalized into shared state access.
 - **Commands execute within one context.** A state-changing command is validated against the owning context's invariants and lifecycle and commits within that context; its synchronous response carries only its own guarded outcome, never the reactions it may trigger (per [ADR-004](./adr-004-context-integration-model)).
 - **Queries never establish transactional ownership.** Side-effect-free reads of owned state or computed value contracts — the pricing authority, availability, the Provider Status read, the Commission Snapshot — let a consumer depend on a result without enrolling the owner's state in its transaction and without acquiring the right to change it (`PRC-1`, `PAY-2`, `INV-6`).
@@ -150,7 +150,7 @@ The transaction and consistency boundaries are fixed as already established:
 - **Eventual consistency is an intentional tradeoff, not a limitation.** Everything across aggregates and contexts is deliberately eventual and reconciled by events; money in particular converges to asynchronous external-rail truth, surfacing divergence as a reconcilable fact rather than a silent loss (`FIN-11`).
 - **Strong consistency exists only where a business invariant requires it.** The atomic checkout unit is strongly consistent because overbooking must be impossible and the snapshot must be authored with the order (`CON-1`, `CON-2`, `INV-1`, `INV-3`); everywhere else, immediate consistency is neither claimed nor required.
 
-This decision records *why the architecture defines transaction and consistency boundaries this way*; it changes nothing about which operations are atomic, which are eventual, the single shared-transaction seam, or the ownership of any invariant, all of which remain as locked in [../overview.md](/docs/architecture/overview), [../bounded-contexts.md](/docs/architecture/bounded-contexts), [../../domain/domain-models.md](/docs/domain/domain-models), and [../../business-rules/business-rules.md](/docs/business-rules/invariants).
+This decision records *why the architecture defines transaction and consistency boundaries this way*; it changes nothing about which operations are atomic, which are eventual, the single shared-transaction seam, or the ownership of any invariant, all of which remain as locked in [/docs/architecture/system/overview](/docs/architecture/system/overview), [../contexts/index](/docs/architecture/contexts), [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models), and [../../product/business-rules/invariants](/docs/product/business-rules/invariants).
 
 ## Consequences
 
@@ -166,7 +166,7 @@ This decision records *why the architecture defines transaction and consistency 
 
 ### Negative
 
-- **Business processes must be reasoned about as choreography.** An end-to-end flow spanning contexts is a sequence of committed steps and eventual reactions, not one atomic story; understanding it requires holding the whole choreography and its ordering hazards in mind (`CR-3`, `CR-5`; [domain-models.md](/docs/domain/domain-models) §6).
+- **Business processes must be reasoned about as choreography.** An end-to-end flow spanning contexts is a sequence of committed steps and eventual reactions, not one atomic story; understanding it requires holding the whole choreography and its ordering hazards in mind (`CR-3`, `CR-5`; [domain-models.md](/docs/architecture/domain/domain-models) §6).
 - **Eventual consistency demands careful design.** Consumers must be idempotent and tolerate delay, reordering, and redelivery, and designers must accept that a committed transition is never undone by a failed reaction (`FIN-10`, `FIN-11`).
 - **The single seam must never quietly spread.** The one deliberate shared-transaction seam (`CR-1`) is a standing temptation to add "just one more" cross-context transaction; the discipline holds only as long as the team refuses to, and any change to it demands a redesign (a saga), not an expedient extension.
 - **No cross-context rollback.** When a later step in a process fails, earlier committed steps are not automatically reversed; correction must be expressed as new, compensating facts within the owning contexts (`PAY-6`, `PAY-8`, `CON-5`) rather than as an undo of a shared transaction.
@@ -205,7 +205,7 @@ Rejected because shared write-access is the ownership ambiguity the whole archit
 - [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the commands/queries/events model and the sync-vs-async rule of thumb that this decision expresses in terms of consistency boundaries.
 - [ADR-005-single-pricing-authority.md](./adr-005-single-pricing-authority) — the pricing authority consumed as a query that establishes no transactional ownership.
 - [ADR-006-immutable-snapshot-strategy.md](./adr-006-immutable-snapshot-strategy) — the immutable facts a downstream context reads without enrolling the owner's state in its transaction.
-- [overview.md](/docs/architecture/overview) — top-level architecture, the Atomic Capacity Reservation and Event-Driven principles, and the "one shared transaction" summary.
-- [bounded-contexts.md](/docs/architecture/bounded-contexts) — authoritative context structure, transactional boundaries per context, the sync-vs-async interaction styles, and the `CR-1`–`CR-7` coupling-risk register.
-- [api-design.md](/docs/architecture/api-design) — how the commands, queries, and cross-context boundaries are expressed at the platform edge.
-- [domain-models.md](/docs/domain/domain-models) — aggregates as consistency boundaries, the aggregate-boundary rules, and the consistency-and-concurrency rules.
+- [overview.md](/docs/architecture/system/overview) — top-level architecture, the Atomic Capacity Reservation and Event-Driven principles, and the "one shared transaction" summary.
+- [contexts/index](/docs/architecture/contexts) — authoritative context structure, transactional boundaries per context, the sync-vs-async interaction styles, and the `CR-1`–`CR-7` coupling-risk register.
+- [api-design.md](/docs/architecture/system/api-design) — how the commands, queries, and cross-context boundaries are expressed at the platform edge.
+- [domain-models.md](/docs/architecture/domain/domain-models) — aggregates as consistency boundaries, the aggregate-boundary rules, and the consistency-and-concurrency rules.

@@ -6,7 +6,7 @@ description: Conceptual data model for Red Cab Marketplace.
 
 ## 6. Entity Relationships
 
-This section describes the conceptual associations **within** each owning context — between an aggregate root and the entities/value objects inside its consistency boundary, and between aggregates that live in the same context. Cross-context associations (which are by identity only) are in §7. The entities, value objects, and their containment are exactly those defined in [../domain/domain-models.md](/docs/domain/domain-models) §3.
+This section describes the conceptual associations **within** each owning context — between an aggregate root and the entities/value objects inside its consistency boundary, and between aggregates that live in the same context. Cross-context associations (which are by identity only) are in §7. The entities, value objects, and their containment are exactly those defined in [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §3.
 
 ### 6.1 Identity & Access
 - An **Account** has zero or more **OAuth identities** (external credentials linked to it), all inside the Account boundary.
@@ -92,7 +92,7 @@ erDiagram
 
 ## 7. Cross-Context References
 
-Across context boundaries, aggregates are related **only by identity** or through an **immutable snapshot** — never by embedding or co-ownership ([../domain/domain-models.md](/docs/domain/domain-models) §2 cross-context reference rule). The following are the canonical cross-context references in the model.
+Across context boundaries, aggregates are related **only by identity** or through an **immutable snapshot** — never by embedding or co-ownership ([/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models) §2 cross-context reference rule). The following are the canonical cross-context references in the model.
 
 | From (context) | References (by id) / consumes (snapshot/contract) | To (owner) | Nature |
 | --- | --- | --- | --- |
@@ -117,7 +117,7 @@ Across context boundaries, aggregates are related **only by identity** or throug
 
 Rules that hold for every cross-context reference:
 
-- The referencing context **never** reads the referenced aggregate's internals or mutates it; it uses the published query/contract or holds a snapshot ([./bounded-contexts.md](/docs/architecture/bounded-contexts)).
+- The referencing context **never** reads the referenced aggregate's internals or mutates it; it uses the published query/contract or holds a snapshot ([./contexts/index](/docs/architecture/contexts)).
 - A reference is by **stable identity**, so the referenced aggregate can evolve without breaking the reference.
 - Where a downstream decision must be immune to upstream change, the fact is **snapshotted** rather than referenced live (see §8).
 - The **Corporate → Booking** reference crosses an **anti-corruption boundary**: corporate vocabulary (line items, PO concepts, credit terms) is translated into Booking's command language and never leaks into Booking.

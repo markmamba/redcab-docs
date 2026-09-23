@@ -1,0 +1,45 @@
+---
+title: Functional Requirements
+sidebar_position: 2
+description: Functional requirements grouped by bounded context.
+---
+
+## TL;DR
+
+- **Functional requirements (FR)** grouped by bounded context: `IAM`, `PRV`, `CAT`, `BKG`, `PAY`, `COR`, `REV`, `NOT`.
+- Each FR is a single externally observable behavior using normative **shall** / **shall not** / **may** language.
+- Governing rules cited as `INV-/LC-/PRC-/PAY-/CON-/BKG-/OPR-/FIN-`; `Provisional` items cite `AMB-###`.
+
+## About this document
+
+Index and reading guide for functional requirements by context.
+
+| Topic | Document |
+| --- | --- |
+| Conventions | [Requirements Overview](/docs/product/requirements) |
+| NFRs | [Non-Functional Requirements](/docs/product/requirements/non-functional-requirements) |
+| Traceability | [Traceability Matrix](/docs/product/requirements/traceability-matrix) |
+| Terminology | [Glossary](/docs/product/business-rules/glossary) |
+| Rules | [Business Rules](/docs/product/business-rules/invariants) |
+
+---
+
+## Reading guide
+
+- **ID** `FR-<CTX>-<NNN>`; **Source** = PRD story / notes origin; **Governs** = authoritative rules/models it conforms to; **Status** = `Approved | Provisional | Draft`.
+- "shall" = mandatory observable behavior; "may" = optional. No implementation detail.
+- Acceptance criteria are stated as observable conditions where they sharpen the behavior.
+
+---
+
+## Context index
+
+- [Identity & Access (IAM)](/docs/product/requirements/functional-requirements/iam)
+- [Provider Onboarding (PRV)](/docs/product/requirements/functional-requirements/prv)
+- [Catalog & Inventory (CAT)](/docs/product/requirements/functional-requirements/cat)
+- [Booking & Checkout (BKG)](/docs/product/requirements/functional-requirements/bkg)
+- [Payments & Payouts (PAY)](/docs/product/requirements/functional-requirements/pay)
+- [Quotation & Invoicing (Corporate)](/docs/product/requirements/functional-requirements/corporate)
+- [Reviews & Ratings (REV)](/docs/product/requirements/functional-requirements/rev)
+- [Notifications (NOT)](/docs/product/requirements/functional-requirements/not)
+- [Provisional index](/docs/product/requirements/functional-requirements/provisional-index)

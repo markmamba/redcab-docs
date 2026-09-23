@@ -1,261 +1,70 @@
 ---
 sidebar_position: 1
 title: Red Cab Documentation
-description: Planning, architecture, domain, and implementation guidance for the Red Cab tourism marketplace platform.
+description: Planning, architecture, and engineering documentation for the Red Cab tourism marketplace platform.
+displayed_sidebar: productSidebar
 ---
 
-## TL;DR
-
-- **Authoritative planning foundation** for Red Cab: B2C/Corporate marketplace for verified Japanese transport and tour providers.
-- Read in order: Business Rules → Requirements → Domain → Architecture → Engineering → **Implementation Specs** → Ambiguities → Roadmap.
-- Precedence: Business Rules > Requirements > Domain > Architecture > ADRs > Engineering > **Implementation Specs** > Code.
-
-## About this document
-
-Site home and documentation reading order for Red Cab Marketplace.
-
-| Topic | Document |
-| --- | --- |
-| Glossary | [Glossary](/docs/business-rules/glossary) |
-| Requirements | [Requirements](/docs/requirements) |
-| Architecture | [Architecture](/docs/architecture) |
-| Engineering | [Engineering](/docs/engineering) |
-| Implementation specs | [Specs](/docs/specs/) |
-| Roadmap | [Phasing Roadmap](/docs/roadmap) |
-
----
-
-## Overview
+## Welcome
 
 Red Cab is a two-sided marketplace connecting inbound travelers and corporate clients with verified transportation and tourism providers in Japan.
 
-The platform supports:
+This site is organized in **three tiers** — read left to right in the navbar:
 
-* B2C instant booking and payment
-* Corporate quotation and invoicing workflows
-* Provider onboarding and verification
-* Inventory, pricing, and availability management
-* Booking lifecycle management
-* Payments, payouts, and refunds
-* Reviews and ratings
-* Multilingual (EN/JA) operations
+| Tier | Audience | What you'll find |
+| --- | --- | --- |
+| [**Product**](/docs/product) | PMs, sponsors, analysts | Glossary, business rules, requirements, roadmap, explainers |
+| [**Architecture**](/docs/architecture) | Architects, tech leads | Domain models, bounded contexts, patterns, ADRs, data model |
+| [**Engineering**](/docs/engineering) | Developers, AI agents | Conventions, infrastructure, implementation specs |
 
-This documentation set serves as the authoritative planning foundation for implementation using:
+## Start here
 
-* Ruby on Rails API (modular monolith, Request → Manager → Validator)
-* React Router v7 SSR frontend (JavaScript, `app/routes/` / `app/api/` / `app/domains/`)
-* PostgreSQL
-* Licensed payment provider (vendor open — `AMB-040`)
+| I am a… | Go to |
+| --- | --- |
+| Executive or sponsor | [Key decisions](/docs/product/explainers/key-decisions) → [Roadmap](/docs/product/planning/roadmap) → [Open questions](/docs/product/planning/open-questions) |
+| Product owner or PM | [Start here](/docs/product/start-here) |
+| Business analyst or ops | [Booking lifecycle](/docs/product/explainers/booking-lifecycle) → [Money flow](/docs/product/explainers/money-flow) |
+| Software architect | [Architecture overview](/docs/architecture/system/overview) → [Bounded contexts](/docs/architecture/contexts) → [ADRs](/docs/architecture/decisions) |
+| Backend or frontend engineer | [Engineering overview](/docs/engineering) → [Specs](/docs/engineering/specs) |
+| AI agent / Cursor | [Agent read path](/docs/product/start-here#by-role) below |
 
----
+## Document precedence
 
-## Documentation Reading Order
+When documents overlap, higher-precedence sources win:
 
-## 1. Business Language
+1. Business Rules (`product/business-rules/`)
+2. Requirements (`product/requirements/`)
+3. Domain Models (`architecture/domain/`)
+4. Architecture + ADRs (`architecture/`)
+5. Engineering (`engineering/`)
+6. Implementation Specs (`engineering/specs/`)
+7. Code (`red-cab-api/`, `red-cab-web/`)
 
-Start here to understand the domain vocabulary.
+## AI agent read path
 
-| Document                                           | Purpose                                                                   |
-| -------------------------------------------------- | ------------------------------------------------------------------------- |
-| [Glossary](/docs/business-rules/glossary)             | Ubiquitous language and shared terminology                                |
-| [Business Rules](/docs/business-rules/invariants) | Invariants, lifecycle rules, pricing, commission, and booking constraints |
+Read in this order before generating implementation artifacts:
 
----
+1. `product/business-rules/glossary.md`
+2. `product/business-rules/invariants.md`
+3. `product/requirements/functional-requirements/{ctx}.md`
+4. `architecture/contexts/{context}.md`
+5. `architecture/domain/domain-models.md`
+6. `architecture/system/overview.md`
+7. `architecture/patterns/payments-architecture.md`
+8. `architecture/decisions/adr-001` → `adr-017`
+9. `product/planning/roadmap/`
+10. `engineering/conventions/domain-to-code-mapping.md`
+11. `engineering/conventions/backend.md` and/or `engineering/conventions/frontend.md`
 
-## 2. Requirements
+For a specific issue, start at `engineering/specs/{context}/{repo}-{issue}-{slug}.md` and read its **Governing docs** section.
 
-Defines observable system behavior.
+## Platform capabilities
 
-| Document                                                                   | Purpose                                                         |
-| -------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| [Requirements Overview](/docs/requirements)                            | Requirements conventions and structure                          |
-| [Functional Requirements](/docs/requirements/functional-requirements)         | System capabilities and user-facing behavior                    |
-| [Non-Functional Requirements](/docs/requirements/non-functional-requirements) | Performance, security, availability, auditability, compliance   |
-| [Traceability Matrix](/docs/requirements/traceability-matrix)                 | Mapping between PRD stories, requirements, and bounded contexts |
-
----
-
-## 3. Domain Design
-
-Defines ownership and domain boundaries.
-
-| Document                                             | Purpose                                         |
-| ---------------------------------------------------- | ----------------------------------------------- |
-| [Bounded Contexts](/docs/architecture/bounded-contexts) | Strategic DDD context map                       |
-| [Domain Models](/docs/domain/domain-models)             | Aggregates, entities, value objects, invariants |
-
----
-
-## 4. Architecture
-
-Defines system structure and integration patterns.
-
-| Document                                                       | Purpose                                          |
-| -------------------------------------------------------------- | ------------------------------------------------ |
-| [Architecture Overview](/docs/architecture/overview)              | Top-level architectural guide                    |
-| [Payments Architecture](/docs/architecture/payments-architecture) | Custody, control, commission, settlement, refunds |
-| [Booking State Machine](/docs/architecture/booking-state-machine) | Booking lifecycle and transitions                |
-| [API Design](/docs/architecture/api-design)                       | REST conventions and contracts                   |
-| [Data Model](/docs/architecture/data-model)                       | Storage model and key relationships              |
-| [Tech Stack](/docs/architecture/tech-stack)                       | Technology choices and rationale                 |
-
----
-
-## 5. Engineering Conventions
-
-Maps domain architecture to codebase structure for `red-cab-api` and `red-cab-web`.
-
-| Document                                                       | Purpose                                          |
-| -------------------------------------------------------------- | ------------------------------------------------ |
-| [Engineering Overview](/docs/engineering)                  | How planning docs connect to implementation      |
-| [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping) | Actors, contexts → folders, routes, DBML        |
-| [Backend Conventions](/docs/engineering/backend-conventions)      | Rails API patterns (Request/Manager/Validator) |
-| [Frontend Conventions](/docs/engineering/frontend-conventions)    | React Router, API clients, forms, surfaces       |
-
----
-
-## 6. Architecture Decision Records (ADRs)
-
-Permanent record of the architectural decisions that define and preserve the system architecture. These ADRs are intended to be read in sequence, as each decision builds upon the previous ones.
-
-| ADR                                                                                  | Title                                   | Purpose                                                                                                             |
-| ------------------------------------------------------------------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| [ADR-001](/docs/architecture/decisions/adr-001-modular-monolith)                        | Modular Monolith                        | Establishes the system packaging strategy and modular monolith first philosophy.                                    |
-| [ADR-002](/docs/architecture/decisions/adr-002-technology-stack)                        | Technology Stack                        | Records the selected technology stack and the principle that technology serves the domain model.                    |
-| [ADR-003](/docs/architecture/decisions/adr-003-bounded-context-architecture)            | Bounded Context Architecture            | Defines the strategic DDD context map and ownership boundaries.                                                     |
-| [ADR-004](/docs/architecture/decisions/adr-004-context-integration-model)               | Context Integration Model               | Defines how bounded contexts collaborate through published contracts.                                               |
-| [ADR-005](/docs/architecture/decisions/adr-005-single-pricing-authority)                | Single Pricing Authority                | Establishes Catalog as the sole authority for price calculation.                                                    |
-| [ADR-006](/docs/architecture/decisions/adr-006-immutable-snapshot-strategy)             | Immutable Snapshot Strategy             | Explains why commercial facts are frozen on Bookings as immutable snapshots.                                        |
-| [ADR-007](/docs/architecture/decisions/adr-007-transaction-and-consistency-boundaries)  | Transaction and Consistency Boundaries  | Defines transactional boundaries, consistency rules, and asynchronous collaboration.                                |
-| [ADR-008](/docs/architecture/decisions/adr-008-domain-event-architecture)               | Domain Event Architecture               | Defines the event-driven collaboration model between bounded contexts.                                              |
-| [ADR-009](/docs/architecture/decisions/adr-009-external-systems-integration)            | External Systems Integration            | Defines how external providers integrate without owning business decisions.                                         |
-| [ADR-010](/docs/architecture/decisions/adr-010-identity-and-authorization-architecture) | Identity and Authorization Architecture | Separates authentication from business authorization responsibilities.                                              |
-| [ADR-011](/docs/architecture/decisions/adr-011-financial-authority-model)               | Financial Authority Model               | Defines ownership of commercial facts versus financial operations.                                                  |
-| [ADR-012](/docs/architecture/decisions/adr-012-evolution-strategy)                      | Evolution Strategy                      | Records how the architecture is intended to evolve while preserving established decisions and ownership boundaries. |
-
----
-
-## 7. Open Questions
-
-Known ambiguities and unresolved decisions.
-
-| Document                                        | Purpose                                    |
-| ----------------------------------------------- | ------------------------------------------ |
-| [Open Questions](/docs/ambiguities/open-questions) | Assumptions register and pending decisions |
-
----
-
-## 8. Delivery Roadmap
-
-Implementation sequencing and milestones.
-
-| Document                              | Purpose                         |
-| ------------------------------------- | ------------------------------- |
-| [Phasing Roadmap](/docs/roadmap) | MVP and future release planning |
-
----
-
-## Recommended Reading Paths
-
-## Product Owner
-
-1. Functional Requirements
-2. Non-Functional Requirements
-3. Open Questions
-4. Roadmap
-
-## Software Architect
-
-1. Glossary
-2. Business Rules
-3. Bounded Contexts
-4. Domain Models
-5. Architecture Overview
-6. Architecture Decision Records (ADR-001 → ADR-012)
-
-## Backend Engineer
-
-1. Glossary
-2. Business Rules
-3. Functional Requirements
-4. Domain Models
-5. Payments Architecture
-6. API Design
-7. Data Model
-8. [Backend Conventions](/docs/engineering/backend-conventions)
-9. [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping)
-
-## Frontend Engineer
-
-1. Functional Requirements
-2. Non-Functional Requirements
-3. API Design
-4. Booking State Machine
-5. [Frontend Conventions](/docs/engineering/frontend-conventions)
-6. [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping)
-
-## AI Agent / Cursor
-
-Read in this order:
-
-1. business-rules/glossary.md
-2. business-rules/business-rules.md
-3. requirements/functional-requirements.md
-4. architecture/bounded-contexts.md
-5. domain/domain-models.md
-6. architecture/overview.md
-7. architecture/payments-architecture.md
-8. architecture/decisions/ADR-001 → ADR-012
-9. roadmap/phasing.md
-10. engineering/domain-to-code-mapping.md
-11. engineering/backend-conventions.md and/or engineering/frontend-conventions.md (by task)
-
-Do not generate implementation artifacts until these documents have been read.
-Architectural decisions recorded in the ADRs are considered authoritative and must not be contradicted.
-Engineering conventions define **how** to code; they must not override domain invariants or context ownership.
-
----
-
-## Authoritative Sources
-
-When documents overlap, precedence is:
-
-1. Business Rules
-2. Requirements
-3. Domain Models
-4. Architecture
-5. ADRs
-6. Engineering Conventions
-7. Roadmap
-
-Higher-precedence documents override lower-precedence documents.
-
----
-
-## Current Planning Status
-
-| Area                  | Status     |
-| --------------------- | ---------- |
-| Glossary              | ✅ Complete |
-| Business Rules        | ✅ Complete |
-| Requirements          | ✅ Complete |
-| Traceability          | ✅ Complete |
-| Bounded Contexts      | ✅ Complete |
-| Domain Models         | ✅ Complete |
-| Architecture Overview | ✅ Complete |
-| Payments Architecture | ✅ Complete |
-| Booking State Machine | ✅ Complete |
-| API Design            | ✅ Complete |
-| Data Model            | ✅ Complete |
-| Technology Stack      | ✅ Complete |
-| ADR Series (001–012)  | ✅ Complete |
-| Engineering Conventions | ✅ Complete |
-| Ambiguity Register    | ✅ Complete |
-| Roadmap               | ✅ Complete |
-
----
-
-## Repository Goal
-
-The objective of this repository is to establish a complete planning and architecture foundation before implementation begins, ensuring that domain invariants, financial correctness, and bounded-context ownership remain stable throughout development.
-
+- B2C instant booking and payment
+- Corporate quotation and invoicing workflows
+- Provider onboarding and verification
+- Inventory, pricing, and availability management
+- Booking lifecycle management
+- Payments, payouts, and refunds
+- Reviews and ratings
+- Multilingual (EN/JA) operations

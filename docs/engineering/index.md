@@ -16,25 +16,25 @@ Engineering overview — how planning docs connect to implementation repos.
 
 | Topic | Document |
 | --- | --- |
-| Code mapping | [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping) |
-| API conventions | [Backend Conventions](/docs/engineering/backend-conventions) |
-| Web conventions | [Frontend Conventions](/docs/engineering/frontend-conventions) |
-| Date / time / timezone | [Date / Time / Timezone](/docs/engineering/datetime-and-timezones) |
-| Context map | [Bounded Contexts](/docs/architecture/bounded-contexts) |
-| Domain | [Domain Models](/docs/domain/domain-models) |
+| Code mapping | [Domain-to-Code Mapping](/docs/engineering/conventions/domain-to-code-mapping) |
+| API conventions | [Backend Conventions](/docs/engineering/conventions/backend) |
+| Web conventions | [Frontend Conventions](/docs/engineering/conventions/frontend) |
+| Date / time / timezone | [Date / Time / Timezone](/docs/engineering/conventions/datetime-and-timezones) |
+| Context map | [Bounded Contexts](/docs/architecture/contexts) |
+| Domain | [Domain Models](/docs/architecture/domain/domain-models) |
 
 ---
 
 ## Purpose
 
-The architecture set ([../architecture/overview.md](/docs/architecture/overview), ADRs, bounded contexts) describes **what** the system must do and **who owns what**. This engineering set describes **how to structure the codebase** so implementation is consistent and predictable across both repos.
+The architecture set ([/docs/architecture/system/overview](/docs/architecture/system/overview), ADRs, bounded contexts) describes **what** the system must do and **who owns what**. This engineering set describes **how to structure the codebase** so implementation is consistent and predictable across both repos.
 
 These conventions use the same structural patterns you will apply when scaffolding (`Request → Manager → Validator`, `app/domains/`, explicit routes, React Router v7 SSR, ky + zod + RHF). Red Cab–specific rules (pricing authority, snapshots, actor namespaces) sit on top of that baseline — they do not replace it.
 
 | Repo (planned) | Conventions documented in |
 | --- | --- |
-| `red-cab-api` | [Backend Conventions](/docs/engineering/backend-conventions) — Request → Manager → Validator, `app/domains/`, explicit routes, DBML-first schema |
-| `red-cab-web` | [Frontend Conventions](/docs/engineering/frontend-conventions) — React Router v7 SSR, `app/routes/`, `app/api/`, `app/domains/`, ky + zod + RHF |
+| `red-cab-api` | [Backend Conventions](/docs/engineering/conventions/backend) — Request → Manager → Validator, `app/domains/`, explicit routes, DBML-first schema |
+| `red-cab-web` | [Frontend Conventions](/docs/engineering/conventions/frontend) — React Router v7 SSR, `app/routes/`, `app/api/`, `app/domains/`, ky + zod + RHF |
 
 Domain rules from Red Cab planning **always win** over generic patterns when they conflict (e.g. single pricing authority, immutable snapshots, money-facts vs money-movement).
 
@@ -44,19 +44,19 @@ Domain rules from Red Cab planning **always win** over generic patterns when the
 
 ### Before first commit
 
-1. [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping) — actors, bounded contexts → folders, route namespaces
-2. [Backend Conventions](/docs/engineering/backend-conventions) — API structure, request lifecycle, DBML/migrations
-3. [Frontend Conventions](/docs/engineering/frontend-conventions) — routes, API clients, forms, surfaces
-4. [Date / Time / Timezone](/docs/engineering/datetime-and-timezones) — instants, civil dates, service timezone resolution
+1. [Domain-to-Code Mapping](/docs/engineering/conventions/domain-to-code-mapping) — actors, bounded contexts → folders, route namespaces
+2. [Backend Conventions](/docs/engineering/conventions/backend) — API structure, request lifecycle, DBML/migrations
+3. [Frontend Conventions](/docs/engineering/conventions/frontend) — routes, API clients, forms, surfaces
+4. [Date / Time / Timezone](/docs/engineering/conventions/datetime-and-timezones) — instants, civil dates, service timezone resolution
 
 ### With domain context (already in planning set)
 
 Read in parallel with:
 
-- [../business-rules/glossary.md](/docs/business-rules/glossary)
-- [../business-rules/business-rules.md](/docs/business-rules/invariants)
-- [../architecture/bounded-contexts.md](/docs/architecture/bounded-contexts)
-- [../domain/domain-models.md](/docs/domain/domain-models)
+- [/docs/product/business-rules/glossary](/docs/product/business-rules/glossary)
+- [../product/business-rules/invariants](/docs/product/business-rules/invariants)
+- [../architecture/contexts](/docs/architecture/contexts)
+- [/docs/architecture/domain/domain-models](/docs/architecture/domain/domain-models)
 
 ---
 
@@ -77,9 +77,9 @@ Engineering conventions **must not** override invariants, context ownership, or 
 
 | Layer | Where documented | Examples |
 | --- | --- | --- |
-| **Baseline patterns** | [Backend](/docs/engineering/backend-conventions) / [Frontend](/docs/engineering/frontend-conventions) convention docs | Request lifecycle, Sorbet sigs, soft delete, pagination, Team layout nesting, env gating |
+| **Baseline patterns** | [Backend](/docs/engineering/conventions/backend) / [Frontend](/docs/engineering/conventions/frontend) convention docs | Request lifecycle, Sorbet sigs, soft delete, pagination, Team layout nesting, env gating |
 | **Red Cab domain rules** | Same docs + business rules + ADRs | No client price, snapshot immutability, seat reservation guard, Corporate ACL |
-| **Actor / folder mapping** | [Domain-to-Code Mapping](/docs/engineering/domain-to-code-mapping) | `marketplace/` vs `tourists/`, surface → route groups |
+| **Actor / folder mapping** | [Domain-to-Code Mapping](/docs/engineering/conventions/domain-to-code-mapping) | `marketplace/` vs `tourists/`, surface → route groups |
 
 When scaffolding `.ai/instructions.md` in each repo, copy the baseline patterns verbatim and append Red Cab–specific rules from this folder.
 
