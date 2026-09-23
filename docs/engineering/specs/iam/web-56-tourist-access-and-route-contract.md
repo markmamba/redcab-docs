@@ -15,7 +15,7 @@ depends_on:
 ## TL;DR
 
 - **Locks:** the `AMB-022` disposition (public browse, auth only at checkout), the canonical public URL family (`/districts/{districtSlug}/areas/{areaSlug}/listings[/{listingUuid}]`), the per-surface auth-gate/SEO matrix, and the `/account/discover/*` redirect plan.
-- **Does NOT ship:** no route files move and no code changes land under this issue — that is `#60` (route migration), `#58` (layout shell unification), and `#57` (breadcrumbs/sitemap/deep-links). This issue is docs + spec only.
+- **Does NOT ship:** no route files move and no code changes land under this issue — that is `#60` (route migration), `#58` (layout shell unification), and a follow-on web issue for breadcrumbs/sitemap/deep-links (contract in [`web-57`](/docs/engineering/specs/cat/web-57-tourist-ia-breadcrumbs-deep-links); GitHub `#57` closed docs-only). This issue is docs + spec only.
 - **Breaking URL change: Yes.** Public catalog browsing moves from the auth-gated `/account/discover/:districtId/:areaId/:listingId` to the unauthenticated, slug-based paths below. A redirect matrix is defined in [Redirect / migration](#redirect--migration) but is implemented in `#60`.
 
 ## Problem
@@ -34,7 +34,7 @@ Evidence and verdicts for each row are recorded in the Session A alignment matri
 | --- | --- | --- |
 | FR-IAM-012 | [/docs/product/requirements/functional-requirements/iam.md](/docs/product/requirements/functional-requirements/iam) | Guest browse is an observable behavior requirement; status moves `Provisional (AMB-022)` → `Approved` per this spec |
 | FR-CAT-003 | [/docs/product/requirements/functional-requirements/cat.md](/docs/product/requirements/functional-requirements/cat) | District/area discovery is unauthenticated; `INV-8` hides zero-listing geography; `FR-CAT-003` "no available services" applies within discoverable areas (filters/date), not empty geography |
-| FR-CAT-004 | [/docs/product/requirements/functional-requirements/cat.md](/docs/product/requirements/functional-requirements/cat) | District → Area hierarchy in URL and navigation IA; breadcrumb UI and data contract are `#57`, not this spec |
+| FR-CAT-004 | [/docs/product/requirements/functional-requirements/cat.md](/docs/product/requirements/functional-requirements/cat) | District → Area hierarchy in URL and navigation IA; breadcrumb data contract in `web-57` spec; UI in follow-on web issue — not this spec |
 | FR-CAT-005 | [/docs/product/requirements/functional-requirements/cat.md](/docs/product/requirements/functional-requirements/cat) | Listing discovery within an area is unauthenticated |
 | FR-CAT-007 | [/docs/product/requirements/functional-requirements/cat.md](/docs/product/requirements/functional-requirements/cat) | Listing detail (indicative pricing) is unauthenticated |
 | NFR-SEC-005 | [requirements/non-functional-requirements.md](/docs/product/requirements/non-functional-requirements) | Auth is required only at booking/checkout initiation; status moves `Provisional (AMB-022)` → `Approved` |
@@ -89,12 +89,12 @@ _No API code changes are proposed or implemented by this issue._ `red-cab-web` i
 | Checkout return | `/account/checkout/return` | `app/tourist.routes.js` (unchanged) | existing | `TouristDashboardLayout` | `withTouristAuth` | existing | `tourists-bookings-checkout-sessions-api` | `noindex, nofollow` |
 | Bookings list | `/account/bookings` | `app/tourist.routes.js` (unchanged) | existing | `TouristDashboardLayout` | `withTouristAuth` | existing | `tourists-bookings-booking-api.index` | `noindex, nofollow` |
 | Booking detail | `/account/bookings/:bookingId` | `app/tourist.routes.js` (unchanged) | existing | `TouristDashboardLayout` | `withTouristAuth` | existing | `tourists-bookings-booking-api.show` | `noindex, nofollow` |
-| Sitemap | `/sitemap.xml` | `routes/marketplace/sitemap.xml.js` (resource route; **`#57`**) | resource route, not a page | — | none | `loader` (`#57`) | `marketplace-catalog-districts-api` (`#57`) | n/a |
+| Sitemap | `/sitemap.xml` | `routes/marketplace/sitemap.xml.js` (resource route; contract in **`web-57`**) | resource route, not a page | — | none | `loader` (follow-on web issue) | `marketplace-catalog-districts-api` (follow-on web issue) | n/a |
 
 **Web contract notes**
 
 - **Home (`#59`):** Path and `index, follow` robots are locked here. No server `loader` or catalog API call until `#59` ships. Homepage district data requires a **new API capability** (featured filter or dedicated endpoint) — **not** a reuse of `marketplace-catalog-districts-api.index` with client-side picking. `#60` does not modify `home-page.jsx` except layout wiring `#58` may require.
-- **Sitemap (`#57`):** `/sitemap.xml` path is locked here; resource-route registration, loader, and XML generation ship in `#57`.
+- **Sitemap:** `/sitemap.xml` path is locked here; resource-route registration, loader, and XML generation ship in a **follow-on web issue** — contract in [`web-57`](/docs/engineering/specs/cat/web-57-tourist-ia-breadcrumbs-deep-links) (GitHub `#57` closed docs-only).
 - **API method names:** Match `app/api/marketplace-catalog-*-api.js` exports — `index`, `show`, `areasIndex`, `areaShow`, `indexByArea`. After `#134`, loaders pass **slug** path segments; method names stay unchanged.
 - **Canonical tags:** Each indexable catalog row above (not Home until `#59`, not account routes, not the `/listings/:uuid` alias) emits `<link rel="canonical" href="…">` pointing at its path **without** pagination or filter query params (`page`, `service_type`, `order_by`, `order_dir`, `date`). Listing detail canonical uses the slug path with listing UUID segment.
 
@@ -105,7 +105,7 @@ Reserved query params on the listings-in-area route (no new path segments for th
 - `app/public.routes.js` → rename to `app/marketplace.routes.js` (same `marketplaceRoutes` export)
 - Discover subtree in `app/tourist.routes.js` → move into `app/marketplace.routes.js`
 - `app/routes/tourist/catalog-district/tourist-catalog-*` (5 modules) → `app/routes/marketplace/catalog-district/marketplace-catalog-*`
-- `tourist-catalog-district-page-layout.jsx` → `marketplace-catalog-district-page-layout.jsx`: drop `withTouristAuth`, flip robots, convert `clientLoader` → `loader`; update geography nav links to slug paths only — full breadcrumb data contract and UI are `#57`
+- `tourist-catalog-district-page-layout.jsx` → `marketplace-catalog-district-page-layout.jsx`: drop `withTouristAuth`, flip robots, convert `clientLoader` → `loader`; update geography nav links to slug paths only — full breadcrumb data contract and UI in follow-on web issue per `web-57`
 - `catalog-listing-constant.js`: delete `TOURIST_DISCOVER_PATH`; add `MARKETPLACE_CATALOG_PATHS` with `DISTRICTS`, `district(districtSlug)`, `areaListings(districtSlug, areaSlug)`, `listing(districtSlug, areaSlug, listingUuid)`
 - `catalog-listing-service.js`: replace `buildDiscoverPath(districtId, areaId)` / `buildListingDetailPath(districtId, areaId, listingId)` with slug-taking builders; `buildCheckoutPath` unchanged; split checkout eligibility so guests with a valid quote can reach login via Book (Design decision #5)
 - `tourist-dashboard-layout.jsx`, `tourist-public-layout.jsx`: nav "Discover" link target becomes `/districts` (label wording is `#58`'s call)
@@ -157,7 +157,7 @@ Districts index (`/districts`) has no slug segment to validate. Bare `/districts
 
 ## Out of scope
 
-- **`#57`** — IA sitemap, breadcrumbs data contract, deep-link UX (how stale-slug redirects surface to the user), `/listings/:uuid` alias in deep-link section. Stale-slug **301 rules** are locked here; `#60` implements them.
+- **`web-57`** — IA sitemap entry rules, breadcrumbs data contract, deep-link UX (how stale-slug redirects surface to the user), `/listings/:uuid` alias in deep-link section — **docs in `web-57` spec**; web implementation is a follow-on issue. Stale-slug **301 rules** are locked here; `#60` implements them.
 - **`#58`** — Unified tourist layout shell (nav items, mobile pattern, footer, shared empty/error/loading states). Implementation, not this spec.
 - **`#59`** — Homepage content, district hub internal-linking, and the **featured-district API** (new filter or endpoint — not `marketplace-catalog-districts-api.index` reuse). Implementation, not this spec.
 - **`#60`** — Route migration implementation: file moves, HOC removal, `clientLoader`→`loader` conversion, redirect implementation, robots flip. This spec is `#60`'s design input, not its code.
@@ -205,7 +205,7 @@ Districts index (`/districts`) has no slug segment to validate. Bare `/districts
 - [x] Target route map agreed and recorded — see Web contract table
 - [x] Auth gate matrix documented per surface — Web contract `Auth HOC` column; checkout route gated by `withTouristAuth`; Book CTA uses conditional login redirect for guests (Design decision #5)
 - [x] Stale-slug 301 on all catalog loaders documented — Redirect / migration matrix + stale-slug detection table
-- [x] SEO meta rules documented — Web contract `meta robots` column; `<link rel="canonical">` rule in Web contract notes; sitemap path locked here, generation in `#57`
+- [x] SEO meta rules documented — Web contract `meta robots` column; `<link rel="canonical">` rule in Web contract notes; sitemap path locked here, generation in follow-on web issue per `web-57`
 - [x] Canonical tags documented — each indexable catalog route emits `<link rel="canonical">` at the slug path without pagination/filter query params (Web contract notes); corpus rule in `frontend.md`
 - [x] Redirect/migration plan documented for all path changes — see Redirect / migration section, all rows sourced from Session A §3.3
 - [x] Spec cites `geography.md` URL hierarchy — Governing docs + Design decision #2

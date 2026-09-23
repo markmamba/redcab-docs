@@ -146,11 +146,11 @@ Home
                 → Bookings list
 ```
 
-**Deliverables:**
+**Deliverables** (locked in [web-57 spec](/docs/engineering/specs/cat/web-57-tourist-ia-breadcrumbs-deep-links)):
 
-- [ ] Sitemap with layout assignment (public shell vs account shell)
-- [ ] Breadcrumb rules per level (geography nav + booking context)
-- [ ] Back-navigation and deep-link rules (shareable listing URLs)
+- [x] Sitemap with layout assignment (public shell vs account shell)
+- [x] Breadcrumb rules per level (geography nav + booking context)
+- [x] Back-navigation and deep-link rules (shareable listing URLs)
 
 ### A3 — Layout shell + navigation
 
