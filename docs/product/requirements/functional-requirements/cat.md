@@ -37,10 +37,12 @@ When Admin deactivates or archives a geography node with active Listings anywher
 ### FR-CAT-003 — Discovery of districts and areas
 The system **shall** present only discovery roots (Districts) and listable nodes (Areas) whose subtree contains at least one Published Listing, and **shall** indicate when an area has no available services.
 - Source: B-01, B-02. Governs: INV-8. Status: Approved.
+- **Access:** Unauthenticated per `AMB-022` Option A (`FR-IAM-012`, `NFR-SEC-005`) — visitors may browse districts and areas without an account; auth is required only at checkout initiation. Route contract: [web-56 spec](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract).
 
 ### FR-CAT-004 — Primary discovery navigation
 The system **shall** allow Tourists to discover services through the location hierarchy (District then Area). The two-level navigation is a projection of a deeper administrative tree. Service type **shall** be available as a filter, not as the primary navigation axis.
 - Source: B-01–B-03. Status: Approved (Decision Log `AMB-020`).
+- **Access:** Unauthenticated per `AMB-022` Option A — same as `FR-CAT-003`; public URL family `/districts/{districtSlug}/areas/{areaSlug}/listings`.
 
 ### FR-CAT-005 — Service list presentation
 The system **shall** present, for a selected Area, each Published Listing with at least its service name, provider name, representative photo, starting price, service type, rating, and review count.

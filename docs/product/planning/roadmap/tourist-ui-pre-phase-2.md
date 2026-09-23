@@ -46,7 +46,7 @@ Phase 1 and Phase 2 roadmaps list **functional web deliverables** (pages that ex
 | Discover funnel (`/account/discover/…`) | Implemented; auth-gated |
 | Listing detail, checkout, bookings | Implemented |
 | Homepage `/` | Phase 0 placeholder; not linked to discover |
-| Public discover (guest browse) | Not aligned with `FR-IAM-012` / provisional `AMB-022` |
+| Public discover (guest browse) | Not implemented — `AMB-022` resolved (public browse); route contract in [web-56 spec](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract) |
 | Near-me / map pins | Not started |
 | Phase 2 UI slots (filter bar, review, cancel) | Not scaffolded |
 
@@ -122,7 +122,7 @@ Plan and implement in this sequence. Skipping a step causes rework.
 > | `/discover`, `/discover/*` | `/districts` | 301 (defensive) |
 > | `/listings/:listingUuid` | canonical nested listing path | 302 |
 >
-> Legacy `/account/discover/*` redirects accept UUID segments during the `API-1` transition window. Retained one release after cutover, then removed by `WEB-1`.
+> Legacy `/account/discover/*` redirects accept UUID segments during the [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) transition window. Retained one release after cutover, then removed by `WEB-1`.
 
 ### A2 — Information architecture
 
@@ -263,8 +263,9 @@ Audit baseline for checklist marks (update when verifying `red-cab-web/`):
 | Checkout + return | `[~]` | Functional under `/account/checkout` |
 | Bookings list + detail | `[~]` | Functional |
 | Homepage in funnel | `[ ]` | Still Phase 0 placeholder |
-| Public discover (`AMB-022`) | `[ ]` | IA mismatch |
-| Unified tourist shell | `[ ]` | Two layouts; nav not aligned |
+| Public discover (`AMB-022`) | `[ ]` | Contract locked in web-56 spec; code still auth-gated under `/account/discover` (`#60`) |
+| Listing detail public URL | `[ ]` | Contract locked; implementation in `#60` |
+| Unified tourist shell | `[ ]` | Two layouts; nav not aligned (`#58`) |
 | Near-me / maps | `[ ]` | Not started |
 | Phase 2 placeholder slots | `[ ]` | Not scaffolded |
 
@@ -277,7 +278,7 @@ Legend: `[x]` done · `[~]` partial · `[ ]` not started (same as [roadmap overv
 **red-cab-web**
 
 - [ ] Milestone A decisions recorded (access model + route map + layout assignment)
-- [ ] A visitor can traverse Home → Discover → Listing without signing in (**if** provisional `AMB-022` stands)
+- [ ] A visitor can traverse Home → Discover → Listing without signing in (`AMB-022` Option A — public browse, auth at checkout only)
 - [ ] A logged-in tourist can complete Book → Checkout → Booking detail without dead-end navigation
 - [ ] One consistent header (and footer) across public and account tourist surfaces
 - [ ] Every Phase 2 tourist capability in [Phase 2 deliverables](/docs/product/planning/roadmap/phase-2-marketplace-depth) has a named UI slot on an existing page

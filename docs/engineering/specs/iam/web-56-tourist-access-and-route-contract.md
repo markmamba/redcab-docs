@@ -58,7 +58,7 @@ Evidence and verdicts for each row are recorded in the Session A alignment matri
 | 5 | The **auth gate on the checkout route** stays at `/account/checkout` (`withTouristAuth`, unchanged). Public listing detail always renders its Book CTA with a **conditional target:** (a) logged-in tourist with complete profile and a valid quote → `buildCheckoutPath` (`/account/checkout?…`); (b) guest with valid quote (slot selected) → `buildIdentitiesLoginRedirect(checkoutPath)` (`/login?redirect_to=…`); (c) no slot / incomplete quote → disabled button (existing “choose date and time” messaging). The CTA does **not** rely on `withTouristAuth` — guests never navigate to checkout directly from Book. | Gate via checkout-only redirect (`withTouristAuth` bounce — rejected for guests: causes an extra hop and flashes the protected route); disabled Book for all guests (rejected — contradicts Option A); “sign in to see pricing” interstitial (rejected — explicitly excluded by Product Owner) | Keeps the checkout **route** as the auth boundary while giving guests a single explicit login handoff with quote params preserved in `redirect_to`. Reuse `identities-auth-utils.js` `buildIdentitiesLoginRedirect` for URL shape consistency with login-page `redirect_to` handling. |
 | 6 | Public routes render via **server `loader`**, not `clientLoader`, and are marked **`index, follow`**. Account routes (`/account/**`) stay `noindex, nofollow` and may keep `clientLoader`/existing patterns. | Leave `clientLoader` and add a robots flip only (rejected — with SEO priority high, crawlers must receive server-rendered content, not an empty shell) | `ky-client.js` already forwards SSR cookies, so marketplace API modules work unchanged from a server loader; this is a rendering-mode fix, not just a meta-tag fix. |
 | 7 | Redirects from all `/account/discover/*` paths are **301** (permanent — no accumulated SEO equity since those paths were `noindex`, but bookmarks must survive). The `/listings/:listingUuid` alias redirect is **302** (target varies with the listing's current area). Legacy redirects are retained **one release** after cutover, then removed by a separate cleanup issue (`WEB-1`). | Skip legacy redirects entirely (rejected — breaks existing bookmarks/shared links immediately); keep legacy redirects permanently (rejected — indefinite dead-code maintenance cost for auth-gated, unindexed paths) | 301 signals a permanent move for the (rare) case any crawler indexed an auth-gated path; 302 for the alias is correct because its destination is not stable across a listing's lifetime (area reassignment). |
-| 8 | District/Area slug resolution on the API is **deferred to new `red-cab-api` issues (`API-1`, `API-2`)** — out of scope for `#56` and for `#60`'s web-only work, but a **hard dependency** of `#60`. `#56` documents the API gap; it does not resolve it. | Have `#56`/`#60` implement the API resolver inline (rejected — `#56` and `#60` are web-repo issues; API work needs its own spec and PR in `red-cab-api`); ship `#60` on UUID paths and slug-ify later (rejected — would require a second migration and contradicts the locked URL scheme) | Keeps `#56` a docs-only, single-repo issue per its own acceptance criteria, while making the cross-repo dependency explicit so `#60` is not scheduled before `API-1`/`API-2` land. |
+| 8 | District/Area slug resolution and district embed in listing DTO are **delivered in `red-cab-api#134`** (geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130)). Session A labels `API-1`/`API-2` remain traceability aliases in specs only — do not file duplicate issues. | Have `#56`/`#60` implement the API resolver inline (rejected — `#56` and `#60` are web-repo issues; API work needs its own spec and PR in `red-cab-api`); ship `#60` on UUID paths and slug-ify later (rejected — would require a second migration and contradicts the locked URL scheme) | `#134` closed the API gap; `#60` can schedule once this spec's corpus amendments land. |
 
 ## API contract
 
@@ -67,11 +67,11 @@ _No API code changes are proposed or implemented by this issue._ `red-cab-web` i
 | Change | Verdict |
 | --- | --- |
 | Marketplace optional auth (`Marketplace::BaseController`) | **No change** — already supports guest browse; `CurrentRequest.identities_user` is nilable and rescued correctly |
-| District/area resolve by slug (`find_by(uuid:)` → `find_by(slug:)`) in `Catalog::Districts::MarketplaceShowManager`, `Catalog::Areas::MarketplaceIndexManager`, `Catalog::Areas::MarketplaceShowManager`, `Catalog::Listings::MarketplaceIndexManager` | **Deferred** — tracked as new issue **`API-1`** in `red-cab-api` (rename route params to `:district_slug`/`:area_slug`, introduce one geography resolver service, temporary UUID fallback during cutover). **Blocks `#60`.** |
-| Embed District (uuid, slug, names) in `MarketplaceAreaEmbeddedSerializer` / listing detail DTO | **Deferred** — tracked as new issue **`API-2`** in `red-cab-api` (needed so the web can build canonical paths and breadcrumbs from a listing payload alone, without a second district fetch). **Blocks `#60`**, parallel with `API-1`. |
+| District/area resolve by slug (`find_by(uuid:)` → `find_by(slug:)`) in `Catalog::Districts::MarketplaceShowManager`, `Catalog::Areas::MarketplaceIndexManager`, `Catalog::Areas::MarketplaceShowManager`, `Catalog::Listings::MarketplaceIndexManager` | **Delivered** — [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) / spec [`api-134-marketplace-geography-slug-and-ancestors`](/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) (Session A alias `API-1`). |
+| Embed District (uuid, slug, names) in `MarketplaceAreaEmbeddedSerializer` / listing detail DTO | **Delivered** — same [`#134`](https://github.com/markmamba/red-cab-api/issues/134) PR (Session A alias `API-2`). |
 | Listing-level `slug` column and slug-based listing URLs | **Deferred beyond this track** — tracked as `CAT-1`, Phase 2 candidate. `#56` keeps the listing URL segment as UUID for Phase 1. |
 
-`#60`'s acceptance criteria must include `API-1` and `API-2` as dependencies, not sub-tasks — they are filed and implemented in `red-cab-api` on their own spec/PR.
+`#60`'s acceptance criteria must cite [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) (epic [#130](https://github.com/markmamba/red-cab-api/issues/130)) as the API dependency — not unfilled `API-1`/`API-2` placeholders.
 
 ## Web contract
 
@@ -95,7 +95,7 @@ _No API code changes are proposed or implemented by this issue._ `red-cab-web` i
 
 - **Home (`#59`):** Path and `index, follow` robots are locked here. No server `loader` or catalog API call until `#59` ships. Homepage district data requires a **new API capability** (featured filter or dedicated endpoint) — **not** a reuse of `marketplace-catalog-districts-api.index` with client-side picking. `#60` does not modify `home-page.jsx` except layout wiring `#58` may require.
 - **Sitemap (`#57`):** `/sitemap.xml` path is locked here; resource-route registration, loader, and XML generation ship in `#57`.
-- **API method names:** Match `app/api/marketplace-catalog-*-api.js` exports — `index`, `show`, `areasIndex`, `areaShow`, `indexByArea`. After `API-1`, loaders pass **slug** path segments; method names stay unchanged.
+- **API method names:** Match `app/api/marketplace-catalog-*-api.js` exports — `index`, `show`, `areasIndex`, `areaShow`, `indexByArea`. After `#134`, loaders pass **slug** path segments; method names stay unchanged.
 - **Canonical tags:** Each indexable catalog row above (not Home until `#59`, not account routes, not the `/listings/:uuid` alias) emits `<link rel="canonical" href="…">` pointing at its path **without** pagination or filter query params (`page`, `service_type`, `order_by`, `order_dir`, `date`). Listing detail canonical uses the slug path with listing UUID segment.
 
 Reserved query params on the listings-in-area route (no new path segments for these, ever): `service_type` (`D-02` filter), `order_by`, `order_dir`, `page`, `date`.
@@ -126,7 +126,7 @@ Reserved query params on the listings-in-area route (no new path segments for th
 | Canonical listing-detail path with stale district or area slug | canonical nested listing path | 301 |
 | Canonical path where the listing UUID is unknown or unpublished | 404 | none |
 
-Legacy `/account/discover/*` redirects accept UUID segments and depend on the API accepting either key during the transition window (`API-1`'s fallback). They ship in `#60`, are retained for one release, then removed by `WEB-1`.
+Legacy `/account/discover/*` redirects accept UUID segments and depend on the API accepting either key during the transition window (`#134`'s UUID fallback). They ship in `#60`, are retained for one release, then removed by `WEB-1`.
 
 **Path constant locations to update (in `#60`):**
 
@@ -143,13 +143,13 @@ Legacy `/account/discover/*` redirects accept UUID segments and depend on the AP
 | --- | --- | --- |
 | `/districts/:districtSlug` | `marketplace-catalog-districts-api.show` | `:districtSlug` vs `catalog_district.slug` |
 | `/districts/:districtSlug/areas/:areaSlug/listings` | `marketplace-catalog-districts-api.areaShow` (or area embed from index) | `:districtSlug`, `:areaSlug` vs district/area slugs in response |
-| `/districts/:d/areas/:a/listings/:listingUuid` | `marketplace-catalog-listings-api.show` | `:districtSlug`, `:areaSlug` vs embedded district/area slugs (`API-2`) |
+| `/districts/:d/areas/:a/listings/:listingUuid` | `marketplace-catalog-listings-api.show` | `:districtSlug`, `:areaSlug` vs embedded district/area slugs (`#134`) |
 
 Districts index (`/districts`) has no slug segment to validate. Bare `/districts/:d/areas/:a` (no `/listings`) is handled by the dedicated 301 row above, not by payload comparison.
 
 ## Data / domain touchpoints
 
-- **Slug fields:** `catalog_districts.slug` (unique) and `catalog_areas.slug` (unique per district) already exist and are already serialized by the API — only the *lookup* by slug (`API-1`) is missing, not the column.
+- **Slug fields:** `catalog_districts.slug` (unique) and `catalog_areas.slug` (unique per district) already exist and are serialized by the API; slug lookup is delivered in [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134).
 - **Listing identification:** `catalog_listings` has `uuid`, no slug column. Listing segment stays UUID for Phase 1; slug-based listing URLs are `CAT-1`, deferred to Phase 2.
 - **Quote/checkout handoff:** listing + slot context passes from public listing detail to checkout via `catalog-listing-service.js`'s `buildCheckoutPath` (listing UUID, slot UUID, passenger count) — query param shape **unchanged**, preserving `PRC-2` input parity. Book CTA routing per Design decision #5: authenticated tourist with profile → `buildCheckoutPath`; guest with valid quote → `buildIdentitiesLoginRedirect(checkoutPath)`; no slot → disabled.
 - **`FR-CAT-003` vs `INV-8`:** `INV-8` means Districts/Areas with zero **published** listings never appear in discovery — public browse does not widen geography. `FR-CAT-003`'s "indicate when an area has no available services" applies only within a **discoverable** area (e.g. filter/date yields zero results, or `FR-CAT-006` fully-booked marking) — not for zero-listing geography.
@@ -164,7 +164,7 @@ Districts index (`/districts`) has no slug segment to validate. Bare `/districts
 - **`#61`** — Closed, absorbed into `#60` (listing detail leaf cannot ship separately from its parent route tree without a broken intermediate state).
 - **`#62`+** — Funnel/checkout alignment implementation (reasserts checkout as the single auth gate; no design change here).
 - **Listing slug field + API (`CAT-1`)** — deferred beyond this track to Phase 2.
-- **`API-1`, `API-2`** — API-side slug resolution and district-embed work. Documented here as a dependency of `#60`; implemented and spec'd in `red-cab-api`, not in this issue.
+- **`API-1`, `API-2` (aliases)** — Delivered as [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134); no duplicate issues.
 - **Phase 2 placeholder slots (`#68`)** — not addressed.
 
 ## Tasks
@@ -177,12 +177,12 @@ Districts index (`/districts`) has no slug segment to validate. Bare `/districts
 - [x] P0: `roadmap/phase-1-mvp.md` — remove "Defer guest-scope UI" from the open decisions table; move `AMB-022` into the applied-decisions paragraph as public browse with auth at checkout
 - [x] P0: `roadmap/tourist-ui-pre-phase-2.md` — replace the provisional A1 route map with this spec's Web contract table; replace the migration note with this spec's Redirect / migration section; drop "working assumption" framing
 - [x] P0: `engineering/domain-to-code-mapping.md` — update frontend surface → route groups table (`/`, `/districts`, `/districts/:d/areas/:a/listings`); confirm `marketplace.routes.js`; state guest discovery resolves to `marketplace/` with optional auth
-- [ ] P1: `architecture/geography.md` — add note that Listing segment is UUID at Phase 1, that slug changes require a 301 from the prior slug, and that slug is the public lookup key for districts/areas
-- [ ] P1: `engineering/frontend-conventions.md` — add canonical-tag rule, sitemap resource route, and the rule that indexable public routes use server `loader` not `clientLoader`
-- [ ] P1: `roadmap/tourist-ui-pre-phase-2.md` — drop conditional "if provisional `AMB-022` stands" language; refresh implementation-snapshot rows for public discover and listing detail
-- [ ] P2: `requirements/functional-requirements/cat.md` — add cross-reference note on `FR-CAT-003`/`FR-CAT-004` that discovery is unauthenticated per `AMB-022` resolution
-- [ ] File new `red-cab-api` issues `API-1` (slug resolution) and `API-2` (district embed) with bodies per Session A §5/§8.4
-- [ ] Close `#61` as absorbed into `#60`; edit `#56`'s (this issue's) provisional route table reference to point at this spec; edit `#60`'s acceptance criteria to include listing detail, robots, SSR, and the `API-1`/`API-2` dependency
+- [x] P1: `architecture/geography.md` — add note that Listing segment is UUID at Phase 1, that slug changes require a 301 from the prior slug, and that slug is the public lookup key for districts/areas
+- [x] P1: `engineering/conventions/frontend.md` — add canonical-tag rule, sitemap resource route, and the rule that indexable public routes use server `loader` not `clientLoader`
+- [x] P1: `roadmap/tourist-ui-pre-phase-2.md` — drop conditional "if provisional `AMB-022` stands" language; refresh implementation-snapshot rows for public discover and listing detail
+- [x] P2: `requirements/functional-requirements/cat.md` — add cross-reference note on `FR-CAT-003`/`FR-CAT-004` that discovery is unauthenticated per `AMB-022` resolution
+- [x] API dependency — delivered as [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) under epic [#130](https://github.com/markmamba/red-cab-api/issues/130); `API-1`/`API-2` are traceability aliases only
+- [x] Close `#61` as absorbed into `#60`; edit `#56`'s (this issue's) provisional route table reference to point at this spec; edit `#60`'s acceptance criteria to include listing detail, robots, SSR, and the `red-cab-api#134` dependency
 
 ### Web (deferred to `#60` unless noted)
 
@@ -197,22 +197,22 @@ Districts index (`/districts`) has no slug segment to validate. Bare `/districts
 
 ### API
 
-- [ ] None for `#56`. `API-1` (slug resolution) and `API-2` (district embed) are separate `red-cab-api` issues, blocking `#60`, tracked in the Docs tasks above.
+- [x] None for `#56`. Slug resolution and district embed delivered in [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134).
 
 ## Acceptance criteria
 
-- [ ] Written decision on guest browse vs auth-gated discover — `AMB-022` = Option A, recorded in Design decisions #1
-- [ ] Target route map agreed and recorded — see Web contract table
-- [ ] Auth gate matrix documented per surface — Web contract `Auth HOC` column; checkout route gated by `withTouristAuth`; Book CTA uses conditional login redirect for guests (Design decision #5)
-- [ ] Stale-slug 301 on all catalog loaders documented — Redirect / migration matrix + stale-slug detection table
-- [ ] SEO meta rules documented — Web contract `meta robots` column; `<link rel="canonical">` rule in Web contract notes; sitemap path locked here, generation in `#57`
-- [ ] Canonical tags documented — each indexable catalog route emits `<link rel="canonical">` at the slug path without pagination/filter query params (Web contract notes)
-- [ ] Redirect/migration plan documented for all path changes — see Redirect / migration section, all rows sourced from Session A §3.3
-- [ ] Spec cites `geography.md` URL hierarchy — Governing docs + Design decision #2
-- [ ] Spec states listing segment = UUID for Phase 1 — Design decision #2, Data/domain touchpoints
-- [ ] No client-side price computation (`PRC-1`) — reaffirmed in Governing docs and Data/domain touchpoints; public pages display server-computed indicative pricing only
-- [ ] `INV-8` reaffirmed — zero-listing Districts/Areas stay hidden even though browse is now public (Governing docs)
-- [ ] API gap (`API-1`, `API-2`) documented as a dependency of `#60`, not silently absorbed into web scope (API contract section)
+- [x] Written decision on guest browse vs auth-gated discover — `AMB-022` = Option A, recorded in Design decisions #1
+- [x] Target route map agreed and recorded — see Web contract table
+- [x] Auth gate matrix documented per surface — Web contract `Auth HOC` column; checkout route gated by `withTouristAuth`; Book CTA uses conditional login redirect for guests (Design decision #5)
+- [x] Stale-slug 301 on all catalog loaders documented — Redirect / migration matrix + stale-slug detection table
+- [x] SEO meta rules documented — Web contract `meta robots` column; `<link rel="canonical">` rule in Web contract notes; sitemap path locked here, generation in `#57`
+- [x] Canonical tags documented — each indexable catalog route emits `<link rel="canonical">` at the slug path without pagination/filter query params (Web contract notes); corpus rule in `frontend.md`
+- [x] Redirect/migration plan documented for all path changes — see Redirect / migration section, all rows sourced from Session A §3.3
+- [x] Spec cites `geography.md` URL hierarchy — Governing docs + Design decision #2
+- [x] Spec states listing segment = UUID for Phase 1 — Design decision #2, Data/domain touchpoints
+- [x] No client-side price computation (`PRC-1`) — reaffirmed in Governing docs and Data/domain touchpoints; public pages display server-computed indicative pricing only
+- [x] `INV-8` reaffirmed — zero-listing Districts/Areas stay hidden even though browse is now public (Governing docs)
+- [x] API dependency documented for `#60` — [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) / epic [#130](https://github.com/markmamba/red-cab-api/issues/130) (API contract section)
 
 ## Verification
 
@@ -232,3 +232,4 @@ Districts index (`/districts`) has no slug segment to validate. Bare `/districts
 | --- | --- | --- | --- |
 | 2026-09-20 | Mark | `review-implementation-spec` | Approved after should-fix pass |
 | 2026-09-20 | Mark | Author Q&A (Q1–Q4) | Approved — featured API → `#59`; all-loader slug 301; conditional Book CTA; 422 risk deferred to Session B |
+| 2026-09-23 | Mark | `review-implementation-spec` (corpus closeout) | Approved — P1/P2 corpus amendments (`geography.md`, `frontend.md`, `tourist-ui-pre-phase-2.md`, `cat.md`); API dependency refreshed to `red-cab-api#134` |
