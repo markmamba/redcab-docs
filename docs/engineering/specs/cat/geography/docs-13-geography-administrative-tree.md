@@ -36,7 +36,8 @@ Evidence: `red-cab-api/docs/db/catalog.dbml` (flat tables), `config/routes/marke
 | ADR-016 | [architecture/decisions/adr-016-geography-administrative-tree.md](/docs/architecture/decisions/adr-016-geography-administrative-tree.md) | Tree shape, C1, listable-leaf, path/successor |
 | INV-8, INV-11 | [/docs/product/business-rules/invariants](/docs/product/business-rules/invariants) | Subtree discoverability; archive never delete |
 | AMB-036 | [/docs/product/planning/open-questions](/docs/product/planning/open-questions) | Partial supersession — storage vs navigation |
-| Session A | [/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture.md) | Frozen URL family; slug-resolution gap (`API-1`, `API-2`) |
+| Session A | [/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture.md) | Frozen URL family; slug resolution + ancestor embed **delivered** in [`red-cab-api#134`](/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) (`API-1`/`API-2` traceability aliases) |
+| api-134 | [/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors](/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) | Delivered marketplace slug resolution (`API-1`) and listing-detail ancestor embed (`API-2`) |
 | Geography review | [/docs/engineering/specs/cat/geography/design-review-data-model](/docs/engineering/specs/cat/geography/design-review-data-model.md) | DBML §3.4, migration §4, API matrix §5 |
 | geography.md | [architecture/geography.md](/docs/architecture/patterns/geography) | Seed pipeline sources, admin workflow |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/engineering/conventions/domain-to-code-mapping) | Target storage shape; manager surface names |
@@ -539,11 +540,11 @@ bundle exec rubocop
 
 | Consumer | Dependency |
 | --- | --- |
-| tourist-web-56 | Slug params + resolver (`API-1`); spec path in `depends_on` |
-| tourist-web-57 | Ancestor embed on listing detail (`API-2`) for breadcrumbs |
-| tourist-web-58 | Sequence after geography API lands |
-| tourist-web-60 | Blocks on `API-1` + `API-2`; UUID fallback until one release after #60 |
-| red-cab-api#130 | Parent epic for all API tasks above |
+| tourist-web-56 | Slug params + resolver — **delivered** via [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) (`API-1` alias); spec path in `depends_on` |
+| tourist-web-57 | Ancestor embed on listing detail — **delivered** via [`#134`](https://github.com/markmamba/red-cab-api/issues/134) (`API-2` alias); IA/breadcrumb contract in [`web-57-tourist-ia-breadcrumbs-deep-links`](/docs/engineering/specs/cat/web-57-tourist-ia-breadcrumbs-deep-links) |
+| tourist-web-58 | Sequence after [`web-57`](/docs/engineering/specs/cat/web-57-tourist-ia-breadcrumbs-deep-links) spec approved |
+| tourist-web-60 | Depends on [`#134`](https://github.com/markmamba/red-cab-api/issues/134) (delivered); UUID fallback until one release after #60 |
+| red-cab-api#130 | Parent epic for geography API work; steps 10–11 closed in [`#134`](https://github.com/markmamba/red-cab-api/issues/134) |
 
 Public URLs unchanged: `/districts/{districtSlug}/areas/{areaSlug}/listings[/{listingUuid}]` (Session A).
 
