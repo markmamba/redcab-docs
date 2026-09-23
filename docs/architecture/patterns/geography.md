@@ -176,6 +176,7 @@ The two-level navigation is a **projection** of a deeper administrative tree —
 - `{areaSlug}` resolves to a listable node within that discovery root's namespace (`discovery_root_id` + `slug`).
 - Listing segment is UUID at Phase 1 (no listing slug column).
 - Slug is the public lookup key for districts and areas (Session A §5 — delivered by geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130)).
+- When the URL slug does not match the authoritative slug in the API payload (including after admin rename), the web **shall** respond with a **301** redirect from the requested path to the current canonical path (stale-slug detection in catalog loaders — see [web-56 redirect matrix](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract#redirect--migration)).
 
 ### Near me (`FR-CAT-032`)
 

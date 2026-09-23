@@ -146,6 +146,19 @@ Supported formats: string, `{ label, isClickable }`, or function `({ params }) =
 - Public discovery: `index, follow`
 - Authenticated tourist / corporate / provider / admin: `noindex, nofollow`
 
+### SEO / public catalog routes
+
+Public catalog routes (`/`, `/districts`, `/districts/:districtSlug`, listings funnel) follow the [web-56 route contract](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract):
+
+| Rule | Convention |
+| --- | --- |
+| Server `loader` | Indexable public catalog pages use server `loader`, not `clientLoader`, so crawlers receive SSR content |
+| Canonical `<link>` | Each indexable catalog page emits `<link rel="canonical" href="…">` at its slug path **without** pagination or filter query params (`page`, `service_type`, `order_by`, `order_dir`, `date`) |
+| Sitemap | `/sitemap.xml` is a resource route (`routes/marketplace/sitemap.xml.js`) with a server `loader`; generation ships in `#57` |
+| Stale slugs | Catalog loaders compare URL slug segments to API payload slugs and `redirect(canonicalPath, 301)` when they differ |
+
+Account routes (`/account/**`) stay `noindex, nofollow` and may keep `clientLoader`.
+
 ---
 
 ## Auth HOCs

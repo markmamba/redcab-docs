@@ -233,7 +233,7 @@ Green is unauthenticated and indexable; red requires a tourist JWT and is `noind
 | #57 | #56 | #58 | IA, breadcrumbs, deep links. Breadcrumb data contract is now slug-driven; add the stale-slug 301 rule and the `/listings/:uuid` alias to its deep-link section |
 | #58 | #56 | #57 | Shell unification unchanged, plus: nav "Discover" target becomes `/districts` in both layouts |
 | #59 | #56, #58 | #60 | Homepage CTA targets `/districts`. Add district hub links for internal linking (SEO priority high) |
-| #60 | #56, #57, #58, **API-1** | #59 | **Enlarged**: absorbs #61, owns the route move, slug params, HOC removal, robots flip, `clientLoader` → `loader`, and the redirect matrix |
+| #60 | #56, #57, #58, [**#134**](https://github.com/markmamba/red-cab-api/issues/134) | #59 | **Enlarged**: absorbs #61, owns the route move, slug params, HOC removal, robots flip, `clientLoader` → `loader`, and the redirect matrix. API dependency delivered — see addendum |
 | #61 | — | — | **Close as absorbed into #60.** Splitting the listing leaf from its parent route tree leaves the tree broken between PRs |
 | #62 | #58, #60 | #63, #64 | Unchanged. Reassert that checkout is the single auth gate |
 | #63 | #58 | #62, #64 | Unchanged, plus: booking detail back-link uses the `/listings/:uuid` resolver alias |
@@ -243,14 +243,14 @@ Green is unauthenticated and indexable; red requires a tourist JWT and is `noind
 
 | Proposed issue | Repo | Depends on | Notes |
 | --- | --- | --- | --- |
-| **API-1** — resolve marketplace district and area path segments by slug | `red-cab-api` | — | Tracked as geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130). Rename route params to `:district_slug` / `:area_slug` in `marketplace_routes.rb`; introduce one geography resolver service against `catalog_geographies`; replace the four `find_by(uuid:)` lookups; temporary UUID fallback in the resolver so legacy redirects and the web cutover are not simultaneous. **Blocks #60** |
-| **API-2** — embed district in marketplace area and listing payloads | `red-cab-api` | — | Add a district embed (uuid, slug, names) to `MarketplaceAreaEmbeddedSerializer` / listing detail DTO so the web can build canonical paths and breadcrumbs from a listing payload. **Blocks #60** (parallel with API-1) |
+| **API-1** — resolve marketplace district and area path segments by slug | `red-cab-api` | — | **Delivered** as [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) (geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130); spec [`api-134-marketplace-geography-slug-and-ancestors`](/docs/engineering/specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors)). Session A traceability alias only — do not file a duplicate issue. |
+| **API-2** — embed district in marketplace area and listing payloads | `red-cab-api` | — | **Delivered** in the same [`#134`](https://github.com/markmamba/red-cab-api/issues/134) PR (Session A traceability alias). |
 | **API-3** — remove the UUID fallback from marketplace geography resolution | `red-cab-api` | API-1, #60 deployed | Deprecation cleanup in the PR-08 style; slug-only afterwards |
 | **WEB-1** — remove legacy `/account/discover` redirects | `red-cab-web` | #60 shipped one release | Drops the legacy tier from the redirect matrix |
 | **WEB-2** — sitemap.xml and canonical tags for public discovery | `red-cab-web` | #60 | Could fold into #60; kept separate so SEO plumbing is reviewable on its own |
 | **CAT-1** — add `slug` to `catalog_listings` and adopt slug listing URLs | `red-cab-api` + `red-cab-web` | API-1, #60 | Deferred beyond this track. Needs a DBML change, uniqueness scope, backfill, and a 301 from the UUID path |
 
-Critical path: **API-1 + API-2 → #60 → #61(closed)/#62** with #57, #58, #59 running alongside. API-1 and API-2 are small and independent of each other, so they can be one milestone even if they are two PRs.
+Critical path: **[`#134`](https://github.com/markmamba/red-cab-api/issues/134) (API-1 + API-2) → #60 → #61(closed)/#62** with #57, #58, #59 running alongside. `#134` closed the API gap; `#60` is unblocked on the API side once [web-56 corpus closeout](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract) lands.
 
 ---
 
@@ -285,3 +285,7 @@ Session B must produce, from this record and nothing new:
 7. **Two verification checklists** — a no-JavaScript fetch of every public route, and a redirect test per row of §3.3.
 
 Session B does not revisit `AMB-022`, the URL scheme, or the web/API split. Those are settled here.
+
+## Addendum (2026-09-23)
+
+Session A labels **API-1** and **API-2** are traceability aliases only. Both shipped in [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) under geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130). Readers of §5 should treat `#134` as the closed API dependency for web issue #60 — not an open API-1/API-2 gap. Authoritative access-model and redirect contract: [web-56 spec](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract).
