@@ -23,6 +23,7 @@ Cross-cutting **red-cab-web** plan for the Tourist App surfaces. Backend phasing
 | Frontend conventions | [Frontend conventions](/docs/engineering/conventions/frontend) |
 | Guest browsing (`AMB-022`) | [Open Questions](/docs/product/planning/open-questions) |
 | Discovery IA (`AMB-020`) | Decision Log — District → Area canonical |
+| Tourist UI + auth redesign | [Web platform program strategy](/docs/product/planning/web-platform-program-strategy) |
 
 ---
 
@@ -158,11 +159,12 @@ One tourist chrome across public and account surfaces.
 
 **red-cab-web**
 
-- [ ] Unify `TouristPublicLayout` and `TouristDashboardLayout` nav items (Discover, Bookings when logged in, Account, auth CTAs)
-- [ ] Mobile nav pattern (collapsible + primary CTA)
-- [ ] Footer (legal links, language hint, support contact placeholder)
-- [ ] Shared empty, error, and loading patterns for catalog and bookings domains
-- [ ] Minimal design tokens documented (Bootstrap-first; overrides in `_variables.scss` per [frontend conventions](/docs/engineering/conventions/frontend))
+- [x] Unify `TouristPublicLayout` and `TouristDashboardLayout` nav items (Districts, Bookings when logged in, Account, auth CTAs) — `#58`
+- [x] Mobile nav pattern (collapsible + primary CTA) — `#58`
+- [x] Footer (legal links, language hint, support contact placeholder) — `#58`
+- [x] Shared empty, error, and loading patterns for catalog and bookings domains — `#58` (`TouristEmptyState`, `TouristErrorState`, `TouristShellPending` on public loaders via `#60`)
+- [ ] Minimal design tokens documented (Bootstrap-first; overrides in `_variables.scss` per [frontend conventions](/docs/engineering/conventions/frontend)) — Milestone E / `#69`
+- [x] Tourist marketplace IAM in-shell chrome (`TouristAuthContent`) — `#64` / [web-64](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment)
 
 ---
 
@@ -253,21 +255,21 @@ Not required to start Milestone B, but recommended before high-traffic pages go 
 
 ## Current implementation snapshot
 
-Audit baseline for checklist marks (update when verifying `red-cab-web/`):
+Audit baseline aligned with `red-cab-web@c4ce884` (2026-09-26). Program sequencing: [Web platform program strategy](/docs/product/planning/web-platform-program-strategy).
 
 | Deliverable | Mark | Notes |
 | --- | --- | --- |
-| Auth + account profile | `[x]` | `/login`, `/sign-up`, `/account` |
-| Discover funnel pages | `[~]` | Under `/account/discover`; auth-gated |
-| Listing detail | `[~]` | Functional; public URL TBD |
-| Checkout + return | `[~]` | Functional under `/account/checkout` |
-| Bookings list + detail | `[~]` | Functional |
-| Homepage in funnel | `[ ]` | Still Phase 0 placeholder |
-| Public discover (`AMB-022`) | `[ ]` | Contract locked in web-56 spec; code still auth-gated under `/account/discover` (`#60`) |
-| Listing detail public URL | `[ ]` | Contract locked; implementation in `#60` |
-| Unified tourist shell | `[ ]` | Two layouts; nav not aligned (`#58`) |
-| Near-me / maps | `[ ]` | Not started |
-| Phase 2 placeholder slots | `[ ]` | Not scaffolded |
+| Auth + account profile | `[x]` | `/login`, `/sign-up`, `/account`; IAM in-shell chrome `#64` |
+| Discover funnel pages | `[x]` | Public `/districts/**` (`#60`); legacy `/account/discover` redirects |
+| Listing detail | `[x]` | Canonical nested public URL; resolver alias `/listings/:uuid` |
+| Checkout + return | `[x]` | `/account/checkout` + return (`#62`) |
+| Bookings list + detail | `[x]` | Tourist shell alignment (`#63`) |
+| Homepage in funnel | `[x]` | Discover entry (`#59`) |
+| Public discover (`AMB-022`) | `[~]` | Implemented (`#60`); run [auth Phase 2 verification](/docs/engineering/authentication/implementation-roadmap#phase-2--tourist-access-web-56--60) |
+| Listing detail public URL | `[x]` | Per web-56 / `#60` |
+| Unified tourist shell | `[~]` | `#58` + `#64`; manual QA matrix open in [web-64](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment) |
+| Near-me / maps | `[ ]` | `#65`–`#66` |
+| Phase 2 placeholder slots | `[ ]` | `#68` |
 
 Legend: `[x]` done · `[~]` partial · `[ ]` not started (same as [roadmap overview](/docs/product/planning/roadmap)).
 
@@ -304,11 +306,12 @@ Legend: `[x]` done · `[~]` partial · `[ ]` not started (same as [roadmap overv
 
 When picking up tourist UI work:
 
-1. Read this document for milestone order and exit criteria.
-2. Confirm Milestone A decisions before changing routes or auth HOCs.
-3. Read [frontend conventions](/docs/engineering/conventions/frontend) and [domain-to-code-mapping](/docs/engineering/conventions/domain-to-code-mapping) — update mapping when public discover routes land.
-4. For behavior tied to Phase 2 APIs, scaffold placeholders only until the matching [implementation spec](/docs/engineering/specs/) is `approved`.
-5. Verify pages against Phase 1 exit criteria in [Phase 1](/docs/product/planning/roadmap/phase-1-mvp) before marking Milestone B complete.
+1. Read [Web platform program strategy](/docs/product/planning/web-platform-program-strategy) if work touches auth, routes, or overlaps epic `#23`.
+2. Read this document for milestone order and exit criteria.
+3. Confirm Milestone A decisions before changing routes or auth HOCs.
+4. Read [frontend conventions](/docs/engineering/conventions/frontend) and [domain-to-code-mapping](/docs/engineering/conventions/domain-to-code-mapping).
+5. For behavior tied to Phase 2 APIs, scaffold placeholders only until the matching [implementation spec](/docs/engineering/specs/) is `approved`.
+6. Milestone B is complete (`#56`–`#64`); resume at verification, `#68`, or Milestone C/E per program strategy.
 
 ---
 
@@ -318,4 +321,5 @@ When picking up tourist UI work:
 - [Phase 2 — red-cab-web deliverables](/docs/product/planning/roadmap/phase-2-marketplace-depth)
 - [FR-CAT-004 — Primary discovery navigation](/docs/product/requirements/functional-requirements/cat)
 - [FR-IAM-012 — Guest browsing](/docs/product/requirements/functional-requirements/iam)
+- [Web platform program strategy](/docs/product/planning/web-platform-program-strategy) — parallel tourist vs auth tracks, gates, issue map
 - [Authentication series](/docs/engineering/authentication) — how the web enforces access. `/account/**` keeps `withTouristAuth` until [roadmap Phase 3](/docs/engineering/authentication/implementation-roadmap#phase-3--auth-core-team-account-login-pages); new Phase 2 authenticated tourist pages go under `tourist-required-policy`

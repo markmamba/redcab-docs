@@ -49,6 +49,7 @@ See [docs/engineering/specs/README.md](docs/engineering/specs/README.md).
 - `docs/product/business-rules/glossary.md`
 - `docs/product/business-rules/invariants.md`
 - `docs/product/planning/open-questions.md`
+- `docs/product/planning/web-platform-program-strategy.md` (tourist UI track + web auth redesign coordination)
 - Relevant `docs/product/requirements/functional-requirements/{ctx}.md`
 - Relevant `docs/architecture/contexts/{context}.md`
 - `docs/engineering/conventions/domain-to-code-mapping.md`

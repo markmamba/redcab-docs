@@ -19,6 +19,7 @@ Roadmap overview — scope, dependency order, phase index, context matrix, and a
 | Phase 0 | [Foundation](/docs/product/planning/roadmap/phase-0-foundation) |
 | Phase 1 | [MVP](/docs/product/planning/roadmap/phase-1-mvp) |
 | Tourist UI (pre–Phase 2) | [Tourist UI](/docs/product/planning/roadmap/tourist-ui-pre-phase-2) |
+| Tourist UI + auth redesign coordination | [Web platform program strategy](/docs/product/planning/web-platform-program-strategy) |
 | Phase 2 | [Marketplace depth](/docs/product/planning/roadmap/phase-2-marketplace-depth) |
 | Phase 3 | [Corporate + packages](/docs/product/planning/roadmap/phase-3-corporate-packages) |
 | Requirements | [Requirements](/docs/product/requirements) |

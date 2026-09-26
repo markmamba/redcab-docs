@@ -220,6 +220,8 @@ Applied with this package:
 | `engineering/conventions/frontend.md` | "Auth HOCs" section: add a note that HOCs are transitional per ADR-018, with a link to this series; "ky-client features": link to ADR-019 refresh rules |
 | `engineering/conventions/domain-to-code-mapping.md` | Frontend surface table: add a note that the `Auth HOC` column becomes policy routes per ADR-018 |
 | `product/planning/roadmap/tourist-ui-pre-phase-2.md` | Related documents: link to this series, noting that `/account/**` keeps HOCs until Phase 3 |
+| `product/planning/web-platform-program-strategy.md` | Program plan: parallel tracks, gates, issue ↔ auth phase map |
+| `product/planning/index.md` | Planning tier index |
 | `engineering/index.md` | Reading order: add the authentication series |
 
 Still to do (outside this package):
@@ -248,5 +250,6 @@ Still to do (outside this package):
 ## Related documents
 
 - [Authentication series overview](/docs/engineering/authentication)
+- [Web platform program strategy](/docs/product/planning/web-platform-program-strategy)
 - [Tourist UI — Pre–Phase 2](/docs/product/planning/roadmap/tourist-ui-pre-phase-2)
 - [IAM audit 2026-08](/docs/engineering/specs/iam/iam-audit-2026-08)

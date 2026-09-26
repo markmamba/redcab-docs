@@ -21,6 +21,7 @@ Stakeholder entry point for the Red Cab documentation site.
 | Business rules | [Invariants](/docs/product/business-rules/invariants) |
 | Requirements | [Requirements](/docs/product/requirements) |
 | Roadmap | [Phasing roadmap](/docs/product/planning/roadmap) |
+| Web platform strategy | [Web platform program strategy](/docs/product/planning/web-platform-program-strategy) |
 | Open questions | [Open questions](/docs/product/planning/open-questions) |
 
 ## Capabilities
