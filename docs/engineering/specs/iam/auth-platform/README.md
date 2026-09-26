@@ -9,7 +9,7 @@ description: Per-issue specs for ADR-018/019 execution (Phase 0–4). Create fro
 - Specs for the [authentication implementation roadmap](/docs/engineering/authentication/implementation-roadmap) live here.
 - Program sequencing and GitHub issue mapping: [Web platform program strategy](/docs/product/planning/web-platform-program-strategy).
 - GitHub epic: [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77). Issue ↔ spec mapping: [Web platform program strategy § GitHub issues](/docs/product/planning/web-platform-program-strategy#github-issues--auth-phases).
-- Specs not committed yet — create from `_template.md` using the issue number in the filename when starting each issue.
+- Committed: [`web-78-ssr-refresh-request-scope.md`](web-78-ssr-refresh-request-scope.md) (`status: approved`) — other Phase 0–4 specs: create from `_template.md` when starting each issue.
 
 ## Workflow
 
