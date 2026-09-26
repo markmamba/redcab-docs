@@ -8,7 +8,8 @@ description: Per-issue specs for ADR-018/019 execution (Phase 0–4). Create fro
 
 - Specs for the [authentication implementation roadmap](/docs/engineering/authentication/implementation-roadmap) live here.
 - Program sequencing and GitHub issue mapping: [Web platform program strategy](/docs/product/planning/web-platform-program-strategy).
-- No specs filed yet — use backlog table in the auth roadmap § Implementation spec backlog.
+- GitHub epic: [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77). Issue ↔ spec mapping: [Web platform program strategy § GitHub issues](/docs/product/planning/web-platform-program-strategy#github-issues--auth-phases).
+- Specs not committed yet — create from `_template.md` using the issue number in the filename when starting each issue.
 
 ## Workflow
 

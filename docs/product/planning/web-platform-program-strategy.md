@@ -84,7 +84,7 @@ flowchart TB
 | Track | Primary outcome | GitHub anchor | Planning doc |
 | --- | --- | --- | --- |
 | **T — Tourist UI** | Coherent browse → book → manage; Phase 2 UI slots | [red-cab-web#55](https://github.com/markmamba/red-cab-web/issues/55) | [tourist-ui-pre-phase-2](/docs/product/planning/roadmap/tourist-ui-pre-phase-2) |
-| **A — Auth redesign** | Safe sessions + policy enforcement on Node | Issues TBD from spec backlog | [implementation-roadmap](/docs/engineering/authentication/implementation-roadmap) |
+| **A — Auth redesign** | Safe sessions + policy enforcement on Node | [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77) (epic) + children below | [implementation-roadmap](/docs/engineering/authentication/implementation-roadmap) |
 | **B — Portal auth UX** | Provider/corporate split-panel and navbar links | [red-cab-web#23](https://github.com/markmamba/red-cab-web/issues/23) | Epic body; **excludes** tourist split-panel post-`#64` |
 
 ---
@@ -166,22 +166,29 @@ Milestone D (**`#68`**) is **not** behind G3 — placeholders on existing pages 
 3. Draft specs 6–8; spike middleware on React Router 8.0.0.
 4. First Phase 3 PR: **team** policies (smaller blast radius) **or** tourist `/account` — one surface per PR.
 
-### Suggested mapping: GitHub issues ↔ auth phases
+### GitHub issues ↔ auth phases
 
-Issues below use `red-cab-web` unless noted. Create issues when opening each auth-platform spec (replace `NNN`).
+Epic: [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77) — all items on [2026 RedCab Project](https://github.com/users/markmamba/projects/2).
 
-| Auth backlog # | Phase | Suggested spec path | Suggested issue title |
+Spec files use this issue number as `NNN` in `iam/auth-platform/{web|api}-NNN-{slug}.md`.
+
+| Auth backlog # | Phase | Issue | Spec path (create before code) |
 | --- | --- | --- | --- |
-| 1 | 0 | `iam/auth-platform/web-NNN-ssr-refresh-request-scope.md` | Isolate SSR token refresh per request |
-| 2 | 0 | `iam/auth-platform/web-NNN-root-session-read-contract.md` | Root session read contract |
-| 3 | 0 | `iam/auth-platform/web-NNN-safe-redirect-helper.md` | Validate `redirect_to` on every login path |
-| 4 | 0 | `iam/auth-platform/api-NNN-portal-gate-forbidden.md` | Return 403 with code for portal gates (api + web) |
-| 5 | 0 | `iam/auth-platform/api-NNN-auth-contract-tests.md` | Pin auth contract with integration tests |
-| 6 | 3 | `iam/auth-platform/web-NNN-auth-core-modules.md` | Session middleware, guards, entry rules |
-| 7 | 3 | `iam/auth-platform/web-NNN-team-policy-routes.md` | Admin Panel policy routes |
-| 8 | 3 | `iam/auth-platform/web-NNN-tourist-account-policy-routes.md` | `/account` and login policy routes |
-| 9 | 4 | `iam/auth-platform/web-NNN-corporate-provider-policy-routes.md` | Client and Provider portal policies |
-| 10 | 4 | `iam/auth-platform/web-NNN-remove-auth-hocs.md` | Remove auth HOCs |
+| — | 1 | [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19) | ADR acceptance (no codegen spec required) |
+| — | 0 / G1 | [redcab-docs#20](https://github.com/markmamba/redcab-docs/issues/20) | Record OQ1 in ADR-019 |
+| — | 2 | [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82) | Verification checklist (optional chore spec) |
+| 1 | 0 | [red-cab-web#78](https://github.com/markmamba/red-cab-web/issues/78) | `web-78-ssr-refresh-request-scope.md` |
+| 2 | 0 | [red-cab-web#79](https://github.com/markmamba/red-cab-web/issues/79) | `web-79-root-session-read-contract.md` |
+| 3 | 0 | [red-cab-web#80](https://github.com/markmamba/red-cab-web/issues/80) | `web-80-safe-redirect-helper.md` |
+| 4 | 0 | [red-cab-api#145](https://github.com/markmamba/red-cab-api/issues/145) + [red-cab-web#81](https://github.com/markmamba/red-cab-web/issues/81) | `api-145-portal-gate-forbidden.md` |
+| 5 | 0 | [red-cab-api#146](https://github.com/markmamba/red-cab-api/issues/146) | `api-146-auth-contract-tests.md` |
+| — | 3 | [red-cab-web#83](https://github.com/markmamba/red-cab-web/issues/83) | Spike — record results in `policy-middleware.md` |
+| 6 | 3 | [red-cab-web#84](https://github.com/markmamba/red-cab-web/issues/84) | `web-84-auth-core-modules.md` |
+| 7 | 3 | [red-cab-web#85](https://github.com/markmamba/red-cab-web/issues/85) | `web-85-team-policy-routes.md` |
+| 8 | 3 | [red-cab-web#86](https://github.com/markmamba/red-cab-web/issues/86) | `web-86-tourist-account-policy-routes.md` |
+| 9 | 4 | [red-cab-web#87](https://github.com/markmamba/red-cab-web/issues/87) | `web-87-corporate-provider-policy-routes.md` |
+| 10 | 4 | [red-cab-web#88](https://github.com/markmamba/red-cab-web/issues/88) | `web-88-remove-auth-hocs.md` |
+| 11 | 5 | [red-cab-api#147](https://github.com/markmamba/red-cab-api/issues/147) | Conditional — only if ADR-019 superseded |
 
 ---
 
@@ -192,7 +199,7 @@ Cross-check [tourist-ui-pre-phase-2 exit criteria](/docs/product/planning/roadma
 | Criterion | Program status (2026-09-26) | Next step |
 | --- | --- | --- |
 | Milestone A decisions recorded | Done (web-56, web-57, web-58) | Mark checkboxes in tourist doc |
-| Guest Home → Listing | Implemented (`#60`); **verify** G1-style checklist | Auth Phase 2 verification |
+| Guest Home → Listing | Implemented (`#60`); **verify** G1-style checklist | [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82) |
 | Logged-in Book → Checkout → detail | Implemented | Regression on shell changes |
 | Unified header/footer (incl. IAM post-`#64`) | Implemented in code; manual QA open | Complete web-64 manual matrix |
 | Phase 2 UI slots on pages | Not started | `#68` |
@@ -247,4 +254,5 @@ Delegated to [auth roadmap open questions](/docs/engineering/authentication/impl
 - [ADR-018 Web authentication enforcement](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model)
 - [ADR-019 Session technology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2)
 - [red-cab-web#55](https://github.com/markmamba/red-cab-web/issues/55) — tourist epic
+- [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77) — authentication enforcement epic (ADR-018)
 - [red-cab-web#23](https://github.com/markmamba/red-cab-web/issues/23) — portal auth UI epic
