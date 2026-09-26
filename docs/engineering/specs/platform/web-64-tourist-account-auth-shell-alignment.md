@@ -143,35 +143,35 @@ _No API changes._
 
 - [x] PKM plan approved (`2026-09-26-issue-64-plan.md`)
 - [x] `review-implementation-spec` — approved 2026-09-26
-- [ ] Commit spec to `redcab-docs` before `red-cab-web` codegen PR
+- [x] Commit spec to `redcab-docs` before `red-cab-web` codegen PR
 - [x] Cross-link `web-58` → `web-64` (decision #19 supersession note)
 
 ### Web
 
-- [ ] Add `TouristAuthContent` (no viewport-height traps)
-- [ ] Tier 1 — login + sign-up off `PublicAuthLayout`
-- [ ] Tier 2 — forgot + reset + verify off `AuthPageShell`
-- [ ] Tier 3 — OAuth callback spacing
-- [ ] Account home polish; remove Account actions card
-- [ ] SCSS — `.tourist-auth-content` only; verify `.public-auth-*` untouched in diff
-- [ ] Tests + tiered manual matrix
+- [x] Add `TouristAuthContent` (no viewport-height traps)
+- [x] Tier 1 — login + sign-up off `PublicAuthLayout`
+- [x] Tier 2 — forgot + reset + verify off `AuthPageShell`
+- [x] Tier 3 — OAuth callback spacing
+- [x] Account home polish; remove Account actions card
+- [x] SCSS — `.tourist-auth-content` only; verify `.public-auth-*` untouched in diff
+- [x] Automated tests (`tourist-auth-content.spec.jsx`); tiered manual matrix — **manual QA pending pre-merge**
 
 ## Acceptance criteria
 
-- [ ] `/account` matches unified shell nav/footer and account main spacing; no Account actions card
-- [ ] All marketplace IAM routes show shell nav/footer without nested full-viewport auth chrome
-- [ ] `_components.scss` adds only `.tourist-auth-content`; no `.public-auth-*` edits
-- [ ] Tourist IAM routes do not import `AuthPageShell`; `_brand.scss` unchanged
-- [ ] No auth behavior changes (session, redirects, forms, HOC set as Web contract table)
-- [ ] Meta robots unchanged
-- [ ] Post-login redirects work (default + `redirect_to`); shell remount acceptable per Known limitations
+- [x] `/account` matches unified shell nav/footer and account main spacing; no Account actions card (code; visual QA manual)
+- [x] All marketplace IAM routes show shell nav/footer without nested full-viewport auth chrome (code; visual QA manual)
+- [x] `_components.scss` adds only `.tourist-auth-content`; no `.public-auth-*` edits
+- [x] Tourist IAM routes do not import `AuthPageShell`; `_brand.scss` unchanged
+- [x] No auth behavior changes (session, redirects, forms, HOC set as Web contract table)
+- [x] Meta robots unchanged
+- [ ] Post-login redirects work (default + `redirect_to`); shell remount acceptable per Known limitations (manual)
 
 ## Test plan
 
 ### Automated
 
-- [ ] `npm run test` — shell / `tourist-auth-content` if added
-- [ ] `npm run lint`
+- [x] `npm run test` — `tourist-auth-content.spec.jsx` (full suite on PR/CI)
+- [x] `npm run lint`
 
 ### Manual — Tier 1
 
@@ -210,3 +210,4 @@ npm run test
 | --- | --- | --- | --- |
 | 2026-09-26 | Agent | `review-implementation-spec` | Must-fix / should-fix folded into spec (SCSS isolation, `AuthPageShell` fate, tiered test plan, known limitations, component path) |
 | 2026-09-26 | — | Cross-check `web-56`, `web-58`, ADR-017, PKM plan hidden risks | No FR/ADR/INV or layout-table conflicts |
+| 2026-09-26 | Agent | `review-react-style` (PKM repo review) | Merge-ready pending manual tiered QA; nits: tier-2 heading parity, test guardrail for `70vh`/`min-vh` |
