@@ -21,7 +21,7 @@ ships_with:
 
 - **Ships:** one shared tourist chrome (header nav, mobile nav, footer with cross-portal links, `<Breadcrumbs />` mount, empty/error/pending UI) consumed by `TouristPublicLayout` and `TouristDashboardLayout`; config-driven nav aligned across public and account surfaces.
 - **Co-ships with `#60`:** this issue **must not merge without `#60`** in the same release. Guest **Districts** nav targets `/districts` (public, unauthenticated) — no interim `/account/discover` nav target.
-- **Does NOT ship:** breadcrumb `handle.breadcrumb` data on routes (`#57` follow-on web issue), homepage SEO content (`#59`), auth page chrome (`PublicAuthLayout` unchanged), API changes.
+- **Does NOT ship:** breadcrumb `handle.breadcrumb` data on routes (`#57` follow-on web issue), homepage SEO content (`#59`), tourist marketplace IAM in-shell auth chrome (deferred to [`web-64`](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment) / `#64` — decision #19 below), API changes.
 - **Breaking change:** No URL changes in `#58` alone — URL migration is `#60`. Nav label changes from "Discover" → **Districts**.
 
 ## Problem
@@ -72,7 +72,7 @@ Evidence: audit artifact `2026-09-23-issue-58-audit.md`; roadmap [`tourist-ui-pr
 | 16 | **`CatalogGeographyNav` stays until `#57` follow-on** — follow-on **deprecates** geography nav when breadcrumb data is wired | Remove in `#58`; keep both permanently | Avoid duplicate hierarchy affordances after breadcrumbs ship |
 | 17 | Districts nav **`activeMatch`** covers **`/districts` and legacy `/account/discover`** | Single-path regex; route-id matching | Highlights correctly during one-release legacy redirect window |
 | 18 | Design tokens in **`_variables.scss`** (Bootstrap-first) | Inline styles only | Roadmap A3; document `$tourist-shell-*` variables in spec Tasks |
-| 19 | **Auth pages (`/login`, `/sign-up`) stay on `PublicAuthLayout`** — not tourist shell | Wrap auth in tourist shell | Milestone B auth restyle; avoids `withNoAuth` conflicts |
+| 19 | **Auth pages (`/login`, `/sign-up`) stay on `PublicAuthLayout`** — not tourist shell | Wrap auth in tourist shell | Locked for `#58` release. **Tourist marketplace IAM presentation** superseded by [`web-64`](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment) (`TouristAuthContent` in shell `main`; `#56` layout/HOC table unchanged). Provider/corporate still use `PublicAuthLayout`. |
 
 ## Release sequencing
 
@@ -97,7 +97,7 @@ _No API changes._ [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/i
 
 ### Layout assignment (from `#56` — not restated)
 
-Both layouts render the **same shell components**. Route → layout mapping unchanged from [`web-56` Web contract table](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract#web-contract). **`PublicAuthLayout` routes are excluded** — login/sign-up keep existing chrome.
+Both layouts render the **same shell components**. Route → layout mapping unchanged from [`web-56` Web contract table](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract#web-contract). At `#58` ship, login/sign-up used nested `PublicAuthLayout` chrome. After **`#64`** ([`web-64`](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment)), tourist marketplace IAM content uses `TouristAuthContent` inside shell `main` (routes still under `TouristPublicLayout` per `#56`).
 
 ### Nav config
 
@@ -215,7 +215,7 @@ Exact values follow existing `$body-bg` / `bg-light` patterns — no new color s
 - **`CatalogGeographyNav` removal** — `#57` follow-on (deprecated when breadcrumbs data ships)
 - Homepage district SEO (`#59`)
 - Sitemap resource route (`#57` follow-on)
-- Auth page restyle / moving login to tourist shell (`PublicAuthLayout` unchanged)
+- Tourist marketplace IAM in-shell auth chrome — [`web-64`](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment) / `#64` (supersedes decision #19 for tourist IAM only)
 - API changes
 
 ## Tasks
@@ -227,6 +227,7 @@ Exact values follow existing `$body-bg` / `bg-light` patterns — no new color s
 - [x] Run `review-implementation-spec` on this file — waived; human edge-case review 2026-09-23
 - [x] Set `status: approved` after human confirmation — **2026-09-23**
 - [x] Commit spec before codegen (PKM spec-first gate)
+- [x] Cross-link [`web-64`](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment) — tourist IAM chrome supersedes decision #19
 - [ ] Optional: amend `frontend.md` with tourist shell token names; grep `docs/engineering/` for stale references
 - [ ] Note in `#57` follow-on issue: deprecate `CatalogGeographyNav` when breadcrumb data wires
 
@@ -249,7 +250,7 @@ Exact values follow existing `$body-bg` / `bg-light` patterns — no new color s
 ## Acceptance criteria
 
 - [ ] **`#58` and `#60` merge together** — guest Districts nav reaches public `/districts` without auth gate
-- [ ] Identical header/footer on public home and `/account/*` routes — **excluding** `/login` and `/sign-up` (`PublicAuthLayout`)
+- [ ] Identical header/footer on public home and `/account/*` routes — at `#58` ship, `/login` and `/sign-up` excluded nested `PublicAuthLayout`; after `#64`, tourist IAM routes use shell nav/footer with `TouristAuthContent` in `main` (see `web-64`)
 - [ ] Guest nav: Districts, Sign In, Sign Up — **no** Provider/Corporate in nav
 - [ ] Logged-in nav on **both** public and account routes: Districts, Bookings, Account, Sign out
 - [ ] Footer: legal, language, support placeholders **plus** Provider/Corporate secondary links on public and account
@@ -274,7 +275,7 @@ npm run test
 # - Guest: footer shows Provider/Corporate links; nav does not
 # - Logged-in: visit / and /account — Bookings link visible on both
 # - Logged-in: language prompt on /districts when should_prompt_language
-# - /login, /sign-up — PublicAuthLayout unchanged (no tourist shell)
+# - /login, /sign-up — at #58: PublicAuthLayout nested in shell; after #64 (web-64): TouristAuthContent in shell main
 # - Mobile width: toggle nav; verify Sign Up CTA
 # - District/area index empty paths use generic copy only
 # - Breadcrumb region present (empty OK until #57 follow-on)
