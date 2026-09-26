@@ -163,6 +163,12 @@ Account routes (`/account/**`) stay `noindex, nofollow` and may keep `clientLoad
 
 ## Auth HOCs
 
+:::warning Transitional
+
+Auth HOCs are being replaced by policy routes ([ADR-018](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model)). New pages on a migrated surface go under its policy, not a HOC. Never put a HOC and a policy on the same subtree. See the [authentication series](/docs/engineering/authentication) and the [roadmap](/docs/engineering/authentication/implementation-roadmap).
+
+:::
+
 | HOC | Surface | Guard |
 | --- | --- | --- |
 | `withNoAuth` | Login/signup pages | Redirect if already logged in |
@@ -202,7 +208,7 @@ export const marketplaceCatalogListingsApi = {
 ### ky-client features
 
 - CSRF token injection
-- 401 → JWT refresh
+- 401 → JWT refresh (rules R1–R8 in [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2); on Node the refresh lock must be per request)
 - HTTP errors → `ApiError` class
 - `getApiErrorToastConfig` + `setApiErrorsToFormFields` in submit handlers
 

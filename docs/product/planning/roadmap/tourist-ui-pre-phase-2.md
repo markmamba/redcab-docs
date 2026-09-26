@@ -318,3 +318,4 @@ When picking up tourist UI work:
 - [Phase 2 — red-cab-web deliverables](/docs/product/planning/roadmap/phase-2-marketplace-depth)
 - [FR-CAT-004 — Primary discovery navigation](/docs/product/requirements/functional-requirements/cat)
 - [FR-IAM-012 — Guest browsing](/docs/product/requirements/functional-requirements/iam)
+- [Authentication series](/docs/engineering/authentication) — how the web enforces access. `/account/**` keeps `withTouristAuth` until [roadmap Phase 3](/docs/engineering/authentication/implementation-roadmap#phase-3--auth-core-team-account-login-pages); new Phase 2 authenticated tourist pages go under `tourist-required-policy`

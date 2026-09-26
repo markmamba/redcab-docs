@@ -48,6 +48,7 @@ Domain rules from Red Cab planning **always win** over generic patterns when the
 2. [Backend Conventions](/docs/engineering/conventions/backend) — API structure, request lifecycle, DBML/migrations
 3. [Frontend Conventions](/docs/engineering/conventions/frontend) — routes, API clients, forms, surfaces
 4. [Date / Time / Timezone](/docs/engineering/conventions/datetime-and-timezones) — instants, civil dates, service timezone resolution
+5. [Authentication series](/docs/engineering/authentication) — sessions, policy routes, entry rules, Web↔API contract (required before any auth or route-guard work)
 
 ### With domain context (already in planning set)
 

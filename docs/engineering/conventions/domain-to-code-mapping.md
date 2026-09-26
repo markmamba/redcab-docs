@@ -125,6 +125,8 @@ Map Red Cab consumer surfaces to React Router route files — one `*.routes.js` 
 
 Public catalog pages use server `loader` and `index, follow` robots per [spec #56](/docs/engineering/specs/iam/web-56-tourist-access-and-route-contract). Checkout and account routes remain in `tourist.routes.js` with `withTouristAuth`.
 
+The **Auth HOC** column is transitional. Per [ADR-018](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model), each private surface moves to a policy route (`tourist-required`, `corporate-required`, `provider-required`, `admin-required`) one surface at a time. See [Policy routes and surfaces](/docs/engineering/authentication/policy-routes-and-surfaces) and the [roadmap](/docs/engineering/authentication/implementation-roadmap).
+
 ### API client naming
 
 Naming pattern: `{actor}-{domain}-{model}-api.js`

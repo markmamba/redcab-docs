@@ -6,9 +6,10 @@ description: Architecture Decision Records (ADRs) for Red Cab Marketplace.
 
 ## TL;DR
 
-- Seventeen architecture decision records (ADR-001–017) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, geography administrative tree, and service timezone.
+- Nineteen architecture decision records (ADR-001–019) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, geography administrative tree, service timezone, tourist public URLs, web authentication enforcement, and session technology.
 - **ADR-015 is Proposed**, not Accepted — it records the payment custody/control separation pending legal counsel opinion.
+- **ADR-018 and ADR-019 are Proposed** — pending review of the [authentication series](/docs/engineering/authentication).
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -38,3 +39,5 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-015 | [ADR-015: Payment Custody and Control Separation](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) | **Proposed** — pending counsel |
 | ADR-016 | [ADR-016: Geography Administrative Tree](/docs/architecture/decisions/adr-016-geography-administrative-tree) | Accepted |
 | ADR-017 | [ADR-017: Tourist UI public URL architecture](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture) | Accepted |
+| ADR-018 | [ADR-018: Red Cab Web Authentication Enforcement Model](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model) | **Proposed** |
+| ADR-019 | [ADR-019: Session Technology for Phase 1 and Phase 2](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2) | **Proposed** |
