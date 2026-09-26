@@ -57,7 +57,7 @@ Public routes are locked (`#56`) but the tourist funnel lacks:
 | 5 | Centralize locale resolution in **`useLanguagePreference()`** hook (auth preference → EN default) | Per-page `identitiesAccount?.language_preference` | Eliminates drift across catalog pages, breadcrumbs, nav, and titles |
 | 6 | **Service type** (`D-02`) appears only as `service_type` query filter on area listings — never a breadcrumb segment or nav item | Top-level "Charter bus" nav | Glossary + `#56` reserved query params |
 | 7 | **Shareable listing URLs** use the canonical nested path only; `/listings/:uuid` is for UUID-only holders (booking detail, notifications) | Share resolver alias externally | `#56` design decision #3; resolver is `noindex` |
-| 8 | **Booking detail → listing** uses `<Link to="/listings/{listingUuid}">` — fresh navigation through resolver (302 → canonical), not `history.back()` | Direct canonical path in link; browser back only | Booking payload may lack current slugs; resolver is the stable contract |
+| 8 | **Booking detail → listing** uses ``<Link to="/listings/{listingUuid}">`` — fresh navigation through resolver (302 → canonical), not `history.back()` | Direct canonical path in link; browser back only | Booking payload may lack current slugs; resolver is the stable contract |
 | 9 | **Stale-slug 301 UX** is **silent** — loader redirects before render; no toast or flash | Toast; interstitial | `#56` implements loader `redirect(canonicalPath, 301)`; standard SEO practice |
 | 10 | **Sitemap generation** is **on-demand server `loader`** with `Cache-Control: public, max-age=3600` | Build-time static; hybrid | Listing set is dynamic; SSR catalog already uses server loaders |
 | 11 | **Remove single-child auto-redirect** on public `/districts` routes — always render index pages | Keep current auto-skip from `/account/discover` | SEO favors reachable `/districts` and district index URLs |
@@ -132,9 +132,9 @@ Last crumb is never linked (`breadcrumbs.jsx` rule). Prior crumbs link when `to`
 | --- | --- | --- | --- |
 | Home | _(none — or optional "Home")_ | — | — |
 | Districts index | `Districts` | Static copy | — (current page) |
-| District (area list) | `Districts` → `{district name}` | `getLocalizedLabel(catalog_district, 'name')` | `/districts` |
-| Area listings | `Districts` → `{district}` → `{area}` | district + area names from loader | district path; area path omitted on last |
-| Listing detail | `Districts` → `{district}` → `{area}` → `{listing title}` | embeds from listing detail payload (`#134`) | prior levels link to slug paths |
+| District (area list) | `Districts` → `:district name` | `getLocalizedLabel(catalog_district, 'name')` | `/districts` |
+| Area listings | `Districts` → `:district` → `:area` | district + area names from loader | district path; area path omitted on last |
+| Listing detail | `Districts` → `:district` → `:area` → `:listing title` | embeds from listing detail payload (`#134`) | prior levels link to slug paths |
 
 Layout-level crumb (e.g. `Discover` on old layout) is replaced by geography crumbs above. **`CatalogGeographyNav` is deprecated in the follow-on web issue** once breadcrumbs render — remove the component to avoid duplicate hierarchy affordances (coordinated with [`web-58`](/docs/engineering/specs/platform/web-58-tourist-unified-layout-shell) decision #16).
 
@@ -164,10 +164,10 @@ Account crumbs render inside `TouristDashboardLayout` (`#58`).
 
 | From | Affordance | Target | Semantics |
 | --- | --- | --- | --- |
-| Listing detail | In-page "Back to {area}" link (existing `ArrowLeft` pattern) | Area listings path for embedded area | In-app navigation; not `history.back()` |
+| Listing detail | In-page "Back to :area" link (existing `ArrowLeft` pattern) | Area listings path for embedded area | In-app navigation; not `history.back()` |
 | Area listings → district | Geography nav or breadcrumb | District area list | Breadcrumb link |
 | Browser back | Native history | Previous URL in stack | No special handling |
-| Booking detail | **New:** "View listing" link | `/listings/{listingUuid}` | Fresh navigation via resolver → canonical |
+| Booking detail | **New:** "View listing" link | `/listings/:listingUuid` | Fresh navigation via resolver → canonical |
 | Booking detail | "Back to my bookings" (existing) | `/account/bookings` | Unchanged |
 | Checkout | Back to listing | Canonical listing path (post-`#60` path builders) | Per `#56` checkout back-link note |
 
