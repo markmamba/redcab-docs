@@ -135,6 +135,7 @@ The system **shall** allow filtering by price range using the Listing's starting
 ### FR-CAT-027 — Sort results
 The system **shall** allow sorting by recommended, price (both directions), rating, review count, and newest.
 - Source: D-05. Status: Approved.
+- **Phased web delivery (Milestone C — [web-67](/docs/engineering/specs/cat/web-67-listing-sort-control-url-params)):** Public area listings index ships URL-driven sort with **newest** (`published_at`, descending) live. **Rating** appears as a disabled UI stub until the reviews (REV) milestone enables tourist rating sort. **Recommended**, **price** (both directions), and **review count** remain deferred until marketplace index ordering and product rules are specified for those columns; no client-side re-sort of listing rows.
 
 ### FR-CAT-028 — Single pricing authority
 The system **shall** compute every displayed and charged price through the single pricing authority so that display, filtering, and checkout prices are consistent.
