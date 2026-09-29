@@ -90,9 +90,22 @@ Error JSON: `ApplicationController#base_error` — `status_name`, `status`, `mes
 
 ## Web contract (coordination — #81)
 
-- Consume seven `code` values; remove title-string matching for missing provider profile.
-- Unit test: `handleLoaderError` returns fallback on **403** (does not throw).
-- Wrong-actor **403** on protected `tourists/**` (and peers) without infinite blank render.
+- Consume seven `code` values from `PORTAL_GATE_CODE` (web) aligned with `Errors::PortalGateCodes` (API).
+- Unit test: `handleLoaderError` returns fallback on **403** (does not throw); **401** rethrows.
+- Unit test: `ky-client` — API GET **403** does not trigger session refresh; **401** does.
+- `ProvidersProfileService.fetchCurrent`: map gate signals narrowly (see deviations below).
+
+### Web (#81) decisions and deviations
+
+| Topic | Decision |
+| --- | --- |
+| Legacy **401** + `title` for missing provider profile | **Bridge** behind `LEGACY_PROVIDER_PROFILE_GATE_BRIDGE` until API #145 is stable in production; open a follow-up issue to remove. Primary path is **403** + `provider_profile_required`. Legacy **401** may still trigger one refresh attempt before the bridge maps to `{ providerProfile: null }`. |
+| Wrong actor on provider portal | **API** — `Providers::BaseController` runs role check **before** `require_provider_profile!` → **403** `provider_role_required`. **Web** — `fetchCurrent` maps that code to `throw redirect('/')`. Role-aware homes (`getIdentitiesHomePath`) deferred until root loader exposes role to `clientLoader`. |
+| Tourist / corporate peers + `withProviderAuth` blank | **Deferred** to Phase 4 (separate issues). Provider wrong-role UX is improved via loader redirect on `provider_role_required` only; HOC unchanged. |
+| Non-gate errors on `fetchCurrent` | **Narrow (S1-A)** — return `{ providerProfile: null }` only for missing-profile gate signals; **500**, network, auth **401**, and unknown **403** `code` **rethrow**. Follow-up issue for `loadError` UX in provider loaders (S1-B). |
+| Portal code constants | All **seven** codes in `providers-profile-constant.js`; `isPortalGateError` in `app/errors/portal-gate-utils.js`. `fetchCurrent` handles `provider_profile_required` and `provider_role_required` on `show`; approval codes remain route-level (`handleLoaderError` / submit toasts). |
+
+**Deploy:** API #145 plus base-controller role gate must be verified in staging before merging web #81.
 
 ## Out of scope
 
