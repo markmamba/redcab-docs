@@ -131,10 +131,10 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 
 | Repo | Path | Covers |
 | --- | --- | --- |
-| api | `test/integration/identities/sessions/*` | Login, refresh, logout |
-| api | `test/integration/identities/accounts/*` | `current` read and update |
-| api | `test/controllers/team/identities/admins/sessions_controller_test.rb` | Admin sessions |
-| api | `test/integration/auth_contract/*` | target (new, Phase 0): one test per contract-sheet row |
+| api | `test/integration/auth_contract/*` | Phase 0: one integration test file per appendix contract row; `contract_facts_test.rb` pins lifetimes, cookie facts, revoke semantics |
+| api | `test/integration/identities_regressions/*` | IAM security and deprecated-route guards not duplicated on the contract sheet |
+| api | `test/integration/notifications/*` | Notification dispatch integration (e.g. email verification resend dedupe) |
+| api | `test/controllers/team/identities/admins*_test.rb` | Deep proofs for team admin session and principal reads |
 | web | `app/auth/*.spec.js` | target (new): one test per entry-rule row |
 | web | `app/api/ky-client.spec.js` | target (new, Phase 0): concurrent SSR refresh isolation |
 
