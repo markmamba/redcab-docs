@@ -26,7 +26,7 @@ Audit of the Identity & Access layer of `red-cab-api`, covering session lifecycl
 
 **Audited:** 2026-08-11 against `red-cab-api` at `d8a244b` plus uncommitted working-tree changes, and `red-cab-web` at its current checkout.
 
-**Method:** static reading of every file in the scope list below, plus `git log -S` archaeology on the two managers that regressed. The test suite could **not** be executed locally — `bundle` cannot materialize the lockfile against the active Ruby (3.4.3 via mise), so `bin/rails test` aborts before boot. Every finding below is therefore backed by a file/line citation or a commit diff, never by a test run. Re-running the suite is the first task in PR-01.
+**Method:** static reading of every file in the scope list below, plus `git log -S` archaeology on the two managers that regressed. The original audit pass could not run `bin/rails test` locally (Ruby/Bundler mismatch). Findings remain backed by file/line citations and commit diffs; **regression evidence** for Phase 0 IAM work is supplemented by issue [#146](https://github.com/markmamba/red-cab-api/issues/146) auth contract integration tests (`api-146-auth-contract-tests.md`) once the full API suite is green on the implementing branch.
 
 ---
 
@@ -419,23 +419,25 @@ Rules that follow, and that PRs 02–05 implement:
 
 **Phase 0 — stop the bleeding. No API contract change.**
 
-- [ ] [PR-01](/docs/engineering/specs/iam/iam-audit-2026-08/pr-01-restore-account-current-route) — revert the working-tree route change; get the suite green and runnable
-- [ ] [PR-02](/docs/engineering/specs/iam/iam-audit-2026-08/pr-02-iam-security-fixes) — IAM-01, IAM-03, IAM-04, IAM-06, IAM-07, IAM-08, IAM-09, IAM-16, IAM-22
+- [x] [PR-01](/docs/engineering/specs/iam/iam-audit-2026-08/pr-01-restore-account-current-route) — revert the working-tree route change; get the suite green and runnable
+- [x] [PR-02](/docs/engineering/specs/iam/iam-audit-2026-08/pr-02-iam-security-fixes) — IAM-01, IAM-03, IAM-04, IAM-06, IAM-07, IAM-08, IAM-09, IAM-16, IAM-22
 - [ ] [PR-03](/docs/engineering/specs/iam/iam-audit-2026-08/pr-03-session-cookie-manager-thread-safety) — IAM-05, IAM-11, IAM-21, IAM-27
 
 **Phase 1 — additive. Old routes keep working.**
 
 - [x] [PR-04](/docs/engineering/specs/iam/iam-audit-2026-08/pr-04-account-current-patch) — `PATCH /identities/accounts/current`; `UpdateLanguagePreference*` removed
-- [ ] [PR-05](/docs/engineering/specs/iam/iam-audit-2026-08/pr-05-actor-base-controllers) — tourist and corporate base controllers, `CurrentRequest` completion, profile-presence gate
-- [ ] [PR-06](/docs/engineering/specs/iam/iam-audit-2026-08/pr-06-session-surface-symmetry) — `GET /team/identities/admins/current`; normalize param shapes and error payloads
+- [x] [PR-05](/docs/engineering/specs/iam/iam-audit-2026-08/pr-05-actor-base-controllers) — tourist and corporate base controllers, `CurrentRequest` completion, profile-presence gate
+- [x] [PR-06](/docs/engineering/specs/iam/iam-audit-2026-08/pr-06-session-surface-symmetry) — `GET /team/identities/admins/current`; normalize param shapes and error payloads
 
 **Phase 2 — internal consolidation, no contract change.**
 
-- [ ] [PR-07](/docs/engineering/specs/iam/iam-audit-2026-08/pr-07-oauth-account-provisioning) — one provisioning path for password and OAuth signup
+- [x] [PR-07](/docs/engineering/specs/iam/iam-audit-2026-08/pr-07-oauth-account-provisioning) — one provisioning path for password and OAuth signup
 
 **Phase 3 — deprecate and remove. Breaking; requires a web release first.**
 
 - [ ] [PR-08](/docs/engineering/specs/iam/iam-audit-2026-08/pr-08-deprecations) — remove `PATCH …/language_preference`, `DELETE /identities/sessions`, `GET …/admins/sessions/current`; rename serializers
+
+**§7 checkbox evidence (2026-09-29):** PR-01 and PR-02 ticks reflect **auth Phase 0 contract tests** (#146) plus existing unit/manager coverage—not a claim that every historical audit finding was re-proven in isolation. PR-05–PR-07 ticks align with portal/team/OAuth contract row files and linked controller deep tests per `api-146-auth-contract-tests.md`. PR-03 (thread-safety) and PR-08 (deprecations) remain open by design.
 
 ---
 
