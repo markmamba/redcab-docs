@@ -9,7 +9,7 @@ description: One sheet of every authentication endpoint between red-cab-web and 
 
 - This sheet is the contract. A PR that changes any row updates this page and the matching contract test in the same change.
 - `red-cab-api` must have one integration test per row (Phase 0, `test/integration/auth_contract/`).
-- "Target" columns apply after the Phase 0 API change (ADR-018 D4). Until then, portal-gate failures answer `401`.
+- "Target" columns matched Phase 0 API change (ADR-018 D4) after issue **#145** ships.
 
 :::info Three rules
 
@@ -28,7 +28,7 @@ description: One sheet of every authentication endpoint between red-cab-web and 
 | CSRF | `X-CSRF-Token` header must equal the masked token in the CSRF cookie |
 | Account JSON | `{ uuid, email, first_name, last_name, role, language_preference, is_email_verified, should_prompt_language }` |
 | Admin JSON | `{ uuid, email, name }` |
-| Error JSON | `{ status_name, status, messages, code, title, server }` (`ApplicationController#base_error`) |
+| Error JSON | `{ status_name, status, messages, code, title, server }` (`ApplicationController#base_error`). **401** responses today use the Ruby error **class name** as `code` (for example `Errors::UnauthorizedError`); stable snake_case **401** codes are deferred. **403** portal gates use the stable codes in the actor table below. |
 
 ## Account principal and sessions
 
@@ -58,13 +58,14 @@ description: One sheet of every authentication endpoint between red-cab-web and 
 
 ## Actor namespaces (portal gates)
 
-| Namespace | Auth | `401` means | `403` today | `403` target | Used by |
-| --- | --- | --- | --- | --- | --- |
-| `marketplace/**` | Optional `ACCOUNT` | **Never** for session reasons. Expired or missing token → served as guest | — | — | Public catalog server loaders; checkout `clientLoader` quote read |
-| `tourists/**` | Required `ACCOUNT` + tourist profile | Signed out | none (answers `401` "This area is for tourist accounts…") | `403 tourist_profile_required` | Checkout, bookings `clientLoader`s |
-| `corporate/**` | Required `ACCOUNT` + corporate profile | Signed out | none (`401`) | `403 corporate_profile_required` | Client Portal |
-| `providers/**` | Required `ACCOUNT` + provider profile | Signed out | none (`401` "Please complete provider registration…") | `403 provider_profile_required` | Provider pages; `ProvidersProfileService.fetchCurrent` |
-| `providers/**` approval-gated actions | + `status_approved?` | Signed out | none (`401`) | `403 provider_approval_required` | Catalog authoring |
+| Namespace | Auth | `401` means | `403` (portal gates) | Used by |
+| --- | --- | --- | --- | --- |
+| `marketplace/**` | Optional `ACCOUNT` | **Never** for session reasons. Expired or missing token → served as guest | — | Public catalog server loaders; checkout `clientLoader` quote read |
+| `tourists/**` | Required `ACCOUNT` + tourist profile | Signed out; inactive account | `tourist_profile_required` | Checkout, bookings `clientLoader`s |
+| `corporate/**` | Required `ACCOUNT` + corporate profile | Signed out; inactive account | `corporate_profile_required` | Client Portal |
+| `providers/**` | Required `ACCOUNT` + provider profile | Signed out; inactive account | `provider_profile_required` | Provider pages; `ProvidersProfileService.fetchCurrent` |
+| `providers/**` approval-gated actions | + `status_approved?` | Signed out; inactive account | `provider_approval_pending`, `provider_application_rejected`, or `provider_account_suspended` by profile status | Catalog authoring, merchant onboarding |
+| `POST providers/profiles` | Required `ACCOUNT`; role must be provider | Signed out; inactive account | `provider_role_required` when role ≠ provider | Provider registration create |
 | `team/**` | Required `TEAM` | Signed out | — | Reserved for future admin permissions (`IAM-Q4`) | Team pages |
 
 ## Cookie attributes
@@ -80,12 +81,12 @@ description: One sheet of every authentication endpoint between red-cab-web and 
 
 ## Token lifetimes
 
-| Token | Value | Status |
-| --- | --- | --- |
-| Access | jwt_sessions default | **Must be set explicitly** (ADR-019) |
-| Refresh | jwt_sessions default | **Must be set explicitly** (ADR-019) |
+Values are set on the **jwt_sessions module** (`config/initializers/jwt_sessions.rb`). Account (`rc_*`) and team admin (`rc_team_*`) sessions share the same durations today — there is no per-principal override in jwt_sessions.
 
-Record the chosen values here when the Phase 0 API spec lands.
+| Token | Seconds | Human |
+| --- | --- | --- |
+| Access | `3600` | 1 hour |
+| Refresh | `604800` | 7 days |
 
 ## Contract test requirements
 

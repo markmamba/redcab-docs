@@ -103,7 +103,17 @@ Invariant 2 needs a clean signal. The API must answer:
 - `401` when the token is missing, invalid, expired after refresh, or the account is not active.
 - `403` with a stable error `code` when the account is signed in but not allowed on this portal or action.
 
-Proposed codes: `tourist_profile_required`, `corporate_profile_required`, `provider_profile_required`, `provider_approval_required`. This resolves `IAM-Q2` in the [IAM audit](/docs/engineering/specs/iam/iam-audit-2026-08). The web client must not refresh on `403`. It already does not retry `403` (`ky-client.js` `beforeRetry`).
+Portal gate codes (Phase 0 API, issue **#145** — closes **IAM-Q2**):
+
+- `tourist_profile_required`
+- `corporate_profile_required`
+- `provider_profile_required`
+- `provider_role_required` (`POST providers/profiles` when account role is not provider)
+- `provider_approval_pending`
+- `provider_application_rejected`
+- `provider_account_suspended`
+
+The web client must not refresh on `403`. It already does not retry `403` (`ky-client.js` `beforeRetry`).
 
 ### D5 — Entry rules gate surfaces by Role; domain gates stay with their owner
 
