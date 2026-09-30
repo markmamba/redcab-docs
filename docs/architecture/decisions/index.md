@@ -9,7 +9,7 @@ description: Architecture Decision Records (ADRs) for Red Cab Marketplace.
 - Nineteen architecture decision records (ADR-001–019) documenting choices already established in the planning set.
 - ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, geography administrative tree, service timezone, tourist public URLs, web authentication enforcement, and session technology.
 - **ADR-015 is Proposed**, not Accepted — it records the payment custody/control separation pending legal counsel opinion.
-- **ADR-018 and ADR-019 are Proposed** — pending review of the [authentication series](/docs/engineering/authentication).
+- **ADR-018 and ADR-019 are Accepted** (2026-09-30) — web enforcement model and Phase 1 session technology; see the [authentication series](/docs/engineering/authentication) and roadmap Phase 1 [Review record](/docs/engineering/authentication/implementation-roadmap#review-record-phase-1).
 - They record **why** — they do not introduce new boundaries or override business rules.
 
 ## About this document
@@ -39,5 +39,15 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-015 | [ADR-015: Payment Custody and Control Separation](/docs/architecture/decisions/adr-015-payment-custody-and-control-separation) | **Proposed** — pending counsel |
 | ADR-016 | [ADR-016: Geography Administrative Tree](/docs/architecture/decisions/adr-016-geography-administrative-tree) | Accepted |
 | ADR-017 | [ADR-017: Tourist UI public URL architecture](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture) | Accepted |
-| ADR-018 | [ADR-018: Red Cab Web Authentication Enforcement Model](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model) | **Proposed** |
-| ADR-019 | [ADR-019: Session Technology for Phase 1 and Phase 2](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2) | **Proposed** |
+| ADR-018 | [ADR-018: Red Cab Web Authentication Enforcement Model](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model) | Accepted (2026-09-30) |
+| ADR-019 | [ADR-019: Session Technology for Phase 1 and Phase 2](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2) | Accepted (2026-09-30); cookie domain open → [#20](https://github.com/markmamba/redcab-docs/issues/20) |
+
+## Amendments convention
+
+Accepted ADRs are **dated decisions**, not live status pages. When shipped code or a later issue changes an Accepted ADR without reversing the whole decision:
+
+1. Add an **Amendments** section at the end of the ADR (or extend an existing one) with a dated bullet: what changed, which PR or issue, and what readers should do.
+2. Update this index row only when the **status** changes (for example Accepted → Superseded).
+3. Use **Superseded** and a replacement ADR only when the original decision is reversed, not for additive clarifications.
+
+Examples in this corpus: ADR-018 D4 portal codes extended by api-145; ADR-019 lifetimes recorded in the contract sheet; cookie topology tracked in roadmap OQ1 / issue #20.

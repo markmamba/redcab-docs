@@ -107,8 +107,8 @@ flowchart TB
 
 | Auth phase | Blocks tourist UI dev? | Blocks production auth? | Status |
 | --- | --- | --- | --- |
-| **0** — Correctness + contract | No | **Yes** | Not started (specs not filed) |
-| **1** — Accept ADR-018/019 + series | No | No | Proposed — review pending |
+| **0** — Correctness + contract | No | **Yes** (except OQ1 cookie topology) | **Mostly merged** — web-78/79/80, api-145/146, web #81; specs approved under `engineering/specs/iam/auth-platform/`; remaining: OQ1 ([#20](https://github.com/markmamba/redcab-docs/issues/20)), IAM audit §7 checkbox ticks |
+| **1** — Accept ADR-018/019 + series | No | No | **Done** (2026-09-30, [#19](https://github.com/markmamba/redcab-docs/issues/19)) — ADRs Accepted; series normative with phase guard |
 | **2** — Tourist access (web-56 / `#60`) | N/A (merged) | No | **Verify** checklist open |
 | **3** — Policies: `/team`, `/account`, login | No | Should follow Phase 0 web 1–3 | Not started |
 | **4** — `/corporate`, `/providers`; delete HOCs | No | After Phase 3 | Not started |
@@ -147,7 +147,7 @@ Milestone D (**`#68`**) is **not** behind G3 — placeholders on existing pages 
 | --- | --- | --- | --- |
 | 1 | Complete `#64` manual QA or record waivers | Web | Checklist in [web-64](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment) |
 | 2 | Run auth **Phase 2 verification** (public catalog, guest Book → login → checkout) | Web | Checkboxes in [auth roadmap Phase 2](/docs/engineering/authentication/implementation-roadmap#phase-2--tourist-access-web-56--60) |
-| 3 | Auth **Phase 1** review — Accept ADR-018/019; answer/defer OQ 2–4 | Architect + PO | ADR status Accepted |
+| 3 | Auth **Phase 1** review — Accept ADR-018/019; answer/defer OQ 2–4 | Architect + PO | **Done** — [#19](https://github.com/markmamba/redcab-docs/issues/19); [roadmap Review record](/docs/engineering/authentication/implementation-roadmap#review-record-phase-1) |
 | 4 | Update epic `#23` description (tourist out of split-panel scope) | PM/Tech lead | GitHub epic only |
 | 5 | Refresh tourist roadmap snapshot | Docs | [tourist-ui-pre-phase-2 § snapshot](/docs/product/planning/roadmap/tourist-ui-pre-phase-2#current-implementation-snapshot) |
 
@@ -161,10 +161,9 @@ Milestone D (**`#68`**) is **not** behind G3 — placeholders on existing pages 
 
 **Wave A (auth platform)**
 
-1. Draft and approve Phase 0 specs (auth-platform backlog rows 1–5).
-2. Implement Phase 0 (API + web); run contract tests; tick IAM audit checkboxes.
-3. Draft specs 6–8; spike middleware on React Router 8.0.0.
-4. First Phase 3 PR: **team** policies (smaller blast radius) **or** tourist `/account` — one surface per PR.
+1. Close remaining **Phase 0** exit items — OQ1 ([#20](https://github.com/markmamba/redcab-docs/issues/20)), IAM audit §7 checkbox ticks, roadmap Phase 0 verification checkboxes.
+2. Draft and approve Phase **3** specs (auth-platform backlog rows 6–8); spike middleware on React Router 8.0.0 ([#83](https://github.com/markmamba/red-cab-web/issues/83)).
+3. First Phase 3 PR: **team** policies (smaller blast radius) **or** tourist `/account` — one surface per PR.
 
 ### GitHub issues ↔ auth phases
 

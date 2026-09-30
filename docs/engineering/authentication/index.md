@@ -12,7 +12,7 @@ description: How Red Cab Web and Red Cab API know who is signed in — two runti
 - Rails decides access on every request. The web only decides where a person goes.
 - Read the pages in order the first time. After that, [Entry rules](/docs/engineering/authentication/entry-rules) and the [contract sheet](/docs/engineering/authentication/appendix-web-api-contract) are the lookup pages.
 
-**Status:** Proposed (2026-09-26). Normative once ADR-018 and ADR-019 are Accepted.
+**Status:** **Normative target design** (2026-09-30, [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19)). ADR-018 and ADR-019 are **Accepted**. Pages describe the target from those ADRs; **phased applicability** still applies — HOCs, api-145 bridges, and missing `app/auth/*` modules remain legal until the roadmap phase that removes them. Each page marks where today's code differs.
 
 ## Why this series lives under Engineering
 
@@ -87,7 +87,7 @@ flowchart LR
 | Virtual root | A pathless `layout()` at the top of the route tree: `roots/public-root.jsx` or `roots/team-root.jsx` |
 | Policy route | A pathless `layout()` that runs one entry rule on Node before its children render |
 | Entry rule | A pure function that returns `null` (allow) or a redirect path |
-| Today / Target | "Today" is the audited code at `red-cab-web@c4ce884` and `red-cab-api@d8ed9b7`. "Target" is the ADR-018 design |
+| Today / Target | "Today" is the audited code at `red-cab-web@c4ce884` and `red-cab-api@d8ed9b7`. "Target" is the ADR-018 design. **Current ship state:** [roadmap — Where things stand](/docs/engineering/authentication/implementation-roadmap#where-things-stand) (same pattern as ADR-018 historical vs living baseline). |
 
 ## What stays the same during the tourist pre–Phase 2 track
 
