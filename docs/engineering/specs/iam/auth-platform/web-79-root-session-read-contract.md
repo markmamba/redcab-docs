@@ -76,13 +76,32 @@ Evidence: `app/roots/public-root.jsx`, `app/roots/team-root.jsx`; audit 2026-09-
 
 | Step | Public (`public-root.jsx`) | Team (`team-root.jsx`) |
 | --- | --- | --- |
-| 1 | If `!hasAccountSessionCookie(request)` → return `{ identitiesAccount: null }` (no API) | If `!hasAdminSessionCookie(request)` → return `{ identitiesAdmin: null }` (no API) |
-| 2 | `createRefreshScope(request)`; call `identitiesAccountsApi.current({ cookie, refreshScope, retry: { limit: 0 } })` | Same with `teamSessionsApi.current` |
-| 3 | On success: build `headers = new Headers()`, append every `refreshScope.setCookieHeaders`; if predicate true → also set `Cache-Control: private, no-store`; return `RouterResponse({ identitiesAccount: identitiesAccount || null }, { headers })` | Same, `identitiesAdmin || null` |
-| 4 | On `ApiError` 401 → same `headers` construction as step 3 (no `Cache-Control` change), return `RouterResponse({ identitiesAccount: null }, { headers })` | Same for `identitiesAdmin` |
-| 5 | On any other error → build `headers` from whatever `refreshScope.setCookieHeaders` were collected **before** the failure (may be empty), then `throw data(error, { headers })` (no `Cache-Control`) so rotated cookies still reach the browser even though the response is an error | Same |
+| 1 | If `!hasAccountSessionCookie(request)` → return null loader data (no API) | If `!hasAdminSessionCookie(request)` → return null loader data (no API) |
+| 2 | `createRefreshScope(request)`; call `identitiesAccountsApi.current` with cookie, `refreshScope`, and `retry` limit 0 | Same with `teamSessionsApi.current` |
+| 3 | On success: build `headers` from `refreshScope.setCookieHeaders`; if predicate true → also `Cache-Control: private, no-store`; return `RouterResponse` with account identity + headers | Same, admin identity coerced with `|| null` |
+| 4 | On `ApiError` 401 → same `headers` as step 3 (no `Cache-Control` change); return `RouterResponse` with null account identity + headers | Same for `identitiesAdmin` |
+| 5 | On any other error → build `headers` from `refreshScope.setCookieHeaders` collected **before** the failure (may be empty), then `throw data(error, …)` with those headers (no `Cache-Control`) | Same |
 
-Step 5 is the fix for review finding #1: `refreshScope.setCookieHeaders` is populated by `ky-client`'s refresh hook *before* the retried request is attempted, so it can hold a value even when the retried `GET …/current` itself throws. The header-building logic in steps 3–5 should be a single shared helper (e.g. `buildSessionResponseHeaders(refreshScope, { isCookiePresent })`) so the three branches cannot drift.
+Exact return shapes (public root; team mirrors with `identitiesAdmin`):
+
+```js
+// Step 1
+return { identitiesAccount: null };
+
+// Step 2 — session read call
+identitiesAccountsApi.current({ cookie, refreshScope, retry: { limit: 0 } });
+
+// Step 3 — success
+return RouterResponse({ identitiesAccount: identitiesAccount || null }, { headers });
+
+// Step 4 — 401
+return RouterResponse({ identitiesAccount: null }, { headers });
+
+// Step 5 — other errors
+throw data(error, { headers });
+```
+
+Step 5 is the fix for review finding #1: `refreshScope.setCookieHeaders` is populated by `ky-client`'s refresh hook *before* the retried request is attempted, so it can hold a value even when the retried `GET …/current` itself throws. The header-building logic in steps 3–5 should be a single shared helper (e.g. `buildSessionResponseHeaders(refreshScope, isCookiePresent)`) so the three branches cannot drift.
 
 ### Session read APIs
 

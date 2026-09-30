@@ -14,11 +14,11 @@ description: Per-issue specs for ADR-018/019 execution (Phase 0–4). Create fro
 ## Workflow
 
 1. Open a GitHub issue in `red-cab-api` or `red-cab-web` as appropriate.
-2. Copy [engineering/specs/_template.md](/docs/engineering/specs/_template.md) to `web-NNN-{slug}.md` or `api-NNN-{slug}.md` in this folder.
+2. Copy `engineering/specs/_template.md` to `web-NNN-{slug}.md` or `api-NNN-{slug}.md` in this folder (template is repo-only; not published on the docs site).
 3. Run `review-implementation-spec`; set `status: approved`.
 4. Implement with `spec_path` pointing at the committed file.
 
 ## Related documents
 
 - [Authentication series](/docs/engineering/authentication)
-- [IAM specs index](/docs/engineering/specs/iam/)
+- [IAM audit 2026-08](/docs/engineering/specs/iam/iam-audit-2026-08/)
