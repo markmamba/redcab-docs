@@ -43,7 +43,7 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 | PR-05 portal gates | In code, **`403` + codes** | `tourists/base_controller.rb`, `corporate/base_controller.rb`, `providers/base_controller.rb` |
 | IAM audit index checkboxes | **Partial** — PR-03, PR-08 open; narrative IAM-Q2 closed on #19 | `iam-audit-2026-08/index.md` §7–§8 |
 | Phase 1 — ADR-018/019 + series | **Accepted / normative** | [#19](https://github.com/markmamba/redcab-docs/issues/19); [Review record](#review-record-phase-1) |
-| Production cookie topology (OQ1) | **Open** | [#20](https://github.com/markmamba/redcab-docs/issues/20); gate G1 |
+| Production cookie topology (OQ1) | **Decided (docs)** — API `domain:` [#77](https://github.com/markmamba/red-cab-web/issues/77) before launch | [ADR-019 § Production cookie topology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology); [#20](https://github.com/markmamba/redcab-docs/issues/20) |
 | web-56 / `#60` public routes | Merged | `red-cab-web` `e24b55b` |
 | Tourist shell / funnel `#58`–`#64` | Merged per program strategy | See [web platform program strategy](/docs/product/planning/web-platform-program-strategy) |
 
@@ -97,7 +97,7 @@ flowchart LR
 - [ ] `redirect_to=//evil.example` on `/team/login` and on every `withNoAuth` page lands on the default path.
 - [ ] A tourist cookie on a `providers/**` endpoint gets `403 provider_profile_required`, and the web does not refresh.
 - [ ] Token lifetimes are recorded in the contract sheet.
-- [ ] Production cookie domain decided (open question 1) and recorded in ADR-019.
+- [x] Production cookie topology decided (open question 1) and recorded in [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology) ([#20](https://github.com/markmamba/redcab-docs/issues/20)). API `domain:` wiring remains [#77](https://github.com/markmamba/red-cab-web/issues/77) before launch.
 
 **Dependencies:** none. The API `403` change and web step 4 ship together, or web step 4 accepts both shapes for one release.
 
@@ -110,7 +110,7 @@ flowchart LR
 **Exit criteria:**
 
 - [x] `review-implementation-spec`-style review of ADR-018, ADR-019, and Appendix A against `FR-IAM-004/005/009/012`, `NFR-SEC-004/005`, ADR-010, ADR-017, web-56 — see [Review record](#review-record-phase-1).
-- [x] Open questions 2, 4, and 5 **resolved**; OQ3 resolved with PO sign-off in Review record; OQ1 remains open ([#20](https://github.com/markmamba/redcab-docs/issues/20)).
+- [x] Open questions 2, 4, and 5 **resolved**; OQ3 resolved with PO sign-off in Review record; OQ1 **resolved** in [#20](https://github.com/markmamba/redcab-docs/issues/20) (API implementation [#77](https://github.com/markmamba/red-cab-web/issues/77)).
 - [x] ADR statuses set to Accepted; ADR index updated (including Amendments convention).
 - [x] Phase 1 link updates and agent spec-path fixes applied ([#19](https://github.com/markmamba/redcab-docs/issues/19)) — `redcab-docs` on #19 PR; `red-cab-api` / `red-cab-web` via chore commits on `chore/docs-19-agent-spec-paths`.
 
@@ -147,7 +147,7 @@ flowchart LR
 | 3 (`/verify-email` while signed in) | **Resolved** — PO sign-off above |
 | 4 (return to public marketplace after sign-in) | **Resolved (implemented)** — web-80 `PUBLIC_RETURN_*` |
 | 5 (token lifetimes) | **Resolved** — `3600` / `604800` in initializer + [contract sheet](/docs/engineering/authentication/appendix-web-api-contract) |
-| 1 (cookie topology) | **Open** — [#20](https://github.com/markmamba/redcab-docs/issues/20); ADR-019 Accepted with one open setting |
+| 1 (cookie topology) | **Resolved (docs)** — [#20](https://github.com/markmamba/redcab-docs/issues/20); [ADR-019 production topology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology). API `domain:` [#77](https://github.com/markmamba/red-cab-web/issues/77) before launch |
 
 ### Phase 2 — Tourist access (web-56 / `#60`)
 
@@ -237,11 +237,11 @@ Specs 1–3 may be one PR if the reviewer prefers. Specs 4 and 5 are separate AP
 | R-3 | Policy silently off (loader deleted, `shouldRevalidate` or `clientLoader` added) | Medium | In-app clicks skip the check | Lint check in spec 6; manual click test in every policy PR |
 | R-4 | JWT refresh interacts badly with policy middleware (double refresh, lost `Set-Cookie`) | Medium | Random logouts | Refresh only in the session middleware (R4); `getCookieHeader()` for other loaders; test both document and `.data` requests with an expired access token |
 | R-5 | Breaking `identities/accounts/current` shape or path | Low | Every surface breaks | Contract sheet + contract tests (spec 5); additive changes only (`CR-6`) |
-| R-6 | SEO cost or cache leak on public routes | Medium today | Slower pages; a shared cache storing a personal page | No cookie, no call; `Cache-Control: private, no-store` when a cookie exists |
+| R-6 | SEO cost or cache leak on public routes | Medium today | Slower pages; a shared cache storing a personal page | No cookie, no call; `Cache-Control: private, no-store` when a cookie exists ([ADR-019 R5](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#refresh-rules-binding-on-red-cab-web-while-option-a-holds); [production cookie topology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology)) |
 | R-7 | Portal `401` → refresh → `401` → login redirect → guest guard → loop | High today for wrong-role API calls | Redirect loop | API `403` (spec 4) before web invariant 2 is relied on |
 | R-8 | Provider onboarding breaks when the API moves to `403` | High if uncoordinated | Providers stuck | Spec 4 changes both repos; web accepts old and new shape for one release |
 | R-9 | React Router `8.0.0` middleware behaves differently from the `8.3.0` reference | Low | Policy gaps | Spike in spec 6 before any policy PR merges |
-| R-10 | Production cookie domain prevents Node from seeing API cookies | Unknown | SSR always signed out | Open question 1 answered in Phase 0 |
+| R-10 | Production cookie domain prevents Node from seeing API cookies | Mitigated when API ships `domain:` | SSR always signed out | **Decided** ([#20](https://github.com/markmamba/redcab-docs/issues/20)) — parent-domain cookies per [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology). **Not resolved** until [#77](https://github.com/markmamba/red-cab-web/issues/77) lands |
 | R-11 | Tourist pre–Phase 2 work stalls waiting for policies | Low | Schedule | HOCs stay legal on unmigrated surfaces; Phase 3 runs in parallel |
 
 ---
@@ -276,7 +276,7 @@ Still to do (content or ticks — not pointer fixes):
 
 | # | Question | Status | Notes |
 | --- | --- | --- | --- |
-| 1 | **Production cookie topology** — how Node on the web host receives API cookies (marketplace + team) | **Open** | [#20](https://github.com/markmamba/redcab-docs/issues/20); gate G1; ADR-019 Accepted with this setting open |
+| 1 | **Production cookie topology** — how Node on the web host receives API cookies (marketplace + team) | **Resolved (docs)** | [#20](https://github.com/markmamba/redcab-docs/issues/20); [ADR-019 § Production cookie topology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology). API `domain:` [#77](https://github.com/markmamba/red-cab-web/issues/77) before launch |
 | 2 | **Portal `403` codes** (`IAM-Q2`) | **Resolved (shipped)** | Seven codes in ADR-018 D4; api-145 (#148); web #81 |
 | 3 | **Signed-in unverified account on `/verify-email`** (`IAM-Q1`) | **Resolved** | PO sign-off 2026-09-30 in [Review record](#review-record-phase-1); ADR-018 D10 |
 | 4 | **Post-auth return to public marketplace URLs** | **Resolved (implemented)** | web-80 `PUBLIC_RETURN_*`; Appendix A G16–G17 |

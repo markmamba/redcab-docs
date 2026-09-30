@@ -40,7 +40,7 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-016 | [ADR-016: Geography Administrative Tree](/docs/architecture/decisions/adr-016-geography-administrative-tree) | Accepted |
 | ADR-017 | [ADR-017: Tourist UI public URL architecture](/docs/architecture/decisions/adr-017-tourist-ui-public-url-architecture) | Accepted |
 | ADR-018 | [ADR-018: Red Cab Web Authentication Enforcement Model](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model) | Accepted (2026-09-30) |
-| ADR-019 | [ADR-019: Session Technology for Phase 1 and Phase 2](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2) | Accepted (2026-09-30); cookie domain open → [#20](https://github.com/markmamba/redcab-docs/issues/20) |
+| ADR-019 | [ADR-019: Session Technology for Phase 1 and Phase 2](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2) | Accepted (2026-09-30); production cookie topology closed ([#20](https://github.com/markmamba/redcab-docs/issues/20)) |
 
 ## Amendments convention
 
@@ -50,4 +50,4 @@ Accepted ADRs are **dated decisions**, not live status pages. When shipped code 
 2. Update this index row only when the **status** changes (for example Accepted → Superseded).
 3. Use **Superseded** and a replacement ADR only when the original decision is reversed, not for additive clarifications.
 
-Examples in this corpus: ADR-018 D4 portal codes extended by api-145; ADR-019 lifetimes recorded in the contract sheet; cookie topology tracked in roadmap OQ1 / issue #20.
+Examples in this corpus: ADR-018 D4 portal codes extended by api-145; ADR-019 lifetimes recorded in the contract sheet; ADR-019 production cookie topology ([#20](https://github.com/markmamba/redcab-docs/issues/20)).
