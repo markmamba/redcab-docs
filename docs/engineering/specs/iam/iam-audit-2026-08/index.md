@@ -411,7 +411,7 @@ Rules that follow, and that PRs 02–05 implement:
 4. **Record ownership is a Manager concern**, scoped by the profile it was handed — never by re-reading the role.
 5. **Status is re-checked per request**, not just at login (IAM-09).
 
-**Status code caveat:** every authorization failure in IAM today returns `Errors::UnauthorizedError` (401), which tells `red-cab-web`'s ky client to attempt a token refresh and retry — pointless work for a request that will never succeed. Introducing a 403 `Errors::ForbiddenError` is the correct fix but is a coordinated API + web change; it is called out as an open question rather than folded into PR-05.
+**Status code caveat (historical):** at the 2026-08 audit, portal gates returned `401`. **IAM-Q2 is closed** (2026-09-30): [ADR-018](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model) D4 is Accepted; api-145 ships `Errors::ForbiddenError` (403) with seven stable portal gate codes; web #81 reads `code` instead of matching `401` titles. PR-05 in §7 still means "actor base controllers exist"; the 403 behaviour is pinned by auth contract tests (#146).
 
 ---
 
@@ -445,8 +445,8 @@ Rules that follow, and that PRs 02–05 implement:
 
 | ID | Question | Why it needs a human | Working assumption |
 | --- | --- | --- | --- |
-| IAM-Q1 | Should an unverified account be able to log in at all? `Sessions::CreateManager` does not check `is_email_verified`, and `.ai/instructions.md` only says signup issues no cookie. | Product gating decision with a real conversion cost | Login is allowed; the frontend gates features on `is_email_verified` |
-| IAM-Q2 | Should authorization failures return 403 instead of 401? Today they return 401, which makes the web client burn a refresh round-trip on every denied request. | Coordinated API + web contract change | Keep 401 until PR-05 ships, then revisit |
+| IAM-Q1 | Should an unverified account be able to log in at all? `Sessions::CreateManager` does not check `is_email_verified`, and `.ai/instructions.md` only says signup issues no cookie. | Product gating decision with a real conversion cost | **Architecture:** yes — ADR-018 D10 Accepted; PO confirmed in auth roadmap [Review record](/docs/engineering/authentication/implementation-roadmap#review-record-phase-1) (2026-09-30). Frontend gates features on `is_email_verified` |
+| IAM-Q2 | Should authorization failures return 403 instead of 401? | Coordinated API + web contract change | **Closed** — ADR-018 D4 Accepted; api-145 (#148) + web #81; seven codes in D4. `provider_role_required` landed with api-145 provider role gate when on main |
 | IAM-Q3 | Can one person hold two roles (a tourist who also runs a tour business)? The schema enforces one `role` and one profile per account per table. | Product decision that determines whether `role` can ever be dropped | One role per account; a second business identity needs a second account |
 | IAM-Q4 | Does `identities_admins` need roles or permissions before the team portal gains destructive financial actions (commission rates, payouts)? | Security posture for internal staff | Every admin is omnipotent in Phase 1 |
 | IAM-Q5 | Should a Google sign-in for a brand-new user always create a tourist, or should the portal that initiated the OAuth flow decide? | Determines whether providers and corporate clients can onboard via Google | Tourist only, per Phase 0 |

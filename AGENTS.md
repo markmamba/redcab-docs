@@ -57,3 +57,9 @@ See [docs/engineering/specs/README.md](docs/engineering/specs/README.md).
 ## Multi-PR audit series
 
 Large audits live as spec series under `docs/engineering/specs/{context}/` (e.g. `iam/iam-audit-2026-08/`). Link from specs when an issue is part of that series.
+
+## Before generating code (auth or routes)
+
+- [Authentication series](docs/engineering/authentication/) — normative target design (ADR-018/019 Accepted; phased applicability)
+- [Authentication implementation roadmap](docs/engineering/authentication/implementation-roadmap.md) — Phase 0–5 gates and open questions
+- [Web platform program strategy](docs/product/planning/web-platform-program-strategy.md) — tourist UI vs auth redesign coordination

@@ -15,7 +15,9 @@ description: Architecture decision record 019 — keep jwt_sessions cookie JWTs 
 
 ## Status
 
-Proposed (2026-09-26). Becomes Accepted when the auth documentation series is approved (roadmap Phase 1).
+**Accepted** (2026-09-30), via [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19) and auth roadmap Phase 1.
+
+**One open setting:** production cookie `domain` / topology (roadmap open question 1, [redcab-docs#20](https://github.com/markmamba/redcab-docs/issues/20), gate **G1**). Access and refresh lifetimes are decided (`3600` / `604800` in `jwt_sessions.rb` and the [contract sheet](/docs/engineering/authentication/appendix-web-api-contract)).
 
 ## About this document
 
@@ -59,7 +61,7 @@ Verified in `red-cab-api` at `d8ed9b7`.
 4. `public-root.jsx` and `team-root.jsx` copy those `Set-Cookie` headers into the document response.
 5. Any refresh failure, including `5xx`, returns `false`. The original `401` then propagates.
 
-**Finding (static reading, confirm with a concurrency test):** on Node, `refreshPromise` is shared across all concurrent SSR requests in the process. If visitor B's request gets a `401` while visitor A's refresh is in flight, B receives A's refresh response. B's retry then runs with A's cookies, and B's document response carries A's `Set-Cookie`. B can end up signed in as A. An anonymous visitor can hit the same path, because every anonymous root load gets a `401` and calls `attemptTokenRefresh`. This is a cross-user session leak. It is Phase 0 work in the [roadmap](/docs/engineering/authentication/implementation-roadmap).
+**Finding (2026-09-26 audit at `c4ce884`):** on Node, a module-level `refreshPromise` could leak cookies across concurrent SSR requests (risk **R-1**). **Closed** by web-78 (`dbd036c`): per-request refresh scope on Node. The 2026-09-26 wording is kept here as audit history; current state is in the roadmap [Where things stand](/docs/engineering/authentication/implementation-roadmap#where-things-stand).
 
 ### The reference pattern
 

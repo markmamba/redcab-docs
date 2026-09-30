@@ -12,11 +12,11 @@ description: Architecture decision record 018 — policy routes, server middlewa
 - **Three web invariants:** (1) no session cookie means no session API call; (2) only HTTP `401` means signed out; (3) Node reads the session, the browser changes it.
 - **Two identity systems stay separate:** account (`apiClient`, `rc_*` cookies, `CSRF_TOKEN`) and team admin (`teamApiClient`, `rc_team_*` cookies, `TEAM_CSRF_TOKEN`).
 - **Migration is one surface per PR.** Order: `/team` and `/account` (Phase 3), then `/corporate` and `/providers` (Phase 4). The tourist pre–Phase 2 track does not wait for it.
-- **Prerequisite:** the API must answer `403`, not `401`, when a signed-in account is in the wrong portal. Until then, invariant 2 cannot hold.
+- **Prerequisite (portal `403`):** satisfied in production code by api-145 (`red-cab-api` `2b26aba`, issue **#148**). Invariant 2 still needs Phase 0 web root-read and provider `403` consumption (web-79, web-81) on every path you rely on.
 
 ## Status
 
-Proposed (2026-09-26). Becomes Accepted when the auth documentation series is approved (roadmap Phase 1).
+**Accepted** (2026-09-30), via [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19) and auth roadmap Phase 1. Consistency review and PO sign-off for OQ3 are recorded in the roadmap [Review record](/docs/engineering/authentication/implementation-roadmap#review-record-phase-1).
 
 ## About this document
 
@@ -40,9 +40,9 @@ This ADR records how `red-cab-web` enforces authentication on its routes. It doe
 
 ADR-010 does not say how the web app should apply the Role gate. This ADR fills that gap for `red-cab-web`.
 
-### How `red-cab-web` enforces access today
+### How `red-cab-web` enforced access at the 2026-09-26 audit
 
-Audited 2026-09-26 against `red-cab-web` at `c4ce884` and `red-cab-api` at `d8ed9b7`.
+**Historical snapshot** — audited 2026-09-26 against `red-cab-web` at `c4ce884` and `red-cab-api` at `d8ed9b7`. For **current** Phase 0 ship state (refresh lock, root read, safe `redirect_to`, API `403`, web portal codes), see the roadmap [Where things stand](/docs/engineering/authentication/implementation-roadmap#where-things-stand).
 
 | Concern | Today | Evidence |
 | --- | --- | --- |
@@ -190,7 +190,7 @@ Some pages must work for everyone and sit outside every policy: `/`, the marketp
 ### Negative
 
 - Each policy route needs a `loader` that returns `null`. Deleting it, or adding `shouldRevalidate` or `clientLoader`, silently turns the policy off on in-app clicks. Reviewers must know this rule ([policy middleware](/docs/engineering/authentication/policy-middleware)).
-- The API needs a coordinated `403` change before the web can trust invariant 2 fully.
+- Until every protected loader and the provider onboarding path consume `403` codes (not `401` title matching), invariant 2 is only partially realized on unmigrated surfaces.
 - For a while, some surfaces use HOCs and some use policies. The "never both in one subtree" rule controls this.
 - React Router `8.0.0` behaviour must be checked once in a spike. The reference pattern was verified on `8.3.0`.
 
@@ -223,4 +223,8 @@ Return a `provider_access.state` word in the account payload, as the reference p
 - [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2) — session technology and refresh rules.
 - [Authentication series](/docs/engineering/authentication) — how the model works.
 - [Entry rules specification](/docs/engineering/authentication/appendix-entry-rules-spec) — every rule, every state.
-- [IAM audit 2026-08](/docs/engineering/specs/iam/iam-audit-2026-08) — API correctness baseline, `IAM-Q2`.
+- [IAM audit 2026-08](/docs/engineering/specs/iam/iam-audit-2026-08) — API correctness baseline; `IAM-Q2` closed with D4 + api-145.
+
+## Revisit triggers
+
+Amend or supersede **D2** (policy routes on React Router `middleware`) if the Phase 3 spike in [policy middleware](/docs/engineering/authentication/policy-middleware) fails on React Router **8.0.0** (issue **#83**): the "when the policy runs" table must hold and the middleware `url` argument must be the page URL. If the spike fails, either upgrade React Router or change the enforcement model in a new ADR before merging policy-route PRs.

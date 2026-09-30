@@ -8,7 +8,7 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 ## TL;DR
 
 - **Phase 0** fixes correctness in **both** repos: a cross-user refresh leak in `ky-client`, `403` for portal gates, safe `redirect_to`, and "no cookie, no call". It blocks the production launch of authenticated surfaces. It does not block tourist UI development.
-- **Phase 1** approves this series and ADR-018/019. Docs only.
+- **Phase 1** approved this series and ADR-018/019 (2026-09-30, [#19](https://github.com/markmamba/redcab-docs/issues/19)). Docs only.
 - **Phase 2** is the tourist access work (web-56 / `#60`). **It has already merged** (`red-cab-web` `e24b55b`). What remains is a verification checklist.
 - **Phase 3** moves `/team` and `/account` (plus login pages) to policy routes. **Phase 4** moves `/corporate` and `/providers`, then deletes the HOCs.
 - **Phase 5** (server-side sessions) runs only if ADR-019 is superseded.
@@ -28,19 +28,24 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 
 ## Where things stand
 
+**Living baseline (2026-09-30):** `red-cab-web@4980e5c`, `red-cab-api@9329239`. ADR "today" tables dated 2026-09-26 stay **historical**; this table is the current ship state.
+
 | Item | State | Evidence |
 | --- | --- | --- |
-| IAM audit PR-01 (`GET accounts/current` restored) | In code | `config/routes/identities_routes.rb` |
-| PR-02 (token inversions, archived login, lockout reset, revoke on reset, OAuth verified-email gate, per-request active check) | In code | `sessions/create_manager.rb`, `password_resets/confirm_manager.rb`, `callback_manager.rb:203`, `authenticated_controller.rb` |
-| PR-03 (no global `JWTSessions.access_cookie` mutation) | In code | `session_cookie_manager.rb#request_cookies`, `session_principal.rb` |
-| PR-04 (`PATCH accounts/current`) | In code | `accounts_controller.rb#update` |
-| PR-05 (tourist and corporate base controllers, `CurrentRequest` profiles) | In code, **but failures answer `401`** | `tourists/base_controller.rb`, `corporate/base_controller.rb` |
-| PR-06 (`GET team/identities/admins/current`) | In code | `team_routes.rb`, `team/identities/admins_controller.rb` |
-| PR-07 (`ProvisionService`) | In code | `accounts/provision_service.rb`, `callback_manager.rb:146` |
-| PR-08 (route removals, serializer renames) | In code | `UsersAccountBaseSerializer`, `TeamAdminBaseSerializer`; no bare `DELETE identities/sessions` |
-| IAM audit index checkboxes | **Stale** (Phase 0 and PR-05 to PR-08 unticked) | `iam-audit-2026-08/index.md` §7 |
+| Phase 0 web — SSR refresh per request (ADR-019 R2) | Merged | web-78 `dbd036c` — `ky-client.js` per-request `refreshScope` |
+| Phase 0 web — root session read contract | Merged | web-79 `a038076` — `public-root.jsx`, `team-root.jsx` |
+| Phase 0 web — safe `redirect_to` + public return | Merged | web-80 `c425887` — `app/auth/auth-safe-redirect.js` |
+| Phase 0 web — portal `403` consumption | Merged | web #81 `4980e5c` — `portal-gate-utils.js` |
+| Phase 0 API — `403` portal gates + lifetimes | Merged | api-145 `2b26aba` (#148) — `ForbiddenError`, seven D4 codes, `jwt_sessions` `3600` / `604800` |
+| Phase 0 API — auth contract integration tests | Merged | api-146 `9329239` (#149) — `test/integration/auth_contract/**` |
+| Phase 0 API — `provider_role_required` on Providers base | **On branch** until merged | [red-cab-api#81](https://github.com/markmamba/red-cab-api/issues/81) — not on `origin/main` at baseline `9329239`; IAM-Q2 narrative closed on #19 |
+| IAM audit PR-01–PR-02, PR-04–PR-07 | In code (§7 partially ticked) | See `iam-audit-2026-08/index.md` §7; PR-03 and PR-08 still open by design |
+| PR-05 portal gates | In code, **`403` + codes** | `tourists/base_controller.rb`, `corporate/base_controller.rb`, `providers/base_controller.rb` |
+| IAM audit index checkboxes | **Partial** — PR-03, PR-08 open; narrative IAM-Q2 closed on #19 | `iam-audit-2026-08/index.md` §7–§8 |
+| Phase 1 — ADR-018/019 + series | **Accepted / normative** | [#19](https://github.com/markmamba/redcab-docs/issues/19); [Review record](#review-record-phase-1) |
+| Production cookie topology (OQ1) | **Open** | [#20](https://github.com/markmamba/redcab-docs/issues/20); gate G1 |
 | web-56 / `#60` public routes | Merged | `red-cab-web` `e24b55b` |
-| `#58`, `#59`, `#62`, `#63` | Merged | `f93a875`, `e9288f9`, `b8787ef`, `c4ce884` |
+| Tourist shell / funnel `#58`–`#64` | Merged per program strategy | See [web platform program strategy](/docs/product/planning/web-platform-program-strategy) |
 
 ---
 
@@ -104,14 +109,45 @@ flowchart LR
 
 **Exit criteria:**
 
-- [ ] `review-implementation-spec`-style review of ADR-018, ADR-019, and Appendix A against `FR-IAM-004/005/009/012`, `NFR-SEC-004/005`, ADR-010, ADR-017, web-56.
-- [ ] Open questions 2–4 answered or explicitly deferred with the working assumption kept.
-- [ ] ADR statuses set to Accepted; ADR index updated.
-- [ ] Link updates below applied.
+- [x] `review-implementation-spec`-style review of ADR-018, ADR-019, and Appendix A against `FR-IAM-004/005/009/012`, `NFR-SEC-004/005`, ADR-010, ADR-017, web-56 — see [Review record](#review-record-phase-1).
+- [x] Open questions 2, 4, and 5 **resolved**; OQ3 resolved with PO sign-off in Review record; OQ1 remains open ([#20](https://github.com/markmamba/redcab-docs/issues/20)).
+- [x] ADR statuses set to Accepted; ADR index updated (including Amendments convention).
+- [x] Phase 1 link updates and agent spec-path fixes applied ([#19](https://github.com/markmamba/redcab-docs/issues/19)) — `redcab-docs` on #19 PR; `red-cab-api` / `red-cab-web` via chore commits on `chore/docs-19-agent-spec-paths`.
 
 **Dependencies:** none. Can run in parallel with Phase 0.
 
 **Non-goals:** code.
+
+### Review record (Phase 1)
+
+**Date:** 2026-09-30  
+**Issue:** [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19)  
+**Reviewer:** implementation-spec consistency pass (FR/NFR/ADR/web-56 matrix)
+
+| Source | Check | Outcome |
+| --- | --- | --- |
+| FR-IAM-004 | Email verification reachable while signed in | ADR-018 D10 + Appendix A `/verify-email` open — aligned |
+| FR-IAM-005 | Authenticated session for protected acts | ADR-019 Option A + refresh rules — aligned |
+| FR-IAM-009 / NFR-SEC-004 | Role gates surfaces; Admin separate | ADR-018 D5/D6, D9, web-56 public browse — aligned |
+| FR-IAM-012 | Session lifecycle on API | ADR-010 + ADR-019; contract sheet — aligned |
+| NFR-SEC-005 | Auth at booking initiation | Public browse + checkout login (web-56) — aligned |
+| ADR-010 | Role vs domain gates | D5 entry rules vs loaders — aligned |
+| ADR-017 / web-56 | Public URLs, auth at checkout | D9, Phase 2 merged — aligned |
+| Appendix A | Entry rules vs D10 guest/open pages | No gap requiring Appendix edit in #19 |
+
+**Gaps fixed in #19:** living-doc re-baseline (Where things stand, program strategy); IAM-Q2 narrative; seven-code wording; ADR Accepted status with historical audit tables.
+
+**Product Owner (OQ3 / IAM-Q1):** 2026-09-30 — Product Owner confirms **yes**: unverified accounts may sign in; `/verify-email` must work while signed in (ADR-018 D10). Recorded before ADR-018 Accept.
+
+**Open question disposition (Phase 1):**
+
+| OQ | Disposition |
+| --- | --- |
+| 2 (`IAM-Q2`, seven `403` codes) | **Resolved (shipped)** — ADR-018 D4 Accepted; api-145 + web #81 |
+| 3 (`/verify-email` while signed in) | **Resolved** — PO sign-off above |
+| 4 (return to public marketplace after sign-in) | **Resolved (implemented)** — web-80 `PUBLIC_RETURN_*` |
+| 5 (token lifetimes) | **Resolved** — `3600` / `604800` in initializer + [contract sheet](/docs/engineering/authentication/appendix-web-api-contract) |
+| 1 (cookie topology) | **Open** — [#20](https://github.com/markmamba/redcab-docs/issues/20); ADR-019 Accepted with one open setting |
 
 ### Phase 2 — Tourist access (web-56 / `#60`)
 
@@ -179,7 +215,7 @@ Create each from `engineering/specs/_template.md`, `status: draft`, under `engin
 | 1 | 0 | `web-NNN-ssr-refresh-request-scope.md` | Isolate SSR token refresh per request | Per-request lock; non-`401` refresh failure propagates; concurrency test; no module-level refresh state on Node |
 | 2 | 0 | `web-NNN-root-session-read-contract.md` | Root session read: no cookie, no call; only 401 is signed out | Both roots; zero calls without cookie; `503` → error boundary; `Cache-Control: private, no-store` with cookie |
 | 3 | 0 | `web-NNN-safe-redirect-helper.md` | Validate redirect_to on every login path | `auth-safe-redirect.js` + tests S1–S9, L1–L2; used by team login and `withNoAuth` |
-| 4 | 0 | `api-NNN-portal-gate-forbidden.md` (repos: api, web) | Return 403 with a code for portal and approval gates | `Errors::ForbiddenError`; four codes; integration tests; web provider service reads the code |
+| 4 | 0 | `api-NNN-portal-gate-forbidden.md` (repos: api, web) | Return 403 with a code for portal and approval gates | `Errors::ForbiddenError`; **seven** D4 codes; integration tests; web reads `code` (web #81) |
 | 5 | 0 | `api-NNN-auth-contract-tests.md` | Pin the auth contract with integration tests | One test per contract row; explicit token lifetimes; IAM audit checkboxes updated |
 | 6 | 3 | `web-NNN-auth-core-modules.md` | Add session middleware, guards, and entry rules | `app/auth/*` + specs for every Appendix A row; RR 8.0 spike recorded; policy export lint |
 | 7 | 3 | `web-NNN-team-policy-routes.md` | Guard the Admin Panel with policy routes | Admin policies; `team-layout` guard removed; team logout route; manual click test |
@@ -212,40 +248,39 @@ Specs 1–3 may be one PR if the reviewer prefers. Specs 4 and 5 are separate AP
 
 ## Link updates
 
-Applied with this package:
+Applied in the auth series bootstrap and Phase 1 ([#19](https://github.com/markmamba/redcab-docs/issues/19)):
 
 | File | Change |
 | --- | --- |
-| `architecture/decisions/index.md` | Add ADR-018 and ADR-019 rows; count "Seventeen" → "Nineteen" |
-| `engineering/conventions/frontend.md` | "Auth HOCs" section: add a note that HOCs are transitional per ADR-018, with a link to this series; "ky-client features": link to ADR-019 refresh rules |
-| `engineering/conventions/domain-to-code-mapping.md` | Frontend surface table: add a note that the `Auth HOC` column becomes policy routes per ADR-018 |
-| `product/planning/roadmap/tourist-ui-pre-phase-2.md` | Related documents: link to this series, noting that `/account/**` keeps HOCs until Phase 3 |
-| `product/planning/web-platform-program-strategy.md` | Program plan: parallel tracks, gates, issue ↔ auth phase map |
-| `product/planning/index.md` | Planning tier index |
-| `engineering/index.md` | Reading order: add the authentication series |
+| `architecture/decisions/index.md` | ADR-018/019 Accepted; **Amendments** convention |
+| `architecture/decisions/adr-018-*.md`, `adr-019-*.md` | Accepted; historical audit tables; prerequisite / leak findings updated |
+| `engineering/authentication/index.md` | Normative target + phased applicability |
+| `product/planning/web-platform-program-strategy.md` | Phase 0 mostly merged; Phase 1 done |
+| `AGENTS.md` (workspace + `redcab-docs`) | Auth series + `docs/engineering/specs/{context}/…` spec path |
+| `.cursor/rules/00-spec-first.mdc` (workspace, api, web) | Correct implementation spec path |
+| `engineering/specs/iam/iam-audit-2026-08/index.md` | **IAM-Q2** closed (narrative); IAM-Q1 tied to PO sign-off |
 
-Still to do (outside this package):
+Still to do (content or ticks — not pointer fixes):
 
 | File | Change | When |
 | --- | --- | --- |
-| `engineering/specs/iam/iam-audit-2026-08/index.md` | Tick PR-01 to PR-08 once contract tests pass; close `IAM-Q2` with ADR-018 D4 | Phase 0 spec 5 |
-| `engineering/conventions/backend.md` | Error table: add `ForbiddenError (403)` and its codes | Phase 0 spec 4 |
-| `architecture/decisions/adr-010-identity-and-authorization-architecture.md` | Remove the TL;DR and About blocks that repeat six times at the top (formatting defect) | Any docs PR |
-| `red-cab-web/.ai/instructions.md`, `red-cab-web/.cursor/rules/10-routes-api-forms.mdc` | "Use surface-appropriate auth HOC" → "place the page under its surface policy" | Phase 3 spec 8 |
-| `red-cab-api/.ai/instructions.md` | IAM section: `403` codes; link to contract sheet | Phase 0 spec 4 |
-| `AGENTS.md` (workspace) | Add `engineering/authentication/` to "Before generating code" for any auth or route work | Phase 1 |
+| `engineering/specs/iam/iam-audit-2026-08/index.md` | Tick PR-03 and PR-08 when those PRs land; optional full §7 re-tick | Phase 0 / PR-08 |
+| `engineering/conventions/backend.md` | Error table: add `ForbiddenError (403)` and its codes | Phase 0 spec 4 follow-up |
+| `architecture/decisions/adr-010-identity-and-authorization-architecture.md` | Remove duplicate TL;DR blocks (formatting defect) | Separate hygiene PR |
+| `red-cab-web/.ai/instructions.md`, `red-cab-web/.cursor/rules/10-routes-api-forms.mdc` | HOC → policy wording | Phase 3 spec 8 |
+| `red-cab-api/.ai/instructions.md` | IAM section: `403` codes; link to contract sheet | Phase 0 spec 4 follow-up |
 
 ---
 
 ## Open questions
 
-| # | Question | Why it needs a decision | Owner | Working assumption |
-| --- | --- | --- | --- | --- |
-| 1 | **Production cookie topology.** API cookies are host-only today. How does Node on the web host receive them? Options: (a) cookie `domain` set to the shared parent domain; (b) API served same-origin under a path on the web host; (c) Node proxies all API calls. The team portal has the same question for `VITE_API_TEAM_URL` | Without it, SSR sees no session in production, and every policy redirects to login | Architect | (a) Parent-domain cookies, separately for the marketplace and team domains, as the `teamApiClient` comment in `ky-client.js` already implies |
-| 2 | **Approve `403` codes for portal and approval gates** (`IAM-Q2`) | Coordinated API + web contract change | Architect | Approve the four codes in ADR-018 D4 |
-| 3 | **Can a signed-in, unverified account open `/verify-email`?** (depends on `IAM-Q1`) | Changes guest-page behaviour | Product Owner | Yes. Unverified login is allowed (`IAM-Q1`), so verification must work while signed in |
-| 4 | **After sign-in, may a person return to a public marketplace page** (for example the listing they were reading), not only to their Role's area? | Changes post-auth landing, a UX behaviour | Product Owner | Yes, for `/`, `/districts/**`, `/listings/**`. These pages are public anyway, so no access widens. **Web:** implemented in [web-80-safe-redirect-helper.md](/docs/engineering/specs/iam/auth-platform/web-80-safe-redirect-helper.md) (`PUBLIC_RETURN_*` + **G16–G17** tests). |
-| 5 | **Token lifetimes.** What access and refresh lifetimes fit Phase 1? | Security posture vs. how often people must sign in again | Architect | Keep the jwt_sessions defaults but write them down explicitly |
+| # | Question | Status | Notes |
+| --- | --- | --- | --- |
+| 1 | **Production cookie topology** — how Node on the web host receives API cookies (marketplace + team) | **Open** | [#20](https://github.com/markmamba/redcab-docs/issues/20); gate G1; ADR-019 Accepted with this setting open |
+| 2 | **Portal `403` codes** (`IAM-Q2`) | **Resolved (shipped)** | Seven codes in ADR-018 D4; api-145 (#148); web #81 |
+| 3 | **Signed-in unverified account on `/verify-email`** (`IAM-Q1`) | **Resolved** | PO sign-off 2026-09-30 in [Review record](#review-record-phase-1); ADR-018 D10 |
+| 4 | **Post-auth return to public marketplace URLs** | **Resolved (implemented)** | web-80 `PUBLIC_RETURN_*`; Appendix A G16–G17 |
+| 5 | **Token lifetimes** | **Resolved** | `JWTSessions.access_exp_time = 3600`, `refresh_exp_time = 604_800`; [contract sheet](/docs/engineering/authentication/appendix-web-api-contract) |
 
 ## Related documents
 
