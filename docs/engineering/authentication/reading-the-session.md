@@ -27,7 +27,7 @@ description: How the virtual roots read the account and admin session — sessio
 | Session middleware | `authAccountSession.middleware` or `authAdminSession.middleware`. Exported from a virtual root as `middleware` |
 | Router context | React Router's per-request `context` (`createContext` from `react-router`). Not React context |
 | Lazy read | The API call starts on the first `getIdentitiesAccountCurrent()` call and is memoized for the rest of the request |
-| Cookie header | The `Cookie` value Node forwards to Rails. After a refresh it holds the new tokens (`getCookieHeader()`) |
+| Cookie header | The `Cookie` value Node forwards to Rails. After a refresh it holds the new tokens (`getCookieHeader()`). In production, parent-domain cookies set at login on the API host appear on the web origin document request ([ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology)) |
 | Revalidation | React Router running matched loaders again after an action or a `revalidate()` call |
 
 ## How the routes nest
@@ -97,6 +97,7 @@ const middleware = async ({ request, context }, next) => {
   for (const setCookieHeader of refreshScope.setCookieHeaders) {
     response.headers.append('Set-Cookie', setCookieHeader)
   }
+  // Parent-domain cookies from refresh match the document host (ADR-019 R4–R5, production topology)
 
   if (hasSessionCookie) {
     response.headers.set('Cache-Control', 'private, no-store')

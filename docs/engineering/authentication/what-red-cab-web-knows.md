@@ -54,7 +54,8 @@ flowchart TB
 
 | Question | Browser | Node |
 | --- | --- | --- |
-| How does it send cookies to Rails? | `credentials: 'include'`. The browser attaches cookies for the API host | Copies the incoming `Cookie` header (`request.headers.get('cookie')`) |
+| How does it send cookies to Rails? | `credentials: 'include'`. The browser attaches cookies whose `Domain` matches the API host (production: parent-domain cookies — [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology)) | Copies the incoming document `Cookie` header (`request.headers.get('cookie')`). After login via the API host, parent-domain session cookies appear on the web origin and are forwarded to `GET …/current` |
+| CORS | API must allow the web origin with `credentials: true` (account: `https://redcab.com`; team: admin portal origin) | N/A — server-side request with forwarded `Cookie` |
 | May it log in or out? | Yes | No (ADR-018 invariant 3) |
 | May it refresh? | Yes, after a `401`, once per tab at a time (ADR-019 R2) | Only inside the session middleware read, once per request (R4) |
 | Where does it keep the session? | React context filled from root loader data | Per-request router context. It dies with the request |
@@ -66,7 +67,7 @@ flowchart TB
 | Principal | `Identities::Account` | `Identities::Admin` |
 | Roles | `tourist`, `corporate`, `provider` (`ACCOUNT_ROLE` in `identities-account-constant.js`) | None. Every admin is signed in or not (`IAM-Q4`) |
 | Virtual root | `roots/public-root.jsx` | `roots/team-root.jsx` |
-| API client | `apiClient` (`VITE_API_REDCAB_URL`) | `teamApiClient` (`VITE_API_TEAM_URL`, falls back to `VITE_API_REDCAB_URL`) |
+| API client | `apiClient` — base URL `VITE_API_REDCAB_URL` (production: `https://api.redcab.com`) | `teamApiClient` — base URL `VITE_API_TEAM_URL` (production: team API on the **admin** registrable domain, first-party to the team portal; **not** `api.redcab.com` for team session cookies). Falls back to `VITE_API_REDCAB_URL` only in local dev when unset |
 | Access cookie | `rc_access` | `rc_team_access` |
 | Refresh cookie | `rc_refresh` | `rc_team_refresh` |
 | CSRF cookie | `CSRF_TOKEN` | `TEAM_CSRF_TOKEN` |

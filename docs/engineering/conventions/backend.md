@@ -76,28 +76,30 @@ HTTP Request
 ApplicationController (ActionController::API)
   ├── error handling (rescue_from)
   ├── pagination (PaginationHelper)
-  └── cookie_domain (private)
-      │
-      ├── Identities::Users::AuthenticatedController
-      │     ├── include SessionCookieManager
-      │     ├── JWT cookie auth (jwt_sessions)
-      │     ├── CurrentRequest population
-      │     │
-      │     ├── Tourists::BaseController
-      │     ├── Corporate::BaseController
-      │     ├── Providers::BaseController
-      │     └── Identities::SessionsController (login/refresh/logout)
-      │
-      ├── Team::AuthenticatedController
-      │     ├── include SessionCookieManager
-      │     ├── JWT cookie auth with team cookies + namespace
-      │     ├── CurrentRequest.identities_admin population
-      │     └── Team::Identities::Admins::SessionsController
-      │
-      └── Marketplace::BaseController
-            Optional auth (tries JWT, proceeds if absent)
-            Sets: CurrentRequest.identities_user (may be nil)
+  │
+  ├── Identities::Users::AuthenticatedController
+  │     ├── include SessionCookieManager
+  │     ├── JWT cookie auth (jwt_sessions)
+  │     ├── CurrentRequest population
+  │     │
+  │     ├── Tourists::BaseController
+  │     ├── Corporate::BaseController
+  │     ├── Providers::BaseController
+  │     └── Identities::SessionsController (login/refresh/logout)
+  │
+  ├── Team::AuthenticatedController
+  │     ├── include SessionCookieManager
+  │     ├── JWT cookie auth with team cookies + namespace
+  │     ├── CurrentRequest.identities_admin population
+  │     └── Team::Identities::Admins::SessionsController
+  │
+  └── Marketplace::BaseController
+        ├── include SessionCookieManager
+        ├── Optional auth (tries JWT, proceeds if absent)
+        └── Sets: CurrentRequest.identities_user (may be nil)
 ```
+
+Session cookies are set and cleared in `SessionCookieManager` (`set_session_cookie`, `set_csrf_cookie`, `delete_session_cookie`). There is no `ApplicationController#cookie_domain` helper. Production cookie `Domain` is configuration per identity system — see [ADR-019 Production cookie topology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2.md#production-cookie-topology); wiring `domain:` on set/delete is [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77).
 
 ### CurrentRequest (thread-local state)
 

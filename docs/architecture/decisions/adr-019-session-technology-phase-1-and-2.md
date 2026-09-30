@@ -11,13 +11,13 @@ description: Architecture decision record 019 — keep jwt_sessions cookie JWTs 
 - **Option B** (server-side sessions in PostgreSQL, no refresh) is **deferred**, not rejected. Named triggers reopen it.
 - Refresh stays, under **eight refresh rules** (R1–R8). The most urgent: on Node, the refresh lock must be **per incoming request**. Today it is shared by every request in the process.
 - The web enforcement model ([ADR-018](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model)) does not depend on this choice. Policies and entry rules work with either option.
-- Two settings must be written down, not left to library defaults: token lifetimes and the production cookie domain.
+- Two settings must be written down, not left to library defaults: token lifetimes and the production cookie `domain` (topology decided — see [Production cookie topology](#production-cookie-topology)).
 
 ## Status
 
 **Accepted** (2026-09-30), via [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19) and auth roadmap Phase 1.
 
-**One open setting:** production cookie `domain` / topology (roadmap open question 1, [redcab-docs#20](https://github.com/markmamba/redcab-docs/issues/20), gate **G1**). Access and refresh lifetimes are decided (`3600` / `604800` in `jwt_sessions.rb` and the [contract sheet](/docs/engineering/authentication/appendix-web-api-contract)).
+**Production cookie topology** is decided in [Production cookie topology](#production-cookie-topology) ([redcab-docs#20](https://github.com/markmamba/redcab-docs/issues/20), gate **G1** documentation). **API wiring** of `domain:` on `SessionCookieManager` is follow-on [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77) — ship before first authenticated production traffic. Access and refresh lifetimes are decided (`3600` / `604800` in `jwt_sessions.rb` and the [contract sheet](/docs/engineering/authentication/appendix-web-api-contract)).
 
 ## About this document
 
@@ -49,7 +49,7 @@ Verified in `red-cab-api` at `d8ed9b7`.
 | Per-principal cookie names without global mutation (IAM audit PR-03 landed) | `SessionPrincipal::ACCOUNT`, `SessionPrincipal::TEAM`; `SessionCookieManager#request_cookies` |
 | Password reset revokes all sessions (PR-02 landed) | `Identities::Sessions::RevokeAllService` call in `password_resets/confirm_manager.rb` |
 | Access and refresh lifetimes are **not set**. Library defaults apply | `jwt_sessions.rb` sets no `access_exp_time` / `refresh_exp_time` |
-| Production cookie domain is **not decided**. `cookie_domain` helper exists but is unused (IAM-27) | `ApplicationController#cookie_domain` |
+| Production cookie `domain` is **not wired** in code yet (host-only today). Value comes from **configuration per identity system**, not `request.host` — see [Production cookie topology](#production-cookie-topology) and [contract sheet](/docs/engineering/authentication/appendix-web-api-contract) | `SessionCookieManager#set_session_cookie` / `#set_csrf_cookie` (no `domain:` today); follow-on #77 |
 
 ### How `red-cab-web` refreshes today
 
@@ -134,7 +134,48 @@ Reasons:
 | Setting | Required action | Owner |
 | --- | --- | --- |
 | Access and refresh lifetimes | Set `JWTSessions.access_exp_time` and `JWTSessions.refresh_exp_time` in `config/initializers/jwt_sessions.rb`. Record the values in the [contract sheet](/docs/engineering/authentication/appendix-web-api-contract) | API |
-| Production cookie domain | Decide how Node on the web host receives API cookies (see open question in the [roadmap](/docs/engineering/authentication/implementation-roadmap#open-questions)). Record it here before any authenticated surface launches | Architect |
+| Production cookie `domain` | **Decided** — parent-domain cookies per identity system ([Production cookie topology](#production-cookie-topology)). Implement `domain:` in API config ([#77](https://github.com/markmamba/red-cab-web/issues/77)) before launch | API |
+
+### Production cookie topology
+
+**Decision (2026-09-30, [#20](https://github.com/markmamba/redcab-docs/issues/20)):** use **parent-domain cookies**. For each identity system, the API sets `Set-Cookie` with a `Domain` attribute that covers **both** that system's browser origin (SSR) **and** its public API origin. That lets Node forward `document.cookie` to the API on SSR, and lets the browser send `credentials: 'include'` cross-origin while still reading the CSRF cookie on the web origin.
+
+Account and team admin use **different registrable domains** in production ([ADR-010](/docs/architecture/decisions/adr-010-identity-and-authorization-architecture), **NFR-SEC-004**). Team admin cookies are **not** under `.redcab.com`.
+
+#### Topology options considered
+
+| Option | Mechanism | SSR cookie visibility | Browser XHR + CSRF | CORS | Node refresh `Set-Cookie` → document | Typical `VITE_API_*` |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Parent-domain cookies** (**chosen**) | API sets `Domain` per identity parent | Document `Cookie` includes session cookies when logged in via API host | `credentials: include`; CSRF readable on web origin when `Domain` covers web+API | Credentialed allowlist per web origin | Suffix match: parent-domain cookies on web response OK (R4–R5) | `VITE_API_REDCAB_URL` → `https://api.redcab.com`; `VITE_API_TEAM_URL` → team API on **admin** parent |
+| Same-origin API path | Ingress `/api/*` on web host | Cookies on web host | Same-origin | Not required for browser `/api` | Cookies already on web host | Relative or web-origin `/api` base |
+| Node proxy (BFF) | Browser → web only | Depends on cookie host | CSRF on web origin if cookies set there | Browser same-origin | Risk: foreign API `Set-Cookie` dropped on document response | Internal API URL on Node |
+
+**Rejected:**
+
+- **Same-origin API path** — every web surface needs ingress/path routing to the API; duplicates origins and complicates cache and rollout.
+- **Node proxy (BFF)** — splits public API URL from browser URL; refresh `Set-Cookie` from the upstream API is easy to drop when building the document response.
+
+#### Production host layout (normative)
+
+| Identity system | Browser origin (SSR) | Public API origin | Cookie `Domain` | Cookies |
+| --- | --- | --- | --- | --- |
+| **Account** (marketplace, tourist, corporate, provider) | `https://redcab.com` | `https://api.redcab.com` | `.redcab.com` | `rc_*`, `CSRF_TOKEN` |
+| **Team admin** | `https://<admin-portal-host>` | `https://<admin-api-host>` | `.<admin-registrable-domain>` | `rc_team_*`, `TEAM_CSRF_TOKEN` |
+
+**Open setting:** replace `<admin-portal-host>`, `<admin-api-host>`, and `<admin-registrable-domain>` when DNS for the admin registrable domain is fixed. Account hosts above are **literal** for production.
+
+**Binding rules:**
+
+1. `Domain` is set from **configuration per identity system** (`SessionPrincipal::ACCOUNT` vs `SessionPrincipal::TEAM`), never derived from `request.host`.
+2. Each `Domain` must cover that system's **web SSR origin and API origin**.
+3. **CORS** on each API must list every browser origin that calls it with `credentials: true` (minimum `https://redcab.com` on the account API; the team portal origin on the team API). First-party product subdomains on the account parent are allowed; do **not** put vendor-hosted sites on `*.redcab.com` (CSRF and cookie scope).
+4. **Delete cookie** (logout) must use the same `domain` and `path` as set.
+5. **Account parent subdomains:** enumerate allowed first-party hosts in CORS; CSRF mitigates scripts on other `*.redcab.com` hosts that share the parent.
+6. **Cache:** when a session cookie is present on a document or `.data` response, set `Cache-Control: private, no-store` (refresh rules R5; roadmap R-6). No HTML CDN on account SSR today; the rule still applies if a shared cache sits in front of authenticated HTML.
+
+**Cutover:** no production authenticated sessions exist yet. Ship API `domain:` before the first authenticated production launch — no cookie migration window.
+
+**Implementation follow-on:** [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77) — add `domain:` to `SessionCookieManager` set, CSRF set, and delete; per principal and per environment (`nil` in dev/test). Update `config/initializers/cors.rb` for team portal and any first-party account subdomains.
 
 ### Revisit triggers for Option B
 
@@ -160,6 +201,8 @@ Open a new ADR that supersedes this one when **any** of these happens:
 - The web keeps refresh code. It is the most delicate code in `ky-client.js` and needs a concurrency test.
 - Every token expiry costs one extra round trip (`401`, refresh, retry).
 - Option B, if chosen later, still needs a dual-read window.
+- Parent-domain cookies on `.redcab.com` share scope across first-party subdomains; CORS allowlisting and CSRF remain mandatory (**NFR-SEC-004** isolates team admin on a separate registrable domain).
+- Cross-origin credentialed API calls require explicit CORS maintenance when new browser origins ship.
 
 ---
 
@@ -175,3 +218,7 @@ Open a new ADR that supersedes this one when **any** of these happens:
 - [ADR-018](/docs/architecture/decisions/adr-018-web-authentication-enforcement-model)
 - [IAM audit 2026-08](/docs/engineering/specs/iam/iam-audit-2026-08) — PR-02 (revocation), PR-03 (per-request cookie names)
 - [Changing a session](/docs/engineering/authentication/changing-a-session)
+
+## Amendments
+
+- **2026-09-30 ([#20](https://github.com/markmamba/redcab-docs/issues/20)):** Recorded [Production cookie topology](#production-cookie-topology) (parent-domain cookies; account on `redcab.com` / `api.redcab.com`; team admin on a separate registrable domain). Closed roadmap open question 1. Corrected stale `ApplicationController#cookie_domain` references — wiring is `SessionCookieManager` + config ([#77](https://github.com/markmamba/red-cab-web/issues/77)).

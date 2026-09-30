@@ -76,8 +76,19 @@ description: One sheet of every authentication endpoint between red-cab-web and 
 | `secure` | `true` in production | same |
 | `same_site` | `lax` | same |
 | `path` | `/` | same |
-| `domain` | host-only today. **Production value to be decided** (roadmap open question 1) | `ApplicationController#cookie_domain` (unused) |
+| `domain` | **Dev/test:** omit (`host-only`). **Production:** parent domain per identity system — see matrix below. **Today in code:** host-only until [#77](https://github.com/markmamba/red-cab-web/issues/77) | `SessionCookieManager` (config per `SessionPrincipal`; not `request.host`) |
 | Expiry | Session cookies (no `Max-Age`). Token lifetime is inside the JWT | jwt_sessions |
+
+### Cookie `domain` by environment
+
+Normative topology: [ADR-019 § Production cookie topology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology). Logout must clear cookies with the **same** `domain` and `path` as set.
+
+| Environment | Account (`rc_*`, `CSRF_TOKEN`) | Team admin (`rc_team_*`, `TEAM_CSRF_TOKEN`) | Notes |
+| --- | --- | --- | --- |
+| **Local dev** | Host-only (no `Domain` attribute) | Host-only | Typical split: web `localhost:5173`, API `localhost:3000` — parent-domain cookies do not apply across ports; use host-only or a shared dev hostname if testing topology |
+| **QA / staging** | Parent domain covering staging web + staging account API (dedicated subdomains on `redcab.com` or equivalent) | Parent domain on **admin** registrable domain covering staging team web + team API | Values are **config**, not code constants; record actual hostnames in deploy config |
+| **Production** | `.redcab.com` (`https://redcab.com` SSR, `https://api.redcab.com` API) | `.<admin-registrable-domain>` (team portal + team API under admin DNS) | Account literals fixed in ADR-019; admin hostname slot open until DNS is fixed |
+| **PR previews** (platform hosts) | Host-only or preview-specific | Host-only or preview-specific | Cannot validate production parent-domain topology on vendor preview URLs |
 
 ## Token lifetimes
 

@@ -107,7 +107,7 @@ flowchart TB
 
 | Auth phase | Blocks tourist UI dev? | Blocks production auth? | Status |
 | --- | --- | --- | --- |
-| **0** — Correctness + contract | No | **Yes** (except OQ1 cookie topology) | **Mostly merged** — web-78/79/80, api-145/146, web #81; specs approved under `engineering/specs/iam/auth-platform/`; remaining: OQ1 ([#20](https://github.com/markmamba/redcab-docs/issues/20)), IAM audit §7 checkbox ticks |
+| **0** — Correctness + contract | No | **Yes** (API cookie `domain:` [#77](https://github.com/markmamba/red-cab-web/issues/77) before launch) | **Mostly merged** — web-78/79/80, api-145/146, web #81; OQ1 topology **recorded** ([#20](https://github.com/markmamba/redcab-docs/issues/20), [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology)); remaining: IAM audit §7 checkbox ticks, Phase 0 verification checkboxes, #77 |
 | **1** — Accept ADR-018/019 + series | No | No | **Done** (2026-09-30, [#19](https://github.com/markmamba/redcab-docs/issues/19)) — ADRs Accepted; series normative with phase guard |
 | **2** — Tourist access (web-56 / `#60`) | N/A (merged) | No | **Verify** checklist open |
 | **3** — Policies: `/team`, `/account`, login | No | Should follow Phase 0 web 1–3 | Not started |
@@ -130,7 +130,7 @@ flowchart TB
 
 | Gate | Condition | Unblocks |
 | --- | --- | --- |
-| **G1 — Production authenticated traffic** | Auth Phase 0 exit criteria met (refresh isolation, root read contract, safe `redirect_to`, API `403` gates, cookie topology OQ #1 recorded) | Launch checkout/bookings/account in production |
+| **G1 — Production authenticated traffic** | Auth Phase 0 exit criteria met (refresh isolation, root read contract, safe `redirect_to`, API `403` gates, cookie topology documented in [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology), API `domain:` shipped [#77](https://github.com/markmamba/red-cab-web/issues/77)) | Launch checkout/bookings/account in production |
 | **G2 — Policy PR merge** | Phase 0 web items 1–3 done; Phase 1 accepted; RR 8.0 spike recorded ([policy middleware](/docs/engineering/authentication/policy-middleware)) | Auth Phase 3 implementation PRs |
 | **G3 — Phase 2 tourist feature UI** (cancel, review submit, refund status — not placeholders) | `tourist-required-policy` shipped (auth Phase 3 spec 8) | Wire real API on new authenticated tourist routes |
 | **G4 — Phase 2 backend** | Product [Phase 2](/docs/product/planning/roadmap/phase-2-marketplace-depth) specs approved | Replace Milestone D stubs with live clients |
@@ -161,7 +161,7 @@ Milestone D (**`#68`**) is **not** behind G3 — placeholders on existing pages 
 
 **Wave A (auth platform)**
 
-1. Close remaining **Phase 0** exit items — OQ1 ([#20](https://github.com/markmamba/redcab-docs/issues/20)), IAM audit §7 checkbox ticks, roadmap Phase 0 verification checkboxes.
+1. Close remaining **Phase 0** exit items — API cookie `domain:` ([#77](https://github.com/markmamba/red-cab-web/issues/77)), IAM audit §7 checkbox ticks, roadmap Phase 0 verification checkboxes. OQ1 docs ([#20](https://github.com/markmamba/redcab-docs/issues/20)) done when ADR-019 topology merges.
 2. Draft and approve Phase **3** specs (auth-platform backlog rows 6–8); spike middleware on React Router 8.0.0 ([#83](https://github.com/markmamba/red-cab-web/issues/83)).
 3. First Phase 3 PR: **team** policies (smaller blast radius) **or** tourist `/account` — one surface per PR.
 
@@ -174,7 +174,8 @@ Spec files use this issue number as `NNN` in `iam/auth-platform/{web|api}-NNN-{s
 | Auth backlog # | Phase | Issue | Spec path (create before code) |
 | --- | --- | --- | --- |
 | — | 1 | [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19) | ADR acceptance (no codegen spec required) |
-| — | 0 / G1 | [redcab-docs#20](https://github.com/markmamba/redcab-docs/issues/20) | Record OQ1 in ADR-019 |
+| — | 0 / G1 | [redcab-docs#20](https://github.com/markmamba/redcab-docs/issues/20) | Record OQ1 in ADR-019 (docs) |
+| — | 0 / G1 | [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77) (API track) | Implement `SessionCookieManager` `domain:` per ADR-019 |
 | — | 2 | [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82) | Verification checklist (optional chore spec) |
 | 1 | 0 | [red-cab-web#78](https://github.com/markmamba/red-cab-web/issues/78) | `web-78-ssr-refresh-request-scope.md` |
 | 2 | 0 | [red-cab-web#79](https://github.com/markmamba/red-cab-web/issues/79) | `web-79-root-session-read-contract.md` |
@@ -229,8 +230,8 @@ Delegated to [auth roadmap open questions](/docs/engineering/authentication/impl
 
 | # | Question | Program impact |
 | --- | --- | --- |
-| 1 | Production cookie topology | **G1** — SSR session visibility |
-| 4 | Post-auth return to public marketplace URLs | Phase 3 entry rules + tourist funnel UX |
+| 1 | Production cookie topology | **Resolved (docs)** — [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology); **G1** still requires API [#77](https://github.com/markmamba/red-cab-web/issues/77) |
+| 4 | Post-auth return to public marketplace URLs | **Resolved** — see auth roadmap OQ4 |
 
 ---
 
