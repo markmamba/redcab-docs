@@ -34,7 +34,7 @@ Red Cab Phase 1 operates in Japan (Tokyo and nationwide). Early schema comments 
 
 Japan uses a single civil timezone (`Asia/Tokyo`) nationwide, so hardcoded JST works for MVP behavior. It does **not** work for global expansion: cancellation cutoffs, slot validation, seasonal date windows, and auto-completion timers must resolve per service location without a codebase-wide refactor.
 
-Prior art: JodApp stores `timezone` on leaf `geo_areas` and resolves operational rules from the entity's geography; person-picked dates anchor via shared `DateTimeUtils`.
+Prior art: comparable products store `timezone` on leaf `geo_areas` and resolve operational rules from the entity's geography; person-picked dates anchor via shared `DateTimeUtils`.
 
 ## Decision
 

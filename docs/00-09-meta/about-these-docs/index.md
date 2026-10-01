@@ -6,7 +6,7 @@ description: How Red Cab documentation is organized (Johnny Decimal).
 
 ## TL;DR
 
-- Single site for product, architecture, and engineering — organized with [Johnny Decimal](https://johnnydecimal.com/) area numbers (same pattern as Jod internal docs).
+- Single site for product, architecture, and engineering — organized with [Johnny Decimal](https://johnnydecimal.com/) area numbers.
 - **Document precedence** still applies: business rules → requirements → domain → ADRs → engineering → implementation specs → code.
 - Implementation specs live under [Initiatives](/docs/60-69-initiatives/implementation-specs/).
 

@@ -1,5 +1,5 @@
 /**
- * Johnny Decimal docs layout (Jod-aligned). Run from repo root:
+ * Johnny Decimal docs layout. Run from repo root:
  *   node scripts/migrate-johnny-decimal.mjs
  */
 import fs from 'fs';
@@ -140,7 +140,7 @@ function main() {
     },
     `## TL;DR
 
-- Single site for product, architecture, and engineering — organized with [Johnny Decimal](https://johnnydecimal.com/) area numbers (same pattern as Jod internal docs).
+- Single site for product, architecture, and engineering — organized with [Johnny Decimal](https://johnnydecimal.com/) area numbers.
 - **Document precedence** still applies: business rules → requirements → domain → ADRs → engineering → implementation specs → code.
 - Implementation specs live under [Initiatives](/docs/60-69-initiatives/61-implementation-specs/).
 
