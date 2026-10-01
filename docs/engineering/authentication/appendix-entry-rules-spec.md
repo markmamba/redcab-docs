@@ -49,12 +49,8 @@ The account guard calls `rule(identitiesAccount, null, location)`. The admin gua
 ## Constants
 
 ```js
-// app/auth/auth-entry-rules.js
-const ACCOUNT_GUEST_PATHS = [
-  '/login', '/sign-up', '/forgot-password', '/reset-password',
-  '/providers/login', '/providers/sign-up',
-  '/corporate/login', '/corporate/sign-up'
-]
+// app/auth/auth-entry-rules.js — re-exports path constants from auth-safe-redirect.js
+const ACCOUNT_GUEST_PATHS = [ /* same values as auth-safe-redirect.js */ ]
 
 const LOGIN_PATH_BY_SURFACE = {
   tourist   : '/login',
@@ -73,7 +69,7 @@ const ROLE_PATH_PREFIXES = {                  // unchanged from identities-auth-
   corporate : ['/corporate']
 }
 
-// Pending open question 4. If rejected, set to [] and delete the related test rows.
+// Resolved (web-80): public marketplace return after login.
 const PUBLIC_RETURN_PREFIXES = ['/districts', '/listings']
 const PUBLIC_RETURN_EXACT    = ['/']
 ```
@@ -88,12 +84,20 @@ const INTERNAL_PATH_PATTERN = /^\/(?!\/|\\)[^\s]*$/
 
 const isUnderPrefix = (pathname, prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
 
+const pathnameFromUrlPath = (urlPath) => urlPath.split('?')[0].split('#')[0]
+
+const canonicalPathname = (pathname) => new URL(pathname, 'http://redcab.invalid').pathname
+
 const internalPathOrDefault = (urlPath, defaultPath, blockedPaths = [], allowedPrefixes = null) => {
   if (!urlPath || !INTERNAL_PATH_PATTERN.test(urlPath)) return defaultPath
 
-  const pathname  = urlPath.split('?')[0].split('#')[0]
-  const isBlocked = blockedPaths.some((blocked) => isUnderPrefix(pathname, blocked))
-  const isAllowed = !allowedPrefixes || allowedPrefixes.some((prefix) => isUnderPrefix(pathname, prefix))
+  const pathnameRaw  = pathnameFromUrlPath(urlPath)
+  const pathnameNorm = canonicalPathname(pathnameRaw)
+
+  if (!pathnameNorm || pathnameNorm !== pathnameRaw) return defaultPath
+
+  const isBlocked = blockedPaths.some((blocked) => isUnderPrefix(pathnameNorm, blocked))
+  const isAllowed = !allowedPrefixes || allowedPrefixes.some((prefix) => isUnderPrefix(pathnameNorm, prefix))
 
   return (isBlocked || !isAllowed) ? defaultPath : urlPath
 }
@@ -127,7 +131,7 @@ export const authSafeRedirect = {
 }
 ```
 
-`ACCOUNT_GUEST_PATHS` is imported from `auth-entry-rules.js`, or moved to a shared constants file in the Phase 0 spec. `auth-safe-redirect.js` must not import any session module.
+`ACCOUNT_GUEST_PATHS` and `LOGIN_PATH_BY_SURFACE` are defined in `auth-safe-redirect.js` and **re-exported** from `auth-entry-rules.js`. `auth-safe-redirect.js` must not import any session module.
 
 ## Entry rules — reference implementation
 
@@ -231,8 +235,10 @@ export const authAdminEntryRules = {
 | G13 | `A('tourist')` | `loc('/login', '?redirect_to=javascript%3Aalert(1)')` | `/account` |
 | G14 | `A('corporate')` | `loc('/corporate/login')` | `/corporate` |
 | G15 | `A('future_role')` | `loc('/login', '?redirect_to=%2Faccount')` | `/` |
-| G16 | `A('tourist')` | `loc('/login', '?redirect_to=%2Fdistricts%2Ftokyo')` | `/districts/tokyo` — **pending open question 4**; if rejected, `/account` |
-| G17 | `A('provider')` | `loc('/login', '?redirect_to=%2Flistings%2Fl1')` | `/listings/l1` — pending open question 4 |
+| G16 | `A('tourist')` | `loc('/login', '?redirect_to=%2Fdistricts%2Ftokyo')` | `/districts/tokyo` |
+| G17 | `A('provider')` | `loc('/login', '?redirect_to=%2Flistings%2Fl1')` | `/listings/l1` |
+| G18 | `A('tourist')` | `loc('/login', '?redirect_to=%2Faccount%2F.%2Fbookings')` | `/account` (dot-segment rejected) |
+| G19 | `A('tourist')` | `loc('/login', '?redirect_to=%2Flogin%2F..%2Faccount')` | `/account` (traversal rejected) |
 
 ### `adminGuest`
 
@@ -245,6 +251,7 @@ export const authAdminEntryRules = {
 | AG5 | `ADMIN` | `loc('/team/login', '?redirect_to=%2Faccount')` | `/team` (outside `/team`) |
 | AG6 | `ADMIN` | `loc('/team/login', '?redirect_to=%2F%2Fevil.example')` | `/team` |
 | AG7 | `ADMIN` | `loc('/team/login', '?redirect_to=%2Fteamwork')` | `/team` (`/teamwork` is not under `/team`) |
+| AG8 | `ADMIN` | `loc('/team/login', '?redirect_to=%2Fteam%2F.%2Fproviders')` | `/team` (dot-segment rejected) |
 
 ### `adminRequired`
 
@@ -267,6 +274,9 @@ export const authAdminEntryRules = {
 | S7 | `/team/x` | `/d` | `[]` | `['/team']` | `/team/x` |
 | S8 | `/teamwork` | `/d` | `[]` | `['/team']` | `/d` |
 | S9 | `/a b` | `/d` | `[]` | `null` | `/d` (whitespace) |
+| S10 | `/team/./providers` | `/d` | `[]` | `['/team']` | `/d` (dot-segment) |
+| S11 | `/team/../account` | `/d` | `[]` | `['/team']` | `/d` (traversal) |
+| S12 | `/team/%2e%2e/account` | `/d` | `[]` | `['/team']` | `/d` (encoded traversal) |
 
 ### `loginRedirectPath`
 
@@ -285,6 +295,7 @@ L2 matches today's `buildIdentitiesLoginRedirect` output, so web-56's Book CTA U
 | Tourist on `/login?redirect_to=/login` | `accountGuest` | `/account` | `touristRequired` | allow |
 | Unknown role on `/providers` | `providerRequired` | `/` | none (open page) | allow |
 | Admin on `/team/login?redirect_to=/team/login` | `adminGuest` | `/team` | `adminRequired` | allow |
+| Tourist on `/login?redirect_to=/account/./bookings` | `accountGuest` | `/account` | `touristRequired` | allow |
 
 No path returned by any rule is guarded by a rule that sends the same person back. Keep a test that runs each rule's output through the matching next rule.
 

@@ -183,13 +183,31 @@ flowchart LR
 
 **Evidence pointer:** GitHub issue [#82](https://github.com/markmamba/red-cab-web/issues/82) comment (command output); this review record.
 
+### Review record (Phase 3 spike — #83)
+
+**Date:** 2026-10-01  
+**Issue:** [red-cab-web#83](https://github.com/markmamba/red-cab-web/issues/83)  
+**Harness branch:** `83-choreiam-spike-react-router-80-policy-middleware-behavior-auth-phase-3` @ `ff041f5` (**do not merge**)  
+**Go / no-go:** **Go** (middleware `url` page-normalized on 8.0.0; policy `.data` redirect proven; legacy discover outside policy)
+
+| Check | Method | Outcome |
+| --- | --- | --- |
+| Policy `.data` redirect (signed out) | `curl` on `react-router-serve` build | `SingleFetchRedirect` → `/login?redirect_to=%2Faccount%2Fbookings`, `replace` |
+| Middleware `url` | `npm run dev` guard log on same `.data` request | `urlSource: middleware-url`, `pathname: /account/bookings` |
+| Legacy discover outside policy | `curl -sI /account/discover` | **301** → `/districts` |
+| URL strip / `redirect_to` | Vitest `auth-policy-page-url.spec.js` | E3 matrix rows pass |
+| R-4 refresh on thrown `replace()` | — | **Not exercised** in automated evidence; manual before first policy PR |
+| Browser rows 3, 5–7 | — | **Not exercised** in #83; note in `policy-middleware.md` |
+
+**Evidence pointer:** [curl transcript](/docs/engineering/authentication/_evidence/issue-83-spike/curl-transcript-2026-10-01.md), [`run-curl-matrix.sh`](/docs/engineering/authentication/_evidence/issue-83-spike/run-curl-matrix.sh).
+
 ### Phase 3 — Auth core, `/team`, `/account`, login pages
 
 **Goal:** Node enforces access for the Admin Panel and the tourist account area before paint.
 
 **Exit criteria:**
 
-- [ ] Spike recorded in [Policy middleware](/docs/engineering/authentication/policy-middleware): the "when the policy runs" table holds on React Router `8.0.0`, and the middleware `url` argument is the page URL.
+- [x] Spike recorded in [Policy middleware](/docs/engineering/authentication/policy-middleware): React Router `8.0.0` harness ([#83](https://github.com/markmamba/red-cab-web/issues/83)); middleware `url` is page-normalized; curl + dev guard evidence under `_evidence/issue-83-spike/`.
 - [ ] `app/auth/*` modules exist with one test per Appendix A row.
 - [ ] `/team/**` and `/team/login` use admin policies. `team-layout.jsx` has no redirect `useEffect`.
 - [ ] `/account/**` uses `tourist-required-policy`. The six `withTouristAuth` exports are gone.
@@ -261,7 +279,7 @@ Specs 1–3 may be one PR if the reviewer prefers. Specs 4 and 5 are separate AP
 | R-6 | SEO cost or cache leak on public routes | Medium today | Slower pages; a shared cache storing a personal page | No cookie, no call; `Cache-Control: private, no-store` when a cookie exists ([ADR-019 R5](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#refresh-rules-binding-on-red-cab-web-while-option-a-holds); [production cookie topology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology)) |
 | R-7 | Portal `401` → refresh → `401` → login redirect → guest guard → loop | High today for wrong-role API calls | Redirect loop | API `403` (spec 4) before web invariant 2 is relied on |
 | R-8 | Provider onboarding breaks when the API moves to `403` | High if uncoordinated | Providers stuck | Spec 4 changes both repos; web accepts old and new shape for one release |
-| R-9 | React Router `8.0.0` middleware behaves differently from the `8.3.0` reference | Low | Policy gaps | Spike in spec 6 before any policy PR merges |
+| R-9 | React Router `8.0.0` middleware behaves differently from the `8.3.0` reference | Low | Policy gaps | **#83 spike recorded** — go for G2; complete manual matrix rows + R-4 refresh test before first policy PR |
 | R-10 | Production cookie domain prevents Node from seeing API cookies | Mitigated when API ships `domain:` | SSR always signed out | **Decided** ([#20](https://github.com/markmamba/redcab-docs/issues/20)) — parent-domain cookies per [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology). **Not resolved** until [#77](https://github.com/markmamba/red-cab-web/issues/77) lands |
 | R-11 | Tourist pre–Phase 2 work stalls waiting for policies | Low | Schedule | HOCs stay legal on unmigrated surfaces; Phase 3 runs in parallel |
 

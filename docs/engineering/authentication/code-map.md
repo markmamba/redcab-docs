@@ -38,7 +38,7 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | api | `app/domains/identities/users_account_base_serializer.rb` | Account JSON shape | exists |
 | api | `app/domains/identities/team_admin_base_serializer.rb` | Admin JSON shape | exists |
 | web | `app/domains/identities-account/identities-account-constant.js` | `ACCOUNT_ROLE` | exists |
-| web | `app/auth/auth-session-cookies.js` | `hasAccountSessionCookie`, `hasAdminSessionCookie` | target (new) |
+| web | `app/auth/auth-session-cookies.js` | `hasAccountSessionCookie`, `hasAdminSessionCookie` | exists |
 
 ## 2. Reading the session
 
@@ -46,8 +46,9 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | --- | --- | --- | --- |
 | web | `app/roots/public-root.jsx` | Account virtual root. Today: loader calls `current`, `catch` → `null` | changes (Phase 0, Phase 3) |
 | web | `app/roots/team-root.jsx` | Admin virtual root | changes (Phase 0, Phase 3) |
-| web | `app/auth/auth-account-session-middleware.js` | One lazy read per request; refresh scope; `Set-Cookie`; `Cache-Control` | target (new) |
-| web | `app/auth/auth-admin-session-middleware.js` | Same for admin | target (new) |
+| web | `app/auth/create-session-middleware.js` | Shared factory for account/admin session middleware | exists |
+| web | `app/auth/auth-account-session-middleware.js` | One lazy read per request; refresh scope; `Set-Cookie`; `Cache-Control` | exists |
+| web | `app/auth/auth-admin-session-middleware.js` | Same for admin | exists |
 | web | `app/hooks/use-auth.jsx` | `AuthProvider`, `useAuth` | changes (Phase 3: read-only) |
 | web | `app/hooks/use-admin-auth.jsx` | `AdminAuthProvider`, `useAdminAuth` | changes (Phase 3: read-only) |
 | web | `app/api/identities-accounts-api.js` | `current`, `update`, verification | changes (Phase 0: refresh scope option) |
@@ -82,10 +83,10 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | web | `app/marketplace.routes.js` | Public + guest + open routes today | changes (Phase 3: split groups) |
 | web | `app/tourist.routes.js` | `/account/**` + legacy redirects | changes (Phase 3: move legacy redirects out) |
 | web | `app/corporate.routes.js`, `app/provider.routes.js`, `app/team.routes.js` | Surface groups | changes (Phase 3–4, paths unchanged) |
-| web | `app/auth/auth-account-guard.js` | `protect(rule)` for account rules | target (new) |
-| web | `app/auth/auth-admin-guard.js` | `protect(rule)` for admin rules | target (new) |
+| web | `app/auth/auth-account-guard.js` | `protect(rule)` for account rules | exists |
+| web | `app/auth/auth-admin-guard.js` | `protect(rule)` for admin rules | exists |
 | web | `app/routes/policies/account-guest-policy.jsx` | Guest pages | target (new, Phase 3) |
-| web | `app/routes/policies/tourist-required-policy.jsx` | `/account/**` | target (new, Phase 3) |
+| web | `app/routes/policies/tourist-required-policy.jsx` | `/account/**` | exists |
 | web | `app/routes/policies/admin-guest-policy.jsx` | `/team/login` | target (new, Phase 3) |
 | web | `app/routes/policies/admin-required-policy.jsx` | `/team/**` | target (new, Phase 3) |
 | web | `app/routes/policies/corporate-required-policy.jsx` | `/corporate/**` | target (new, Phase 4) |
@@ -99,9 +100,10 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 
 | Repo | File | Role | Status |
 | --- | --- | --- | --- |
-| web | `app/auth/auth-entry-rules.js` (+ `.spec.js`) | `accountGuest`, `touristRequired`, `corporateRequired`, `providerRequired` | target (new) |
-| web | `app/auth/auth-admin-entry-rules.js` (+ `.spec.js`) | `adminGuest`, `adminRequired` | target (new) |
-| web | `app/auth/auth-safe-redirect.js` (+ `.spec.js`) | `internalPathOrDefault`, `loginRedirectPath`, `redirectTarget`, `postAuthPath` | target (new, Phase 0) |
+| web | `app/auth/auth-entry-rules.js` (+ `.spec.js`) | `accountGuest`, `touristRequired`, `corporateRequired`, `providerRequired` | exists |
+| web | `app/auth/auth-admin-entry-rules.js` (+ `.spec.js`) | `adminGuest`, `adminRequired` | exists |
+| web | `app/auth/auth-safe-redirect.js` (+ `.spec.js`) | `internalPathOrDefault`, `loginRedirectPath`, `redirectTarget`, `postAuthPath` | exists |
+| web | `app/auth/build-session-response-headers.js` (+ `.spec.js`) | Loader throw-path `Set-Cookie` / `Cache-Control` helper | exists |
 | web | `app/utils/identities-auth-utils.js` | Role homes, today's post-auth resolver, OAuth redirect storage | changes (Phase 0: delegate to `auth-safe-redirect`); role-home map stays |
 
 ## 7. Rails is the boundary
