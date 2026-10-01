@@ -1,7 +1,7 @@
 ---
 title: "Session A — Tourist UI access model and public URL architecture"
-sidebar_label: Session A — Tourist UI Decisions
-sidebar_position: 10
+sidebar_label: ADR-017
+sidebar_position: 17
 description: Architecture decision record resolving AMB-022, the public tourist URL scheme, redirect matrix, and the web/API work split for the Tourist UI pre-Phase 2 track.
 ---
 
