@@ -56,7 +56,9 @@ export const authAccountGuard = {
 
 The guard never calls `next()`. React Router continues the chain when a middleware returns without calling it.
 
-On React Router **8.0.0**, the spike ([#83](https://github.com/markmamba/red-cab-web/issues/83)) observed `url` as the **page-normalized** location (`middleware-url` in guard logs) for `.data` requests to `/account/bookings`. The harness still implements `resolvePolicyPageLocation` (`app/auth/auth-policy-page-url.js`) to strip `.data` and `_routes` from `request.url` when `url` is missing or carries a `.data` suffix — centralize that helper in spec 6 if production ever relies on the strip path.
+On React Router **8.0.0**, the spike ([#83](https://github.com/markmamba/red-cab-web/issues/83)) observed `url` as the **page-normalized** location for `.data` requests to `/account/bookings`. Production guards use `url.pathname` and `url.search` only (no `auth-policy-page-url.js`).
+
+**R-4 (automated):** `app/auth/auth-session-redirect-integration.spec.js` runs account session middleware with a guard that returns `replace()` and asserts rotated `Set-Cookie` headers are present on the redirect response when `refreshScope.setCookieHeaders` is populated.
 
 ## Why every policy route exports a loader
 
