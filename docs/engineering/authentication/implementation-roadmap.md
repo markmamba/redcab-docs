@@ -199,7 +199,7 @@ flowchart LR
 | R-4 refresh on thrown `replace()` | — | **Not exercised** in automated evidence; manual before first policy PR |
 | Browser rows 3, 5–7 | — | **Not exercised** in #83; note in `policy-middleware.md` |
 
-**Evidence pointer:** [curl transcript](/docs/engineering/authentication/_evidence/issue-83-spike/curl-transcript-2026-10-01.md), [`run-curl-matrix.sh`](/docs/engineering/authentication/_evidence/issue-83-spike/run-curl-matrix.sh).
+**Evidence pointer:** [curl transcript](/docs/engineering/authentication/evidence/issue-83-spike/curl-transcript-2026-10-01), [`run-curl-matrix.sh`](https://github.com/markmamba/redcab-docs/blob/main/docs/engineering/authentication/evidence/issue-83-spike/run-curl-matrix.sh).
 
 ### Phase 3 — Auth core, `/team`, `/account`, login pages
 
@@ -207,7 +207,7 @@ flowchart LR
 
 **Exit criteria:**
 
-- [x] Spike recorded in [Policy middleware](/docs/engineering/authentication/policy-middleware): React Router `8.0.0` harness ([#83](https://github.com/markmamba/red-cab-web/issues/83)); middleware `url` is page-normalized; curl + dev guard evidence under `_evidence/issue-83-spike/`.
+- [x] Spike recorded in [Policy middleware](/docs/engineering/authentication/policy-middleware): React Router `8.0.0` harness ([#83](https://github.com/markmamba/red-cab-web/issues/83)); middleware `url` is page-normalized; curl + dev guard evidence under `evidence/issue-83-spike/`.
 - [ ] `app/auth/*` modules exist with one test per Appendix A row.
 - [ ] `/team/**` and `/team/login` use admin policies. `team-layout.jsx` has no redirect `useEffect`.
 - [ ] `/account/**` uses `tourist-required-policy`. The six `withTouristAuth` exports are gone.

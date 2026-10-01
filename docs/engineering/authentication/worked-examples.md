@@ -15,11 +15,13 @@ Five moments, each as a sequence diagram of the **target** design:
 4. The API is down when a signed-in tourist reloads.
 5. A team admin signs in.
 
+## Three rules that hold on every page
+
 :::info Three rules
 
-1. **No cookie, no call.** See example 1, first request.
-2. **Only `401` means signed out.** See example 4.
-3. **Node reads, the browser writes.** See the login step in examples 1 and 5.
+1. **No cookie, no call.** A Node request with no session cookie is signed out. Node does not call Rails to ask.
+2. **Only `401` means signed out.** `403`, `5xx`, timeouts, and network failures are errors. They never clear a session.
+3. **Node reads, the browser writes.** Login, logout, and OAuth run in the browser, with CSRF. Node reads the session. Its only write is the token refresh that [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2) allows.
 
 :::
 
@@ -48,7 +50,7 @@ sequenceDiagram
   R-->>N: 200 (guest, optional auth)
   N-->>B: HTML, index follow, Book CTA
 
-  B->>B: picks slot; Book → /login?redirect_to=/account/checkout?listing_id=…&availability_slot_id=…&passenger_count=2
+  B->>B: picks slot, Book → /login?redirect_to=/account/checkout?listing_id=…&availability_slot_id=…&passenger_count=2
   B->>N: .data for /login (account-guest-policy)
   N->>N: no cookie → accountGuest(null) → allow
   N-->>B: login page
@@ -80,15 +82,15 @@ sequenceDiagram
   participant R as Rails
 
   B->>N: GET /account/bookings (document), Cookie: rc_access (expired), rc_refresh, CSRF_TOKEN
-  N->>N: session middleware: cookie present; refreshScope for this request
+  N->>N: session middleware: cookie present, refreshScope for this request
   N->>R: GET identities/accounts/current
   R-->>N: 401
   N->>R: PATCH identities/sessions/current + X-CSRF-Token (per-request lock, R2)
   R-->>N: 200 + Set-Cookie rc_access(new), CSRF_TOKEN(new)
-  N->>N: refreshScope.cookieHeader = new cookies; remember Set-Cookie
+  N->>N: refreshScope.cookieHeader = new cookies, remember Set-Cookie
   N->>R: GET identities/accounts/current (retry once, R6)
   R-->>N: 200 { role: tourist }
-  N->>N: touristRequired → allow; render
+  N->>N: touristRequired → allow, render
   N-->>B: HTML + Set-Cookie (appended once by middleware, R5) + Cache-Control private, no-store
   B->>R: bookings clientLoader (new cookies)
   R-->>B: 200

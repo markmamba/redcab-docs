@@ -1,3 +1,7 @@
+---
+unlisted: true
+---
+
 # Issue #83 curl transcript — 2026-10-01
 
 Harness: `red-cab-web` branch `83-choreiam-spike-react-router-80-policy-middleware-behavior-auth-phase-3` @ `ff041f5` (local; push before citing in PR).

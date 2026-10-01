@@ -80,7 +80,7 @@ React Router decides at build time whether a route "has a loader" by checking th
 
 ## When the policy runs
 
-The reference pattern verified this table on React Router `8.3.0`. Red Cab runs `8.0.0`. Issue **#83** re-ran the matrix on **8.0.0** using the throwaway harness on branch `83-choreiam-spike-react-router-80-policy-middleware-behavior-auth-phase-3` (never merge to `main`). Evidence: [curl transcript](/docs/engineering/authentication/_evidence/issue-83-spike/curl-transcript-2026-10-01.md).
+The reference pattern verified this table on React Router `8.3.0`. Red Cab runs `8.0.0`. Issue **#83** re-ran the matrix on **8.0.0** using the throwaway harness on branch `83-choreiam-spike-react-router-80-policy-middleware-behavior-auth-phase-3` (never merge to `main`). Evidence: [curl transcript](/docs/engineering/authentication/evidence/issue-83-spike/curl-transcript-2026-10-01).
 
 | Navigation | Policy runs on Node? (8.3.0 reference) | Observed on 8.0.0 (#83) |
 | --- | --- | --- |
