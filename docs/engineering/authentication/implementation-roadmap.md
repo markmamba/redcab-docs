@@ -9,7 +9,7 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 
 - **Phase 0** fixes correctness in **both** repos: a cross-user refresh leak in `ky-client`, `403` for portal gates, safe `redirect_to`, and "no cookie, no call". It blocks the production launch of authenticated surfaces. It does not block tourist UI development.
 - **Phase 1** approved this series and ADR-018/019 (2026-09-30, [#19](https://github.com/markmamba/redcab-docs/issues/19)). Docs only.
-- **Phase 2** is the tourist access work (web-56 / `#60`). **It has already merged** (`red-cab-web` `e24b55b`). What remains is a verification checklist.
+- **Phase 2** is the tourist access work (web-56 / `#60`). **Merged** (`red-cab-web` `e24b55b`); **verification closed** 2026-10-01 ([#82](https://github.com/markmamba/red-cab-web/issues/82), [Review record](#review-record-phase-2)).
 - **Phase 3** moves `/team` and `/account` (plus login pages) to policy routes. **Phase 4** moves `/corporate` and `/providers`, then deletes the HOCs.
 - **Phase 5** (server-side sessions) runs only if ADR-019 is superseded.
 
@@ -45,6 +45,7 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 | Phase 1 — ADR-018/019 + series | **Accepted / normative** | [#19](https://github.com/markmamba/redcab-docs/issues/19); [Review record](#review-record-phase-1) |
 | Production cookie topology (OQ1) | **Decided (docs)** — API `domain:` [#77](https://github.com/markmamba/red-cab-web/issues/77) before launch | [ADR-019 § Production cookie topology](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology); [#20](https://github.com/markmamba/redcab-docs/issues/20) |
 | web-56 / `#60` public routes | Merged | `red-cab-web` `e24b55b` |
+| Phase 2 verification (public catalog, guest Book handoff) | **Done** (2026-10-01) | [Review record (Phase 2)](#review-record-phase-2); [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82) |
 | Tourist shell / funnel `#58`–`#64` | Merged per program strategy | See [web platform program strategy](/docs/product/planning/web-platform-program-strategy) |
 
 ---
@@ -55,7 +56,7 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 | --- | --- | --- | --- |
 | 0 | Correctness + contract freeze | API + web | **No** for UI development. **Yes** for production launch of any authenticated surface |
 | 1 | Series + ADR-018/019 approved | docs | No |
-| 2 | Tourist access (web-56 / `#60`) | web | This **is** pre–Phase 2. Merged; verify only |
+| 2 | Tourist access (web-56 / `#60`) | web | This **is** pre–Phase 2. Merged; **verified** ([#82](https://github.com/markmamba/red-cab-web/issues/82)) |
 | 3 | Policy routes: auth core, `/team`, `/account`, login pages | web | No. Runs in parallel after Phase 1 |
 | 4 | Policy routes: `/corporate`, `/providers`; delete HOCs | web | No |
 | 5 | Server-side sessions (only if ADR-019 is superseded) | API + web | No |
@@ -153,14 +154,34 @@ flowchart LR
 
 **Goal:** public browse with auth only at checkout (`AMB-022` Option A).
 
-**State:** merged. Remaining work is verification, recorded in the tourist pre–Phase 2 snapshot:
+**State:** merged and **verified** (2026-10-01, [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82)). Checklist:
 
-- [ ] No public catalog module imports an auth HOC (`rg "with(Tourist|Corporate|Provider)Auth" app/routes/marketplace` is empty).
-- [ ] Every public catalog module uses server `loader` and `index, follow`.
-- [ ] A no-JavaScript fetch of each public route returns content.
-- [ ] Guest Book CTA goes to `/login?redirect_to=/account/checkout?…`, and sign-in lands on checkout.
+- [x] No public catalog module imports an auth HOC (`rg "with(Tourist|Corporate|Provider)Auth" app/routes/marketplace` is empty).
+- [x] Every public catalog route uses a server `loader` (including `/districts` index via parent layout) and `index, follow` on indexable pages; redirect/resolver routes use `noindex`.
+- [x] A no-JavaScript fetch of each public catalog route in the web-56 matrix returns meaningful SSR HTML or a valid redirect (local `react-router-serve` + API; see [Review record](#review-record-phase-2)).
+- [x] Guest Book CTA → `/login?redirect_to=…` with checkout query preserved (`catalog-listing-service.spec.js`, `auth-safe-redirect.spec.js`); full browser sign-in path not re-run in `#82` (no canonical listing fixture in repo).
 
 **Non-goals:** policy routes. `/account/**` keeps `withTouristAuth`.
+
+### Review record (Phase 2)
+
+**Date:** 2026-10-01  
+**Issue:** [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82)  
+**Verified at:** `red-cab-web@29eaeb0` (verification pass); feature merge `e24b55b` (`#60` / web-56)
+
+| Check | Method | Outcome |
+| --- | --- | --- |
+| Auth HOC scan | `rg 'withTouristAuth\|withCorporateAuth\|withProviderAuth' app/routes/marketplace` | No matches |
+| Loader + robots | Static read of marketplace catalog modules + `home-page.jsx` | Indexable routes `index, follow`; resolver/redirect routes `noindex` |
+| Guest Book → login URL | Vitest: `catalog-listing-service.spec.js`, `auth-safe-redirect.spec.js` | 30 tests passed |
+| Loader redirects (legacy discover, stale slug, resolver) | `npm test -- app/routes/marketplace/catalog-district/ app/routes/tourist/tourist-account-discover-redirect-utils.spec.js` | 24 tests passed |
+| No-JS SSR / redirects | `curl -A 'curl'` (no cookies) on `/`, `/districts`; `curl -sI` on `/account/discover`, `/discover`, `/discover/foo` | Meaningful HTML on `/` and `/districts`; **301** → `/districts` for legacy discover and `/discover*` |
+| Unknown listing on canonical detail path | `curl` on `/districts/.../listings/{random-uuid}` | HTTP 200 with SSR alert **"We could not find that listing."** (loader soft-404; not an empty shell) |
+| Stale slug **301** on nested listing path | Not exercised live (empty local catalog); covered by loader unit tests above | Pass via Vitest |
+
+**Known gap (not tested in `#82`):** Guest slot/quote may go **stale** between Book click and post-login checkout (422 / checkout rejection). Deferred to web-56 Session B; document only — same disposition as Phase 2 review notes in web-56.
+
+**Evidence pointer:** GitHub issue [#82](https://github.com/markmamba/red-cab-web/issues/82) comment (command output); this review record.
 
 ### Phase 3 — Auth core, `/team`, `/account`, login pages
 

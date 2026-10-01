@@ -187,7 +187,7 @@ Implement or refactor pages so the funnel in A2 is traversable end-to-end. Prefe
 **red-cab-web checklist**
 
 - [ ] Homepage wired to discover entry
-- [ ] Public discover routes (per A1 decision) or documented exception
+- [x] Public discover routes (per A1 decision) or documented exception — verified [#82](https://github.com/markmamba/red-cab-web/issues/82) (2026-10-01)
 - [ ] Listing detail uses server `price_breakdown` only (`PRC-1`)
 - [ ] Checkout multi-step layout stable (fulfillment, policy, payment)
 - [ ] Bookings list supports status filter via URL (`useSearchParams`)
@@ -265,7 +265,7 @@ Audit baseline aligned with `red-cab-web@c4ce884` (2026-09-26). Program sequenci
 | Checkout + return | `[x]` | `/account/checkout` + return (`#62`) |
 | Bookings list + detail | `[x]` | Tourist shell alignment (`#63`) |
 | Homepage in funnel | `[x]` | Discover entry (`#59`) |
-| Public discover (`AMB-022`) | `[~]` | Implemented (`#60`); run [auth Phase 2 verification](/docs/engineering/authentication/implementation-roadmap#phase-2--tourist-access-web-56--60) |
+| Public discover (`AMB-022`) | `[x]` | Verified 2026-10-01 — [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82); [Review record (Phase 2)](/docs/engineering/authentication/implementation-roadmap#review-record-phase-2) |
 | Listing detail public URL | `[x]` | Per web-56 / `#60` |
 | Unified tourist shell | `[~]` | `#58` + `#64`; manual QA matrix open in [web-64](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment) |
 | Near-me / maps | `[ ]` | `#65`–`#66` |
