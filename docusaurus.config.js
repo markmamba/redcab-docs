@@ -4,32 +4,32 @@
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
 import {themes as prismThemes} from 'prism-react-renderer';
-import optionARedirects from './scripts/option-a-redirects.json';
+import johnnyDecimalRedirects from './scripts/johnny-decimal-redirects.json';
 
 /** Map legacy paths to valid Docusaurus routes (category indexes use trailing `/`). */
 const redirectTargetFixes = {
-  '/docs/engineering/specs/README': '/docs/engineering/specs/',
-  '/docs/engineering/specs/_template': '/docs/engineering/specs/',
-  '/docs/engineering/specs/iam/iam-audit-2026-08/index':
-    '/docs/engineering/specs/iam/iam-audit-2026-08/',
-  '/docs/product/business-rules/': '/docs/product/business-rules/glossary',
-  '/docs/architecture/domain/': '/docs/architecture/domain/domain-models',
-  '/docs/product/requirements': '/docs/product/requirements/',
-  '/docs/product/planning/roadmap': '/docs/product/planning/roadmap/',
-  '/docs/engineering/specs': '/docs/engineering/specs/',
+  '/docs/60-69-initiatives/implementation-specs/README': '/docs/60-69-initiatives/implementation-specs/',
+  '/docs/60-69-initiatives/implementation-specs/_template': '/docs/60-69-initiatives/implementation-specs/',
+  '/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08/index':
+    '/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08/',
+  '/docs/70-79-business/business-rules/': '/docs/70-79-business/business-rules/glossary',
+  '/docs/30-49-domains/domain-models/': '/docs/30-49-domains/domain-models/domain-models',
+  '/docs/70-79-business/requirements': '/docs/70-79-business/requirements/',
+  '/docs/70-79-business/planning/roadmap': '/docs/70-79-business/planning/roadmap/',
+  '/docs/60-69-initiatives/implementation-specs': '/docs/60-69-initiatives/implementation-specs/',
 };
 
 const extraRedirects = [
-  {from: '/docs/requirements', to: '/docs/product/requirements/'},
-  {from: '/docs/roadmap', to: '/docs/product/planning/roadmap/'},
-  {from: '/docs/business-rules/glossary', to: '/docs/product/business-rules/glossary'},
-  {from: '/docs/business-rules/invariants', to: '/docs/product/business-rules/invariants'},
-  {from: '/docs/domain/domain-models', to: '/docs/architecture/domain/domain-models'},
-  {from: '/docs/specs', to: '/docs/engineering/specs/'},
+  {from: '/docs/requirements', to: '/docs/70-79-business/requirements/'},
+  {from: '/docs/roadmap', to: '/docs/70-79-business/planning/roadmap/'},
+  {from: '/docs/business-rules/glossary', to: '/docs/70-79-business/business-rules/glossary'},
+  {from: '/docs/business-rules/invariants', to: '/docs/70-79-business/business-rules/invariants'},
+  {from: '/docs/domain/domain-models', to: '/docs/30-49-domains/domain-models/domain-models'},
+  {from: '/docs/specs', to: '/docs/60-69-initiatives/implementation-specs/'},
 ];
 
 /** Deduplicate redirects that would write the same HTML file (e.g. `/foo` vs `/foo/`). */
-const redirects = [...optionARedirects, ...extraRedirects]
+const redirects = [...johnnyDecimalRedirects, ...extraRedirects]
   .map(({from, to}) => ({
     from,
     to: redirectTargetFixes[to] ?? to,
@@ -121,21 +121,15 @@ const config = {
           },
           {
             type: 'docSidebar',
-            sidebarId: 'productSidebar',
+            sidebarId: 'docsSidebar',
             position: 'left',
-            label: 'Product',
+            label: 'Docs',
           },
           {
-            type: 'docSidebar',
-            sidebarId: 'architectureSidebar',
+            type: 'doc',
+            docId: '00-09-meta/about-these-docs/index',
             position: 'left',
-            label: 'Architecture',
-          },
-          {
-            type: 'docSidebar',
-            sidebarId: 'engineeringSidebar',
-            position: 'left',
-            label: 'Engineering',
+            label: 'About',
           },
         ],
       },
