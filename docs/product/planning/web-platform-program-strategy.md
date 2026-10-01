@@ -24,7 +24,7 @@ Cross-cutting **program** plan for product and engineering leads. It does not re
 | [Authentication series](/docs/engineering/authentication) | Target design and module layout (ADR-018/019) |
 | [Phasing roadmap](/docs/product/planning/roadmap) | Backend/product phase boundaries |
 
-**Last aligned with repos:** 2026-09-26 (`red-cab-api@d8ed9b7`, `red-cab-web@c4ce884` per auth roadmap audit). Refresh the [Where we stand](#where-we-stand) section when closing epics or auth phases.
+**Last aligned with repos:** 2026-10-01 (`red-cab-web@29eaeb0` verification pass for auth Phase 2 / `#82`). Refresh the [Where we stand](#where-we-stand) section when closing epics or auth phases.
 
 ---
 
@@ -101,7 +101,7 @@ flowchart TB
 | **D — Phase 2 placeholders** | Filter/cancel/review/refund/bundle slots | `#68` | Open |
 | **E — Visual polish** | Tokens, copy, wireframes | `#69` | Open |
 
-**Pause point:** After `#64` is the correct breakpoint — not mid–Milestone B. Next recommended work: **auth Phase 2 verification checklist** (below) then **`#68`**.
+**Pause point:** After `#64` is the correct breakpoint — not mid–Milestone B. Auth **Phase 2 verification** closed ([#82](https://github.com/markmamba/red-cab-web/issues/82), 2026-10-01). Next recommended work: **`#68`** (and auth Phase 3 planning per Wave A).
 
 ### Authentication redesign
 
@@ -109,7 +109,7 @@ flowchart TB
 | --- | --- | --- | --- |
 | **0** — Correctness + contract | No | **Yes** (API cookie `domain:` [#77](https://github.com/markmamba/red-cab-web/issues/77) before launch) | **Mostly merged** — web-78/79/80, api-145/146, web #81; OQ1 topology **recorded** ([#20](https://github.com/markmamba/redcab-docs/issues/20), [ADR-019](/docs/architecture/decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology)); remaining: IAM audit §7 checkbox ticks, Phase 0 verification checkboxes, #77 |
 | **1** — Accept ADR-018/019 + series | No | No | **Done** (2026-09-30, [#19](https://github.com/markmamba/redcab-docs/issues/19)) — ADRs Accepted; series normative with phase guard |
-| **2** — Tourist access (web-56 / `#60`) | N/A (merged) | No | **Verify** checklist open |
+| **2** — Tourist access (web-56 / `#60`) | N/A (merged) | No | **Done** — verified 2026-10-01 ([#82](https://github.com/markmamba/red-cab-web/issues/82)) |
 | **3** — Policies: `/team`, `/account`, login | No | Should follow Phase 0 web 1–3 | Not started |
 | **4** — `/corporate`, `/providers`; delete HOCs | No | After Phase 3 | Not started |
 | **5** — Server sessions | No | Only if ADR-019 superseded | Conditional |
@@ -146,10 +146,10 @@ Milestone D (**`#68`**) is **not** behind G3 — placeholders on existing pages 
 | # | Work | Owner | Output |
 | --- | --- | --- | --- |
 | 1 | Complete `#64` manual QA or record waivers | Web | Checklist in [web-64](/docs/engineering/specs/platform/web-64-tourist-account-auth-shell-alignment) |
-| 2 | Run auth **Phase 2 verification** (public catalog, guest Book → login → checkout) | Web | Checkboxes in [auth roadmap Phase 2](/docs/engineering/authentication/implementation-roadmap#phase-2--tourist-access-web-56--60) |
+| 2 | Run auth **Phase 2 verification** (public catalog, guest Book → login → checkout) | Web | **Done** — [#82](https://github.com/markmamba/red-cab-web/issues/82); [Review record (Phase 2)](/docs/engineering/authentication/implementation-roadmap#review-record-phase-2) |
 | 3 | Auth **Phase 1** review — Accept ADR-018/019; answer/defer OQ 2–4 | Architect + PO | **Done** — [#19](https://github.com/markmamba/redcab-docs/issues/19); [roadmap Review record](/docs/engineering/authentication/implementation-roadmap#review-record-phase-1) |
 | 4 | Update epic `#23` description (tourist out of split-panel scope) | PM/Tech lead | GitHub epic only |
-| 5 | Refresh tourist roadmap snapshot | Docs | [tourist-ui-pre-phase-2 § snapshot](/docs/product/planning/roadmap/tourist-ui-pre-phase-2#current-implementation-snapshot) |
+| 5 | Refresh tourist roadmap snapshot (remaining gaps) | Docs | `#64` manual QA; `#68` Phase 2 slots — [tourist-ui-pre-phase-2 § snapshot](/docs/product/planning/roadmap/tourist-ui-pre-phase-2#current-implementation-snapshot) |
 
 ### Next implementation waves (parallel)
 
@@ -176,7 +176,7 @@ Spec files use this issue number as `NNN` in `iam/auth-platform/{web|api}-NNN-{s
 | — | 1 | [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19) | ADR acceptance (no codegen spec required) |
 | — | 0 / G1 | [redcab-docs#20](https://github.com/markmamba/redcab-docs/issues/20) | Record OQ1 in ADR-019 (docs) |
 | — | 0 / G1 | [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77) (API track) | Implement `SessionCookieManager` `domain:` per ADR-019 |
-| — | 2 | [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82) | Verification checklist (optional chore spec) |
+| — | 2 | [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82) | **Done** (2026-10-01) — placement B only (no `web-82` spec); [Review record (Phase 2)](/docs/engineering/authentication/implementation-roadmap#review-record-phase-2) |
 | 1 | 0 | [red-cab-web#78](https://github.com/markmamba/red-cab-web/issues/78) | `web-78-ssr-refresh-request-scope.md` |
 | 2 | 0 | [red-cab-web#79](https://github.com/markmamba/red-cab-web/issues/79) | `web-79-root-session-read-contract.md` |
 | 3 | 0 | [red-cab-web#80](https://github.com/markmamba/red-cab-web/issues/80) | `web-80-safe-redirect-helper.md` |
@@ -196,10 +196,10 @@ Spec files use this issue number as `NNN` in `iam/auth-platform/{web|api}-NNN-{s
 
 Cross-check [tourist-ui-pre-phase-2 exit criteria](/docs/product/planning/roadmap/tourist-ui-pre-phase-2#exit-criteria-ready-for-phase-2-tourist-feature-ui):
 
-| Criterion | Program status (2026-09-26) | Next step |
+| Criterion | Program status (2026-10-01) | Next step |
 | --- | --- | --- |
 | Milestone A decisions recorded | Done (web-56, web-57, web-58) | Mark checkboxes in tourist doc |
-| Guest Home → Listing | Implemented (`#60`); **verify** G1-style checklist | [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82) |
+| Guest Home → Listing | **Done** — Phase 2 verification ([#82](https://github.com/markmamba/red-cab-web/issues/82), 2026-10-01) | [Review record (Phase 2)](/docs/engineering/authentication/implementation-roadmap#review-record-phase-2) |
 | Logged-in Book → Checkout → detail | Implemented | Regression on shell changes |
 | Unified header/footer (incl. IAM post-`#64`) | Implemented in code; manual QA open | Complete web-64 manual matrix |
 | Phase 2 UI slots on pages | Not started | `#68` |
