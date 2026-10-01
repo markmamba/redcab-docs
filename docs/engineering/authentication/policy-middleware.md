@@ -56,7 +56,7 @@ export const authAccountGuard = {
 
 The guard never calls `next()`. React Router continues the chain when a middleware returns without calling it.
 
-**Check in the Phase 3 spike:** that the middleware argument exposes the normalized page `url` on React Router `8.0.0`. If it does not, derive `pathname` from `request.url` and strip the `.data` suffix and `_routes` parameter.
+On React Router **8.0.0**, the spike ([#83](https://github.com/markmamba/red-cab-web/issues/83)) observed `url` as the **page-normalized** location (`middleware-url` in guard logs) for `.data` requests to `/account/bookings`. The harness still implements `resolvePolicyPageLocation` (`app/auth/auth-policy-page-url.js`) to strip `.data` and `_routes` from `request.url` when `url` is missing or carries a `.data` suffix — centralize that helper in spec 6 if production ever relies on the strip path.
 
 ## Why every policy route exports a loader
 
@@ -78,17 +78,21 @@ React Router decides at build time whether a route "has a loader" by checking th
 
 ## When the policy runs
 
-The reference pattern verified this table on React Router `8.3.0`. Red Cab runs `8.0.0`. The Phase 3 spike must repeat the manual test below and record the result here.
+The reference pattern verified this table on React Router `8.3.0`. Red Cab runs `8.0.0`. Issue **#83** re-ran the matrix on **8.0.0** using the throwaway harness on branch `83-choreiam-spike-react-router-80-policy-middleware-behavior-auth-phase-3` (never merge to `main`). Evidence: [curl transcript](/docs/engineering/authentication/_evidence/issue-83-spike/curl-transcript-2026-10-01.md).
 
-| Navigation | Policy runs on Node? |
-| --- | --- |
-| Document request | Yes |
-| In-app click that **enters** the policy's area | Yes. The policy is newly matched |
-| In-app click between two pages **inside** the area | No, unless the destination has its own server `loader` |
-| Search params change (`?page=2`) | Yes |
-| An action succeeds, or fails with `401` / `403` | Yes |
-| `revalidate()` | Yes |
-| Leave the area and come back | Yes |
+| Navigation | Policy runs on Node? (8.3.0 reference) | Observed on 8.0.0 (#83) |
+| --- | --- | --- |
+| Document request | Yes | **Yes** — guest `HEAD /account/bookings` → `302` `/login?redirect_to=…` with `x-remix-replace` |
+| In-app click that **enters** the policy's area | Yes. The policy is newly matched | **Yes** — `.data` with `_routes` including `routes/policies/tourist-required-policy` → `SingleFetchRedirect` to login (`replace`) |
+| In-app click between two pages **inside** the area | No, unless the destination has its own server `loader` | **Not exercised** in #83 (browser); expected **No** per reference |
+| Search params change (`?page=2`) | Yes | **Not exercised** in #83 (browser); strip helper covers `?page=2` in Vitest |
+| An action succeeds, or fails with `401` / `403` | Yes | **Not exercised** — no server `action` on `/account/bookings`; defer to spec 6 or a `fetcher` fixture |
+| `revalidate()` | Yes | **Not exercised** in #83 (browser) |
+| Leave the area and come back | Yes | **Not exercised** in #83 (browser) |
+
+**Step 6 proof (signed-out in-app enter):** With `withTouristAuth` removed on `booking-list-page.jsx` and `SPIKE_83_DISABLE_ERROR_BOUNDARY_401_NAVIGATE`, the `.data` response carries the policy redirect (not only a clientLoader `401`). See transcript above.
+
+**Go / no-go (#83):** **Go** — rows 1, 2, and 4 (unit strip matrix) match the reference; middleware `url` is page-normalized on 8.0.0. **Follow-up:** manual rows 3, 5–7 and R-4 expired-token refresh before merging production policy PRs (G2).
 
 Row 3 is acceptable. The policy is the check at the door. Inside the area, Rails refuses any call from a person who lost access. The caller answers with `revalidate()`, and the next request runs the policy.
 
