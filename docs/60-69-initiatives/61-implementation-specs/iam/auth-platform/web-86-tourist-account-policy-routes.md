@@ -37,11 +37,11 @@ parent_epic: "https://github.com/markmamba/red-cab-web/issues/77"
 | changing-session | [changing-a-session.md](/docs/90-99-engineering-meta/authentication/changing-a-session) | Login/logout/OAuth `clientAction`; revalidation rules |
 | policy-middleware | [policy-middleware.md](/docs/90-99-engineering-meta/authentication/policy-middleware) | Policy export shape; in-area 401 |
 | code-map | [code-map.md](/docs/90-99-engineering-meta/authentication/code-map) | New modules |
-| web-84 | [web-84-auth-core-modules.md](/docs/60-69-initiatives/61-implementation-specs/iam/auth-platform/web-84-auth-core-modules) | Account guard, entry rules, session middleware |
-| web-85 | [web-85-team-policy-routes.md](/docs/60-69-initiatives/61-implementation-specs/iam/auth-platform/web-85-team-policy-routes) | Parallel guest/required/logout pattern |
-| ADR-018 | [adr-018-web-authentication-enforcement-model.md](/docs/30-49-domains/34-architecture-decisions/adr-018-web-authentication-enforcement-model) | Policy enforcement; open pages |
-| frontend | [frontend.md](/docs/50-59-frontend/51-conventions/frontend) | R-2 single door |
-| program | [web-platform-program-strategy.md](/docs/70-79-business/73-planning/web-platform-program-strategy) | Phase 3 sequencing |
+| web-84 | [web-84-auth-core-modules.md](/docs/60-69-initiatives/implementation-specs/iam/auth-platform/web-84-auth-core-modules) | Account guard, entry rules, session middleware |
+| web-85 | [web-85-team-policy-routes.md](/docs/60-69-initiatives/implementation-specs/iam/auth-platform/web-85-team-policy-routes) | Parallel guest/required/logout pattern |
+| ADR-018 | [adr-018-web-authentication-enforcement-model.md](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model) | Policy enforcement; open pages |
+| frontend | [frontend.md](/docs/50-59-frontend/conventions/frontend) | R-2 single door |
+| program | [web-platform-program-strategy.md](/docs/70-79-business/planning/web-platform-program-strategy) | Phase 3 sequencing |
 
 ## Design decisions
 
