@@ -49,7 +49,7 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | web | `app/auth/create-session-middleware.js` | Shared factory for account/admin session middleware | exists |
 | web | `app/auth/auth-account-session-middleware.js` | One lazy read per request; refresh scope; `Set-Cookie`; `Cache-Control` | exists |
 | web | `app/auth/auth-admin-session-middleware.js` | Same for admin | exists |
-| web | `app/hooks/use-auth.jsx` | `AuthProvider`, `useAuth` | changes (Phase 3: read-only) |
+| web | `app/hooks/use-auth.jsx` | `AuthProvider`, `useAuth` | exists (Phase 3: read-only, web-86) |
 | web | `app/hooks/use-admin-auth.jsx` | `AdminAuthProvider`, `useAdminAuth` | changes (Phase 3: read-only) |
 | web | `app/api/identities-accounts-api.js` | `current`, `update`, verification | changes (Phase 0: refresh scope option) |
 | web | `app/api/team-sessions-api.js` | `create`, `current`, `destroy` | changes (Phase 0) |
@@ -68,27 +68,31 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | web | `app/api/identities-sessions-api.js` | `create`, `destroy` | exists |
 | web | `app/api/identities-oauth-api.js` | `googleAuthorizeUrl`, `googleCallback` | exists |
 | web | `app/hooks/use-identities-logout.jsx` | Logout hook | deleted (Phase 3, replaced by `logout` action route) |
-| web | `app/routes/identities-account/logout.js` | `clientAction` logout route | target (new, Phase 3) |
-| web | `app/routes/team/team-logout.js` | Team logout route | target (new, Phase 3) |
-| web | `app/routes/identities-account/login-page.jsx` | Login submit | changes (Phase 3: `clientAction`) |
-| web | `app/routes/provider/provider-login-page.jsx`, `app/routes/corporate/corporate-login-page.jsx` | Portal logins | changes (Phase 3) |
+| web | `app/routes/identities-account/logout.js` | `clientAction` logout route | exists (Phase 3, web-86) |
+| web | `app/routes/team/team-logout.js` | Team logout route | exists (Phase 3, web-85) |
+| web | `app/auth/create-login-action.js` | Shared tourist/corporate/provider login `clientAction` | exists (Phase 3, web-86) |
+| web | `app/domains/identities-session/use-session-login-submit.js` | RHF → `useSubmit` glue for login actions | exists (Phase 3, web-86) |
+| web | `app/hooks/use-logout-fetcher.jsx` | Tourist nav `fetcher.Form` logout + error toast | exists (Phase 3, web-86) |
+| web | `app/routes/identities-account/login-page.jsx` | Login submit | exists (Phase 3: `clientAction`) |
+| web | `app/routes/provider/provider-login-page.jsx`, `app/routes/corporate/corporate-login-page.jsx` | Portal logins | exists (Phase 3: `clientAction`) |
 | web | `app/routes/team/team-login-page.jsx` | Team login. Today: unchecked `redirect_to` | changes (Phase 0, Phase 3) |
-| web | `app/routes/identities-account/google-oauth-callback-page.jsx` | OAuth callback page | changes (Phase 3: `postAuthPath`) |
+| web | `app/routes/identities-account/google-oauth-callback-page.jsx` | OAuth callback page | exists (Phase 3: `clientAction`, `postAuthPath`) |
 
 ## 4–5. Policy routes and middleware
 
 | Repo | File | Role | Status |
 | --- | --- | --- | --- |
 | web | `app/routes.js` | Route tree | changes (Phase 3, Phase 4) |
-| web | `app/marketplace.routes.js` | Public + guest + open routes today | changes (Phase 3: split groups) |
-| web | `app/tourist.routes.js` | `/account/**` + legacy redirects | changes (Phase 3: move legacy redirects out) |
+| web | `app/marketplace.routes.js` | Marketplace + open IAM routes (guest IAM split to `account-guest.routes.js`) | exists (Phase 3, web-86) |
+| web | `app/account-guest.routes.js` | Guest IAM URLs under `account-guest-policy` | exists (Phase 3, web-86) |
+| web | `app/tourist.routes.js` | `openAccountRoutes` + `touristAccountRoutes` | exists (Phase 3, web-86) |
 | web | `app/corporate.routes.js`, `app/provider.routes.js`, `app/team.routes.js` | Surface groups | changes (Phase 3–4, paths unchanged) |
 | web | `app/auth/auth-account-guard.js` | `protect(rule)` for account rules | exists |
 | web | `app/auth/auth-admin-guard.js` | `protect(rule)` for admin rules | exists |
-| web | `app/routes/policies/account-guest-policy.jsx` | Guest pages | target (new, Phase 3) |
-| web | `app/routes/policies/tourist-required-policy.jsx` | `/account/**` | exists |
-| web | `app/routes/policies/admin-guest-policy.jsx` | `/team/login` | target (new, Phase 3) |
-| web | `app/routes/policies/admin-required-policy.jsx` | `/team/**` | target (new, Phase 3) |
+| web | `app/routes/policies/account-guest-policy.jsx` | Account guest IAM pages | exists (Phase 3, web-86) |
+| web | `app/routes/policies/tourist-required-policy.jsx` | `/account/**` dashboard | exists |
+| web | `app/routes/policies/admin-guest-policy.jsx` | `/team/login` | exists (Phase 3, web-85) |
+| web | `app/routes/policies/admin-required-policy.jsx` | `/team/**` | exists (Phase 3, web-85) |
 | web | `app/routes/policies/corporate-required-policy.jsx` | `/corporate/**` | target (new, Phase 4) |
 | web | `app/routes/policies/provider-required-policy.jsx` | `/providers/**` | target (new, Phase 4) |
 | web | `app/layouts/team/team-layout.jsx` | Today: `useEffect` login redirect | changes (Phase 3: guard removed) |

@@ -83,10 +83,10 @@ Orange is a policy. Green has no policy.
 ```js
 const routes = [
   layout('roots/public-root.jsx', [
-    ...openAccountRoutes,                       // verify-email, auth/google/callback, legacy redirects
+    ...prefix('account', openAccountRoutes),    // legacy /account/discover* only — outside all policies
 
     layout('layouts/tourist/tourist-public-layout.jsx', [
-      ...marketplaceRoutes                      // '/', districts/**, listings/:listingUuid — no policy
+      ...marketplaceRoutes                      // marketplace + open IAM (verify-email, OAuth callback, discover*, tourists/sign-up) — no policy
     ]),
 
     layout('./routes/policies/account-guest-policy.jsx', [
@@ -130,10 +130,10 @@ Route groups move as follows:
 
 | Group | From | To |
 | --- | --- | --- |
-| `login`, `sign-up`, `forgot-password`, `reset-password` | `marketplace.routes.js` | `accountGuestRoutes` (new export, same file or `identities.routes.js`) |
-| `verify-email`, `auth/google/callback`, `tourists/sign-up`, `discover`, `discover/*` | `marketplace.routes.js` | `openAccountRoutes` |
-| `account/discover*` legacy redirects | `tourist.routes.js` | `openAccountRoutes` — **must** stay outside `tourist-required-policy`, or guests following old bookmarks would be sent to login (web-56 redirect matrix) |
-| `providers/login`, `providers/sign-up`, `corporate/login`, `corporate/sign-up` | inline in `routes.js` | `providerGuestRoutes`, `corporateGuestRoutes` |
+| `login`, `sign-up`, `forgot-password`, `reset-password` | `marketplace.routes.js` | `accountGuestRoutes` under `account-guest-policy` |
+| `verify-email`, `auth/google/callback`, `tourists/sign-up`, `discover`, `discover/*`, `/`, `districts/**`, `listings/:listingUuid` | `marketplace.routes.js` | **Stay** in `marketplaceRoutes` inside `TouristPublicLayout` (open — no policy) |
+| `account/discover*` legacy redirects | `tourist.routes.js` | `openAccountRoutes` via `prefix('account', …)` — **must** stay outside `tourist-required-policy`, or guests following old bookmarks would be sent to login (web-56 redirect matrix) |
+| `providers/login`, `providers/sign-up`, `corporate/login`, `corporate/sign-up` | inline in `routes.js` | Under `account-guest-policy` with provider/corporate public auth layouts |
 
 URL paths do not change. Only the tree above them changes.
 
@@ -190,7 +190,7 @@ A Corporate account on `/account/checkout` goes to `/corporate`. `FR-IAM-012` le
 | Surface | Today | Target |
 | --- | --- | --- |
 | Public marketplace | No guard (`#60` merged) | Unchanged |
-| `/account/**` | `withTouristAuth` on each page (6 pages) | `tourist-required-policy` |
+| `/account/**` (dashboard) | `withTouristAuth` on **four** pages | `tourist-required-policy` |
 | Login pages | `withNoAuth` on each page | `account-guest-policy` |
 | `/verify-email` | `withNoAuth` | Open page (ADR-018 D10) |
 | `/corporate/**` | `withCorporateAuth` | `corporate-required-policy` |
