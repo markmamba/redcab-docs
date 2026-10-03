@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1180" viewBox="0 0 1280 1180" role="img" aria-label="Listing detail wireframe — desktop 1280">
+  <defs>
+    <style>
+      .wf-font { font-family: Inter, system-ui, sans-serif; }
+      .wf-label { font-size: 10px; fill: #94a3b8; }
+      .wf-muted { font-size: 13px; fill: #6c757d; }
+      .wf-body { font-size: 14px; fill: #334155; }
+      .wf-h1 { font-size: 26px; font-weight: 600; fill: #1f1f1f; }
+      .wf-h2 { font-size: 11px; font-weight: 600; fill: #6c757d; letter-spacing: 0.04em; }
+    </style>
+    <filter id="cardShadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+    <linearGradient id="heroScrim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.35"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="1180" fill="#ffffff"/>
+
+  <g id="Nav">
+    <rect width="1280" height="64" fill="#fff" stroke="#dee2e6"/>
+    <rect x="70" y="18" width="28" height="28" rx="4" fill="#c8102e"/>
+    <text x="106" y="40" class="wf-font wf-body" font-weight="700" fill="#1f1f1f">Red Cab</text>
+    <text x="980" y="40" class="wf-font wf-body">Districts</text>
+    <text x="1070" y="40" class="wf-font wf-body">Sign In</text>
+    <text x="1160" y="40" class="wf-font wf-body">Sign Up</text>
+    <text x="70" y="12" class="wf-font wf-label">Nav</text>
+  </g>
+
+  <g id="Breadcrumbs">
+    <text x="70" y="100" class="wf-font wf-muted">Home / Tokyo / Shibuya / Private airport transfer</text>
+    <text x="70" y="86" class="wf-font wf-label">Breadcrumbs</text>
+  </g>
+
+  <g id="Main-column">
+    <text x="70" y="132" class="wf-font wf-muted">← Back to services in Shibuya</text>
+
+    <g id="CatalogListingHeroView">
+      <rect x="70" y="148" width="740" height="320" rx="8" fill="#e9ecef"/>
+      <rect x="70" y="308" width="740" height="160" rx="0" fill="url(#heroScrim)"/>
+      <text x="82" y="162" class="wf-font wf-label">Hero media + gradient overlay</text>
+      <text x="70" y="492" class="wf-font wf-h1">Private airport transfer — sample title (API)</text>
+      <rect x="70" y="508" width="148" height="26" rx="4" fill="#fffbeb" stroke="#f5b800"/>
+      <text x="82" y="525" class="wf-font" font-size="12" fill="#6c757d">#68 · No reviews yet</text>
+      <text x="230" y="525" class="wf-font wf-muted">Private transfer · Shibuya</text>
+    </g>
+
+    <g id="CatalogGeographyCentroidMapView">
+      <rect x="70" y="548" width="740" height="120" rx="8" fill="#e9ecef" stroke="#dee2e6"/>
+      <text x="440" y="612" text-anchor="middle" class="wf-font wf-muted">Area centroid map</text>
+    </g>
+
+    <text x="70" y="696" class="wf-font wf-h2">HIGHLIGHTS</text>
+    <text x="70" y="718" class="wf-font wf-body">Group size · Languages · Vehicle · Service type</text>
+
+    <text x="70" y="758" class="wf-font wf-h2">ABOUT THIS SERVICE</text>
+    <text x="70" y="780" class="wf-font wf-muted">Description from API (localized).</text>
+
+    <text x="70" y="820" class="wf-font wf-h2">PROVIDED BY</text>
+    <text x="70" y="842" class="wf-font wf-body">Sample Provider Co.</text>
+
+    <text x="70" y="882" class="wf-font wf-h2">LOCATION</text>
+    <text x="70" y="904" class="wf-font wf-body">Shibuya</text>
+  </g>
+
+  <g id="Booking-panel" filter="url(#cardShadow)">
+    <rect x="850" y="148" width="360" height="520" rx="8" fill="#fff" stroke="#dee2e6"/>
+    <text x="866" y="178" class="wf-font" font-size="16" font-weight="600" fill="#1f1f1f">Book this service</text>
+    <text x="866" y="208" class="wf-font wf-body" font-weight="500">Service date</text>
+    <rect x="866" y="218" width="328" height="36" rx="6" fill="#fff" stroke="#ced4da"/>
+    <text x="878" y="242" class="wf-font wf-muted">2026-10-15</text>
+    <text x="866" y="278" class="wf-font wf-body" font-weight="500">Available times</text>
+    <rect x="866" y="290" width="200" height="34" rx="6" fill="#fff" stroke="#c8102e"/>
+    <text x="966" y="312" text-anchor="middle" class="wf-font" font-size="13" fill="#c8102e">09:00 – 12:00</text>
+    <rect x="866" y="334" width="328" height="56" rx="6" fill="#f8f9fa"/>
+    <text x="878" y="358" class="wf-font wf-muted" font-size="12">Total (server quote)</text>
+    <text x="878" y="378" class="wf-font" font-size="18" font-weight="600" fill="#1f1f1f">¥12,000</text>
+    <text x="866" y="412" class="wf-font wf-body" font-weight="500">Passengers</text>
+    <text x="866" y="434" class="wf-font wf-body">−  2  +</text>
+    <rect x="866" y="456" width="328" height="48" rx="6" fill="#c8102e"/>
+    <text x="1030" y="486" text-anchor="middle" class="wf-font" font-size="16" font-weight="600" fill="#fff">Book</text>
+    <text x="866" y="628" class="wf-font" font-size="12" fill="#6c757d">Choose a date and time to continue booking.</text>
+    <text x="866" y="136" class="wf-font wf-label">Sticky panel (lg+)</text>
+  </g>
+
+  <g id="Mobile-book-bar">
+    <rect x="70" y="1080" width="1140" height="56" rx="6" fill="#f8f9fa" stroke="#dee2e6" stroke-dasharray="6 4"/>
+    <text x="82" y="1100" class="wf-font wf-label">Mobile only: catalog-listing-mobile-book-bar (Total + Book)</text>
+    <text x="82" y="1124" class="wf-font wf-muted">See mobile 390 artboard in .pen</text>
+  </g>
+
+  <g id="Footer">
+    <line x1="0" y1="1140" x2="1280" y2="1140" stroke="#dee2e6"/>
+    <text x="70" y="1168" class="wf-font wf-muted">Footer · Legal · Language · Support</text>
+  </g>
+</svg>
