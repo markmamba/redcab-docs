@@ -161,23 +161,19 @@ Account routes (`/account/**`) stay `noindex, nofollow` and may keep `clientLoad
 
 ---
 
-## Auth HOCs
+## Auth policies
 
-:::warning Transitional
+Protected surfaces use **policy route parents** in `app/routes.js` ([ADR-018](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model)). New pages on a migrated surface nest under its policy — never re-add `app/components/hocs/with-*-auth` (removed in [#88](https://github.com/markmamba/red-cab-web/issues/88); ESLint enforced). Never put a policy and a deleted HOC pattern on the same subtree. See the [authentication series](/docs/90-99-engineering-meta/authentication) and the [roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap).
 
-Auth HOCs are being replaced by policy routes ([ADR-018](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model)). New pages on a migrated surface go under its policy, not a HOC. Never put a HOC and a policy on the same subtree. See the [authentication series](/docs/90-99-engineering-meta/authentication) and the [roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap).
-
-:::
-
-| HOC | Surface | Guard |
+| Policy parent | Surface | Guard |
 | --- | --- | --- |
-| `withNoAuth` | Login/signup pages | Redirect if already logged in |
-| `withTouristAuth` | Tourist account pages | Logged-in tourist |
-| `withCorporateAuth` | Client Portal | Logged-in corporate client |
-| `withProviderAuth` | Provider Portal | Logged-in approved provider |
-| Team admin auth | Admin Panel (`/team`) | Independent admin identity — **not** coupled to tourist/user auth |
+| `account-guest-policy` | Guest IAM (`/login`, sign-up, forgot password) | Redirect signed-in users away from guest URLs |
+| `tourist-required-policy` | Tourist account (`/account/*` dashboard) | Signed-in tourist |
+| `corporate-required-policy` | Client portal (`/corporate/*`) | Signed-in corporate client |
+| `provider-required-policy` | Provider portal (`/providers/*`) | Signed-in provider (entry rule + loader `403` onboarding) |
+| Team admin policies | Admin panel (`/team/**`) | Independent admin identity — **not** coupled to tourist auth |
 
-Wrap at default export: `export default withProviderAuth(ProviderListingsPage)`
+Mid-session hard `401` after refresh failure: root `ErrorBoundary` shows session-expired UI with **Sign in again** (user-initiated navigation). Only **policies** auto-redirect to login on entry (ADR-018 D7).
 
 ---
 

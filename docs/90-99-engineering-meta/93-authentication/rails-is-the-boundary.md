@@ -100,6 +100,16 @@ Managers receive the scoping profile as a keyword argument (`tourist_profile:`, 
 
 No private page today has a first fetch with a side effect. Checkout creates a CheckoutSession on **submit**, not on load (`tourist-checkout-page.jsx`). Keep it that way.
 
+## Error boundaries vs policies
+
+| Layer | Role on auth failure |
+| --- | --- |
+| Policy route | Entry guard on Node before paint — may **redirect** to the surface login with `redirect_to` |
+| Root `ErrorBoundary` | Displays errors only — on hard loader `401`, session-expired copy and **Sign in again** (user click), not automatic login navigation ([#88](https://github.com/markmamba/red-cab-web/issues/88), ADR-018 D7) |
+| Rails | Authoritative access on every API request |
+
+Deleted auth HOC modules are not a security boundary — only Rails protects data.
+
 ## Related documents
 
 - Previous: [Entry rules](/docs/90-99-engineering-meta/authentication/entry-rules)
