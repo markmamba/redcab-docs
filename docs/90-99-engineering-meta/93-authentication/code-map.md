@@ -93,8 +93,8 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | web | `app/routes/policies/tourist-required-policy.jsx` | `/account/**` dashboard | exists |
 | web | `app/routes/policies/admin-guest-policy.jsx` | `/team/login` | exists (Phase 3, web-85) |
 | web | `app/routes/policies/admin-required-policy.jsx` | `/team/**` | exists (Phase 3, web-85) |
-| web | `app/routes/policies/corporate-required-policy.jsx` | `/corporate/**` | target (new, Phase 4) |
-| web | `app/routes/policies/provider-required-policy.jsx` | `/providers/**` | target (new, Phase 4) |
+| web | `app/routes/policies/corporate-required-policy.jsx` | `/corporate/**` | exists (Phase 4, web-87) |
+| web | `app/routes/policies/provider-required-policy.jsx` | `/providers/**` | exists (Phase 4, web-87) |
 | web | `app/layouts/team/team-layout.jsx` | Today: `useEffect` login redirect | changes (Phase 3: guard removed) |
 | web | `app/components/hocs/with-tourist-auth.jsx` | HOC | deleted (Phase 4 last PR) |
 | web | `app/components/hocs/with-no-auth.jsx` | HOC. Today: unchecked `redirect_to` | changes (Phase 0), deleted (Phase 4) |
