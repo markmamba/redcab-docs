@@ -186,6 +186,7 @@ export function shouldRevalidate({ formMethod, actionStatus, currentUrl, nextUrl
   const isAuthFailed = actionStatus === 401 || actionStatus === 403
 
   if (isMutation || isAuthFailed) return true
+  if (isBridgeDrivenRevalidation()) return defaultShouldRevalidate
   if (currentUrl?.href !== nextUrl?.href) return false
 
   return defaultShouldRevalidate
