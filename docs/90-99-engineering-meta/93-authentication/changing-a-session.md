@@ -155,7 +155,7 @@ sequenceDiagram
 | `422` | Validation or business rule failed | `setApiErrorsToFormFields` + toast | Toast |
 | `5xx`, network | Outage | Toast. Session unchanged | Toast. Session unchanged |
 
-Only a policy navigates to a login page on **entry** (ADR-018 D7). After [#88](https://github.com/markmamba/red-cab-web/issues/88), a hard `401` from a loader (refresh already failed) surfaces at the root `ErrorBoundary` as session-expired UI with **Sign in again** — the boundary does **not** auto-navigate. Normative in-area recovery via `revalidate()` is [#107](https://github.com/markmamba/red-cab-web/issues/107).
+Only a policy navigates to a login page on **entry** (ADR-018 D7). In-area hard `401` from **`clientLoader`** (refresh already failed) must **`await` root `revalidate()`** ([#107](https://github.com/markmamba/red-cab-web/issues/107)); the helper does not call `navigate` / `redirect` — login **`replace`** may follow when policy runs on the revalidation request. SSR `loader` paths and hard `401` outside the loader helper may still surface the root `ErrorBoundary` session-expired UI with **Sign in again** ([#88](https://github.com/markmamba/red-cab-web/issues/88)); that boundary does **not** auto-navigate.
 
 ## CSRF
 
