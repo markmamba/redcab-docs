@@ -51,7 +51,7 @@ parent_epic: "https://github.com/markmamba/red-cab-web/issues/77"
 | 7 | **E1 Option A:** behavior tests + `provider_role_required` → `getIdentitiesHomePath` | Option B `clientMiddleware` first | Minimal scope; single wrong-role authority |
 | 8 | **E1 contingency:** `clientMiddleware` on required policies only if Option A spike fails | Server layout `loader` (Option C) | Extend policy contract only when proven necessary |
 | 9 | Provider onboarding in `clientLoader` + `ProvidersProfileService` | Policy extension | ADR-018 D5; handled codes: `provider_profile_required`, `provider_role_required` only |
-| 10 | **E2:** Policy = **entry** guard; mid-session expiry via API 401 → `public-root` `ErrorBoundary` | Delete boundary in #87 | #88 must not remove boundary without replacement |
+| 10 | **E2:** Policy = **entry** guard; mid-session hard `401` → root `ErrorBoundary` **A1** (session-expired UI + Sign in again) | Delete boundary in #87 without replacement | **Superseded by** [web-88-remove-auth-hocs.md](web-88-remove-auth-hocs.md) |
 | 11 | **E3:** Pending/rejected/suspended provider states | Handle in #87 | Out of scope; follow-up issue |
 | 12 | Corporate dashboard: no `clientLoader`, no API on load | Add loader | Document — mid-session expiry undetected until navigation/reload |
 | 13 | Sign-out **87b** | Defer | web-86 + plan Q1=A |
@@ -126,7 +126,7 @@ Guest corporate/provider login and sign-up remain under `account-guest-policy`.
 
 ### #88 coupling (E2)
 
-Do **not** remove `public-root` `ErrorBoundary` 401 navigate in #88 until a replacement (e.g. centralized `ky-client` 401 handling) has its own spec.
+Boundary 401 auto-navigation and HOC file deletion are owned by [web-88-remove-auth-hocs.md](web-88-remove-auth-hocs.md) (**A1**: session-expired UI + **Sign in again**, no `useEffect` navigate). Do not remove the boundary UX entirely — only the automatic redirect.
 
 ### Files to create or modify (Web)
 

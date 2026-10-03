@@ -231,9 +231,9 @@ flowchart LR
 
 - [ ] `/corporate/**` and `/providers/**` use their policies.
 - [ ] Provider onboarding redirects still work, driven by `403` codes in page loaders.
-- [ ] `app/components/hocs/with-*-auth.jsx` deleted. Lint forbids re-adding the folder.
-- [ ] Root `ErrorBoundary`s no longer navigate on `401`.
-- [ ] [Frontend conventions](/docs/50-59-frontend/conventions/frontend) "Auth HOCs" section replaced by "Auth policies".
+- [x] `app/components/hocs/with-*-auth.jsx` deleted. Lint forbids re-adding the folder.
+- [x] Root `ErrorBoundary`s no longer navigate on `401`.
+- [x] [Frontend conventions](/docs/50-59-frontend/conventions/frontend) "Auth HOCs" section replaced by "Auth policies".
 
 **Dependencies:** Phase 3.
 

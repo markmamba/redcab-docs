@@ -12,7 +12,7 @@ description: How Red Cab Web and Red Cab API know who is signed in — two runti
 - Rails decides access on every request. The web only decides where a person goes.
 - Read the pages in order the first time. After that, [Entry rules](/docs/90-99-engineering-meta/authentication/entry-rules) and the [contract sheet](/docs/90-99-engineering-meta/authentication/appendix-web-api-contract) are the lookup pages.
 
-**Status:** **Normative target design** (2026-09-30, [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19)). ADR-018 and ADR-019 are **Accepted**. Pages describe the target from those ADRs; **phased applicability** still applies — HOCs, api-145 bridges, and missing `app/auth/*` modules remain legal until the roadmap phase that removes them. Each page marks where today's code differs.
+**Status:** **Normative target design** (2026-09-30, [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19)). ADR-018 and ADR-019 are **Accepted**. Pages describe the target from those ADRs; **phased applicability** still applies for remaining roadmap items (Phase 3 session-write contract, `revalidate()` on hard loader `401`, etc.). Each page marks where today's code differs.
 
 ## Why this series lives under Engineering
 
@@ -91,7 +91,7 @@ flowchart LR
 
 ## What stays the same during the tourist pre–Phase 2 track
 
-- HOCs remain on `/account/**`, login pages, `/corporate/**`, and `/providers/**` until their migration PR.
+- Protected surfaces use **policy routes** (`/account/**`, `/corporate/**`, `/providers/**`, `/team/**`); auth HOC files were removed in [#88](https://github.com/markmamba/red-cab-web/issues/88).
 - Public marketplace routes stay guard-free (`AMB-022`, web-56).
 - `ky-client` keeps refresh-on-`401`, with the Phase 0 per-request lock fix.
 - See the [roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap) for exact phase gates.
