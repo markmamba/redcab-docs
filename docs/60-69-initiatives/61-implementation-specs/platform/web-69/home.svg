@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="980" viewBox="0 0 1280 980" role="img" aria-label="Red Cab Home wireframe — desktop 1280">
+  <defs>
+    <style>
+      .wf-font { font-family: Inter, system-ui, sans-serif; }
+      .wf-h1 { font-size: 32px; font-weight: 600; fill: #1f1f1f; }
+      .wf-h2 { font-size: 22px; font-weight: 600; fill: #1f1f1f; }
+      .wf-body { font-size: 15px; fill: #334155; }
+      .wf-muted { font-size: 16px; fill: #6c757d; }
+      .wf-small { font-size: 13px; fill: #6c757d; }
+      .wf-label { font-size: 10px; fill: #94a3b8; }
+    </style>
+    <filter id="cardShadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="980" fill="#ffffff"/>
+
+  <!-- Nav -->
+  <g id="Nav">
+    <rect x="0" y="0" width="1280" height="64" fill="#fff" stroke="#dee2e6"/>
+    <rect x="70" y="18" width="28" height="28" rx="4" fill="#c8102e"/>
+    <text x="106" y="40" class="wf-font wf-body" font-weight="700" fill="#1f1f1f">Red Cab</text>
+    <text x="980" y="40" class="wf-font wf-body">Districts</text>
+    <text x="1070" y="40" class="wf-font wf-body">Sign In</text>
+    <text x="1160" y="40" class="wf-font wf-body">Sign Up</text>
+    <text x="70" y="12" class="wf-font wf-label">Nav</text>
+  </g>
+
+  <!-- Breadcrumbs -->
+  <g id="Breadcrumbs">
+    <rect x="0" y="64" width="1280" height="40" fill="#fff"/>
+    <text x="70" y="90" class="wf-font wf-small">Home</text>
+    <text x="70" y="76" class="wf-font wf-label">Breadcrumbs</text>
+  </g>
+
+  <!-- Hero -->
+  <g id="Hero">
+    <rect x="70" y="128" width="1140" height="260" rx="8" fill="#f8f9fa" stroke="#dee2e6"/>
+    <text x="640" y="200" text-anchor="middle" class="wf-font wf-h1">Book private transfers and tours across Japan</text>
+    <text x="640" y="240" text-anchor="middle" class="wf-font wf-muted">Browse districts, compare services, and book trusted local providers on Red Cab.</text>
+    <rect x="530" y="268" width="220" height="52" rx="6" fill="#c8102e"/>
+    <text x="640" y="300" text-anchor="middle" class="wf-font" font-size="16" font-weight="600" fill="#fff">Browse districts</text>
+    <text x="82" y="142" class="wf-font wf-label">Hero · tourist-home-landing__hero</text>
+  </g>
+
+  <!-- Featured districts -->
+  <g id="Featured-districts">
+    <text x="70" y="430" class="wf-font wf-h2">Featured districts</text>
+    <text x="70" y="458" class="wf-font wf-muted" font-size="16">Start exploring popular destinations with published services.</text>
+    <text x="70" y="418" class="wf-font wf-label">Featured grid</text>
+  </g>
+
+  <!-- District cards -->
+  <g id="District-card" filter="url(#cardShadow)">
+    <g transform="translate(70 480)">
+      <rect width="340" height="280" rx="8" fill="#fff" stroke="#dee2e6"/>
+      <rect width="340" height="124" rx="8" fill="#e9ecef"/>
+      <rect y="116" width="340" height="8" fill="#e9ecef"/>
+      <text x="170" y="70" text-anchor="middle" class="wf-font wf-small">16:9 placeholder</text>
+      <text x="16" y="160" class="wf-font" font-size="20" font-weight="600" fill="#1f1f1f">Tokyo</text>
+      <rect x="16" y="228" width="110" height="32" rx="6" fill="#fff" stroke="#c8102e"/>
+      <text x="71" y="249" text-anchor="middle" class="wf-font" font-size="13" fill="#c8102e">View areas</text>
+    </g>
+    <g transform="translate(434 480)">
+      <rect width="340" height="280" rx="8" fill="#fff" stroke="#dee2e6"/>
+      <rect width="340" height="124" rx="8" fill="#e9ecef"/>
+      <rect y="116" width="340" height="8" fill="#e9ecef"/>
+      <text x="170" y="70" text-anchor="middle" class="wf-font wf-small">16:9 placeholder</text>
+      <text x="16" y="160" class="wf-font" font-size="20" font-weight="600" fill="#1f1f1f">Osaka</text>
+      <rect x="16" y="228" width="110" height="32" rx="6" fill="#fff" stroke="#c8102e"/>
+      <text x="71" y="249" text-anchor="middle" class="wf-font" font-size="13" fill="#c8102e">View areas</text>
+    </g>
+    <g transform="translate(798 480)">
+      <rect width="340" height="280" rx="8" fill="#fff" stroke="#dee2e6"/>
+      <rect width="340" height="124" rx="8" fill="#e9ecef"/>
+      <rect y="116" width="340" height="8" fill="#e9ecef"/>
+      <text x="170" y="70" text-anchor="middle" class="wf-font wf-small">16:9 placeholder</text>
+      <text x="16" y="160" class="wf-font" font-size="20" font-weight="600" fill="#1f1f1f">Kyoto</text>
+      <rect x="16" y="228" width="110" height="32" rx="6" fill="#fff" stroke="#c8102e"/>
+      <text x="71" y="249" text-anchor="middle" class="wf-font" font-size="13" fill="#c8102e">View areas</text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <g id="Footer">
+    <line x1="0" y1="820" x2="1280" y2="820" stroke="#dee2e6"/>
+    <text x="70" y="852" class="wf-font wf-small" font-weight="600">LEGAL</text>
+    <text x="70" y="876" class="wf-font wf-small">Terms (coming soon)</text>
+    <text x="70" y="896" class="wf-font wf-small">Privacy (coming soon)</text>
+    <text x="450" y="852" class="wf-font wf-small" font-weight="600">LANGUAGE</text>
+    <text x="450" y="880" class="wf-font wf-small">English / 日本語 — language settings in Account</text>
+    <text x="830" y="852" class="wf-font wf-small" font-weight="600">SUPPORT</text>
+    <text x="830" y="880" class="wf-font wf-small">Contact support at support@redcab.example</text>
+    <line x1="70" y1="920" x2="1210" y2="920" stroke="#dee2e6"/>
+    <text x="70" y="948" class="wf-font wf-small">Provider login</text>
+    <text x="190" y="948" class="wf-font wf-small">Corporate login</text>
+    <text x="70" y="836" class="wf-font wf-label">Footer</text>
+  </g>
+
+  <!-- State callouts -->
+  <g id="Annotations">
+    <rect x="1040" y="128" width="200" height="72" rx="6" fill="#fffbeb" stroke="#f5b800"/>
+    <text x="1052" y="150" class="wf-font" font-size="11" fill="#334155">Loading: shell + Loading...</text>
+    <text x="1052" y="168" class="wf-font" font-size="11" fill="#334155">Empty: hero only</text>
+    <rect x="1040" y="212" width="200" height="48" rx="6" fill="#f0fdf4" stroke="#00854a"/>
+    <text x="1052" y="240" class="wf-font" font-size="11" fill="#334155">A11y: red CTA contrast OK</text>
+  </g>
+</svg>

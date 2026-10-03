@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="900" viewBox="0 0 1280 900" role="img" aria-label="Checkout wireframe — desktop 1280">
+  <defs>
+    <style>
+      .wf-font { font-family: Inter, system-ui, sans-serif; }
+      .wf-label { font-size: 10px; fill: #94a3b8; }
+      .wf-muted { font-size: 13px; fill: #6c757d; }
+      .wf-body { font-size: 14px; fill: #334155; }
+    </style>
+    <filter id="cardShadow" x="-4%" y="-4%" width="108%" height="112%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  <rect width="1280" height="900" fill="#ffffff"/>
+
+  <g id="Nav">
+    <rect width="1280" height="64" fill="#fff" stroke="#dee2e6"/>
+    <rect x="70" y="18" width="28" height="28" rx="4" fill="#c8102e"/>
+    <text x="106" y="40" class="wf-font wf-body" font-weight="700" fill="#1f1f1f">Red Cab</text>
+    <text x="900" y="40" class="wf-font wf-body">Districts</text>
+    <text x="990" y="40" class="wf-font wf-body">Bookings</text>
+    <text x="1085" y="40" class="wf-font wf-body">Account</text>
+    <text x="1175" y="40" class="wf-font wf-body">Sign out</text>
+    <text x="70" y="12" class="wf-font wf-label">Nav (logged in)</text>
+  </g>
+
+  <g id="Breadcrumbs">
+    <text x="70" y="100" class="wf-font wf-muted">Account / Checkout</text>
+    <text x="70" y="86" class="wf-font wf-label">Breadcrumbs</text>
+  </g>
+
+  <g id="Checkout-main">
+    <text x="70" y="132" class="wf-font wf-muted">← Back to service</text>
+    <text x="70" y="168" class="wf-font" font-size="24" font-weight="600" fill="#1f1f1f">Checkout</text>
+    <text x="70" y="194" class="wf-font wf-muted">Refreshing this page starts checkout over. Seats held on server until session expires.</text>
+
+    <rect x="70" y="210" width="520" height="36" rx="6" fill="#f8f9fa" stroke="#dee2e6"/>
+    <text x="82" y="233" class="wf-font" font-size="12" fill="#6c757d">Language prompt — not suppressed on checkout (Q11)</text>
+
+    <g id="Checkout-stepper">
+      <text x="70" y="268" class="wf-font wf-label">Checkout stepper</text>
+      <text x="70" y="292" class="wf-font wf-body" font-weight="600" fill="#c8102e">1. Fulfillment</text>
+      <text x="200" y="292" class="wf-font wf-muted">2. Policy</text>
+      <text x="290" y="292" class="wf-font wf-muted">3. Payment</text>
+    </g>
+
+    <rect x="70" y="312" width="720" height="340" rx="8" fill="#fff" stroke="#dee2e6"/>
+    <text x="94" y="348" class="wf-font" font-size="18" font-weight="600" fill="#1f1f1f">Trip details</text>
+    <text x="94" y="378" class="wf-font wf-muted">Pickup location</text>
+    <rect x="94" y="388" width="672" height="36" rx="6" fill="#fff" stroke="#ced4da"/>
+    <text x="94" y="442" class="wf-font wf-muted">Contact phone</text>
+    <rect x="94" y="452" width="672" height="36" rx="6" fill="#fff" stroke="#ced4da"/>
+    <rect x="94" y="512" width="220" height="44" rx="6" fill="#c8102e"/>
+    <text x="204" y="540" text-anchor="middle" class="wf-font" font-size="14" font-weight="600" fill="#fff">Continue to policy</text>
+    <text x="82" y="326" class="wf-font wf-label">Active step card (Fulfillment shown)</text>
+  </g>
+
+  <g id="Order-summary" filter="url(#cardShadow)">
+    <rect x="830" y="312" width="380" height="340" rx="8" fill="#fff" stroke="#dee2e6"/>
+    <text x="854" y="348" class="wf-font" font-size="18" font-weight="600" fill="#1f1f1f">Order summary</text>
+    <text x="854" y="378" class="wf-font wf-muted" font-size="12">Service</text>
+    <text x="854" y="398" class="wf-font wf-body" font-weight="500">Sample listing title (API)</text>
+    <text x="854" y="428" class="wf-font wf-muted" font-size="12">Passengers</text>
+    <text x="854" y="448" class="wf-font wf-body" font-weight="500">2</text>
+    <rect x="854" y="468" width="332" height="44" rx="4" fill="#f8f9fa" stroke="#dee2e6" stroke-dasharray="4 4"/>
+    <text x="1020" y="495" text-anchor="middle" class="wf-font" font-size="11" fill="#6c757d">#68 bundle extension — no visible UI</text>
+    <rect x="854" y="528" width="332" height="72" rx="6" fill="#f8f9fa"/>
+    <text x="866" y="552" class="wf-font wf-muted" font-size="12">Price breakdown (server only)</text>
+    <text x="866" y="578" class="wf-font" font-size="16" font-weight="600" fill="#1f1f1f">¥12,000 total</text>
+    <text x="854" y="300" class="wf-font wf-label">Sticky summary (lg)</text>
+  </g>
+
+  <g id="Footer">
+    <line x1="0" y1="860" x2="1280" y2="860" stroke="#dee2e6"/>
+    <text x="70" y="888" class="wf-font wf-muted">Footer</text>
+  </g>
+</svg>

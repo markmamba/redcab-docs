@@ -246,8 +246,12 @@ Scaffold **named slots** on existing pages. Do not implement Phase 2 API clients
 
 Not required to start Milestone B, but recommended before high-traffic pages go to production.
 
+Implementation spec: [web-69-tourist-brand-visual-polish](/docs/60-69-initiatives/implementation-specs/platform/web-69-tourist-brand-visual-polish) ([#69](https://github.com/markmamba/red-cab-web/issues/69)).
+
+Wireframes (canonical on GitHub Pages): [web-69 spec — Wireframes](/docs/60-69-initiatives/implementation-specs/platform/web-69-tourist-brand-visual-polish#wireframes).
+
 - [ ] Brand tokens in `app/styles/_variables.scss`
-- [ ] Wireframes for Home, listing detail, checkout (tool of choice)
+- [x] Wireframes for Home, listing detail, checkout — [web-69 exports](/docs/60-69-initiatives/implementation-specs/platform/web-69-tourist-brand-visual-polish#wireframes)
 - [ ] EN/JA copy patterns for discovery and checkout
 - [ ] Card/list patterns aligned across discover and bookings
 
