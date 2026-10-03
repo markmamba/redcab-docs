@@ -29,7 +29,7 @@ approved: "2026-10-03"
 | ID | Document | Why |
 | --- | --- | --- |
 | roadmap | [implementation-roadmap.md](/docs/90-99-engineering-meta/authentication/implementation-roadmap) | Phase 4 exit criteria; spec row 10 |
-| web-87 | [web-87-corporate-provider-policy-routes.md](/docs/60-69-initiatives/61-implementation-specs/iam/auth-platform/web-87-corporate-provider-policy-routes) | C9 manual; E2 superseded by this spec |
+| web-87 | [web-87-corporate-provider-policy-routes.md](/docs/60-69-initiatives/implementation-specs/iam/auth-platform/web-87-corporate-provider-policy-routes) | C9 manual; E2 superseded by this spec |
 | changing-a-session | [changing-a-session.md](/docs/90-99-engineering-meta/authentication/changing-a-session) | ADR-018 D7; refused-response table |
 | policy-middleware | [policy-middleware.md](/docs/90-99-engineering-meta/authentication/policy-middleware) | When policy runs; ky must not navigate |
 | frontend | [frontend.md](/docs/50-59-frontend/conventions/frontend) | Auth policies section |
