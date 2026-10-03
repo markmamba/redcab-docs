@@ -35,8 +35,8 @@ Evidence: `app/utils/loader-utils.js` (401 rethrow + #107 comment); **18** route
 | changing-a-session | [changing-a-session.md](/docs/90-99-engineering-meta/authentication/changing-a-session) | Refused-response table: `401` → `revalidate()`, helper must not navigate |
 | reading-the-session | [reading-the-session.md](/docs/90-99-engineering-meta/authentication/reading-the-session) | Root re-read on `revalidate()` |
 | policy-middleware | [policy-middleware.md](/docs/90-99-engineering-meta/authentication/policy-middleware) | In-area race; **`revalidate()`** row → policy runs on Node |
-| web-88 | [web-88-remove-auth-hocs.md](/docs/60-69-initiatives/61-implementation-specs/iam/auth-platform/web-88-remove-auth-hocs) | A1 interim; defers loader `revalidate()` to #107 |
-| frontend | [frontend.md](/docs/50-59-frontend/51-conventions/frontend) | `clientLoader` on private surfaces |
+| web-88 | [web-88-remove-auth-hocs.md](/docs/60-69-initiatives/implementation-specs/iam/auth-platform/web-88-remove-auth-hocs) | A1 interim; defers loader `revalidate()` to #107 |
+| frontend | [frontend.md](/docs/50-59-frontend/conventions/frontend) | `clientLoader` on private surfaces |
 
 No `FR-IAM-*` row names loader revalidation; observable auth behaviour is covered by the authentication series above and issue #107.
 
