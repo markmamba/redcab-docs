@@ -87,10 +87,10 @@ The reference pattern verified this table on React Router `8.3.0`. Red Cab runs 
 | Document request | Yes | **Yes** — guest `HEAD /account/bookings` → `302` `/login?redirect_to=…` with `x-remix-replace` |
 | In-app click that **enters** the policy's area | Yes. The policy is newly matched | **Yes** — `.data` with `_routes` including `routes/policies/tourist-required-policy` → `SingleFetchRedirect` to login (`replace`) |
 | In-app click between two pages **inside** the area | No, unless the destination has its own server `loader` | **Not exercised** in #83 (browser); expected **No** per reference |
-| In-app click after session loss (row 3) | Yes | **Playwright** — `e2e/policy-middleware-matrix.spec.js` |
+| In-app click after session loss (row 3) | Yes | **Playwright (local)** — `e2e/policy-middleware-matrix.spec.js` |
 | Search params change (`?page=2`) | Yes | **Not exercised** in #83 (browser); strip helper covers `?page=2` in Vitest |
-| An action succeeds, or fails with `401` / `403` | Yes | **Playwright** — `e2e/policy-middleware-matrix.spec.js` (fixture `clientAction` when `VITE_E2E_AUTH_FIXTURES=true`) |
-| `revalidate()` | Yes | **Playwright** — `e2e/policy-middleware-matrix.spec.js` (hard `401` from `clientLoader` after session cleared) |
+| An action succeeds, or fails with `401` / `403` | Yes | **Playwright (local)** — `e2e/policy-middleware-matrix.spec.js` (fixture `clientAction` when `VITE_E2E_AUTH_FIXTURES=true`) |
+| `revalidate()` | Yes | **Playwright (local)** — `e2e/policy-middleware-matrix.spec.js` (hard `401` from `clientLoader` after session cleared) |
 | Leave the area and come back | Yes | **Not exercised** in #83 (browser); optional follow-up |
 
 **Step 6 proof (signed-out in-app enter):** With `withTouristAuth` removed on `booking-list-page.jsx` and `SPIKE_83_DISABLE_ERROR_BOUNDARY_401_NAVIGATE`, the `.data` response carries the policy redirect (not only a clientLoader `401`). See transcript above.
@@ -146,11 +146,14 @@ Each file has a matching `*.spec.js`. An account file never imports an admin fil
 
 ## How to test a policy
 
-### Automated (gap browser rows)
+### Automated (gap browser rows, local only)
+
+PR CI runs **Vitest** (`npm run ci:test`) for middleware chains, `shouldRevalidate`, and policy export contracts. It does **not** run Playwright.
 
 From `red-cab-web` with `red-cab-api` running (`rails dev:accounts:seed`, port `3000`):
 
 ```bash
+npx playwright install chromium
 VITE_E2E_AUTH_FIXTURES=true npm run test:e2e
 ```
 

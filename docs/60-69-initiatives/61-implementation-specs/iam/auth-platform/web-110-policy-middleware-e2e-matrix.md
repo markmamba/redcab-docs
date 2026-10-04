@@ -15,7 +15,7 @@ parent_epic: "https://github.com/markmamba/red-cab-web/issues/77"
 
 ## TL;DR
 
-- **Ships:** `@playwright/test` harness under `e2e/`; gap browser rows on tourist `/account/bookings` (in-app enter after session loss, `clientLoader` hard `401` → `revalidate()` → policy, action `401` → root revalidation → policy); dev-only action fixture route when `VITE_E2E_AUTH_FIXTURES=true`; PR CI job with API + Postgres + Redis + seeded `dev:accounts:seed` tourist.
+- **Ships:** `@playwright/test` harness under `e2e/`; gap browser rows on tourist `/account/bookings` (in-app enter after session loss, `clientLoader` hard `401` → `revalidate()` → policy, action `401` → root revalidation → policy); dev-only action fixture route when `VITE_E2E_AUTH_FIXTURES=true`. **CI:** Vitest only; Playwright runs locally with full stack (API + seed).
 - **Does NOT ship:** Full seven-row duplication of curl/Vitest rows 1–2; team-root matrix; R-4 rotated-cookie `.data` proof; API code changes.
 - **Breaking change:** No.
 
@@ -40,7 +40,7 @@ parent_epic: "https://github.com/markmamba/red-cab-web/issues/77"
 | 1 | Runner: **Playwright** | Vitest browser only | Multi-tab session loss; brief Gate 1 Q1=A |
 | 2 | Scope: **gap rows** on tourist `/account/bookings` | Full seven-row suite | Q2=A; avoid curl/Vitest duplication |
 | 3 | Session: **full stack** web + API | ky intercept in Playwright | Q3=A; real cookies |
-| 4 | CI: **dedicated job** on PR | Docs-only local command | Q4=A |
+| 4 | CI: **Vitest only** on PR | Dedicated Playwright job (original Q4=A) | Cost and `RAILS_MASTER_KEY`; gap rows stay local + manual hand test |
 | 5 | Credentials | `Dev::TestAccounts::TOURIST_COMPLETE_EMAIL` / `DEV_PASSWORD` | `rails dev:accounts:seed` in development |
 | 6 | Action row fixture | Reuse `/logout` only | Bookings has no server `action`; add `/account/e2e/policy-action-fixture` with `clientAction` returning `401`, registered only when `VITE_E2E_AUTH_FIXTURES=true` |
 | 7 | Action row assertion | Clear cookies, submit fixture `401`, expect policy login | `actionStatus` forces revalidation; policy redirect requires null session read |
@@ -52,7 +52,7 @@ parent_epic: "https://github.com/markmamba/red-cab-web/issues/77"
 | Script | Command |
 | --- | --- |
 | `test:e2e` | `playwright test` |
-| `ci:e2e` | `playwright test` (CI sets env; install browsers in workflow) |
+| `ci:e2e` | `playwright test` (local alias; not run in GitHub Actions) |
 
 ### Environment
 
@@ -61,7 +61,7 @@ parent_epic: "https://github.com/markmamba/red-cab-web/issues/77"
 | `VITE_API_REDCAB_URL` | API origin (default `http://localhost:3000`) |
 | `VITE_E2E_AUTH_FIXTURES` | `true` enables fixture route at build/dev time |
 | `PLAYWRIGHT_BASE_URL` | Web origin (default `http://localhost:5173`) |
-| `PLAYWRIGHT_SKIP_WEBSERVER` | Set in CI when dev server started explicitly |
+| `PLAYWRIGHT_SKIP_WEBSERVER` | Optional when dev server is started manually |
 
 ### E2E scenarios (gap rows)
 
@@ -82,7 +82,7 @@ parent_epic: "https://github.com/markmamba/red-cab-web/issues/77"
 | `e2e/policy-middleware-matrix.spec.js` | Matrix tests |
 | `app/routes/tourist/e2e-policy-action-fixture-page.jsx` | Fixture `clientAction` 401 |
 | `app/tourist.routes.js` | Conditional fixture route |
-| `.github/workflows/ci.yml` | `e2e` job |
+| `.github/workflows/ci.yml` | Vitest job only (no Playwright job) |
 | `policy-middleware.md` (corpus) | Point hand test to `npm run test:e2e` |
 | `.ai/instructions.md` | E2E run instructions |
 
@@ -95,9 +95,8 @@ parent_epic: "https://github.com/markmamba/red-cab-web/issues/77"
 ## Acceptance criteria
 
 - [ ] Approved spec merged before web PR
-- [ ] `npm run ci:test` unchanged green
-- [ ] `npm run test:e2e` passes locally with API seeded + running
-- [ ] CI `e2e` job passes on PR (requires `RAILS_MASTER_KEY` secret for API checkout)
+- [ ] `npm run ci:test` passes on PR (Vitest; no Playwright in CI)
+- [ ] `npm run test:e2e` passes locally with API seeded + running (maintainer gate before merge when auth navigation changes)
 
 ## Verification
 
@@ -116,3 +115,4 @@ VITE_E2E_AUTH_FIXTURES=true npm run test:e2e
 | Date | Reviewer | Tool / model | Outcome |
 | --- | --- | --- | --- |
 | 2026-10-04 | Mark | Brief Gate 1 | Approved via brief MCQs |
+| 2026-10-04 | Mark | CI scope | Playwright removed from PR CI; local E2E + Vitest in CI |
