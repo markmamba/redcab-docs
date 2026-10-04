@@ -87,10 +87,11 @@ The reference pattern verified this table on React Router `8.3.0`. Red Cab runs 
 | Document request | Yes | **Yes** — guest `HEAD /account/bookings` → `302` `/login?redirect_to=…` with `x-remix-replace` |
 | In-app click that **enters** the policy's area | Yes. The policy is newly matched | **Yes** — `.data` with `_routes` including `routes/policies/tourist-required-policy` → `SingleFetchRedirect` to login (`replace`) |
 | In-app click between two pages **inside** the area | No, unless the destination has its own server `loader` | **Not exercised** in #83 (browser); expected **No** per reference |
+| In-app click after session loss (row 3) | Yes | **Playwright** — `e2e/policy-middleware-matrix.spec.js` |
 | Search params change (`?page=2`) | Yes | **Not exercised** in #83 (browser); strip helper covers `?page=2` in Vitest |
-| An action succeeds, or fails with `401` / `403` | Yes | **Not exercised** — no server `action` on `/account/bookings`; defer to spec 6 or a `fetcher` fixture |
-| `revalidate()` | Yes | **Not exercised** in #83 (browser) |
-| Leave the area and come back | Yes | **Not exercised** in #83 (browser) |
+| An action succeeds, or fails with `401` / `403` | Yes | **Playwright** — `e2e/policy-middleware-matrix.spec.js` (fixture `clientAction` when `VITE_E2E_AUTH_FIXTURES=true`) |
+| `revalidate()` | Yes | **Playwright** — `e2e/policy-middleware-matrix.spec.js` (hard `401` from `clientLoader` after session cleared) |
+| Leave the area and come back | Yes | **Not exercised** in #83 (browser); optional follow-up |
 
 **Step 6 proof (signed-out in-app enter):** With `withTouristAuth` removed on `booking-list-page.jsx` and `SPIKE_83_DISABLE_ERROR_BOUNDARY_401_NAVIGATE`, the `.data` response carries the policy redirect (not only a clientLoader `401`). See transcript above.
 
@@ -143,7 +144,19 @@ Do not add `clientMiddleware` to close the gap. It needs a browser copy of the s
 
 Each file has a matching `*.spec.js`. An account file never imports an admin file, and the reverse. `auth-safe-redirect.js` is the only file both sides use.
 
-## How to test a policy by hand
+## How to test a policy
+
+### Automated (gap browser rows)
+
+From `red-cab-web` with `red-cab-api` running (`rails dev:accounts:seed`, port `3000`):
+
+```bash
+VITE_E2E_AUTH_FIXTURES=true npm run test:e2e
+```
+
+Suite: `e2e/policy-middleware-matrix.spec.js` ([#110](https://github.com/markmamba/red-cab-web/issues/110)). Spec: [web-110-policy-middleware-e2e-matrix.md](/docs/60-69-initiatives/61-implementation-specs/iam/auth-platform/web-110-policy-middleware-e2e-matrix).
+
+### Manual hand test (same scenarios)
 
 1. Sign in as a tourist. Open `/districts` (no policy).
 2. Click the header link to `/account/bookings`. Do **not** open a new tab. This click enters `tourist-required-policy`.
