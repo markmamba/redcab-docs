@@ -23,7 +23,7 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 
 | Status | Meaning |
 | --- | --- |
-| exists | In the audited code today (`red-cab-web@c4ce884`, `red-cab-api@d8ed9b7`) |
+| exists | On `main` at the [roadmap living baseline](/docs/90-99-engineering-meta/authentication/implementation-roadmap#where-things-stand) (`red-cab-web@b4a539d`, `red-cab-api@e780bc5`, 2026-10-04) |
 | target (new) | Created by a roadmap phase |
 | changes | Exists; a roadmap phase edits it |
 | deleted | Removed by a roadmap phase |
@@ -44,8 +44,9 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 
 | Repo | File | Role | Status |
 | --- | --- | --- | --- |
-| web | `app/roots/public-root.jsx` | Account virtual root. Today: loader calls `current`, `catch` → `null` | changes (Phase 0, Phase 3) |
-| web | `app/roots/team-root.jsx` | Admin virtual root | changes (Phase 0, Phase 3) |
+| web | `app/roots/public-root.jsx` | Account virtual root; session read + A1 `ErrorBoundary` ([#88](https://github.com/markmamba/red-cab-web/issues/88)) | exists |
+| web | `app/roots/team-root.jsx` | Admin virtual root; same A1 boundary contract | exists |
+| web | `app/roots/root-route-error-boundary.jsx` | Shared session-expired UI + **Sign in again** for account and team roots | exists (Phase 4, [#88](https://github.com/markmamba/red-cab-web/issues/88)) |
 | web | `app/auth/create-session-middleware.js` | Shared factory for account/admin session middleware | exists |
 | web | `app/auth/auth-account-session-middleware.js` | One lazy read per request; refresh scope; `Set-Cookie`; `Cache-Control` | exists |
 | web | `app/auth/auth-admin-session-middleware.js` | Same for admin | exists |
@@ -96,10 +97,8 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | web | `app/routes/policies/admin-required-policy.jsx` | `/team/**` | exists (Phase 3, web-85) |
 | web | `app/routes/policies/corporate-required-policy.jsx` | `/corporate/**` | exists (Phase 4, web-87) |
 | web | `app/routes/policies/provider-required-policy.jsx` | `/providers/**` | exists (Phase 4, web-87) |
-| web | `app/layouts/team/team-layout.jsx` | Today: `useEffect` login redirect | changes (Phase 3: guard removed) |
-| web | `app/components/hocs/with-tourist-auth.jsx` | HOC | deleted (Phase 4 last PR) |
-| web | `app/components/hocs/with-no-auth.jsx` | HOC. Today: unchecked `redirect_to` | changes (Phase 0), deleted (Phase 4) |
-| web | `app/components/hocs/with-corporate-auth.jsx`, `with-provider-auth.jsx` | HOCs | deleted (Phase 4) |
+| web | `app/layouts/team/team-layout.jsx` | Team chrome only; no login `useEffect` ([#85](https://github.com/markmamba/red-cab-web/issues/85)) | exists |
+| web | `app/components/hocs/with-*-auth.jsx` | Legacy HOC modules | **deleted** ([#88](https://github.com/markmamba/red-cab-web/issues/88); ESLint forbids re-add) |
 
 ## 6. Entry rules
 
@@ -121,7 +120,7 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | api | `app/controllers/tourists/base_controller.rb` | Tourist portal gate | changes (Phase 0: `403`) |
 | api | `app/controllers/corporate/base_controller.rb` | Corporate portal gate | changes (Phase 0: `403`) |
 | api | `app/controllers/providers/base_controller.rb` | Provider portal gate + approval | changes (Phase 0: `403`) |
-| api | `app/shared/errors/forbidden_error.rb` | `Errors::ForbiddenError` (`403`) | target (new, Phase 0) |
+| api | `app/shared/errors/forbidden_error.rb` | `Errors::ForbiddenError` (`403`) | exists (Phase 0, api-145) |
 | api | `app/models/current_request.rb` | Per-request principal and profiles | exists |
 | web | `app/domains/providers-profile/providers-profile-service.js` | Onboarding redirect. Today: `401` + title match | changes (Phase 0: `403` code) |
 | web | `app/errors/api-error.js` | `ApiError` with `status`, `code`, `title` | exists |
@@ -142,8 +141,10 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | api | `test/integration/identities_regressions/*` | IAM security and deprecated-route guards not duplicated on the contract sheet |
 | api | `test/integration/notifications/*` | Notification dispatch integration (e.g. email verification resend dedupe) |
 | api | `test/controllers/team/identities/admins*_test.rb` | Deep proofs for team admin session and principal reads |
-| web | `app/auth/*.spec.js` | target (new): one test per entry-rule row |
-| web | `app/api/ky-client.spec.js` | target (new, Phase 0): concurrent SSR refresh isolation |
+| web | `app/auth/*.spec.js` | Entry rules, guards, middleware, safe redirect, policy URL matrix | exists (Phase 3 core; matrix rows in `auth-portal-guard-behavior.spec.js`, `policy-export-contract.spec.js`) |
+| web | `app/api/ky-client.spec.js` | Refresh / SSR behavior | exists |
+| web | `app/routes/policies/policy-export-contract.spec.js` | Forbids `shouldRevalidate` / `clientLoader` on policy modules | exists (Phase 3) |
+| web | `eslint.config.js` | `no-restricted-imports` patterns for deleted HOC paths | exists (Phase 4, [#88](https://github.com/markmamba/red-cab-web/issues/88)) |
 
 ## Related documents
 

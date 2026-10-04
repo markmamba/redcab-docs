@@ -89,7 +89,7 @@ Plan and implement in this sequence. Skipping a step causes rework.
 
 | Decision | Current `red-cab-web` | Requirements / ambiguity |
 | --- | --- | --- |
-| Guest discovery | Discover under `/account/discover` with `withTouristAuth` | `FR-IAM-012` Approved: visitors may browse; account required to **book** only |
+| Guest discovery | Public catalog at `/districts` (legacy `/account/discover` → redirect) | `FR-IAM-012` Approved: visitors may browse; account required to **book** only |
 | Homepage role | Placeholder at `/` | Entry to discover; SEO landing (`index, follow`) |
 | Booking gate | Checkout requires tourist auth | Correct |
 | Account-only pages | `/account`, `/account/bookings`, checkout | Stay auth-gated; `noindex, nofollow` |
@@ -312,7 +312,7 @@ When picking up tourist UI work:
 
 1. Read [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) if work touches auth, routes, or overlaps epic `#23`.
 2. Read this document for milestone order and exit criteria.
-3. Confirm Milestone A decisions before changing routes or auth HOCs.
+3. Confirm Milestone A decisions before changing routes or auth policies.
 4. Read [frontend conventions](/docs/50-59-frontend/conventions/frontend) and [domain-to-code-mapping](/docs/20-29-backend/conventions/domain-to-code-mapping).
 5. For behavior tied to Phase 2 APIs, scaffold placeholders only until the matching [implementation spec](/docs/60-69-initiatives/implementation-specs/) is `approved`.
 6. Milestone B is complete (`#56`–`#64`); resume at verification, `#68`, or Milestone C/E per program strategy.
@@ -326,4 +326,4 @@ When picking up tourist UI work:
 - [FR-CAT-004 — Primary discovery navigation](/docs/70-79-business/requirements/functional-requirements/cat)
 - [FR-IAM-012 — Guest browsing](/docs/70-79-business/requirements/functional-requirements/iam)
 - [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) — parallel tourist vs auth tracks, gates, issue map
-- [Authentication series](/docs/90-99-engineering-meta/authentication) — how the web enforces access. `/account/**` keeps `withTouristAuth` until [roadmap Phase 3](/docs/90-99-engineering-meta/authentication/implementation-roadmap#phase-3--auth-core-team-account-login-pages); new Phase 2 authenticated tourist pages go under `tourist-required-policy`
+- [Authentication series](/docs/90-99-engineering-meta/authentication) — how the web enforces access. `/account/**` uses `tourist-required-policy` ([roadmap Phase 3](/docs/90-99-engineering-meta/authentication/implementation-roadmap#phase-3--auth-core-team-account-login-pages), shipped [#86](https://github.com/markmamba/red-cab-web/issues/86)); new Phase 2 authenticated tourist pages nest under that policy

@@ -116,9 +116,9 @@ sequenceDiagram
   N-->>B: provider dashboard
 ```
 
-**Today:** `withTouristAuth` renders `null` for Ren forever. The page is blank.
+**Today (shipped):** `tourist-required-policy` redirects Ren to `/providers` on the document request ([#86](https://github.com/markmamba/red-cab-web/issues/86), [#87](https://github.com/markmamba/red-cab-web/issues/87)). Auth HOCs are gone ([#88](https://github.com/markmamba/red-cab-web/issues/88)).
 
-If Ren's browser calls `GET tourists/bookings/orders` directly (a raced `clientLoader`), target Rails answers `403 tourist_profile_required`. No refresh. No login redirect.
+If Ren's browser calls `GET tourists/bookings/orders` directly (a raced `clientLoader`), Rails answers `403 tourist_profile_required`. No refresh. No login redirect.
 
 ## 4. API outage on reload
 
@@ -135,7 +135,11 @@ sequenceDiagram
   N-->>B: public-root ErrorBoundary: "Something went wrong", Refresh button
 ```
 
-**Today:** the root loader's `catch` returns `identitiesAccount: null`. Aiko sees a signed-out header, and `withTouristAuth` sends her to `/login`, which also fails.
+**Today (shipped):** `public-root` rethrows non-`401` `ApiError` responses to the root `ErrorBoundary` (web-79). Aiko sees **Something went wrong** with **Refresh**, not a false signed-out header ([#88](https://github.com/markmamba/red-cab-web/issues/88) removed HOC login redirects).
+
+### In-area hard `401` after refresh fails (A1)
+
+When a signed-in tourist is already inside `/account/**` and a `clientLoader` gets a hard `401` (refresh failed), the root boundary shows session-expired copy and **Sign in again** — it does **not** auto-navigate to login ([#88](https://github.com/markmamba/red-cab-web/issues/88)). Normative `revalidate()` recovery is [#107](https://github.com/markmamba/red-cab-web/issues/107). See [Changing a session — refused responses](/docs/90-99-engineering-meta/authentication/changing-a-session#what-each-refused-response-means).
 
 ## 5. Team admin login
 

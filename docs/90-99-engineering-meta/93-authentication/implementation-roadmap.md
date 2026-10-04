@@ -10,7 +10,8 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 - **Phase 0** fixes correctness in **both** repos: a cross-user refresh leak in `ky-client`, `403` for portal gates, safe `redirect_to`, and "no cookie, no call". It blocks the production launch of authenticated surfaces. It does not block tourist UI development.
 - **Phase 1** approved this series and ADR-018/019 (2026-09-30, [#19](https://github.com/markmamba/redcab-docs/issues/19)). Docs only.
 - **Phase 2** is the tourist access work (web-56 / `#60`). **Merged** (`red-cab-web` `e24b55b`); **verification closed** 2026-10-01 ([#82](https://github.com/markmamba/red-cab-web/issues/82), [Review record](#review-record-phase-2)).
-- **Phase 3** moves `/team` and `/account` (plus login pages) to policy routes. **Phase 4** moves `/corporate` and `/providers`, then deletes the HOCs.
+- **Phase 3** policy routes for `/team`, `/account`, and login pages — **shipped** ([#85](https://github.com/markmamba/red-cab-web/issues/85), [#86](https://github.com/markmamba/red-cab-web/issues/86), [#112](https://github.com/markmamba/red-cab-web/issues/112)); manual click matrix and some Phase 0 exit rows remain open.
+- **Phase 4** `/corporate` and `/providers` policies plus HOC deletion — **shipped** ([#87](https://github.com/markmamba/red-cab-web/issues/87), [#88](https://github.com/markmamba/red-cab-web/issues/88)); provider onboarding UX gaps per web-87 E3 may remain.
 - **Phase 5** (server-side sessions) runs only if ADR-019 is superseded.
 
 ## About this document
@@ -28,7 +29,7 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 
 ## Where things stand
 
-**Living baseline (2026-09-30):** `red-cab-web@4980e5c`, `red-cab-api@9329239`. ADR "today" tables dated 2026-09-26 stay **historical**; this table is the current ship state.
+**Living baseline (2026-10-04):** `red-cab-web@b4a539d`, `red-cab-api@e780bc5`. ADR "today" tables dated 2026-09-26 stay **historical**; this table is the current ship state.
 
 | Item | State | Evidence |
 | --- | --- | --- |
@@ -47,6 +48,9 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 | web-56 / `#60` public routes | Merged | `red-cab-web` `e24b55b` |
 | Phase 2 verification (public catalog, guest Book handoff) | **Done** (2026-10-01) | [Review record (Phase 2)](#review-record-phase-2); [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82) |
 | Tourist shell / funnel `#58`–`#64` | Merged per program strategy | See [web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) |
+| Phase 3 — team + account policy routes | **Merged** | [#85](https://github.com/markmamba/red-cab-web/issues/85), [#86](https://github.com/markmamba/red-cab-web/issues/86), [#112](https://github.com/markmamba/red-cab-web/issues/112) |
+| Phase 4 — corporate/provider policies + HOC delete + A1 boundary | **Merged** | [#87](https://github.com/markmamba/red-cab-web/issues/87), [#88](https://github.com/markmamba/red-cab-web/issues/88) (PR [#113](https://github.com/markmamba/red-cab-web/pull/113)) |
+| Auth series post-#88 alignment | **This docs pass** | [redcab-docs#32](https://github.com/markmamba/redcab-docs/issues/32) |
 
 ---
 
@@ -95,7 +99,7 @@ flowchart LR
 - [ ] A concurrency test proves two SSR requests that both refresh never share cookies or data.
 - [ ] An anonymous document request to `/districts` makes zero calls to `identities/accounts/current`.
 - [ ] A forced `503` from `accounts/current` renders the root error boundary, not a signed-out header.
-- [ ] `redirect_to=//evil.example` on `/team/login` and on every `withNoAuth` page lands on the default path.
+- [x] `redirect_to=//evil.example` on `/team/login` and guest IAM login paths lands on the default path (`auth-safe-redirect.spec.js`; guest policy + `createLoginAction` [#80](https://github.com/markmamba/red-cab-web/issues/80), [#86](https://github.com/markmamba/red-cab-web/issues/86)).
 - [ ] A tourist cookie on a `providers/**` endpoint gets `403 provider_profile_required`, and the web does not refresh.
 - [ ] Token lifetimes are recorded in the contract sheet.
 - [x] Production cookie topology decided (open question 1) and recorded in [ADR-019](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology) ([#20](https://github.com/markmamba/redcab-docs/issues/20)). API `domain:` wiring remains [#77](https://github.com/markmamba/red-cab-web/issues/77) before launch.
@@ -161,7 +165,7 @@ flowchart LR
 - [x] A no-JavaScript fetch of each public catalog route in the web-56 matrix returns meaningful SSR HTML or a valid redirect (local `react-router-serve` + API; see [Review record](#review-record-phase-2)).
 - [x] Guest Book CTA → `/login?redirect_to=…` with checkout query preserved (`catalog-listing-service.spec.js`, `auth-safe-redirect.spec.js`); full browser sign-in path not re-run in `#82` (no canonical listing fixture in repo).
 
-**Non-goals:** policy routes. `/account/**` keeps `withTouristAuth`.
+**Non-goals (at Phase 2 time):** policy routes — later delivered in Phase 3 ([#86](https://github.com/markmamba/red-cab-web/issues/86)).
 
 ### Review record (Phase 2)
 
@@ -208,14 +212,14 @@ flowchart LR
 **Exit criteria:**
 
 - [x] Spike recorded in [Policy middleware](/docs/90-99-engineering-meta/authentication/policy-middleware): React Router `8.0.0` harness ([#83](https://github.com/markmamba/red-cab-web/issues/83)); middleware `url` is page-normalized; curl + dev guard evidence under `evidence/issue-83-spike/`.
-- [ ] `app/auth/*` modules exist with one test per Appendix A row.
-- [ ] `/team/**` and `/team/login` use admin policies. `team-layout.jsx` has no redirect `useEffect`.
-- [ ] `/account/**` uses `tourist-required-policy`. The six `withTouristAuth` exports are gone.
-- [ ] The eight guest pages use `account-guest-policy`. `/verify-email` is open.
-- [ ] Legacy `/account/discover*` redirects sit outside the tourist policy and still work for guests.
+- [x] `app/auth/*` modules exist with specs for entry rules, guards, middleware, and safe redirect ([#85](https://github.com/markmamba/red-cab-web/issues/85)–[#86](https://github.com/markmamba/red-cab-web/issues/86); matrix in `auth-portal-guard-behavior.spec.js`).
+- [x] `/team/**` and `/team/login` use admin policies. `team-layout.jsx` has no redirect `useEffect` ([#85](https://github.com/markmamba/red-cab-web/issues/85)).
+- [x] `/account/**` uses `tourist-required-policy`. All `withTouristAuth` exports are gone ([#86](https://github.com/markmamba/red-cab-web/issues/86), [#88](https://github.com/markmamba/red-cab-web/issues/88)).
+- [x] Guest IAM pages use `account-guest-policy`. `/verify-email` is open ([#86](https://github.com/markmamba/red-cab-web/issues/86)).
+- [x] Legacy `/account/discover*` redirects sit outside the tourist policy ([#86](https://github.com/markmamba/red-cab-web/issues/86)).
 - [x] Login and logout are `clientAction`s. The root revalidates after them. `AuthProvider` and `AdminAuthProvider` no longer expose setters ([#86](https://github.com/markmamba/red-cab-web/issues/86), [#112](https://github.com/markmamba/red-cab-web/issues/112)).
-- [ ] The manual in-app click test passes for `/account/bookings` and `/team/providers/profiles`.
-- [ ] A lint or unit check forbids `shouldRevalidate` and `clientLoader` in `app/routes/policies/`.
+- [ ] The manual in-app click test passes for `/account/bookings` and `/team/providers/profiles` (program gate; automated policy matrix partially covered — see [#83](https://github.com/markmamba/red-cab-web/issues/83) spike and `e2e/policy-middleware-matrix.spec.js`).
+- [x] A lint or unit check forbids `shouldRevalidate` and `clientLoader` in `app/routes/policies/` (`policy-export-contract.spec.js`).
 
 **Dependencies:** Phase 0 web items 1–3; Phase 1 approved.
 
@@ -229,8 +233,8 @@ flowchart LR
 
 **Exit criteria:**
 
-- [ ] `/corporate/**` and `/providers/**` use their policies.
-- [ ] Provider onboarding redirects still work, driven by `403` codes in page loaders.
+- [x] `/corporate/**` and `/providers/**` use their policies ([#87](https://github.com/markmamba/red-cab-web/issues/87)).
+- [x] Provider onboarding redirects still work, driven by `403` codes in page loaders ([#87](https://github.com/markmamba/red-cab-web/issues/87); full portal 403 UX gaps remain web-87 E3).
 - [x] `app/components/hocs/with-*-auth.jsx` deleted. Lint forbids re-adding the folder.
 - [x] Root `ErrorBoundary`s no longer navigate on `401`.
 - [x] [Frontend conventions](/docs/50-59-frontend/conventions/frontend) "Auth HOCs" section replaced by "Auth policies".
@@ -238,6 +242,22 @@ flowchart LR
 **Dependencies:** Phase 3.
 
 **Non-goals:** new portal features.
+
+### Review record (Phase 4 — #88)
+
+**Date:** 2026-10-04  
+**Issue:** [red-cab-web#88](https://github.com/markmamba/red-cab-web/issues/88)  
+**Verified at:** `red-cab-web@b4a539d` (includes post-#88 session UX on `main`)
+
+| Check | Method | Outcome |
+| --- | --- | --- |
+| HOC modules deleted | `ls app/components/hocs` | Empty directory (no `with-*-auth` files; folder may remain) |
+| HOC import scan | `rg 'withTouristAuth\|withNoAuth\|withCorporateAuth\|withProviderAuth\|components/hocs' app` | No matches |
+| Corporate/provider policies | `ls app/routes/policies/*-required-policy.jsx` | `corporate-required-policy.jsx`, `provider-required-policy.jsx` present |
+| Policy export contract | `app/routes/policies/policy-export-contract.spec.js` | Forbids `shouldRevalidate` / `clientLoader` on policies |
+| A1 boundary | Static read `public-root.jsx`, `team-root.jsx`, `root-route-error-boundary.jsx` | No `useEffect` navigate on `401`; **Sign in again** targets surface login + `redirect_to` |
+
+**Evidence pointer:** [web-88 spec](/docs/60-69-initiatives/implementation-specs/iam/auth-platform/web-88-remove-auth-hocs); auth series alignment [redcab-docs#32](https://github.com/markmamba/redcab-docs/issues/32).
 
 ### Phase 5 — Server-side sessions (conditional)
 
@@ -281,7 +301,7 @@ Specs 1–3 may be one PR if the reviewer prefers. Specs 4 and 5 are separate AP
 | R-8 | Provider onboarding breaks when the API moves to `403` | High if uncoordinated | Providers stuck | Spec 4 changes both repos; web accepts old and new shape for one release |
 | R-9 | React Router `8.0.0` middleware behaves differently from the `8.3.0` reference | Low | Policy gaps | **#83 spike recorded** — go for G2; complete manual matrix rows + R-4 refresh test before first policy PR |
 | R-10 | Production cookie domain prevents Node from seeing API cookies | Mitigated when API ships `domain:` | SSR always signed out | **Decided** ([#20](https://github.com/markmamba/redcab-docs/issues/20)) — parent-domain cookies per [ADR-019](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology). **Not resolved** until [#77](https://github.com/markmamba/red-cab-web/issues/77) lands |
-| R-11 | Tourist pre–Phase 2 work stalls waiting for policies | Low | Schedule | HOCs stay legal on unmigrated surfaces; Phase 3 runs in parallel |
+| R-11 | Tourist pre–Phase 2 work stalls waiting for policies | Low (mitigated) | Schedule | Policy routes shipped ([#85](https://github.com/markmamba/red-cab-web/issues/85)–[#87](https://github.com/markmamba/red-cab-web/issues/87)); HOCs deleted ([#88](https://github.com/markmamba/red-cab-web/issues/88)) |
 
 ---
 
@@ -306,7 +326,7 @@ Still to do (content or ticks — not pointer fixes):
 | `60-69-initiatives/61-implementation-specs/iam/iam-audit-2026-08/index.md` | Tick PR-03 and PR-08 when those PRs land; optional full §7 re-tick | Phase 0 / PR-08 |
 | `engineering/conventions/backend.md` | Error table: add `ForbiddenError (403)` and its codes | Phase 0 spec 4 follow-up |
 | `30-49-domains/34-architecture-decisions/adr-010-identity-and-authorization-architecture.md` | Remove duplicate TL;DR blocks (formatting defect) | Separate hygiene PR |
-| `red-cab-web/.ai/instructions.md`, `red-cab-web/.cursor/rules/10-routes-api-forms.mdc` | HOC → policy wording | Phase 3 spec 8 |
+| `red-cab-web/.ai/instructions.md`, `red-cab-web/.cursor/rules/10-routes-api-forms.mdc` | HOC → policy wording | **Done** ([#88](https://github.com/markmamba/red-cab-web/issues/88) PR [#113](https://github.com/markmamba/red-cab-web/pull/113)) |
 | `red-cab-api/.ai/instructions.md` | IAM section: `403` codes; link to contract sheet | Phase 0 spec 4 follow-up |
 
 ---

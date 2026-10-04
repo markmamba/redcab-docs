@@ -187,16 +187,18 @@ A Corporate account on `/account/checkout` goes to `/corporate`. `FR-IAM-012` le
 
 ## Today vs target
 
-| Surface | Today | Target |
+**Living baseline:** `red-cab-web@b4a539d` (2026-10-04). Policy routes for all protected surfaces are **shipped** ([#85](https://github.com/markmamba/red-cab-web/issues/85)–[#87](https://github.com/markmamba/red-cab-web/issues/87)); auth HOC modules are **deleted** ([#88](https://github.com/markmamba/red-cab-web/issues/88)). The table below is the **target** from ADR-018; **today matches target** for every row except follow-ups in [#107](https://github.com/markmamba/red-cab-web/issues/107)–[#112](https://github.com/markmamba/red-cab-web/issues/112) (in-area `revalidate()`, guest degradation, etc.).
+
+| Surface | Target (normative) | Today (`b4a539d`) |
 | --- | --- | --- |
-| Public marketplace | No guard (`#60` merged) | Unchanged |
-| `/account/**` (dashboard) | `withTouristAuth` on **four** pages | `tourist-required-policy` |
-| Login pages | `withNoAuth` on each page | `account-guest-policy` |
-| `/verify-email` | `withNoAuth` | Open page (ADR-018 D10) |
-| `/corporate/**` | `withCorporateAuth` | `corporate-required-policy` |
-| `/providers/**` | `withProviderAuth` (13 pages) | `provider-required-policy` |
-| `/team/**` | `useEffect` in `team-layout.jsx` | `admin-required-policy` |
-| `/team/login` | Redirect in page `useEffect`, unchecked `redirect_to` | `admin-guest-policy` |
+| Public marketplace | No guard | **Shipped** (`#60`) |
+| `/account/**` (dashboard) | `tourist-required-policy` | **Shipped** (`#86`) |
+| Guest IAM login pages | `account-guest-policy` | **Shipped** (`#86`) |
+| `/verify-email` | Open page (ADR-018 D10) | **Shipped** (no policy ancestor) |
+| `/corporate/**` | `corporate-required-policy` | **Shipped** (`#87`) |
+| `/providers/**` | `provider-required-policy` | **Shipped** (`#87`) |
+| `/team/**` | `admin-required-policy` | **Shipped** (`#85`) |
+| `/team/login` | `admin-guest-policy` + safe `redirect_to` | **Shipped** (`#85`, `#112`) |
 
 ## Related documents
 

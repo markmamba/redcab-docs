@@ -93,7 +93,7 @@ The reference pattern verified this table on React Router `8.3.0`. Red Cab runs 
 | `revalidate()` | Yes | **Playwright (local)** — `e2e/policy-middleware-matrix.spec.js` (hard `401` from `clientLoader` after session cleared) |
 | Leave the area and come back | Yes | **Not exercised** in #83 (browser); optional follow-up |
 
-**Step 6 proof (signed-out in-app enter):** With `withTouristAuth` removed on `booking-list-page.jsx` and `SPIKE_83_DISABLE_ERROR_BOUNDARY_401_NAVIGATE`, the `.data` response carries the policy redirect (not only a clientLoader `401`). See transcript above.
+**Step 6 proof (signed-out in-app enter):** On the #83 harness, with `withTouristAuth` removed from `booking-list-page.jsx` and `SPIKE_83_DISABLE_ERROR_BOUNDARY_401_NAVIGATE`, the `.data` response carried the policy redirect (not only a clientLoader `401`). **Production:** account routes are HOC-free under `tourist-required-policy` ([#86](https://github.com/markmamba/red-cab-web/issues/86)); hard in-area `401` uses A1 boundary UI ([#88](https://github.com/markmamba/red-cab-web/issues/88)). See transcript above.
 
 **Go / no-go (#83):** **Go** — rows 1, 2, and 4 (unit strip matrix) match the reference; middleware `url` is page-normalized on 8.0.0. **Follow-up:** manual rows 3, 5–7 and R-4 expired-token refresh before merging production policy PRs (G2).
 
