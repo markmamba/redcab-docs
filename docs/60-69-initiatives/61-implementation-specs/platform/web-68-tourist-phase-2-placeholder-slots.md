@@ -43,7 +43,8 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 | FR-BKG-010, FR-BKG-012, BKG-3 | [bkg.md](/docs/70-79-business/requirements/functional-requirements/bkg), invariants | Cancel/bundle semantics |
 | FR-PAY-006, PAY-6, PAY-7 | [pay.md](/docs/70-79-business/requirements/functional-requirements/pay), invariants | Refund display — no client math |
 | LC-1, PRC-1 | invariants | Status machine; pricing display |
-| AMB-006, AMB-014, AMB-017, AMB-019 | [open-questions](/docs/70-79-business/planning/open-questions) | Cited; not resolved client-side in #68 |
+| AMB-006, AMB-014 | [open-questions](/docs/70-79-business/planning/open-questions) | Cited; not resolved client-side in #68 |
+| AMB-017, AMB-019 | [open-questions](/docs/70-79-business/planning/open-questions) | **Resolved** 2026-10-04 (Decision Log); bundle/review UI still deferred in #68 |
 | frontend.md | [frontend conventions](/docs/50-59-frontend/conventions/frontend) | Domain views; URL-driven state |
 
 ## Design decisions
@@ -58,7 +59,7 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 | 6 | Cancel (M1) | Dismiss-only confirm modal | Q4=A: disabled cancel + badge for `confirmed` only; modal for tests only, not user-reachable |
 | 7 | Review (M2) | Enable only `completed` | Q3=B amended: always render; enable when status ∈ `{ completed, payout_queued, refunded }` (INV-5) |
 | 8 | Refund (M3) | Always-on panel (Q7=A) | Panel only `cancelled` \| `refunded`; neutral placeholder; no “not available yet” on refunded |
-| 9 | Bundle (S1) | Bordered subsection (Q6=B) | Mount extension; `null` UI — BKG-3 / AMB-017 shape deferred |
+| 9 | Bundle (S1) | Bordered subsection (Q6=B) | Mount extension; `null` UI — BKG-3 / `FR-BKG-012` shape deferred in #68 (`AMB-017` resolved) |
 | 10 | Eligibility B1+B3 | Inline view gates | `BookingsBookingService` pure helpers + matrix tests; Phase 2 reads server flags |
 | 11 | Rating D2+S3 | Full empty state on every card | `hasReviewData` in service; compact card vs hero component |
 | 12 | Components C2 | `*-stub.jsx` + comments | Capability names, stable props, `@phase 2` JSDoc; inert-state vitest per component |

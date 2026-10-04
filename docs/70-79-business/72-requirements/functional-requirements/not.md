@@ -37,8 +37,8 @@ The system **shall** render each notification in the recipient's stored language
 - Source: G-03, G-04. Governs: OPR-9. Status: Approved.
 
 ### FR-NOT-004 — SMS channel
-The system **may** additionally send SMS notifications when the recipient has a verified phone and SMS is enabled.
-- Source: G-01, G-02. Status: Provisional (AMB-034 SMS scope).
+In **Phase 2**, the system **shall** deliver transactional and lifecycle notifications on the **email channel only**. SMS is **out of Phase 2 scope** (Decision Log `AMB-034`, 2026-10-04). When SMS is implemented in a later phase, the system **may** additionally send SMS notifications when the recipient has a verified phone and SMS is enabled; provider choice and phone-verification rules remain open.
+- Source: G-01, G-02. Status: Approved.
 
 ### FR-NOT-005 — Scheduled alerts
 The system **shall** issue scheduled alerts for license expiry, support-trial expiry, overdue registrations, overdue quotations, and overdue corporate payments.

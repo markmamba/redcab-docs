@@ -113,7 +113,7 @@ Four-way mapping table for all requirements.
 | FR-BKG-009 | E-09 | LC-5; BKG | Confirmed→Completed only after service time has passed and is marked delivered. |
 | FR-BKG-010 | E-09, E-12 | CON-5, PAY-6; BKG | Tourist cancel of an eligible booking restores seats; refund derives from the snapshotted policy. |
 | FR-BKG-011 | E-12 | PAY-7, CON-5; BKG | Provider/Admin cancel restores seats and grants a 100% refund regardless of policy. |
-| FR-BKG-012 | E-03 | BKG-3; BKG | Bundle creates two linked bookings with independent commission; each Provider notified. |
+| FR-BKG-012 | E-03 | BKG-3; BKG | Bundle creates two linked bookings with independent commission; each Provider notified. Cancelling one leg does not auto-cancel the sibling. |
 | FR-BKG-013 | E-04 | BKG-4, BKG-5; BKG | Multi-day single-provider checkout verifies every day's slot first and identifies any unavailable day. |
 | FR-BKG-014 | E-08 | BKG-6; BKG | Corporate submits a manifest on a confirmed group booking, viewable by the assigned Provider. |
 | FR-BKG-015 | C-11, E-10 | INV-1, BKG-8; BKG | Snapshotted commercial terms stay unchanged despite later listing/policy edits. |
@@ -160,7 +160,7 @@ Four-way mapping table for all requirements.
 | FR-NOT-001 | G-01, G-02 | OPR-8; NOT | Tourist and Provider are notified of a new booking within 60 seconds of creation. |
 | FR-NOT-002 | G-01, G-02 | NOT | Affected parties are notified on confirmation, cancellation, and refund. |
 | FR-NOT-003 | G-03, G-04 | OPR-9; NOT | Each notification is rendered in the recipient's stored language preference. |
-| FR-NOT-004 | G-01, G-02 | NOT | SMS is additionally sent when the recipient has a verified phone and SMS is enabled. |
+| FR-NOT-004 | G-01, G-02 | NOT | Phase 2 email-only transactional/lifecycle notifications; SMS deferred beyond Phase 2 (future channel when provider/phone rules are set). |
 | FR-NOT-005 | A-05, A-06, A-07, E-05, E-07 | OPR-3, OPR-4, OPR-5; NOT | Scheduled alerts issue for license/trial expiry and overdue registration/quotation/payment. |
 
 ### 1.9 NFR — Non-functional (by category)

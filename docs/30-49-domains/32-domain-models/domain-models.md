@@ -195,7 +195,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
   - *Transactionally consistent:* Booking materialization from CheckoutSession copies snapshots + payload atomically (`BKG-2`, `BKG-9`).
 - **BundleBooking** (root: `BundleBooking`)
   - *Purpose:* link two independent Bookings (car + guide) as one purchase.
-  - *Invariants:* two separate Booking records share one `bundle_booking_id`; commission computed per sub-booking independently (`BKG-3`, `E1`). Cross-leg cancellation semantics unresolved (`AMB-017`).
+  - *Invariants:* two separate Booking records share one `bundle_booking_id`; commission computed per sub-booking independently (`BKG-3`, `E1`). Cancelling one leg does not auto-cancel the other (`FR-BKG-012`, Decision Log `AMB-017`).
 - **PassengerManifest** (root within Booking boundary or its own aggregate referencing `booking_id`)
   - *Purpose:* group passenger roster for a confirmed group Booking.
   - *Invariants:* permitted only on a confirmed group Booking; visible to the assigned Provider (`BKG-6`).
@@ -294,7 +294,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 ### Aggregates
 - **Review** (root: `Review`)
   - *Purpose:* one verified tourist's rating/text/photos for a completed Booking, plus the provider response.
-  - *Invariants:* exists only for a `COMPLETED` Booking; at most one per Booking (`INV-5`, `BKG-7`); enters Pending Moderation and is not public until approved (`OPR-6`); review link valid 14 days from completion (`OPR-7`, `F2`). Moderation default & window confirmation `AMB-019`.
+  - *Invariants:* exists only for a `COMPLETED` Booking; at most one per Booking (`INV-5`, `BKG-7`); enters Pending Moderation and is not public until approved (`OPR-6`); review link valid 14 days from completion (`OPR-7`, `F2`, `FR-REV-002`, `NFR-TIME-007`).
   - *Lifecycle:* `PendingModeration → Approved | Removed`; provider response addable once published.
 - **RatingSummary** (root: `RatingSummary`)
   - *Purpose:* per-listing aggregate of approved reviews.
@@ -332,7 +332,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 - Publishes `NotificationDispatched`, `NotificationFailed` (observability). Consumes the full event catalog.
 
 ### Cross-context references
-- Holds a **snapshot** of recipient language at send time; references entities by id. SMS scope/provider/phone verification unresolved (`AMB-034`).
+- Holds a **snapshot** of recipient language at send time; references entities by id. Phase 2 uses email only (`FR-NOT-004`, Decision Log `AMB-034`); SMS provider and phone-verification rules deferred.
 
 ---
 
@@ -392,12 +392,11 @@ Sequencing hazards to respect (not resolve here): payout-queue vs refund orderin
 These are tracked in [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions); the model is built to accommodate either resolution and never silently assumes one.
 
 - **Booking lifecycle completeness (`AMB-013/014`).** Missing transitions (tourist-cancel-confirmed, provider decline, no-show, reschedule) and terminal-state overloading; `CancellationContext` (initiator) is modeled now so the refund rule stays derivable.
-- **Bundle cancellation semantics (`AMB-017`).** Cross-leg effect undefined; BundleBooking link is modeled but the cascade is not.
 - **corporate lifecycle (`AMB-027/028/031`).** Pre-payment state vs canonical states, seat-hold timing, and PDF rendering. Settlement and reconciliation resolved 2026-08-30 via provider-collected virtual accounts (`PAY-9`). The Corporate→Booking conversion is modeled through an ACL so a resolution does not ripple into Booking.
 - **Provider mid-flight status change (`AMB-026`).** Effect of suspension/expiry on confirmed Bookings; the boundary rule (no historical mutation) holds regardless.
-- **Identity scope (`AMB-021/022`), SMS scope (`AMB-034`).** None alter aggregate boundaries; they refine value objects and contracts within the owning context.
+- **Identity scope (`AMB-021/022`).** None alter aggregate boundaries; they refine value objects and contracts within the owning context.
 
-**Resolved (Decision Log):** platform payout queue (`AMB-003/004/005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); seat restoration idempotency (`AMB-012`); District→Area discovery (`AMB-020`); PRD vehicle taxonomy (`AMB-023`); B2C tax-inclusive / Corporate itemized tax (`AMB-033`). **Superseded by [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) (pending counsel):** `AMB-001` custody element, `AMB-002`, `AMB-032` — sub-merchant settlement with deferred release; Provider merchant-of-record; capture timing reopened as `AMB-039`.
+**Resolved (Decision Log):** platform payout queue (`AMB-003/004/005`); CheckoutSession snapshot timing (`AMB-007`); B2C enters `CONFIRMED` (`AMB-011`); seat restoration idempotency (`AMB-012`); bundle cross-leg cancellation (`AMB-017`); review moderation default and 14-day window (`AMB-019`); District→Area discovery (`AMB-020`); PRD vehicle taxonomy (`AMB-023`); B2C tax-inclusive / Corporate itemized tax (`AMB-033`); Phase 2 email-only notifications (`AMB-034` channel scope). **Superseded by [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) (pending counsel):** `AMB-001` custody element, `AMB-002`, `AMB-032` — sub-merchant settlement with deferred release; Provider merchant-of-record; capture timing reopened as `AMB-039`.
 
 No deferred decision changes the aggregate boundaries defined above; each affects value objects, lifecycle detail, or cross-context contracts within a single owning context — which is the point of drawing the boundaries where we did.
 
