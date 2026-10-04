@@ -20,7 +20,7 @@ Roadmap overview — scope, dependency order, phase index, context matrix, and a
 | Phase 1 | [MVP](/docs/70-79-business/planning/roadmap/phase-1-mvp) |
 | Tourist UI (pre–Phase 2) | [Tourist UI](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) |
 | Tourist UI + auth redesign coordination | [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) |
-| Phase 2 | [Marketplace depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) |
+| Phase 2 | [Marketplace depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) — [execution map](/docs/70-79-business/planning/roadmap/phase-2-execution-map) |
 | Phase 3 | [Corporate + packages](/docs/70-79-business/planning/roadmap/phase-3-corporate-packages) |
 | Requirements | [Requirements](/docs/70-79-business/requirements) |
 | Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
@@ -126,7 +126,7 @@ Within each Phase 1–3 context slice, build in order: **DBML → migrations →
 | **0** | [Foundation](/docs/70-79-business/planning/roadmap/phase-0-foundation) | Runnable repos, IAM + profiles, event bus | IAM, profiles, NOT stub, engineering scaffold |
 | **1** | [MVP — B2C happy path](/docs/70-79-business/planning/roadmap/phase-1-mvp) | End-to-end tourist booking + payout | PRV, CAT (basic), BKG, PAY, NOT |
 | **1b** | [Tourist UI — pre–Phase 2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Tourist marketplace UX, funnel, Phase 2 UI slots | red-cab-web (Tourist App) |
-| **2** | [Marketplace depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) | Reviews, pricing, search, refunds | REV, CAT (advanced), BKG, PRV automation |
+| **2** | [Marketplace depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) ([map](/docs/70-79-business/planning/roadmap/phase-2-execution-map)) | Reviews, pricing, search, refunds | REV, CAT (advanced), BKG, PRV automation |
 | **3** | [Corporate + packages](/docs/70-79-business/planning/roadmap/phase-3-corporate-packages) | Quotations, invoices, bank transfer | COR, BKG manifests, PAY reconciliation |
 | **v2** | [Post-baseline](/docs/70-79-business/planning/roadmap/v2-post-baseline) | Unscheduled backlog | Ambiguity register |
 

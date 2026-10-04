@@ -18,6 +18,7 @@ Phase 2 scope, schema gates, deliverables, and exit criteria.
 | Topic | Document |
 | --- | --- |
 | Roadmap overview | [Phasing Roadmap](/docs/70-79-business/planning/roadmap) |
+| **Execution map (epics, waves, issues)** | [Phase 2 — Execution map](/docs/70-79-business/planning/roadmap/phase-2-execution-map) |
 | Prior phase | [Phase 1](/docs/70-79-business/planning/roadmap/phase-1-mvp) |
 | Tourist UI (complete first) | [Tourist UI — pre–Phase 2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) |
 | Next phase | [Phase 3](/docs/70-79-business/planning/roadmap/phase-3-corporate-packages) |
@@ -36,6 +37,8 @@ Phase 2 scope, schema gates, deliverables, and exit criteria.
 Feature-competitive B2C marketplace: reviews, flexible pricing, search/filter, refunds, and operational automation.
 
 > **Tourist UI gate:** Complete [Tourist UI — pre–Phase 2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) (Milestones A–D) before wiring Phase 2 feature UI on tourist surfaces — IA, shells, funnel pages, and placeholder slots should be in place first.
+
+For epics, waves, proposed GitHub issues, and [web-68](/docs/60-69-initiatives/implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots) wiring, use the [Phase 2 execution map](/docs/70-79-business/planning/roadmap/phase-2-execution-map).
 
 ### How to proceed (DBML-first)
 
