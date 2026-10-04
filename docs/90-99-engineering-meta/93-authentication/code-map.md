@@ -50,7 +50,7 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | web | `app/auth/auth-account-session-middleware.js` | One lazy read per request; refresh scope; `Set-Cookie`; `Cache-Control` | exists |
 | web | `app/auth/auth-admin-session-middleware.js` | Same for admin | exists |
 | web | `app/hooks/use-auth.jsx` | `AuthProvider`, `useAuth` | exists (Phase 3: read-only, web-86) |
-| web | `app/hooks/use-admin-auth.jsx` | `AdminAuthProvider`, `useAdminAuth` | changes (Phase 3: read-only) |
+| web | `app/hooks/use-admin-auth.jsx` | `AdminAuthProvider`, `useAdminAuth` | exists (Phase 3: read-only, web-112) |
 | web | `app/api/identities-accounts-api.js` | `current`, `update`, verification | changes (Phase 0: refresh scope option) |
 | web | `app/api/team-sessions-api.js` | `create`, `current`, `destroy` | changes (Phase 0) |
 
@@ -71,11 +71,12 @@ description: Every authentication file in red-cab-api and red-cab-web, grouped t
 | web | `app/routes/identities-account/logout.js` | `clientAction` logout route | exists (Phase 3, web-86) |
 | web | `app/routes/team/team-logout.js` | Team logout route | exists (Phase 3, web-85) |
 | web | `app/auth/create-login-action.js` | Shared tourist/corporate/provider login `clientAction` | exists (Phase 3, web-86) |
+| web | `app/auth/create-team-login-action.js` | Team login `clientAction` | exists (Phase 3, web-112) |
 | web | `app/domains/identities-session/use-session-login-submit.js` | RHF → `useSubmit` glue for login actions | exists (Phase 3, web-86) |
 | web | `app/hooks/use-logout-fetcher.jsx` | Tourist nav `fetcher.Form` logout + error toast | exists (Phase 3, web-86) |
 | web | `app/routes/identities-account/login-page.jsx` | Login submit | exists (Phase 3: `clientAction`) |
 | web | `app/routes/provider/provider-login-page.jsx`, `app/routes/corporate/corporate-login-page.jsx` | Portal logins | exists (Phase 3: `clientAction`) |
-| web | `app/routes/team/team-login-page.jsx` | Team login. Today: unchecked `redirect_to` | changes (Phase 0, Phase 3) |
+| web | `app/routes/team/team-login-page.jsx` | Team login `clientAction` + safe `redirect_to` | exists (Phase 3, web-112) |
 | web | `app/routes/identities-account/google-oauth-callback-page.jsx` | OAuth callback page | exists (Phase 3: `clientAction`, `postAuthPath`) |
 
 ## 4–5. Policy routes and middleware
