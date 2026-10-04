@@ -137,7 +137,7 @@ For epics, waves, proposed GitHub issues, and [web-68](/docs/60-69-initiatives/i
 **red-cab-api**
 
 - [ ] Cancellation, refund, and review-link emails
-- [ ] SMS channel (if `AMB-034` resolves to include in this phase)
+- [x] SMS channel — **N/A Phase 2** (email-only per Decision Log `AMB-034`, 2026-10-04)
 - [ ] Scheduled overdue alerts
 
 **red-cab-web**

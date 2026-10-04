@@ -30,7 +30,7 @@ The system **shall** allow a review only for a Booking that has completed, and *
 
 ### FR-REV-002 — Review invitation and window
 The system **shall** issue a review invitation upon completion and **shall** accept a review only within 14 days of completion.
-- Source: F-01. Governs: OPR-7, OPR-8. Status: Provisional (AMB-019 window confirmation).
+- Source: F-01. Governs: OPR-7, OPR-8. Status: Approved.
 
 ### FR-REV-003 — Review submission content
 The system **shall** accept a required star rating and optional text and photos within published limits.
@@ -38,7 +38,7 @@ The system **shall** accept a required star rating and optional text and photos 
 
 ### FR-REV-004 — Moderation before publication
 The system **shall** hold a submitted review as pending moderation and **shall not** make it public until Admin approves it.
-- Source: F-01, F-03. Governs: OPR-6. Status: Provisional (AMB-019 moderation default).
+- Source: F-01, F-03. Governs: OPR-6. Status: Approved.
 
 ### FR-REV-005 — Moderation actions
 The system **shall** allow Admin to approve or remove a review with a reason, notifying the Tourist on removal, and **shall** prioritize provider-flagged reviews.

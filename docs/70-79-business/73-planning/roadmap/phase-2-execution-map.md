@@ -22,7 +22,7 @@ Turns [Phase 2 — Marketplace depth](/docs/70-79-business/planning/roadmap/phas
 | Roadmap index | [Phasing roadmap](/docs/70-79-business/planning/roadmap) |
 | Tourist UI slots to wire | [web-68](/docs/60-69-initiatives/implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots) |
 | Auth gate for new `/account` features | [Authentication roadmap Phase 3](/docs/90-99-engineering-meta/authentication/implementation-roadmap#phase-3--auth-core-team-account-login-pages) (shipped) |
-| Spec workflow | [Implementation specs](/docs/60-69-initiatives/61-implementation-specs/) |
+| Spec workflow | [Implementation specs](/docs/60-69-initiatives/implementation-specs/) |
 
 ---
 
@@ -40,7 +40,7 @@ Turns [Phase 2 — Marketplace depth](/docs/70-79-business/planning/roadmap/phas
 | **Approved implementation spec** per slice | Not started for Phase 2 backend | Codegen on that slice |
 | Auth Phase 0 production checklist (`#77`, contract tests) | Partial | **Production** launch only |
 
-Resolve **AMB-019** (review moderation default and 14-day window) before locking REV API specs. **AMB-017** (bundle cross-leg cancel) before locking bundle BKG specs. **AMB-034** (SMS in Phase 2 or not) before NOT scope freeze.
+**Resolved (2026-10-04, Decision Log):** **AMB-019** (review moderation default and 14-day window) — REV API specs may lock. **AMB-017** (independent cross-leg cancel) — bundle BKG specs may lock. **AMB-034** (Phase 2 email-only) — NOT scope freeze (W7) may proceed without SMS.
 
 ---
 
@@ -73,7 +73,7 @@ Create one program epic per repo (or one cross-repo epic in the planning project
 | `red-cab-web` | **Phase 2 — Marketplace depth (Web)** | Wire `#68` slots + provider/team surfaces |
 | `redcab-docs` | **Phase 2 — specs and roadmap hygiene** | Approve specs before codegen |
 
-Child issues use the [implementation spec filename pattern](/docs/60-69-initiatives/61-implementation-specs/README.md): `{context}/{repo}-{issue}-{slug}.md` with `status: approved`.
+Child issues use the [implementation spec filename pattern](/docs/60-69-initiatives/implementation-specs/): `{context}/{repo}-{issue}-{slug}.md` with `status: approved`.
 
 ---
 
@@ -280,7 +280,7 @@ Slice by event; no tourist UI.
 | --- | --- | --- |
 | W7-1 | Cancellation and refund email templates | api |
 | W7-2 | Review invitation and moderation emails | api |
-| W7-3 | SMS channel (only if `AMB-034` → include) | api |
+| W7-3 | SMS channel — **deferred** (Phase 2 email-only per `AMB-034`, 2026-10-04) | — |
 
 ---
 
@@ -313,9 +313,9 @@ Do **not** open web wiring PRs until the matching API spec is `approved` and the
 
 1. Read [phase-2-marketplace-depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) for scope boundaries.
 2. Pick **one wave slice** from this map.
-3. Confirm open questions (`AMB-019`, `AMB-017`, `AMB-034`) for that slice.
+3. Confirm slice-specific open questions remain (e.g. `AMB-013`/`AMB-014` for full cancel spec lock); `AMB-017`, `AMB-019`, and `AMB-034` Phase 2 scope are resolved (Decision Log 2026-10-04).
 4. Write or read an **approved** spec under `docs/60-69-initiatives/61-implementation-specs/{context}/`.
-5. For tourist web work, read [web-68](/docs/60-69-initiatives/61-implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots) and replace stubs — do not add parallel UI patterns.
+5. For tourist web work, read [web-68](/docs/60-69-initiatives/implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots) and replace stubs — do not add parallel UI patterns.
 6. After merge, tick deliverables in [phase-2-marketplace-depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) and update the baseline table in this doc.
 
 ---

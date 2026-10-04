@@ -33,8 +33,6 @@ These FRs depend on open decisions and cannot reach Approved until the cited ite
 - AMB-013 (no-show / missing transitions): FR-BKG-009.
 - AMB-014 (cancellation initiator): FR-BKG-010.
 - AMB-016 (lockout params): FR-IAM-007.
-- AMB-017 (bundle cancellation): FR-BKG-012.
-- AMB-019 (review moderation/window): FR-REV-002, FR-REV-004.
 - AMB-020 (navigation model): FR-CAT-004.
 - AMB-021 (auth methods): FR-IAM-008.
 - AMB-022 (guest scope): FR-IAM-012.
@@ -42,6 +40,5 @@ These FRs depend on open decisions and cannot reach Approved until the cited ite
 - AMB-026 (suspension in-flight bookings): FR-PRV-013.
 - AMB-027 (corporate pre-payment state): FR-COR-004.
 - AMB-031/033 (PDF rendering / tax): FR-COR-003.
-- AMB-034 (SMS scope): FR-NOT-004.
 - AMB-035 (support monetization): FR-PRV-010.
 - A1/A3 confirmations: FR-PRV-008, FR-PRV-009.

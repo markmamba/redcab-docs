@@ -252,10 +252,10 @@ Internal Red Cab staff with full override access. Runs provider verification (`L
 The external **licensed payment provider** is the card-payment and marketplace-settlement rail. It is the **legal recipient and holder of customer funds** — Red Cab holds none (`INV-13`, `PAY-13`). It is responsible for card authorization/capture, fund custody, PCI scope, sub-merchant KYC, splitting and releasing funds on the platform's instruction, executing refunds, and emitting **settlement truth via events** (charge, settlement, refund, dispute). Provider events are authoritative for settlement outcomes; Red Cab converges to them (`FIN-11`). The provider is **not yet selected** (`AMB-040`) and is engaged only through a capability-declaring adapter ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation)); see [External Integrations](#external-integrations).
 
 ## Email Provider
-The external transactional email rail. Carries verification emails, booking-confirmation and lifecycle notifications, review links, and all scheduled alerts, rendered in the recipient's stored Language Preference (`OPR-9`) and dispatched within the 60-second SLA for confirmations (`OPR-8`). Email is the MVP notification channel (`AMB-034`).
+The external transactional email rail. Carries verification emails, booking-confirmation and lifecycle notifications, review links, and all scheduled alerts, rendered in the recipient's stored Language Preference (`OPR-9`) and dispatched within the 60-second SLA for confirmations (`OPR-8`). Email is the MVP and **Phase 2** notification channel (Decision Log `AMB-034`, 2026-10-04).
 
 ## SMS Provider
-The optional external SMS rail. May additionally carry notifications when the recipient has a verified phone and SMS is enabled (`FR-NOT-004`). SMS is **out of MVP scope** under the working baseline; provider choice and phone-verification requirements are unresolved (`AMB-034`).
+The optional external SMS rail for a **future** phase. May additionally carry notifications when the recipient has a verified phone and SMS is enabled (`FR-NOT-004`). SMS is **out of MVP and Phase 2 scope**; provider choice and phone-verification requirements remain open sub-notes under `AMB-034`.
 
 ---
 
@@ -393,7 +393,7 @@ Open: cross-border exemption applicability (`AMB-037`, P0), provider custody/rel
 The transactional and scheduled email rail, and the MVP notification channel. Carries account verification, booking-confirmation and lifecycle notifications (confirmation, cancellation, refund), completion review links, and time-based alerts. All messages render in the recipient's stored Language Preference (`OPR-9`) and confirmation notifications meet the 60-second SLA (`OPR-8`). Dispatch is asynchronous, idempotent per (event, recipient, channel), and decoupled from request latency.
 
 ## SMS
-The optional secondary notification rail. May additionally send notifications when the recipient has a verified phone and SMS is enabled (`FR-NOT-004`). Under the working baseline SMS is **out of MVP scope** (email-only); the provider, MVP inclusion, and phone-verification requirement are unresolved (`AMB-034`).
+The optional secondary notification rail for a **future** phase. May additionally send notifications when the recipient has a verified phone and SMS is enabled (`FR-NOT-004`). Phase 2 is **email-only** (Decision Log `AMB-034`); SMS provider and phone-verification rules remain open.
 
 ---
 
@@ -438,7 +438,7 @@ Listed below: **remaining open items** by the architectural seam they most affec
 
 ## Booking lifecycle
 - **`AMB-013` — missing operational lifecycle paths (P1)** and **`AMB-014` — terminal-state overloading & initiator attribute (P1).** Complete cancellation/refund paths; ensure the refund rule stays derivable.
-- **`AMB-017` — bundle cancellation semantics (P1/P2)** and **`AMB-026` — provider suspension/expiry mid-flight (P1).** Cross-leg effects and in-flight booking treatment — in no case mutating historical facts.
+- **`AMB-026` — provider suspension/expiry mid-flight (P1).** In-flight booking treatment — in no case mutating historical facts.
 
 ## Catalog, discovery & identity
 - **`AMB-021` — authentication methods (P0)** and **`AMB-022` — guest access scope (P1).** Affect the dependency-root contract and discovery/booking gating.
@@ -449,7 +449,6 @@ Listed below: **remaining open items** by the architectural seam they most affec
 - **`AMB-037` — cross-border exemption applicability (P0, highest severity)**, **`AMB-040` — provider custody/release and selection (P0)**, **`AMB-038` — clawback mechanism (P1)**, **`AMB-039` — capture timing (P1)**, **`AMB-031` — formal-document character rendering (P1).** *(`AMB-029` and `AMB-030` resolved 2026-08-30 via provider-collected virtual accounts.)*
 
 ## Notifications & operations
-- **`AMB-034` — SMS provider & phone-verification scope (P1).** Whether SMS is in MVP and how it is gated.
-- **`AMB-016` — login lockout parameters (P2)**, **`AMB-019` — review moderation default & window (P2)**, **`AMB-035` — support monetization after trial (P2)**, **`AMB-015` — holiday-calendar presets (P2)**, **`AMB-018` — multi-day single-provider scope (P2).**
+- **`AMB-016` — login lockout parameters (P2)**, **`AMB-035` — support monetization after trial (P2)**, **`AMB-015` — holiday-calendar presets (P2)**, **`AMB-018` — multi-day single-provider scope (P2).**
 
 > Note on scope: no open decision above changes the aggregate or context **boundaries** defined in [./contexts/index](/docs/30-49-domains/bounded-contexts) and [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models). Each affects value objects, lifecycle detail, external-rail topology, or a cross-context contract within a single owning context — which is the purpose of drawing the boundaries where they are.

@@ -32,8 +32,8 @@ Provisional requirements (README §8) cannot reach Approved until the cited item
 | AMB-013 | Missing transitions | (Phase 2 — no provisional FR beyond FR-BKG-010 scope) |
 | AMB-014 | Cancellation initiator | FR-BKG-010 |
 | AMB-016 | Lockout parameters | FR-IAM-007; NFR-SEC-002; NFR-TIME-008 |
-| AMB-017 | Bundle cancellation | FR-BKG-012 |
-| AMB-019 | Review moderation/window | FR-REV-002, -004; NFR-TIME-007 |
+| AMB-017 | Bundle cancellation | *(Resolved 2026-10-04 — FR-BKG-012 Approved)* |
+| AMB-019 | Review moderation/window | *(Resolved 2026-10-04 — FR-REV-002, -004; NFR-TIME-007 Approved)* |
 | AMB-020 | Navigation model | *(Resolved — FR-CAT-004 Approved)* |
 | AMB-021 | Auth methods | FR-IAM-008; NFR-SEC-007 |
 | AMB-022 | Guest scope | FR-IAM-012; NFR-SEC-005 |
@@ -44,7 +44,7 @@ Provisional requirements (README §8) cannot reach Approved until the cited item
 | AMB-031 | PDF rendering | FR-COR-003; NFR-I18N-006; NFR-COMP-003 |
 | AMB-032 | Merchant/seller-of-record | *(Resolved — Decision Log)* |
 | AMB-033 | Consumption tax | FR-COR-003; NFR-COMP-001 *(corporate itemization; B2C tax-inclusive resolved)* |
-| AMB-034 | SMS scope | FR-NOT-004 |
+| AMB-034 | SMS scope | *(Resolved 2026-10-04 — Phase 2 email-only; FR-NOT-004 Approved)* |
 | AMB-035 | Support monetization | FR-PRV-010 |
 | A1 / A3 | Trial start / overdue confirmation | FR-PRV-008, -009; NFR-TIME-004 |
 

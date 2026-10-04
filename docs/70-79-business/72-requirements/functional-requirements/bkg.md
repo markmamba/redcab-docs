@@ -81,8 +81,8 @@ When a Booking is cancelled by Provider or Admin, the system **shall** restore s
 - Source: E-12. Governs: PAY-7, CON-5. Status: Approved.
 
 ### FR-BKG-012 — Bundle booking
-The system **shall** allow booking a car and guide together as a bundle, creating two linked Booking records with independent commission, each Provider notified independently.
-- Source: E-03. Governs: BKG-3. Status: Provisional (AMB-017 cross-leg cancellation).
+The system **shall** allow booking a car and guide together as a bundle, creating two linked Booking records with independent commission, each Provider notified independently. Cancelling one leg **shall not** auto-cancel the other leg; each leg **shall** follow normal cancellation and refund rules independently.
+- Source: E-03. Governs: BKG-3. Status: Approved.
 
 ### FR-BKG-013 — Multi-day package
 The system **shall** verify availability of every constituent slot across all days before allowing checkout of a single-provider multi-day package, and **shall** identify any unavailable day.

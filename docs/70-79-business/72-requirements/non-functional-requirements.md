@@ -61,7 +61,7 @@ The system **shall** raise an Admin payment-overdue alert when a corporate Booki
 
 ### NFR-TIME-007 — Review window enforcement
 The system **shall** accept a Review only within 14 days of the Booking's completion and **shall not** accept submissions after the window closes.
-- Source: F-01. Governs: OPR-7; relates FR-REV-002. Status: Provisional (AMB-019).
+- Source: F-01. Governs: OPR-7; relates FR-REV-002. Status: Approved.
 
 ### NFR-TIME-008 — Account lockout duration
 The system **shall** keep an Account locked for 15 minutes after 5 consecutive failed login attempts before permitting further attempts.
@@ -260,7 +260,6 @@ These NFRs depend on open decisions and cannot reach Approved until the cited it
 - AMB-005/006 (payout & refund failure states): NFR-AVAIL-004.
 - AMB-011 (auto-confirm timer): NFR-TIME-009.
 - AMB-016 (lockout params): NFR-TIME-008, NFR-SEC-002.
-- AMB-019 (review window): NFR-TIME-007.
 - AMB-021 (auth methods): NFR-SEC-007.
 - AMB-024 (language defaults / supported languages): NFR-I18N-002, NFR-I18N-004.
 - AMB-025 (currency): NFR-I18N-005.

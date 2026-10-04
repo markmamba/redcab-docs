@@ -14,7 +14,6 @@ The model is built to accommodate either resolution of each open decision and **
 | `AMB-009` — commission base | Confirms commission computed on gross **incl. mandatory Extra Charges**; affects Commission Snapshot values | Commission Snapshot (BKG) |
 | `AMB-010` — snapshot scope | Confirms all three (price, commission, cancellation policy) are snapshotted at CheckoutSession creation | CheckoutSession / Booking snapshots (BKG) |
 | `AMB-013/014` — lifecycle completeness & initiator | Additional transitions and the **CancellationContext** (initiator + refund outcome) needed so the refund rule is derivable | Booking State, CancellationContext (BKG) |
-| `AMB-017` — bundle cancellation | Cross-leg effect when one BundleBooking leg is cancelled (the link is modeled; the cascade is not) | BundleBooking (BKG) |
 | `AMB-021/022` — auth methods / guest scope | Shape of credentials/OAuth identities on Account and gating; no boundary change | Account (IAM) |
 | `AMB-024` — language defaults / supported languages | The supported-language value set and per-surface defaults | LanguagePreference (IAM), Listing/Search (CAT) |
 | `AMB-025` — currency | Whether Money remains single-currency JPY (the working baseline) | Money (cross-cutting) |
@@ -25,6 +24,5 @@ The model is built to accommodate either resolution of each open decision and **
 | `AMB-038` — clawback mechanism | How post-settlement recovery from a Provider is recorded | RefundRecord, PayoutQueueEntry (PAY) |
 | `AMB-039` — capture timing | Whether an authorization-then-capture lifecycle needs distinct states | Charge (PAY) |
 | `AMB-031/033` — PDF rendering / consumption tax | Formal-document rendering and tax treatment on corporate documents | Quotation, Invoice (COR) |
-| `AMB-034` — SMS scope | Whether the SMS Channel is in MVP and phone verification is required | NotificationDispatch (NOT) |
 
 > Scope note (mirrors [./overview.md](/docs/30-49-domains/system-design/overview) and [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §7): no deferred decision above moves an ownership boundary. The boundaries are drawn so that these open questions can be resolved **within** a single owning context — which is precisely why this conceptual data model can be reviewed and relied upon ahead of those resolutions.

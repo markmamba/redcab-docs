@@ -170,7 +170,7 @@ Locked technology choices and why each fits the architecture — no versions, pa
 | Background jobs | Rails-native asynchronous job runtime | [Background Jobs](/docs/30-49-domains/system-design/overview#background-jobs) | Locked (category); queue backend open |
 | Auth / Identity | Session-based web authentication owned by IAM | [IAM context](/docs/30-49-domains/bounded-contexts) | Locked (mechanism); methods open (`AMB-021`/`AMB-022`) |
 | Payments | Licensed marketplace payment provider (cards + sub-merchant settlement) | [Payments context](/docs/30-49-domains/system-design/overview#payments--payments--payouts-core) | **Not locked** — vendor, custody mechanics, and release control open (`AMB-040`); integrated via capability-declaring adapter ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation)) |
-| Notifications | Email rail (MVP); SMS optional | [Notifications context](/docs/30-49-domains/system-design/overview#notifications--notifications-supporting-generic-event-driven) | Locked (email MVP); provider/SMS open (`AMB-034`) |
+| Notifications | Email rail (MVP + Phase 2); SMS deferred | [Notifications context](/docs/30-49-domains/system-design/overview#notifications--notifications-supporting-generic-event-driven) | Locked (email MVP + Phase 2); SMS provider/phone verification open (`AMB-034` sub-notes) |
 | PDF documents | Server-side PDF generation with embedded Japanese fonts | [Corporate context](/docs/30-49-domains/bounded-contexts) | Locked (capability); library open (`AMB-031`) |
 | Internationalization | EN/JA, server-rendered language per recipient | cross-cutting (`OPR-9`) | Locked (EN/JA); defaults open (`AMB-024`) |
 
@@ -279,7 +279,7 @@ The provider is the **legal recipient and holder of customer funds**; Red Cab ho
 - Dispatch is **asynchronous and idempotent per (event, recipient, channel)**, decoupling request latency from delivery and protecting the 60-second confirmation SLA (`OPR-8`, `NFR-TIME-001..002`).
 - Every message renders in the recipient's stored Language Preference (`OPR-9`, `NFR-I18N-001`) — see i18n below.
 
-**Status.** Locked that **email is the MVP channel**. The **email provider** and whether **SMS is in MVP** (and phone-verification requirements) are open under `AMB-034` and **not resolved here**.
+**Status.** Locked that **email is the MVP and Phase 2 channel** (Decision Log `AMB-034`, 2026-10-04). The **email provider** is still open. **SMS** is deferred beyond Phase 2; SMS provider and phone-verification requirements remain open sub-notes under `AMB-034`.
 
 ---
 
@@ -315,6 +315,6 @@ To stay at the architecture level and avoid making new decisions, the following 
 - Specific versions, packages/gems, configuration, environment, hosting/CI, and deployment topology.
 - The concrete background-job queue/broker product.
 - Payment provider selection and its custody/release mechanics (`AMB-040`), cross-border exemption applicability (`AMB-037`), clawback (`AMB-038`), and capture timing (`AMB-039`).
-- Authentication methods and guest scope (`AMB-021`, `AMB-022`); SMS provider/scope (`AMB-034`); PDF library (`AMB-031`); language defaults/supported set (`AMB-024`); currency beyond the JPY baseline (`AMB-025`).
+- Authentication methods and guest scope (`AMB-021`, `AMB-022`); SMS provider and phone verification for a future SMS channel (`AMB-034` sub-notes); PDF library (`AMB-031`); language defaults/supported set (`AMB-024`); currency beyond the JPY baseline (`AMB-025`).
 
 > No choice recorded here changes the bounded-context or aggregate boundaries in [./contexts/index](/docs/30-49-domains/bounded-contexts) and [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models). Each technology realizes an existing container or context; none introduces a new one.

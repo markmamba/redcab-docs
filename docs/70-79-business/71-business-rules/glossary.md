@@ -109,7 +109,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Price Snapshot** — the Price Breakdown frozen at CheckoutSession creation; immune to later provider changes (`C1`, `E-02`, `PRC-8`).
 - **Booking State** — `PENDING | CONFIRMED | COMPLETED | PAYOUT_QUEUED | CANCELLED | REFUNDED`. B2C card path enters at `CONFIRMED`; `PENDING` retained for corporate / pre-payment paths. Governed by the Booking State Machine (`E-09`).
 - **Seat Reservation** — atomic decrement of `available_seats` during CheckoutSession creation (or restoration on session expiry/cancel); Booking materialization inherits the held seats (`CON-1`, `BKG-9`).
-- **Bundle Booking** — a car + guide booked together; creates 2 Booking records linked by `bundle_booking_id`; commission per sub-booking (`E-03`).
+- **Bundle Booking** — a car + guide booked together; creates 2 Booking records linked by `bundle_booking_id`; commission per sub-booking (`E-03`). Cancelling one leg does not auto-cancel the other; each leg is cancelled and refunded on its own (`FR-BKG-012`, Decision Log `AMB-017`).
 - **Multi-Day Package** — a single-provider day-by-day itinerary booked as one purchase; all days' availability checked before checkout (`E-04`).
 - **Passenger Manifest** — list of passenger names/age-groups for a group booking, viewable by the Provider (`E-08`).
 
