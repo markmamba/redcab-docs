@@ -73,7 +73,41 @@ export async function clientAction({ request }) {
 - `postAuthPath` is defined in [Entry rules](/docs/90-99-engineering-meta/authentication/entry-rules#post-auth-redirect).
 - The redirect makes React Router revalidate the root (non-`GET` action). The header reads the new account from root loader data. No `onIdentitiesAccountUpdate` call is needed.
 
-**Today:** the login pages call `identitiesSessionsApi.create` from a submit handler, then `onIdentitiesAccountUpdate(sessionResponse)` and `navigate(resolveIdentitiesPostAuthPath(...))`. This works, and it stays until the Phase 3 tourist PR.
+**Today:** tourist, corporate, and provider login pages export `clientAction` via `createLoginAction` and post through `useSessionLoginSubmit`. `AuthProvider` is read-only and derives the account from `public-root` loader data ([#86](https://github.com/markmamba/red-cab-web/issues/86)).
+
+## Team admin login (target)
+
+```js
+// app/auth/create-team-login-action.js — exported from team-login-page.jsx
+export function createTeamLoginAction() {
+  return async function clientAction({ request }) {
+    const formData = await request.formData()
+
+    try {
+      await teamSessionsApi.create({
+        email    : formData.get('email'),
+        password : formData.get('password')
+      })
+
+      const redirectTo = authSafeRedirect.redirectTarget(new URL(request.url))
+
+      return redirect(
+        authSafeRedirect.internalPathOrDefault(
+          redirectTo,
+          '/team',
+          ADMIN_GUEST_PATHS,
+          ADMIN_ALLOWED_PREFIX
+        )
+      )
+    } catch (error) {
+      return data({ error: error.toJSON() }, { status: error.status })
+    }
+  }
+}
+```
+
+- Safe `redirect_to` uses the same helper as policy entry rules ([Entry rules](/docs/90-99-engineering-meta/authentication/entry-rules#admin-guest)).
+- The redirect revalidates `team-root`. `AdminAuthProvider` is read-only — no `onAdminUpdate` ([#112](https://github.com/markmamba/red-cab-web/issues/112)).
 
 ## Logout (target)
 
@@ -94,9 +128,7 @@ export async function clientAction() {
 }
 ```
 
-**Today:** `useIdentitiesLogout` calls `destroy`, then `onIdentitiesAccountUpdate(null)` and `navigate('/')` in `finally`, even when the call failed. The header then shows "signed out" while the cookies still exist, and the next document request shows the person signed in again. The target fixes this.
-
-The team side mirrors this with `team/logout` and `teamSessionsApi.destroy`.
+**Today:** account logout is `POST /logout` via `clientAction` on `logout.js` and `useLogoutFetcher` in the tourist nav ([#86](https://github.com/markmamba/red-cab-web/issues/86)). Team logout mirrors this with `team/logout` and `teamSessionsApi.destroy` ([#85](https://github.com/markmamba/red-cab-web/issues/85)).
 
 ## Google OAuth
 

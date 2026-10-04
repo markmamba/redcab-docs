@@ -213,7 +213,7 @@ flowchart LR
 - [ ] `/account/**` uses `tourist-required-policy`. The six `withTouristAuth` exports are gone.
 - [ ] The eight guest pages use `account-guest-policy`. `/verify-email` is open.
 - [ ] Legacy `/account/discover*` redirects sit outside the tourist policy and still work for guests.
-- [ ] Login and logout are `clientAction`s. The root revalidates after them. `AuthProvider` no longer exposes a setter.
+- [x] Login and logout are `clientAction`s. The root revalidates after them. `AuthProvider` and `AdminAuthProvider` no longer expose setters ([#86](https://github.com/markmamba/red-cab-web/issues/86), [#112](https://github.com/markmamba/red-cab-web/issues/112)).
 - [ ] The manual in-app click test passes for `/account/bookings` and `/team/providers/profiles`.
 - [ ] A lint or unit check forbids `shouldRevalidate` and `clientLoader` in `app/routes/policies/`.
 
