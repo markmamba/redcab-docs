@@ -117,6 +117,8 @@ What happens **after** Allow is the provider pages' job, not the rule's:
 
 ## The admin rules — `/team/**`
 
+### Admin guest
+
 | Policy | Admin session | Result |
 | --- | --- | --- |
 | Admin guest (`/team/login`) | Signed out | Allow |
@@ -171,7 +173,7 @@ const INTERNAL_PATH_PATTERN = /^\/(?!\/|\\)[^\s]*$/
 | `/login-help` | Allow | `/login` blocks only `/login` and `/login/...` |
 | Missing, empty | Default | Nothing to check |
 
-**Today** the team login page (`team-login-page.jsx:25`) and `withNoAuth` (`with-no-auth.jsx:16`) navigate to `redirect_to` without this check. Phase 0 fixes both.
+**Today (shipped):** team login and guest IAM logins use `auth-safe-redirect.js` via `createLoginAction` / `create-team-login-action` ([#80](https://github.com/markmamba/red-cab-web/issues/80), [#86](https://github.com/markmamba/red-cab-web/issues/86), [#112](https://github.com/markmamba/red-cab-web/issues/112)). `withNoAuth` is deleted ([#88](https://github.com/markmamba/red-cab-web/issues/88)).
 
 ## How to write a new rule
 

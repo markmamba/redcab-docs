@@ -12,7 +12,7 @@ description: How Red Cab Web and Red Cab API know who is signed in — two runti
 - Rails decides access on every request. The web only decides where a person goes.
 - Read the pages in order the first time. After that, [Entry rules](/docs/90-99-engineering-meta/authentication/entry-rules) and the [contract sheet](/docs/90-99-engineering-meta/authentication/appendix-web-api-contract) are the lookup pages.
 
-**Status:** **Normative target design** (2026-09-30, [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19)). ADR-018 and ADR-019 are **Accepted**. Pages describe the target from those ADRs; **phased applicability** still applies for remaining roadmap items (Phase 3 session-write contract, `revalidate()` on hard loader `401`, etc.). Each page marks where today's code differs.
+**Status:** **Normative target design** (2026-09-30, [redcab-docs#19](https://github.com/markmamba/redcab-docs/issues/19)). ADR-018 and ADR-019 are **Accepted**. Policy routes and HOC removal are **shipped** on web `main` ([#85](https://github.com/markmamba/red-cab-web/issues/85)–[#88](https://github.com/markmamba/red-cab-web/issues/88)). **Phased applicability** still applies for Phase 0 integration gaps, manual policy matrices, and follow-ups [#107](https://github.com/markmamba/red-cab-web/issues/107)–[#112](https://github.com/markmamba/red-cab-web/issues/112). Each page marks historical vs living baseline where it matters.
 
 ## Why this series lives under Engineering
 
@@ -87,7 +87,7 @@ flowchart LR
 | Virtual root | A pathless `layout()` at the top of the route tree: `roots/public-root.jsx` or `roots/team-root.jsx` |
 | Policy route | A pathless `layout()` that runs one entry rule on Node before its children render |
 | Entry rule | A pure function that returns `null` (allow) or a redirect path |
-| Today / Target | "Today" is the audited code at `red-cab-web@c4ce884` and `red-cab-api@d8ed9b7`. "Target" is the ADR-018 design. **Current ship state:** [roadmap — Where things stand](/docs/90-99-engineering-meta/authentication/implementation-roadmap#where-things-stand) (same pattern as ADR-018 historical vs living baseline). |
+| Today / Target | "Target" is the ADR-018 design. **Today** is the living baseline on `main` — see [roadmap — Where things stand](/docs/90-99-engineering-meta/authentication/implementation-roadmap#where-things-stand) (`red-cab-web@b4a539d`, `red-cab-api@e780bc5`, 2026-10-04). ADR pages may still cite the 2026-09-26 audit SHAs as **historical**. |
 
 ## What stays the same during the tourist pre–Phase 2 track
 

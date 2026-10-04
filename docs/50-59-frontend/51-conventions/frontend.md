@@ -47,9 +47,8 @@ app/
     marketplace-catalog-listings-api.js
     tourists-bookings-booking-api.js
     ...
-  components/                  # Shared UI (forms, HOCs, breadcrumbs)
+  components/                  # Shared UI (forms, breadcrumbs)
     forms/
-    hocs/                      # with-tourist-auth, with-provider-auth, etc.
     navigation/
       team-page-shell.jsx
     error-display/
@@ -126,8 +125,10 @@ export const handle = {
   pageShell: { guidanceText: '...' }  // team pages only
 }
 
-export default withTouristAuth(BookingsListPage)
+export default BookingsListPage
 ```
+
+Protected tourist pages nest under `tourist-required-policy` in `app/routes.js` — the page module exports the component only; the policy parent enforces access.
 
 ### Route page naming
 
@@ -342,7 +343,7 @@ Use `prepareSearchParams` / `serializeUrlParams` from `app/utils/search-param-ut
 1. **Never compute price on the client.** Display `price_breakdown` from `calculate_quote` API response only. No `listing.base_price * passengers` in JSX or utils.
 2. **Never mutate API response objects.** Pass-through data from serializers.
 3. **Checkout shows server-confirmed breakdown.** Submit booking with slot/listing/passenger selections; amounts come back from API.
-4. **Role-confined surfaces.** Tourist pages don't import provider auth HOCs. One segment per page.
+4. **Role-confined surfaces.** Tourist pages don't nest under provider or corporate policy parents. One segment per page.
 5. **EN/JA rendering.** Use stored language preference; geography labels use `name_en` / `name_ja` / `name_kana` from API; disambiguate homonymous Areas with parent District.
 6. **corporate documents.** PDF download links from API; no client-side PDF generation.
 7. **Payment step is provider-agnostic.** The API returns a payment handoff descriptor and the UI branches on its `kind` (redirect to a hosted page, or embedded fields). Only the embedded branch may lazy-load a provider SDK, keeping it out of the main bundle. The charge amount always originates from the server snapshot, never client input. The post-payment return route is a **presentation hint only** — booking confirmation is read from our own API, which converges to verified provider events (`FIN-11`, `FIN-13`).
@@ -447,7 +448,7 @@ Env hiding is **not** API security — backend must enforce authorization indepe
 4. Domain forms in `app/components/`
 5. Domain views in `app/routes/`
 6. `process.env.VITE_*` (use `import.meta.env`)
-7. Mixing auth HOCs across role surfaces
+7. Mixing policy parents across role surfaces (e.g. tourist page under `provider-required-policy`)
 8. Custom CSS when Bootstrap utilities suffice
 9. Skipping `meta` export on route pages
 10. Importing `TeamPageShell` directly in page components
