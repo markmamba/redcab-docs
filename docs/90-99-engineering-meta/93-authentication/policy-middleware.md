@@ -157,7 +157,7 @@ npx playwright install chromium
 VITE_E2E_AUTH_FIXTURES=true npm run test:e2e
 ```
 
-Suite: `e2e/policy-middleware-matrix.spec.js` ([#110](https://github.com/markmamba/red-cab-web/issues/110)). Spec: [web-110-policy-middleware-e2e-matrix.md](/docs/60-69-initiatives/61-implementation-specs/iam/auth-platform/web-110-policy-middleware-e2e-matrix).
+Suite: `e2e/policy-middleware-matrix.spec.js` ([#110](https://github.com/markmamba/red-cab-web/issues/110)). Spec: [web-110-policy-middleware-e2e-matrix.md](/docs/60-69-initiatives/implementation-specs/iam/auth-platform/web-110-policy-middleware-e2e-matrix).
 
 ### Manual hand test (same scenarios)
 
