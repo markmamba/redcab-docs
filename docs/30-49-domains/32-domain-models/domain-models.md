@@ -232,7 +232,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 - **PayoutQueueEntry** (root: `PayoutQueueEntry`)
   - *Purpose:* record the Net Payout owed to a Provider after Booking `COMPLETED`; carries Red Cab's settlement-release instruction to the payment provider and serves as its evidentiary record (`PAY-15`, `PAY-16`).
   - *Invariants:* carries frozen Net Payout Amount (`LC-6`); payout never exceeds net (`FIN-4`); payout/refund mutually exclusive (`FIN-5`, `PAY-8`).
-  - *Lifecycle:* `QUEUED → PROCESSING → DISBURSED | FAILED` (`LC-13`, `LC-14`, `PAY-14`).
+  - *Lifecycle:* `QUEUED → PROCESSING → DISBURSED | FAILED | VOIDED` (`LC-13`, `LC-14`, `PAY-14`). Refund interlock voids a `QUEUED` or `FAILED` entry **before** creating the `Refund` row, in the same transaction under row lock on the queue entry (`PAY-8`, `FIN-5`). `PROCESSING` awaits settlement or W5 reversal (`AMB-038`).
 - **Refund** (root: `Refund`)
   - *Purpose:* a return of funds computed from snapshot + snapshotted policy.
   - *Invariants:* `refund = gross × matched_tier_pct/100` from the snapshot, never live rate (`PAY-6`, `FIN-6`); Provider/Admin-initiated → 100% (`PAY-7`); never exceeds gross (`FIN-4`). Refund-failure representation `AMB-006`.
@@ -374,7 +374,8 @@ graph TD
   Confirmed[BookingConfirmed] --> NotifD[Notifications]
   Completed[BookingCompleted] --> Queue[Payments queues payout]
   Completed --> RevElig[Reviews eligibility + review link]
-  Refund[RefundCompleted] --> VoidPayout[Payments voids payout entry]
+  RefundInit[Refund initiated PAY] --> VoidPayout[Payments voids payout entry if QUEUED or FAILED]
+  VoidPayout --> RefundCompleted[RefundCompleted]
   QAccept[QuotationAccepted] --> CreateFromQuote[Booking create-from-quote]
   BankOK[BankTransferConfirmed] --> ConfirmCorp[Booking corporate confirmation]
   RevApproved[ReviewApproved] --> Recalc[RatingRecalculated]
