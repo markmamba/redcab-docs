@@ -27,13 +27,13 @@ Phase 2 execution map **W0-2**: BKG has no persisted link for a car + guide bund
 
 | ID | Document | Why |
 | --- | --- | --- |
-| W0-2 | [phase-2-execution-map.md](/docs/70-79-business/73-planning/roadmap/phase-2-execution-map) | Wave 0 verification bar |
-| BKG-3 | [invariants](/docs/70-79-business/71-business-rules/invariants) | Two orders, shared bundle id, independent commission snapshots |
-| FR-BKG-012 | [bkg.md](/docs/70-79-business/72-requirements/functional-requirements/bkg) | Bundle behavior; independent leg cancel (**AMB-017**) |
-| Glossary | [glossary.md](/docs/70-79-business/71-business-rules/glossary) | `bundle_booking_id` column name |
-| ER §6.4 | [entity-relationships.md §6.4](/docs/30-49-domains/33-data-model/entity-relationships#64-booking--checkout) | `BUNDLE_BOOKING` ↔ two `BOOKING` legs |
-| Domain §3.4 | [domain-models.md](/docs/30-49-domains/32-domain-models/domain-models) | `BundleBooking` aggregate root |
-| BKG context | [booking.md](/docs/30-49-domains/31-bounded-contexts/booking) | Context ownership |
+| W0-2 | [phase-2-execution-map.md](/docs/70-79-business/planning/roadmap/phase-2-execution-map) | Wave 0 verification bar |
+| BKG-3 | [invariants](/docs/70-79-business/business-rules/invariants) | Two orders, shared bundle id, independent commission snapshots |
+| FR-BKG-012 | [bkg.md](/docs/70-79-business/requirements/functional-requirements/bkg) | Bundle behavior; independent leg cancel (**AMB-017**) |
+| Glossary | [glossary.md](/docs/70-79-business/business-rules/glossary) | `bundle_booking_id` column name |
+| ER §6.4 | [entity-relationships.md §6.4](/docs/30-49-domains/data-model/entity-relationships#64-booking--checkout) | `BUNDLE_BOOKING` ↔ two `BOOKING` legs |
+| Domain §3.4 | [domain-models.md](/docs/30-49-domains/domain-models/domain-models) | `BundleBooking` aggregate root |
+| BKG context | [booking.md](/docs/30-49-domains/bounded-contexts/booking) | Context ownership |
 
 ## Design decisions
 
