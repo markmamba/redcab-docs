@@ -148,7 +148,7 @@ Canonical states (`LC-1`):
 
 State classification:
 - Active: `PENDING` (Corporate only), `CONFIRMED`, `COMPLETED`.
-- Settled: `PAYOUT_QUEUED` (Booking state; payout entry may still be `QUEUED` / `PROCESSING` / `DISBURSED` / `FAILED`).
+- Settled: `PAYOUT_QUEUED` (Booking state; payout entry may still be `QUEUED` / `PROCESSING` / `DISBURSED` / `FAILED` / `VOIDED`).
 - Terminal: `CANCELLED`, `REFUNDED`.
 
 ## State diagram (B2C card happy path)
@@ -205,7 +205,7 @@ Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` d
 ### T2: CONFIRMED → CANCELLED
 - **Trigger type:** `sync`, actor: Tourist, Provider, or Admin (initiator recorded per `AMB-014` interim model).
 - **Guards:** current state `CONFIRMED`.
-- **Sync side effects:** restore reserved seats idempotently (`CON-5`); void any in-flight Payout Queue entry.
+- **Sync side effects:** restore reserved seats idempotently (`CON-5`); void any Payout Queue entry in `QUEUED` or `FAILED` (not `:processing` — W5 handles in-flight settlement).
 - **Async reactions (`BookingCancelled`):**
   - Refund: Provider/Admin-initiated → 100% (`PAY-7`); Tourist-initiated → per snapshotted policy (`PAY-6`). Captured funds refunded via Platform charge reversal (`PAY-13`).
   - Tourist + Provider cancellation notifications (`G-01`, `G-02`).
@@ -219,7 +219,7 @@ Not a transition from `[*]` through `PENDING`; the B2C path enters `CONFIRMED` d
 ### T4: COMPLETED → REFUNDED
 - **Trigger type:** `sync`, actor: Admin.
 - **Guards:** current state `COMPLETED`.
-- **Sync side effects:** void/reverse any Payout Queue entry not yet `DISBURSED` (`PAY-8`, `LC-14`); set state `REFUNDED`.
+- **Sync side effects:** void any Payout Queue entry in `QUEUED` or `FAILED` before refund (`PAY-8`, `LC-14`); entries in `PROCESSING` follow W5 settlement/reversal rules; set state `REFUNDED`.
 - **Async reactions:** refund to original payment method using snapshotted values (`PAY-6`, `INV-1`); Tourist + Provider notifications.
 
 ### T5: PENDING → CONFIRMED (corporate / pre-payment only)

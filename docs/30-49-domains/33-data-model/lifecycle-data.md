@@ -18,7 +18,7 @@ Some data is **mutable lifecycle state** owned by a single aggregate and changed
 | **AvailabilitySlot state** | AvailabilitySlot (CAT) | open → (partially reserved) → fully booked → past; `0 ≤ available_seats ≤ capacity` | `INV-3`, `CON-3` |
 | **Quotation Status** | Quotation (COR) | `Pending → Sent → Accepted \| Rejected \| Expired`; converts to Booking only from `Accepted` | `LC-11` |
 | **Review moderation** | Review (REV) | `PendingModeration → Approved \| Removed` | `OPR-6` |
-| **Payout queue entry state** | PayoutQueueEntry (PAY) | `QUEUED → PROCESSING → DISBURSED \| FAILED` (`LC-13`, `LC-14`) | `LC-6`, `FIN-5`, `PAY-14` |
+| **Payout queue entry state** | PayoutQueueEntry (PAY) | `QUEUED → PROCESSING → DISBURSED \| FAILED \| VOIDED` (`LC-13`, `LC-14`) | `LC-6`, `FIN-5`, `PAY-14` |
 | **Account state** | Account (IAM) | registered → active → (locked ↔ active) | `OPR-1` |
 | **Dispatch state** | NotificationDispatch (NOT) | requested → dispatched \| failed | `OPR-8` |
 

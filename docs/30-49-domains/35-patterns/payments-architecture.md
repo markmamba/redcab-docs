@@ -10,7 +10,7 @@ description: Custody, control, commission, settlement, and refunds across a prov
 - **Custody and control are separate axes.** Red Cab holds no customer funds (`INV-13`, `PAY-13`); Red Cab alone determines when a transaction completes and settlement releases (`PAY-15`).
 - The licensed **payment provider** receives and holds funds; the **Provider is merchant-of-record**; commission arrives as a provider-routed **platform fee**.
 - Commission snapshot is frozen at CheckoutSession creation; all charges, settlements, and refunds derive from it.
-- Payout queue: `QUEUED → PROCESSING → DISBURSED | FAILED`; settlement and refund are mutually exclusive per booking.
+- Payout queue: `QUEUED → PROCESSING → DISBURSED | FAILED | VOIDED`; settlement and refund are mutually exclusive per booking.
 - The provider is engaged only through a **capability-declaring adapter**; the no-custody posture is asserted at startup.
 
 ## About this document
@@ -161,9 +161,10 @@ Guarantees:
 | `PROCESSING` | Settlement instructed to the provider |
 | `DISBURSED` | Settlement confirmed by provider event |
 | `FAILED` | Settlement failed (retryable; Admin alerted) |
+| `VOIDED` | Refund interlock: entry voided before refund; not disbursed (`PAY-8`, `FIN-5`). Only from `QUEUED` or `FAILED` until W5 reversal design |
 
 - Funds remain in **provider custody** from charge until settlement `DISBURSED`. There is no automatic Provider settlement at charge time (`PAY-15`).
-- Refund before `DISBURSED` voids or reverses the queue entry (`PAY-8`, `FIN-5`).
+- Refund before `DISBURSED` voids the queue entry when it is still `QUEUED` or `FAILED` (`PAY-8`, `FIN-5`). Entries in `PROCESSING` require settlement outcome or designed reversal (W5, `AMB-038`).
 - The queue entry is the **evidentiary artifact** of Red Cab's control over transaction completion. It is not an internal convenience and MUST NOT be bypassed.
 
 ```mermaid
@@ -173,6 +174,8 @@ graph LR
   Processing --> Disbursed[DISBURSED]
   Processing --> Failed[FAILED]
   Failed -->|retry| Processing
+  Queued -->|refund interlock W5| Voided[VOIDED]
+  Failed -->|refund interlock W5| Voided
   Completed -->|admin refund T4| Refunded[Booking REFUNDED]
 ```
 
@@ -180,7 +183,7 @@ graph LR
 
 - **Computation** from snapshotted Cancellation Policy: `refund = gross_amount × (matched_tier_refund_pct / 100)` (`PAY-6`).
 - **Initiator-driven rule:** tourist-initiated → policy-based; Provider/Admin-initiated → 100% (`PAY-7`). Initiator MUST be recorded (`AMB-014`, interim).
-- **Payout interlock:** refund voids/reverses non-`DISBURSED` queue entries (`PAY-8`, `FIN-5`). Because funds are in provider custody until release, a pre-settlement refund requires no recovery from the Provider.
+- **Payout interlock:** refund voids `QUEUED` or `FAILED` queue entries before creating the refund row (`PAY-8`, `FIN-5`). `PROCESSING` awaits settlement outcome or W5 reversal (`AMB-038`). Because funds are in provider custody until release, a pre-settlement refund from `QUEUED` requires no recovery from the Provider; void from `FAILED` may retain a rail reference and is reconciliation-watched.
 - **Post-settlement liability sits with the Provider** (`FIN-14`). Once settled, honoring a refund depends on a working **clawback** against the sub-merchant — reversal against provider balance, deduction from future settlement, or invoice. This is an unresolved dependency of `PAY-7` (`AMB-038`).
 - **Execution** is asynchronous; financial finality only on provider confirmation (`FIN-11`). Refund-failure handling remains open (`AMB-006`).
 
