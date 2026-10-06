@@ -63,7 +63,7 @@ For epics, waves, proposed GitHub issues, and [web-68](/docs/60-69-initiatives/i
 
 - [ ] `docs/db/reviews.dbml` designed and migrated
 - [ ] Catalog / Booking / Payments DBML extended for Phase 2 columns (advanced pricing, cancellation, refunds, bundles)
-- [ ] `redcab.dbml` updated
+- [x] `redcab.dbml` updated
 
 #### Reviews & Ratings (`REV`)
 
