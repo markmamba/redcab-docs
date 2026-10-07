@@ -29,8 +29,8 @@ Phase 2 execution map W1-1 needs the first REV HTTP action. Schema exists from a
 | ID | Document | Why |
 | --- | --- | --- |
 | api-154 | [api-154-reviews-schema-migrate.md](./api-154-reviews-schema-migrate.md) | Table columns, moderation default, composite FK deferral |
-| FR-REV-001..004 | [rev.md](/docs/70-79-business/72-requirements/functional-requirements/rev) | Eligibility, window, content, moderation |
-| INV-5, BKG-7, OPR-6, OPR-7 | [invariants](/docs/70-79-business/71-business-rules/invariants) | One review per booking; completion gate; window |
+| FR-REV-001..004 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Eligibility, window, content, moderation |
+| INV-5, BKG-7, OPR-6, OPR-7 | [invariants](/docs/70-79-business/business-rules/invariants) | One review per booking; completion gate; window |
 | web-68 | [web-68-tourist-phase-2-placeholder-slots.md](../platform/web-68-tourist-phase-2-placeholder-slots.md) | Eligibility must be API-driven when REV ships |
 
 ## Design decisions
