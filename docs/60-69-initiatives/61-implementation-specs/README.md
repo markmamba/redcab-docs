@@ -16,8 +16,11 @@ description: Per-issue implementation specs — persistent design artifacts comm
 
 How to write, review, and link implementation specs in the KOS pipeline.
 
+Narrative sections (TL;DR, Problem, Out of scope, Acceptance criteria) follow [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) (Tier A). Contract tables and file paths stay precise.
+
 | Topic | Document |
 | --- | --- |
+| Prose (STE100) | [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) |
 | Spec template | `_template.md` (repo file; not published) |
 | Example (audit series) | [IAM Audit 2026-08](/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08/) |
 | Requirements | [Requirements](/docs/70-79-business/requirements) |

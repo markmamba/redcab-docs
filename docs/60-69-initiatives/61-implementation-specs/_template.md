@@ -12,13 +12,15 @@ context: BKG
 
 ## TL;DR
 
+_Write Tier A STE: short bullets, one idea each. See [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100)._
+
 - {What ships — 1 bullet}
 - {What does NOT ship — 1 bullet}
 - {Breaking change: Yes/No}
 
 ## Problem
 
-{What is broken or missing? Link evidence: file paths, test names, issue quote.}
+{What is broken or missing? Active voice, short sentences. Link evidence: file paths, test names, issue quote.}
 
 ## Governing docs
 

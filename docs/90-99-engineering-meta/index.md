@@ -20,6 +20,7 @@ Engineering overview — how planning docs connect to implementation repos.
 | API conventions | [Backend Conventions](/docs/20-29-backend/conventions/backend) |
 | Web conventions | [Frontend Conventions](/docs/50-59-frontend/conventions/frontend) |
 | Date / time / timezone | [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones) |
+| Prose (ASD-STE100) | [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) |
 | Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
 | Domain | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
 

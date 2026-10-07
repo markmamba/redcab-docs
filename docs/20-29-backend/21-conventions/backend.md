@@ -247,6 +247,8 @@ In Managers, raise `Errors::ValidationError` when validation fails. For non-vali
 
 ### Error messages for users
 
+Tier A [ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) applies to all user-visible API validation and error strings.
+
 Target users are non-technical tourists and corporate clients. Every message should answer:
 
 1. What went wrong?

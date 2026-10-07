@@ -1,8 +1,16 @@
 ---
 title: Documentation conventions
 sidebar_position: 2
-description: Johnny Decimal structure, naming, and link style for Red Cab docs.
+description: Johnny Decimal structure, naming, link style, and prose (ASD-STE100).
 ---
+
+## Prose (ASD-STE100)
+
+Human-readable text uses [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) by tier:
+
+- **Tier A (required):** explainers, spec narrative, user-facing errors, GitHub issues and PRs.
+- **Tier B (sentences only):** requirements and glossary — keep **shall** / **may** and defined terms.
+- **Tier C:** ADRs and dense architecture — STE optional.
 
 ## Johnny Decimal structure
 

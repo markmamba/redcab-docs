@@ -50,6 +50,11 @@ Before implementation code is written in api/web repos:
 
 See [docs/60-69-initiatives/61-implementation-specs/README.md](docs/60-69-initiatives/61-implementation-specs/README.md).
 
+## Prose (ASD-STE100)
+
+- Tier A/B rules: `docs/00-09-meta/conventions/prose-and-ste100.md`
+- Spec narrative, explainers, issues/PRs (via web `.ai/instructions.md`), and user-facing errors use Tier A unless noted.
+
 ## Read first (new feature work)
 
 - `docs/70-79-business/71-business-rules/glossary.md`

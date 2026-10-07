@@ -27,6 +27,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 ## How to use this document
 - Terms are grouped by bounded context (the locked 6 core + 2 supporting baseline).
 - A term is defined once, in its **owning context**, and only referenced elsewhere.
+- This glossary is the **approved vocabulary** for Tier B docs (requirements, invariants references) and for domain names in specs. [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) applies to how you write around these terms, not to renaming them.
 - `Cross-cutting` terms apply across all contexts.
 - PRD story references (e.g. `A-03`, `E-10`) point to `notes/redcab-prd.pdf` in the planning repo (not published on this site).
 - Naming convention for code: contexts map to `app/modules/<context>`; aggregates are PascalCase; events are past-tense (`BookingConfirmed`).

@@ -79,6 +79,14 @@ Additional language rules:
 - Conditions are expressed in observable terms ("Given an Approved Provider…", "When payment fails…", "Then the system shall…").
 - One behavior per requirement; compound behaviors are split so each can be traced and verified independently.
 
+### 4.1 Prose (ASD-STE100, Tier B)
+
+Requirement **IDs** and normative keywords (**shall**, **shall not**, **may**) are fixed. Apply [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) to the rest of each statement:
+
+- Short, active sentences; one observable behavior per requirement.
+- Use terms from [/docs/70-79-business/business-rules/glossary](/docs/70-79-business/business-rules/glossary) exactly — do not substitute informal synonyms for defined concepts.
+- Do not weaken precision to simplify wording; split into two requirements instead of one long sentence.
+
 ## 5. Traceability philosophy
 Traceability exists so every behavior is justified by a source and connected to the rules and models that constrain it.
 
