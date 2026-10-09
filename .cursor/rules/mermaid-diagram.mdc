@@ -1,0 +1,9 @@
+---
+description: Add or fix Mermaid diagrams in redcab-docs Docusaurus pages — flows, state machines, and sequence diagrams with readable labels.
+globs: []
+alwaysApply: false
+---
+
+# /mermaid-diagram
+
+Read and follow the instructions in `.ai/skills/mermaid-diagram/SKILL.md`.

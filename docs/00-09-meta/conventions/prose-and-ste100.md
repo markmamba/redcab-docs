@@ -129,7 +129,8 @@ Explainers under `70-79-business/74-explainers/` are **non-normative**. They **m
 
 | Location | What to read |
 | --- | --- |
-| `redcab-docs` | This page |
+| `redcab-docs` | This page; skills in `redcab-docs/.ai/skills/` (`write-tier-a-prose`, `write-issue`, `write-doc`) |
+| `redcab-docs/.ai/instructions.md` | Docs repo agent conventions |
 | `red-cab-web/.ai/instructions.md` | Team plain English + Tier A |
 | `red-cab-api/.ai/instructions.md` | User-facing plain language + Tier A |
 | `write-implementation-spec` | Fill spec narrative sections with Tier A STE |

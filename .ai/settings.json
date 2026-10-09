@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**/redcab-docs/**)",
+      "Read(**/red-cab-api/**)",
+      "Read(**/red-cab-web/**)",
+      "Grep(**/redcab-docs/**)",
+      "Grep(**/red-cab-api/**)",
+      "Grep(**/red-cab-web/**)",
+      "Bash(npm run build:*)",
+      "Bash(npm run start:*)"
+    ],
+    "additionalDirectories": [
+      "../red-cab-api",
+      "../red-cab-web"
+    ],
+    "deny": [
+      "Read(**/.env*)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Read(**/secrets/**)"
+    ]
+  }
+}

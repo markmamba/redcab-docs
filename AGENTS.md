@@ -55,6 +55,20 @@ See [docs/60-69-initiatives/61-implementation-specs/README.md](docs/60-69-initia
 - Tier A/B rules: `docs/00-09-meta/conventions/prose-and-ste100.md`
 - Spec narrative, explainers, issues/PRs (via web `.ai/instructions.md`), and user-facing errors use Tier A unless noted.
 
+## AI skills (this repo)
+
+Conventions: `.ai/instructions.md`. Catalog: `.ai/README.md`.
+
+| Skill | Purpose |
+| --- | --- |
+| `write-tier-a-prose` | Tier A/B prose, bullets, naming; check scripts |
+| `write-issue` | GitHub issue bodies for api, web, or docs |
+| `write-doc` | Explainers, ADRs, bounded-context pages, conventions |
+| `system-design` | Design plan before an implementation spec |
+| `mermaid-diagram` | Mermaid blocks in Docusaurus pages |
+
+Per-issue shipping design uses `write-implementation-spec` / `review-implementation-spec` in `red-cab-api` or `red-cab-web`, not `write-doc`.
+
 ## Read first (new feature work)
 
 - `docs/70-79-business/71-business-rules/glossary.md`
