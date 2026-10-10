@@ -25,16 +25,16 @@ Evidence: `app/domains/payments/payout_queue_entries/create_service.rb`, `app/do
 
 | ID | Document | Why |
 | --- | --- | --- |
-| FR-PAY-005 | [requirements/functional-requirements/pay.md](../requirements/functional-requirements/pay.md) | Settlement release queue lifecycle |
-| FR-PAY-008 | [requirements/functional-requirements/pay.md](../requirements/functional-requirements/pay.md) | Idempotent settlement operations |
-| FR-PAY-013 | [requirements/functional-requirements/pay.md](../requirements/functional-requirements/pay.md) | Platform fee = snapshotted commission |
-| FR-PAY-015 | [requirements/functional-requirements/pay.md](../requirements/functional-requirements/pay.md) | Money state from verified provider events only |
-| ADR-015 | [architecture/decisions/adr-015-payment-custody-and-control-separation.md](../architecture/decisions/adr-015-payment-custody-and-control-separation.md) | Provider custody; adapter-only settlement |
-| LC-13, LC-14 | [architecture/booking-state-machine.md](../architecture/booking-state-machine.md) | Payout queue lifecycle |
-| FIN-4, FIN-11, FIN-12 | [domain/domain-models.md](../domain/domain-models.md) | Snapshot amounts; webhook truth |
-| INV-2, INV-12 | [business-rules/invariants.md](../business-rules/invariants.md) | Commission split; merchant destination |
+| FR-PAY-005 | [pay.md](/docs/70-79-business/requirements/functional-requirements/pay) | Settlement release queue lifecycle |
+| FR-PAY-008 | [pay.md](/docs/70-79-business/requirements/functional-requirements/pay) | Idempotent settlement operations |
+| FR-PAY-013 | [pay.md](/docs/70-79-business/requirements/functional-requirements/pay) | Platform fee = snapshotted commission |
+| FR-PAY-015 | [pay.md](/docs/70-79-business/requirements/functional-requirements/pay) | Money state from verified provider events only |
+| ADR-015 | [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) | Provider custody; adapter-only settlement |
+| LC-13, LC-14 | [Booking state machine](/docs/30-49-domains/patterns/booking-state-machine) | Payout queue lifecycle |
+| FIN-4, FIN-11, FIN-12 | [Domain models](/docs/30-49-domains/domain-models/domain-models) | Snapshot amounts; webhook truth |
+| INV-2, INV-12 | [Invariants](/docs/70-79-business/business-rules/invariants) | Commission split; merchant destination |
 | DBML | `red-cab-api/docs/db/payments.dbml` | `payments_payout_queue_entries` schema + dispatch index |
-| Spec #71 | [specs/71-payment-attempt-checkout.md](./71-payment-attempt-checkout.md) | Adapter-outside-transaction pattern |
+| Spec #71 | [api-71-payment-attempt-checkout](/docs/60-69-initiatives/implementation-specs/pay/api-71-payment-attempt-checkout) | Adapter-outside-transaction pattern |
 
 ## Design decisions
 

@@ -26,9 +26,9 @@ Observable qualities and constraints on system behavior.
 
 ## Reading guide
 - **ID** `NFR-<CAT>-<NNN>`; **Source** = PRD story / notes / rule origin; **Governs** = authoritative rules/models it conforms to; **Status** = `Approved | Provisional | Draft`.
-- Categories (per [./README.md](/docs/70-79-business/requirements) §3.1): `PERF`, `TIME`, `AVAIL`, `SEC`, `PRIV`, `I18N`, `AUD`, `A11Y`, `COMP`.
+- Categories (per [Requirements overview](/docs/70-79-business/requirements) §3.1): `PERF`, `TIME`, `AVAIL`, `SEC`, `PRIV`, `I18N`, `AUD`, `A11Y`, `COMP`.
 - "shall" = mandatory observable quality/constraint; "may" = optional. No implementation detail.
-- An NFR is a quality/constraint under which behavior occurs; the behavior itself lives in [./functional-requirements.md](/docs/70-79-business/requirements/functional-requirements).
+- An NFR is a quality/constraint under which behavior occurs; the behavior itself lives in [Functional requirements](/docs/70-79-business/requirements/functional-requirements).
 - NFRs may apply to one or many contexts; scope is stated in the requirement.
 
 ---

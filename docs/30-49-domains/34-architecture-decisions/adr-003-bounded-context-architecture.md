@@ -22,115 +22,13 @@ ADR for bounded context architecture.
 
 ---
 
-## TL;DR
-
-- Partition the domain into **6 core + 2 supporting** bounded contexts with exactly one owner per concept.
-- Geography and Search are modules inside Catalog, not separate contexts; Corporate is split from Booking for independent evolution.
-
-## About this document
-
-ADR for bounded context architecture.
-
-| Topic | Document |
-| --- | --- |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Domain | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-
----
-
-## TL;DR
-
-- Partition the domain into **6 core + 2 supporting** bounded contexts with exactly one owner per concept.
-- Geography and Search are modules inside Catalog, not separate contexts; Corporate is split from Booking for independent evolution.
-
-## About this document
-
-ADR for bounded context architecture.
-
-| Topic | Document |
-| --- | --- |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Domain | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-
----
-
-## TL;DR
-
-- Partition the domain into **6 core + 2 supporting** bounded contexts with exactly one owner per concept.
-- Geography and Search are modules inside Catalog, not separate contexts; Corporate is split from Booking for independent evolution.
-
-## About this document
-
-ADR for bounded context architecture.
-
-| Topic | Document |
-| --- | --- |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Domain | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-
----
-
-## TL;DR
-
-- Partition the domain into **6 core + 2 supporting** bounded contexts with exactly one owner per concept.
-- Geography and Search are modules inside Catalog, not separate contexts; Corporate is split from Booking for independent evolution.
-
-## About this document
-
-ADR for bounded context architecture.
-
-| Topic | Document |
-| --- | --- |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Domain | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-
----
-
-## TL;DR
-
-- Partition the domain into **6 core + 2 supporting** bounded contexts with exactly one owner per concept.
-- Geography and Search are modules inside Catalog, not separate contexts; Corporate is split from Booking for independent evolution.
-
-## About this document
-
-ADR for bounded context architecture.
-
-| Topic | Document |
-| --- | --- |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Domain | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-
----
-
-## TL;DR
-
-- Partition the domain into **6 core + 2 supporting** bounded contexts with exactly one owner per concept.
-- Geography and Search are modules inside Catalog, not separate contexts; Corporate is split from Booking for independent evolution.
-
-## About this document
-
-ADR for bounded context architecture.
-
-| Topic | Document |
-| --- | --- |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Domain | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-
----
-
 ## Status
 
 Accepted
 
 ## Context
 
-Per [ADR-001-modular-monolith.md](./adr-001-modular-monolith), Red Cab is one deployable over one database. That decision answers *how the system is packaged and run*; it does not by itself answer *how domain responsibility is divided inside that single process*. A modular monolith without internal boundaries degrades into an implicitly shared domain model with ambiguous ownership — it keeps the operational simplicity of one deployable while losing the design clarity that makes a small team able to reason about change. This ADR records the second decision: the system is partitioned into logical ownership boundaries, and explains the architectural forces that drove that partitioning.
+Per [ADR-001](./adr-001-modular-monolith), Red Cab is one deployable over one database. That decision answers *how the system is packaged and run*; it does not by itself answer *how domain responsibility is divided inside that single process*. A modular monolith without internal boundaries degrades into an implicitly shared domain model with ambiguous ownership — it keeps the operational simplicity of one deployable while losing the design clarity that makes a small team able to reason about change. This ADR records the second decision: the system is partitioned into logical ownership boundaries, and explains the architectural forces that drove that partitioning.
 
 The domain spans several business capabilities that **evolve on independent axes**. Provider verification grows with regulatory and trust requirements; the corporate quotation path grows toward PO numbers, credit terms, and consolidated invoicing; payments converge to an external rail's asynchronous settlement truth; reviews and ratings move at their own cadence. Capabilities that change for different reasons, driven by different actors, must not be bound into a single model where one change forces another.
 
@@ -143,7 +41,7 @@ Different capabilities also **enforce different invariants**, and an invariant c
 
 These invariants share a structural requirement: **a single source of truth per concept**. Price is computed in exactly one place (`PRC-1`); provider right-to-operate is decided in one place; the revenue split is frozen in one place. When a concept has one owner, **business logic cannot be duplicated** across modules and then drift, and **ownership ambiguity** — the question "who is allowed to change this?" having more than one answer — cannot arise.
 
-Finally, the partitioning exists to support **modular-monolith discipline**. Because there is no network boundary between modules to mechanically enforce separation, boundaries must be expressed as explicit ownership and published contracts. The same partitioning bounds the coupling risks already catalogued in [../contexts/index](/docs/30-49-domains/bounded-contexts) (`CR-1` through `CR-7`): the single deliberate shared-transaction seam (`CR-1`), pricing-authority leakage (`CR-2`), the payout/refund race (`CR-3`), cross-context cascades that must be events not direct writes (`CR-4`), notification fan-out (`CR-5`), Identity as universal upstream (`CR-6`), and the provisional corporate pre-payment lifecycle (`CR-7`). Each risk is a coupling that the boundary either forbids outright or confines to one documented place.
+Finally, the partitioning exists to support **modular-monolith discipline**. Because there is no network boundary between modules to mechanically enforce separation, boundaries must be expressed as explicit ownership and published contracts. The same partitioning bounds the coupling risks already catalogued in [Bounded contexts](/docs/30-49-domains/bounded-contexts) (`CR-1` through `CR-7`): the single deliberate shared-transaction seam (`CR-1`), pricing-authority leakage (`CR-2`), the payout/refund race (`CR-3`), cross-context cascades that must be events not direct writes (`CR-4`), notification fan-out (`CR-5`), Identity as universal upstream (`CR-6`), and the provisional corporate pre-payment lifecycle (`CR-7`). Each risk is a coupling that the boundary either forbids outright or confines to one documented place.
 
 ## Decision
 
@@ -171,7 +69,7 @@ The partitioning is governed by these rules, all already established:
 - **Cross-context table access is forbidden** — no context reads or writes another context's tables. The single deliberate exception is the guarded co-transactional seat-reservation seam (`CR-1`), which is a guarded *command*, not raw table access, and is documented as the only shared-transaction point in the system.
 - **Ownership is singular and explicit** — every concept has exactly one owning context; there is no shared-write concept and no concept owned by committee.
 
-This decision records *why responsibility is divided this way*; it changes nothing about the contexts, their ownership, their aggregates, or their integration styles, all of which remain as locked in [../contexts/index](/docs/30-49-domains/bounded-contexts).
+This decision records *why responsibility is divided this way*; it changes nothing about the contexts, their ownership, their aggregates, or their integration styles, all of which remain as locked in [Bounded contexts](/docs/30-49-domains/bounded-contexts).
 
 ## Consequences
 
@@ -208,12 +106,12 @@ Rejected because shared write-access to a concept is exactly the ownership ambig
 
 A microservice-first partitioning that splits each capability into its own independently deployed service.
 
-Rejected because it conflicts with [ADR-001-modular-monolith.md](./adr-001-modular-monolith): the atomic checkout unit and its guarded seat-reservation seam (`CON-1`, `CR-1`) would become a distributed transaction across a network, threatening `INV-3`, and it would impose distributed-systems operational and coordination cost disproportionate to the team size and MVP scope. The same ownership benefits are achieved in-process by logical bounded contexts; a context graduates to its own service only against a documented fitness function, never speculatively.
+Rejected because it conflicts with [ADR-001](./adr-001-modular-monolith): the atomic checkout unit and its guarded seat-reservation seam (`CON-1`, `CR-1`) would become a distributed transaction across a network, threatening `INV-3`, and it would impose distributed-systems operational and coordination cost disproportionate to the team size and MVP scope. The same ownership benefits are achieved in-process by logical bounded contexts; a context graduates to its own service only against a documented fitness function, never speculatively.
 
 ## Related Documents
 
-- [contexts/index](/docs/30-49-domains/bounded-contexts) — authoritative 6 core + 2 supporting structure, ownership boundaries, integration contracts, domain events, and the `CR-1`–`CR-7` coupling-risk register.
-- [ADR-001-modular-monolith.md](./adr-001-modular-monolith) — the single-deployable, single-database decision this partitioning lives inside.
-- [overview.md](/docs/30-49-domains/system-design/overview) — top-level architecture and principles.
-- [domain-models.md](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, snapshot philosophy, and consistency rules.
-- [api-design.md](/docs/30-49-domains/system-design/api-design) — how the published surfaces are exposed at the platform edge.
+- [Bounded contexts](/docs/30-49-domains/bounded-contexts) — authoritative 6 core + 2 supporting structure, ownership boundaries, integration contracts, domain events, and the `CR-1`–`CR-7` coupling-risk register.
+- [ADR-001](./adr-001-modular-monolith) — the single-deployable, single-database decision this partitioning lives inside.
+- [System design overview](/docs/30-49-domains/system-design/overview) — top-level architecture and principles.
+- [Domain models](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, snapshot philosophy, and consistency rules.
+- [API design](/docs/30-49-domains/system-design/api-design) — how the published surfaces are exposed at the platform edge.

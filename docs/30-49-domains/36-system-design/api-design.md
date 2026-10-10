@@ -10,156 +10,7 @@ description: API contracts, ownership boundaries, and interaction patterns.
 - Each capability is owned by **exactly one** context; price crosses boundaries only as `PriceBreakdown`; snapshots are never writable via the API.
 - Role-confined surfaces (Tourist, Corporate, Provider, Admin) consume context-owned capabilities — no client computes price.
 - External operations and event consumers must be **idempotent**; async reactions are eventually consistent.
-
-## About this document
-
-API as contracts, ownership boundaries, and interaction patterns — not endpoints, controllers, or payloads.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Top-level shape | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Requirements | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- The API is the **outer contract** of the modular monolith: web app + webhooks cross a network boundary; contexts integrate in-process via commands, queries, and events.
-- Each capability is owned by **exactly one** context; price crosses boundaries only as `PriceBreakdown`; snapshots are never writable via the API.
-- Role-confined surfaces (Tourist, Corporate, Provider, Admin) consume context-owned capabilities — no client computes price.
-- External operations and event consumers must be **idempotent**; async reactions are eventually consistent.
-
-## About this document
-
-API as contracts, ownership boundaries, and interaction patterns — not endpoints, controllers, or payloads.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Top-level shape | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Requirements | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- The API is the **outer contract** of the modular monolith: web app + webhooks cross a network boundary; contexts integrate in-process via commands, queries, and events.
-- Each capability is owned by **exactly one** context; price crosses boundaries only as `PriceBreakdown`; snapshots are never writable via the API.
-- Role-confined surfaces (Tourist, Corporate, Provider, Admin) consume context-owned capabilities — no client computes price.
-- External operations and event consumers must be **idempotent**; async reactions are eventually consistent.
-
-## About this document
-
-API as contracts, ownership boundaries, and interaction patterns — not endpoints, controllers, or payloads.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Top-level shape | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Requirements | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- The API is the **outer contract** of the modular monolith: web app + webhooks cross a network boundary; contexts integrate in-process via commands, queries, and events.
-- Each capability is owned by **exactly one** context; price crosses boundaries only as `PriceBreakdown`; snapshots are never writable via the API.
-- Role-confined surfaces (Tourist, Corporate, Provider, Admin) consume context-owned capabilities — no client computes price.
-- External operations and event consumers must be **idempotent**; async reactions are eventually consistent.
-
-## About this document
-
-API as contracts, ownership boundaries, and interaction patterns — not endpoints, controllers, or payloads.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Top-level shape | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Requirements | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- The API is the **outer contract** of the modular monolith: web app + webhooks cross a network boundary; contexts integrate in-process via commands, queries, and events.
-- Each capability is owned by **exactly one** context; price crosses boundaries only as `PriceBreakdown`; snapshots are never writable via the API.
-- Role-confined surfaces (Tourist, Corporate, Provider, Admin) consume context-owned capabilities — no client computes price.
-- External operations and event consumers must be **idempotent**; async reactions are eventually consistent.
-
-## About this document
-
-API as contracts, ownership boundaries, and interaction patterns — not endpoints, controllers, or payloads.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Top-level shape | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Requirements | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- The API is the **outer contract** of the modular monolith: web app + webhooks cross a network boundary; contexts integrate in-process via commands, queries, and events.
-- Each capability is owned by **exactly one** context; price crosses boundaries only as `PriceBreakdown`; snapshots are never writable via the API.
-- Role-confined surfaces (Tourist, Corporate, Provider, Admin) consume context-owned capabilities — no client computes price.
-- External operations and event consumers must be **idempotent**; async reactions are eventually consistent.
-
-## About this document
-
-API as contracts, ownership boundaries, and interaction patterns — not endpoints, controllers, or payloads.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Aggregates | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Top-level shape | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Requirements | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- The API is the **outer contract** of the modular monolith: web app + webhooks cross a network boundary; contexts integrate in-process via commands, queries, and events.
-- Each capability is owned by **exactly one** context; price crosses boundaries only as `PriceBreakdown`; snapshots are never writable via the API.
-- Role-confined surfaces (Tourist, Corporate, Provider, Admin) consume context-owned capabilities — no client computes price.
-- External operations and event consumers must be **idempotent**; async reactions are eventually consistent.
+- Context map and event catalog: [Bounded contexts](/docs/30-49-domains/bounded-contexts) and [Domain events](/docs/30-49-domains/bounded-contexts/domain-events).
 
 ## About this document
 
@@ -181,12 +32,12 @@ API as contracts, ownership boundaries, and interaction patterns — not endpoin
 
 ## Purpose
 
-The API is the **outer contract of the modular monolith** — the single guarded surface through which external Actors and external rails interact with Red Cab's domain logic. Internally the system is one Rails deployable partitioned into the locked 6 core + 2 supporting bounded contexts that integrate **in-process** ([./overview.md](/docs/30-49-domains/system-design/overview), [./contexts/index](/docs/30-49-domains/bounded-contexts)). The API is therefore two things at once, and this document keeps them distinct:
+The API is the **outer contract of the modular monolith** — the single guarded surface through which external Actors and external rails interact with Red Cab's domain logic. Internally the system is one Rails deployable partitioned into the locked 6 core + 2 supporting bounded contexts that integrate **in-process** ([System design overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts)). The API is therefore two things at once, and this document keeps them distinct:
 
 - The **external API**: the boundary the React web app and external systems (payment-provider events, email/SMS rails) cross to reach the platform. This is a network boundary.
 - The **internal context contracts**: the commands, queries, and domain events through which contexts cooperate. These are **not** network APIs — there is no network boundary between contexts ([Modular Monolith First](/docs/30-49-domains/system-design/overview#modular-monolith-first)) — but they are real contracts with the same discipline: a context is reached only through its published surface, never by reaching into its tables.
 
-The API exists to deliver the platform's observable behavior ([/docs/70-79-business/requirements/functional-requirements](/docs/70-79-business/requirements/functional-requirements)) **while protecting the small set of high-value invariants** the architecture is built around: frozen revenue splits (`INV-1`, `INV-2`), never-overbooked inventory (`INV-3`, `CON-1..3`), verified-only participation and reviews (`INV-5`, `INV-6`, `INV-7`), and a strict booking lifecycle (`LC-1..6`). Where those invariants meet the boundary, the API is shaped to uphold them rather than expose a way around them.
+The API exists to deliver the platform's observable behavior ([Functional requirements](/docs/70-79-business/requirements/functional-requirements)) **while protecting the small set of high-value invariants** the architecture is built around: frozen revenue splits (`INV-1`, `INV-2`), never-overbooked inventory (`INV-3`, `CON-1..3`), verified-only participation and reviews (`INV-5`, `INV-6`, `INV-7`), and a strict booking lifecycle (`LC-1..6`). Where those invariants meet the boundary, the API is shaped to uphold them rather than expose a way around them.
 
 This document is **subordinate** to the documents above: where it appears to overlap an invariant, a lifecycle rule, the pricing authority, or a context/aggregate boundary, those documents govern and this one conforms (mirroring the precedence rule in [/docs/70-79-business/requirements](/docs/70-79-business/requirements) §9). It contains no decisions of its own; where the contract shape depends on an open decision, the choice is deferred to the relevant `AMB-###` (see [Open API Decisions](#open-api-decisions)).
 
@@ -197,7 +48,7 @@ This document is **subordinate** to the documents above: where it appears to ove
 The load-bearing principles every API contract must uphold. Each maps to a named rule or an established architecture principle and is stated as a constraint on contracts and boundaries, not on implementation.
 
 ## API follows bounded-context ownership
-Every capability is exposed by **exactly one** owning context — the context that owns the underlying aggregate and its source-of-truth concepts ([/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §3). A capability is offered through that context's guarded surface (its commands, queries, and events) and never by another context reaching across the boundary. No capability is owned by two contexts; cross-context effects are expressed through the published contracts in [Cross-Context API Boundaries](#cross-context-api-boundaries), not by shared ownership. This mirrors the requirement-ownership rule ([/docs/70-79-business/requirements](/docs/70-79-business/requirements) §6): one owner per concept, lateral links for everything else.
+Every capability is exposed by **exactly one** owning context — the context that owns the underlying aggregate and its source-of-truth concepts ([Domain models](/docs/30-49-domains/domain-models/domain-models) §3). A capability is offered through that context's guarded surface (its commands, queries, and events) and never by another context reaching across the boundary. No capability is owned by two contexts; cross-context effects are expressed through the published contracts in [Cross-Context API Boundaries](#cross-context-api-boundaries), not by shared ownership. This mirrors the requirement-ownership rule ([Requirements](/docs/70-79-business/requirements) §6): one owner per concept, lateral links for everything else.
 
 ## Commands vs Queries separation
 The contract surface separates **state-changing intent** (commands) from **side-effect-free reads** (queries). A command requests a guarded state transition that the owning context validates against its invariants and lifecycle rules before applying; a query returns a view of owned state or a computed value contract and never mutates. This separation is what lets the lifecycle and concurrency guarantees hold: a Booking transition (`LC-1..6`), a guarded seat reservation (`CON-1`), or a commission-rate change (`PAY-2`) is a command the owning context fully governs, while discovery, pricing display, and the Admin Payments Overview are queries that observe without perturbing state.
@@ -209,13 +60,13 @@ Price crosses the API only as a **computed value contract** (the `PriceBreakdown
 Facts whose meaning must not change after checkout — the Price Snapshot, Commission Snapshot, and Cancellation Policy Snapshot — are **owned by the Booking once captured** (`INV-1`, `PAY-2`, `PAY-4`, `BKG-8`). The API exposes **no capability to edit a snapshot**. Downstream contexts read snapshots through published contracts and never receive a write path to them; corrections are modeled as *new* facts (a refund is a new movement, not an edit of a charge — [Snapshot Pattern](/docs/30-49-domains/system-design/overview#snapshot-pattern)). The immutability surface itself (which facts are snapshotted and at which instant) is governed by the financial docs and remains open in part (`AMB-007`, `AMB-010`).
 
 ## Role-Based Access
-Every contract is reachable only by Actors whose Role permits it ([/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §3.1; `FR-IAM-009`, `NFR-SEC-004`). Authorization is evaluated against the IAM-issued principal and Role on every command and query; the consumer surface a request arrives on does not by itself grant authority. Role boundaries are detailed in [API Security Model](#api-security-model).
+Every contract is reachable only by Actors whose Role permits it ([Domain models](/docs/30-49-domains/domain-models/domain-models) §3.1; `FR-IAM-009`, `NFR-SEC-004`). Authorization is evaluated against the IAM-issued principal and Role on every command and query; the consumer surface a request arrives on does not by itself grant authority. Role boundaries are detailed in [API Security Model](#api-security-model).
 
 ## Idempotency
-Externally triggered operations that can be retried or redelivered — money operations and event reactions especially — are **idempotent and uniquely keyed** so a retry or duplicate signal cannot double-apply (`FIN-10`, [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §5). This is a contract obligation, not only an implementation detail: a webhook ingestion, a payout queuing, a notification dispatch, a seat restoration, and a creation command must each be safe to receive more than once (`AMB-012` for seat-restoration edge cases). Duplicate delivery yields the same outcome, never a second charge, refund, payout, booking, or notification.
+Externally triggered operations that can be retried or redelivered — money operations and event reactions especially — are **idempotent and uniquely keyed** so a retry or duplicate signal cannot double-apply (`FIN-10`, [Domain models](/docs/30-49-domains/domain-models/domain-models) §5). This is a contract obligation, not only an implementation detail: a webhook ingestion, a payout queuing, a notification dispatch, a seat restoration, and a creation command must each be safe to receive more than once (`AMB-012` for seat-restoration edge cases). Duplicate delivery yields the same outcome, never a second charge, refund, payout, booking, or notification.
 
 ## Eventual Consistency for asynchronous reactions
-State-changing invariants that must hold together are synchronous and co-transactional; **cross-context reactions and notifications are asynchronous** and only eventually consistent ([./contexts/index](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §5). The contract consequence is that an asynchronous reaction (payout queuing, rating recalculation, listing pause/restore, notification) is **not** part of the synchronous response to the command that triggered it; consumers observe these effects after the fact, must tolerate delay and reordering, and a failed reaction never rolls back the committed transition that emitted it (`FIN-11`).
+State-changing invariants that must hold together are synchronous and co-transactional; **cross-context reactions and notifications are asynchronous** and only eventually consistent ([Bounded contexts](/docs/30-49-domains/bounded-contexts), [Domain models](/docs/30-49-domains/domain-models/domain-models) §5). The contract consequence is that an asynchronous reaction (payout queuing, rating recalculation, listing pause/restore, notification) is **not** part of the synchronous response to the command that triggered it; consumers observe these effects after the fact, must tolerate delay and reordering, and a failed reaction never rolls back the committed transition that emitted it (`FIN-11`).
 
 ## Backward Compatibility expectations
 Because contexts integrate through published contracts, **a contract is a commitment**: the value contracts that cross boundaries (`PriceBreakdown`, `AvailabilitySnapshot`, the Provider Status read, the Commission Snapshot, the completion fact, recipient language) and the external SPA surface are expected to evolve **additively and non-breakingly**, so a change in one context does not ripple into its consumers (the Identity-as-universal-upstream risk CR-6, and the pricing/snapshot contracts). Breaking change is the exception, handled under [Versioning Strategy](#versioning-strategy); the default expectation is that existing consumers keep working.
@@ -224,7 +75,7 @@ Because contexts integrate through published contracts, **a contract is a commit
 
 ## Consumer Surfaces
 
-The external API serves a single React Router web application presenting **role-confined surfaces** over an authenticated session ([React Router Web Application](/docs/30-49-domains/system-design/overview#react-router-web-application)). Each surface is a consumer of the API, gated by Role (`FR-IAM-009`, `NFR-SEC-004`) and rendered in the Actor's Language Preference (`OPR-9`). No surface holds financial truth or computes price; each consumes the contracts the owning contexts expose. Actor namespaces and route structure are defined in [../engineering/domain-to-code-mapping.md](/docs/20-29-backend/conventions/domain-to-code-mapping).
+The external API serves a single React Router web application presenting **role-confined surfaces** over an authenticated session ([React Router Web Application](/docs/30-49-domains/system-design/overview#react-router-web-application)). Each surface is a consumer of the API, gated by Role (`FR-IAM-009`, `NFR-SEC-004`) and rendered in the Actor's Language Preference (`OPR-9`). No surface holds financial truth or computes price; each consumes the contracts the owning contexts expose. Actor namespaces and route structure are defined in [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping).
 
 ## Tourist App
 The B2C consumer surface for the **Tourist** Role. It consumes Catalog discovery and pricing queries (location hierarchy, listings, the `PriceBreakdown`, availability), CheckoutSession creation and payment, Booking lifecycle commands/queries, Payments outcomes as they pertain to the buyer (charge result, refund status), and Reviews submission for completed bookings. It is the surface across which a Tourist browses, initiates checkout (Fulfillment Payload capture), pays, manages bookings, and reviews. Booking initiation requires an authenticated Tourist or Corporate principal regardless of how much browsing is open to Visitors (`AMB-022`); the default surface language is EN (`OPR-9`, default open under `AMB-024`).
@@ -242,7 +93,7 @@ The internal operations surface for **Platform Admin**, authenticated via a **se
 
 ## Context-Owned API Capabilities
 
-Each context exposes a guarded set of **business capabilities** — commands, queries, and published events — owned solely by it. The following describes *what each context is responsible for offering and the contracts it owns*, not URLs, routes, or payloads. Ownership and event names are authoritative in [./contexts/index](/docs/30-49-domains/bounded-contexts) and [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models).
+Each context exposes a guarded set of **business capabilities** — commands, queries, and published events — owned solely by it. The following describes *what each context is responsible for offering and the contracts it owns*, not URLs, routes, or payloads. Ownership and event names are authoritative in [Bounded contexts](/docs/30-49-domains/bounded-contexts) and [Domain models](/docs/30-49-domains/domain-models/domain-models).
 
 ## IAM
 The dependency-root supporting context. **Owns** the authenticated marketplace **Account** (Tourist/Corporate/Provider Roles), the separate **Admin** principal, and Language Preference, exposing a deliberately minimal contract consumed by every other context (CR-6). Marketplace capabilities: account registration and authentication, session/principal resolution, Role checking, Language Preference capture/read. Admin capabilities: Admin authentication and session resolution for `/team`. It publishes `AccountRegistered`, `AccountLocked`, and `LanguagePreferenceChanged`. It is the single authority that answers "who is acting"; marketplace Role is `Tourist | Corporate | Provider` only — Admin is a distinct principal. Authentication methods and guest scope are open (`AMB-021`, `AMB-022`).
@@ -262,7 +113,7 @@ The dependency-root supporting context. **Owns** the authenticated marketplace *
 It publishes `ListingPublished/Paused/Unlisted`, `SlotCapacityChanged`, and consumes license and geography subtree deactivation cascades and Reviews' `RatingRecalculated` (for display). Consumers must never recompute price or reach the seat counter except through these contracts (CR-1, CR-2).
 
 ## Booking
-**Owns** Booking existence and lifecycle state and the immutable money facts (Price/Commission/Cancellation snapshots), plus Passenger Manifest and the Bundle link. Capabilities: the **checkout command** (the critical atomic unit — snapshot freeze + seat reservation + booking creation commit together or not at all, `BKG-2`, `CON-1`), the **lifecycle transition commands** governed by [./booking-state-machine.md](/docs/30-49-domains/patterns/booking-state-machine) (`LC-1..6`), the **`create_booking_from_quote`** command consumed by Corporate across an ACL, and manifest submission on confirmed group bookings (`BKG-6`). It publishes `BookingCreated/Confirmed/Cancelled/Completed/Refunded`, the **Commission Snapshot** contract that Payments consumes, and the minimal **completion fact** `{ booking_id, tourist_id, listing_id, completed_at }` that Reviews consumes. It exposes **no contract to mutate a snapshot**. Snapshot instant, auto-confirm timing, and missing lifecycle paths remain open (`AMB-007`, `AMB-011`, `AMB-013`, `AMB-014`); capture timing reopened (`AMB-039`).
+**Owns** Booking existence and lifecycle state and the immutable money facts (Price/Commission/Cancellation snapshots), plus Passenger Manifest and the Bundle link. Capabilities: the **checkout command** (the critical atomic unit — snapshot freeze + seat reservation + booking creation commit together or not at all, `BKG-2`, `CON-1`), the **lifecycle transition commands** governed by [Booking state machine](/docs/30-49-domains/patterns/booking-state-machine) (`LC-1..6`), the **`create_booking_from_quote`** command consumed by Corporate across an ACL, and manifest submission on confirmed group bookings (`BKG-6`). It publishes `BookingCreated/Confirmed/Cancelled/Completed/Refunded`, the **Commission Snapshot** contract that Payments consumes, and the minimal **completion fact** `{ booking_id, tourist_id, listing_id, completed_at }` that Reviews consumes. It exposes **no contract to mutate a snapshot**. Snapshot instant, auto-confirm timing, and missing lifecycle paths remain open (`AMB-007`, `AMB-011`, `AMB-013`, `AMB-014`); capture timing reopened (`AMB-039`).
 
 ## Payments
 **Owns** money movement and the Commission Rate setting. Capabilities: charge/refund/settlement-release initiation against external rails, the **commission-rate read** consumed by Booking at checkout to populate its snapshot, the **Commission Rate setting command** for Admin (`PAY-2`), provider-event reconciliation, and the **Payments Overview query** for Admin (`FIN-3`). It consumes the Booking Commission Snapshot **read-only and never authors or mutates it** ([Money Facts vs Money Movement](/docs/30-49-domains/system-design/overview#money-facts-vs-money-movement)). Custody sits with the licensed payment provider (`INV-13`, `PAY-13`, [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation)). It publishes `PaymentSucceeded/Failed`, `RefundCompleted`, `PayoutQueued`, `PayoutDisbursed`, `PayoutFailed`, and `BankTransferConfirmed`. All money operations are idempotent and uniquely keyed (`FIN-10`) and converge to provider-event truth (`FIN-11`). Payout queue lifecycle affirmed (`AMB-003`–`005`); remaining open: refund-failure (`AMB-006`), post-settlement disputes (`AMB-008`), capture timing (`AMB-039`), provider selection (`AMB-040`).
@@ -280,7 +131,7 @@ The supporting, event-driven outbound adapter. **Owns** dispatch records and tem
 
 ## Cross-Context API Boundaries
 
-How contexts cooperate across their contracts, and who owns what at each seam. The governing rule is from [./contexts/index](/docs/30-49-domains/bounded-contexts): **state-changing invariants that must hold together are synchronous and co-transactional; cross-context reactions are asynchronous.** Contexts refer to one another **by identity only** and depend on a published contract or a snapshot, never on another context's internals ([/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §2).
+How contexts cooperate across their contracts, and who owns what at each seam. The governing rule is from [Bounded contexts](/docs/30-49-domains/bounded-contexts): **state-changing invariants that must hold together are synchronous and co-transactional; cross-context reactions are asynchronous.** Contexts refer to one another **by identity only** and depend on a published contract or a snapshot, never on another context's internals ([Domain models](/docs/30-49-domains/domain-models/domain-models) §2).
 
 ## Catalog → Booking
 - **Relationship:** Customer/Supplier (Catalog upstream). Two synchronous contracts cross this seam: `calculate_quote(...) → PriceBreakdown`, and the **guarded seat-reservation command** invoked inside Booking's checkout transaction.
@@ -309,10 +160,10 @@ How contexts cooperate across their contracts, and who owns what at each seam. T
 The four interaction styles the API uses, and the contract obligations of each. These are the mechanics by which the principles and boundaries above are realized.
 
 ## Synchronous command/query interactions
-A caller (an external surface, or one context invoking another in-process) issues a command or query and **awaits the result**. Used where an invariant must hold within the operation: the atomic checkout unit (`BKG-2`, `CON-1`), `calculate_quote(...)` and availability checks, the guarded seat reserve, Corporate → Booking conversion, Payments reading the Commission Snapshot, and IAM principal resolution ([./contexts/index](/docs/30-49-domains/bounded-contexts) "Interaction styles"). Commands change guarded state and validate against invariants/lifecycle before applying; queries are side-effect-free. The synchronous response carries only the outcome of the guarded operation — **not** the asynchronous reactions it may trigger.
+A caller (an external surface, or one context invoking another in-process) issues a command or query and **awaits the result**. Used where an invariant must hold within the operation: the atomic checkout unit (`BKG-2`, `CON-1`), `calculate_quote(...)` and availability checks, the guarded seat reserve, Corporate → Booking conversion, Payments reading the Commission Snapshot, and IAM principal resolution ([Bounded contexts](/docs/30-49-domains/bounded-contexts) "Interaction styles"). Commands change guarded state and validate against invariants/lifecycle before applying; queries are side-effect-free. The synchronous response carries only the outcome of the guarded operation — **not** the asynchronous reactions it may trigger.
 
 ## Domain event publication
-Contexts publish **past-tense, in-process domain events** carrying identities and immutable facts, never references to another context's live aggregate ([/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §2, §6). Events are the asynchronous spine: Notifications consumes the full catalog; cross-context cascades (license expiry → pause; district deactivation → unlist; completion → enable review; completion → queue payout) flow as events. **Every consumer must be idempotent** (`FIN-10`) because events can be redelivered or arrive out of order; a failed reaction is retried independently and never rolls back the committed transition that emitted it (`FIN-11`). The authoritative producer/consumer mapping is the [domain events catalog](/docs/30-49-domains/bounded-contexts/domain-events).
+Contexts publish **past-tense, in-process domain events** carrying identities and immutable facts, never references to another context's live aggregate ([Domain models](/docs/30-49-domains/domain-models/domain-models) §2, §6). Events are the asynchronous spine: Notifications consumes the full catalog; cross-context cascades (license expiry → pause; district deactivation → unlist; completion → enable review; completion → queue payout) flow as events. **Every consumer must be idempotent** (`FIN-10`) because events can be redelivered or arrive out of order; a failed reaction is retried independently and never rolls back the committed transition that emitted it (`FIN-11`). The authoritative producer/consumer mapping is the [domain events catalog](/docs/30-49-domains/bounded-contexts/domain-events).
 
 ## Webhook ingestion
 The external **payment provider** delivers **settlement truth asynchronously via events** (charge, settlement, refund, dispute). Ingestion is an external boundary owned by Payments: provider events are **authoritative for settlement outcomes**, and internal Payments state **converges to them** (`FIN-11`, [External Integrations](/docs/30-49-domains/system-design/overview#external-integrations)). Ingestion must be idempotent and uniquely keyed so duplicate or out-of-order events cannot double-apply (`FIN-10`); divergence surfaces as a reconcilable fact for operator action, never a silent loss. Provider payload shapes are normalized at the adapter boundary and never reach the domain ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) C6). Corporate bank-transfer funds are collected through a provider-issued virtual account and confirmed by provider event on the same path as card (`PAY-9`). **No money-moving state change may be driven by a client-supplied signal, including a return redirect** (`FIN-13`).
@@ -327,7 +178,7 @@ Asynchronous reactions and scheduled work run in the background-job runtime **af
 How the boundary establishes *who is acting*, *what they may do*, *which surfaces they reach*, and *what is recorded*. Security is evaluated at the boundary on every command and query; no surface confers authority by itself.
 
 ## Authentication
-Authentication is owned by **IAM** and established over a server-issued authenticated session for the web app ([tech-stack](/docs/30-49-domains/system-design/tech-stack), [./contexts/index](/docs/30-49-domains/bounded-contexts) §7). Every API interaction resolves to an **IAM-issued principal** before any context acts; contexts consume that principal by identity and never re-authenticate. External-rail callers (webhooks) are authenticated as integrations at the Payments ingestion boundary rather than as Actor principals. The **authentication methods** themselves (email/password, Google sign-in, captcha on registration) are unresolved and not assumed here (`AMB-021`); whether and how far unauthenticated Visitors may reach discovery contracts is likewise open (`AMB-022`).
+Authentication is owned by **IAM** and established over a server-issued authenticated session for the web app ([tech-stack](/docs/30-49-domains/system-design/tech-stack), [Bounded contexts](/docs/30-49-domains/bounded-contexts) §7). Every API interaction resolves to an **IAM-issued principal** before any context acts; contexts consume that principal by identity and never re-authenticate. External-rail callers (webhooks) are authenticated as integrations at the Payments ingestion boundary rather than as Actor principals. The **authentication methods** themselves (email/password, Google sign-in, captcha on registration) are unresolved and not assumed here (`AMB-021`); whether and how far unauthenticated Visitors may reach discovery contracts is likewise open (`AMB-022`).
 
 ## Authorization
 Authorization is evaluated against the resolved principal type — marketplace **Role** (`Tourist | Corporate | Provider`) or **Admin principal** — and, where relevant, additional domain gates owned by the responsible context — e.g. Catalog authoring requires Provider Status `Approved`, a valid license, and a verified Provider Merchant Account to publish (`INV-6`, `INV-7`, `INV-12`, `LC-8`), and a Review requires a completed booking owned by the requesting Tourist (`INV-5`, `BKG-7`). A command is rejected when the principal's authorization or domain state does not permit it. Authorization is **owned by the context that owns the capability**: IAM answers identity and Role; Admin authorization is evaluated against the Admin principal; each context applies its own domain-state gates on top.
@@ -351,7 +202,7 @@ Stated as architectural expectations, not a chosen scheme. The two seams version
 - **Internal context contracts** are versioned by **discipline, not distribution**. Because contexts share one deployable and one database, a contract change is applied with its consumers in the same release; the expectation is **additive, non-breaking evolution** of the published value contracts (`PriceBreakdown`, `AvailabilitySnapshot`, the Provider Status read, the Commission Snapshot, the completion fact) so a change in an owning context does not force a coordinated rewrite of its consumers. The minimal IAM contract is held especially stable (CR-6). A breaking change to an internal contract is a deliberate, reviewed event that updates the owning context and all consumers together, never a silent reshape.
 - **The external SPA surface and webhook boundary** are network contracts with independent consumers (the deployed SPA, external rails). The expectation is **backward compatibility by default**: existing clients keep working across releases, changes are additive where possible, and a genuinely breaking change is introduced behind an explicit, separately addressable contract version with a migration path rather than by mutating the existing one. Webhook ingestion must additionally tolerate the external rail's own contract evolution and remain idempotent across it (`FIN-10`).
 
-The **concrete versioning mechanism** (URI versioning, header negotiation, etc.) is an implementation choice below the architecture line and is deliberately not fixed here, consistent with the tech-stack doc's "out of scope" stance ([tech-stack](/docs/30-49-domains/system-design/tech-stack#out-of-scope-for-this-document)). No versioning approach may change the bounded-context or aggregate **boundaries** in [./contexts/index](/docs/30-49-domains/bounded-contexts) and [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models).
+The **concrete versioning mechanism** (URI versioning, header negotiation, etc.) is an implementation choice below the architecture line and is deliberately not fixed here, consistent with the tech-stack doc's "out of scope" stance ([Tech stack](/docs/30-49-domains/system-design/tech-stack#out-of-scope-for-this-document)). No versioning approach may change the bounded-context or aggregate **boundaries** in [Bounded contexts](/docs/30-49-domains/bounded-contexts) and [Domain models](/docs/30-49-domains/domain-models/domain-models).
 
 ---
 
@@ -366,7 +217,7 @@ A request that is malformed or violates input constraints (e.g. password strengt
 A request that is well-formed but would violate an invariant or lifecycle rule — publishing a listing with zero photos (`INV-10`), creating a listing as a non-Approved Provider (`INV-6`, `LC-8`), an illegal Booking transition (`LC-1..6`), reviewing a non-completed booking (`INV-5`), paying without agreeing to the cancellation policy (`BKG-1`) — is **refused by the owning context** as a domain rejection, distinct from a validation error. The invariant is upheld by refusing the operation, never by applying a weakened version of it (requirements cannot override invariants, [/docs/70-79-business/requirements](/docs/70-79-business/requirements) §9).
 
 ## Concurrency conflicts
-Simultaneous attempts on the same state resolve to **a single applied outcome**; the rest observe the updated state and are rejected. The canonical case is last-seat contention: at most enough reservations succeed to reach `available_seats = 0`, and further attempts receive a **"now fully booked"** outcome (`CON-2`, `CON-3`, `FR-BKG-006`). Likewise, simultaneous Booking transition attempts resolve to one applied transition; the others are rejected as invalid against the new state ([./booking-state-machine.md](/docs/30-49-domains/patterns/booking-state-machine)). Conflicts are a normal, definite outcome the contract surfaces promptly (`NFR-PERF-003`), not an error to retry blindly.
+Simultaneous attempts on the same state resolve to **a single applied outcome**; the rest observe the updated state and are rejected. The canonical case is last-seat contention: at most enough reservations succeed to reach `available_seats = 0`, and further attempts receive a **"now fully booked"** outcome (`CON-2`, `CON-3`, `FR-BKG-006`). Likewise, simultaneous Booking transition attempts resolve to one applied transition; the others are rejected as invalid against the new state ([Booking state machine](/docs/30-49-domains/patterns/booking-state-machine)). Conflicts are a normal, definite outcome the contract surfaces promptly (`NFR-PERF-003`), not an error to retry blindly.
 
 ## External integration failures
 Failures of external rails (charge declined, payout/refund failure, webhook delays, bank-transfer non-receipt) are handled under **convergence, not rollback**. A failed payment yields no Booking and no seat reservation (`PAY-5`, `FIN-9`) — the synchronous guarantee. After a committed transition, an external failure **never rolls it back**; it surfaces as a **reconcilable Payments fact** for operator action and the operation is retried idempotently (`FIN-10`, `FIN-11`). The platform does not assert a refunded/paid outcome as financially final until the rail confirms it. The exact failure-state representations (payout-failed, refund-failed, dispute) are open (`AMB-005`, `AMB-006`, `AMB-008`).
@@ -398,4 +249,4 @@ Unresolved decisions that shape API contracts. Each is tracked in [/docs/70-79-b
 - **`AMB-024` — language defaults / supported languages (P1)** and **`AMB-025` — currency (P1).** Refine the language and money value contracts within their owning contexts.
 - **`AMB-016` — login lockout parameters (P2).** Tune IAM contract behavior without changing its shape.
 
-> Note on scope: no open decision above changes the context or aggregate **boundaries** defined in [./contexts/index](/docs/30-49-domains/bounded-contexts) and [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models). Each affects a contract's shape, a value object, a lifecycle detail, or an external-rail topology within a single owning context — which is precisely why the boundaries are drawn where they are.
+> Note on scope: no open decision above changes the context or aggregate **boundaries** defined in [Bounded contexts](/docs/30-49-domains/bounded-contexts) and [Domain models](/docs/30-49-domains/domain-models/domain-models). Each affects a contract's shape, a value object, a lifecycle detail, or an external-rail topology within a single owning context — which is precisely why the boundaries are drawn where they are.

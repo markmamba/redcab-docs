@@ -74,7 +74,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 **red-cab-api**
 
-- [x] `docs/db/catalog.dbml` designed and reviewed against [../architecture/data-model.md](/docs/30-49-domains/data-model) §5.3 / §6.3
+- [x] `docs/db/catalog.dbml` designed and reviewed against [Data model](/docs/30-49-domains/data-model) §5.3 / §6.3
 - [x] `docs/db/bookings.dbml` designed (`checkout_sessions`, Booking + snapshots + fulfillment payload; buyer = tourist profile)
 - [x] `docs/db/payments.dbml` designed (commission rate, provider merchant account, charge, payout queue, refund stub)
 - [x] `docs/db/redcab.dbml` updated to include Phase 1 tables

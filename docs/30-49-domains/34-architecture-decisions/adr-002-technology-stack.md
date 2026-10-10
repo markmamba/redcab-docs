@@ -23,114 +23,6 @@ ADR for locked technology stack selection.
 
 ---
 
-## TL;DR
-
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
-- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Technology serves the domain model; stack does not define architecture boundaries.
-
-## About this document
-
-ADR for locked technology stack selection.
-
-| Topic | Document |
-| --- | --- |
-| Tech stack detail | [Technology Stack](/docs/30-49-domains/system-design/tech-stack) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Engineering | [Engineering](/docs/90-99-engineering-meta) |
-
----
-
-## TL;DR
-
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
-- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Technology serves the domain model; stack does not define architecture boundaries.
-
-## About this document
-
-ADR for locked technology stack selection.
-
-| Topic | Document |
-| --- | --- |
-| Tech stack detail | [Technology Stack](/docs/30-49-domains/system-design/tech-stack) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Engineering | [Engineering](/docs/90-99-engineering-meta) |
-
----
-
-## TL;DR
-
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
-- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Technology serves the domain model; stack does not define architecture boundaries.
-
-## About this document
-
-ADR for locked technology stack selection.
-
-| Topic | Document |
-| --- | --- |
-| Tech stack detail | [Technology Stack](/docs/30-49-domains/system-design/tech-stack) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Engineering | [Engineering](/docs/90-99-engineering-meta) |
-
----
-
-## TL;DR
-
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
-- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Technology serves the domain model; stack does not define architecture boundaries.
-
-## About this document
-
-ADR for locked technology stack selection.
-
-| Topic | Document |
-| --- | --- |
-| Tech stack detail | [Technology Stack](/docs/30-49-domains/system-design/tech-stack) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Engineering | [Engineering](/docs/90-99-engineering-meta) |
-
----
-
-## TL;DR
-
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
-- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Technology serves the domain model; stack does not define architecture boundaries.
-
-## About this document
-
-ADR for locked technology stack selection.
-
-| Topic | Document |
-| --- | --- |
-| Tech stack detail | [Technology Stack](/docs/30-49-domains/system-design/tech-stack) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Engineering | [Engineering](/docs/90-99-engineering-meta) |
-
----
-
-## TL;DR
-
-- **Rails API** modular monolith, **React Router v7** SSR (JavaScript), **PostgreSQL**, email-first notifications.
-- **Payments superseded:** the Stripe Connect lock is withdrawn on the payments dimension. The payment provider is not selected (`AMB-040`) and is integrated through a capability-declaring adapter — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Technology serves the domain model; stack does not define architecture boundaries.
-
-## About this document
-
-ADR for locked technology stack selection.
-
-| Topic | Document |
-| --- | --- |
-| Tech stack detail | [Technology Stack](/docs/30-49-domains/system-design/tech-stack) |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Engineering | [Engineering](/docs/90-99-engineering-meta) |
-
----
-
 ## Status
 
 Accepted
@@ -140,7 +32,7 @@ Accepted
 Red Cab is a two-sided marketplace earning a commission per booking, with two demand channels (instant B2C card checkout and negotiated Corporate furikomi invoicing) and an external financial rail whose settlement truth is authoritative and asynchronous. The technology stack is selected to serve the architecture already established, under these forces:
 
 - **Need for rapid MVP delivery.** A small operator must ship a verified marketplace quickly; the stack favors a high-productivity, batteries-included path over assembling many independent parts.
-- **Modular monolith architecture.** Per [ADR-001-modular-monolith.md](./adr-001-modular-monolith), the system is one deployable over one database, partitioned into the locked 6 core + 2 supporting bounded contexts that integrate in-process. The stack must host all contexts as logical modules with guarded surfaces, not as distributed services.
+- **Modular monolith architecture.** Per [ADR-001](./adr-001-modular-monolith), the system is one deployable over one database, partitioned into the locked 6 core + 2 supporting bounded contexts that integrate in-process. The stack must host all contexts as logical modules with guarded surfaces, not as distributed services.
 - **Strong transactional consistency.** The most load-bearing requirement is the atomic checkout unit — snapshot freeze + seat reservation + booking creation commit together or not at all (`CON-1`) — including the one deliberate cross-context shared transaction, Booking↔Catalog seat reservation (`CR-1`). The stack must make this possible without a distributed protocol, while upholding inventory invariants (`INV-3`) and immutable Booking snapshots (`INV-1`).
 - **Small engineering team.** Coordination cost must stay low; one runtime and one data store minimize operational and cognitive overhead.
 - **Japanese market requirements.** Formal corporate documents (Omitsumorisho/Seikyusho) must itemize the 10% consumption tax (`PAY-10`) and render correctly as Japanese commercial documents; whole-yen JPY is the only money (`PAY-1`).
@@ -149,7 +41,7 @@ Red Cab is a two-sided marketplace earning a commission per booking, with two de
 
 ## Decision
 
-The stack is recorded as already locked in [../tech-stack.md](/docs/30-49-domains/system-design/tech-stack):
+The stack is recorded as already locked in [Tech stack](/docs/30-49-domains/system-design/tech-stack):
 
 - **Ruby on Rails (API mode) backend** — a single deployable hosting the 6 core + 2 supporting contexts as in-process logical modules; synchronous commands/queries where an invariant must hold within the operation, asynchronous domain events for cross-context reactions.
 - **React Router v7 (SSR) frontend** — one web application presenting three role-confined surfaces (Tourist App, Client Portal, Admin Panel) over an authenticated session; it holds no financial truth and never computes price, consuming the `PriceBreakdown` from the single pricing authority (`PRC-1`). JavaScript, not TypeScript.
@@ -191,7 +83,7 @@ Rejected because:
 
 Rejected because:
 
-- It conflicts with [ADR-001-modular-monolith.md](./adr-001-modular-monolith): a service-per-context topology would turn the in-database atomic checkout seam (`CON-1`, `CR-1`) into a distributed transaction, against the deliberate single-deployable decision.
+- It conflicts with [ADR-001](./adr-001-modular-monolith): a service-per-context topology would turn the in-database atomic checkout seam (`CON-1`, `CR-1`) into a distributed transaction, against the deliberate single-deployable decision.
 
 ### Polyglot Architecture
 
@@ -201,6 +93,6 @@ Rejected because:
 
 ## Related Documents
 
-- [ADR-001-modular-monolith.md](./adr-001-modular-monolith) — the modular-monolith decision this stack realizes.
-- [overview.md](/docs/30-49-domains/system-design/overview) — container view and architecture principles.
-- [tech-stack.md](/docs/30-49-domains/system-design/tech-stack) — the authoritative record of the locked technology choices.
+- [ADR-001](./adr-001-modular-monolith) — the modular-monolith decision this stack realizes.
+- [System design overview](/docs/30-49-domains/system-design/overview) — container view and architecture principles.
+- [Tech stack](/docs/30-49-domains/system-design/tech-stack) — the authoritative record of the locked technology choices.

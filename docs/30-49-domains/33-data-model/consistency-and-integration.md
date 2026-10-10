@@ -1,43 +1,76 @@
 ---
 title: Consistency & Integration
 sidebar_position: 8
-description: Conceptual data model for Red Cab Marketplace.
+description: Data consistency guarantees and cross-context integration constraints for the conceptual model.
 ---
 
-## 12. Data Consistency Rules
+## TL;DR
 
-These are the consistency guarantees the model must uphold, restated from [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §5 and the business rules. They are stated as guarantees over the data, not as mechanisms.
+- Inside one aggregate, changes are strongly consistent. Across aggregates, the model is eventually consistent.
+- Checkout plus seat reservation is the **only** co-transactional cross-context operation (`CR-1`).
+- Snapshots are write-once for the life of the Booking. Financial corrections are new movement facts.
+- Reviews and Payments read Booking facts. They do not mutate Booking.
 
-1. **Intra-aggregate strong consistency.** Everything inside one aggregate is consistent within a single atomic change; nothing inside an aggregate is ever partially applied.
-2. **Atomic checkout unit.** CheckoutSession creation + Price/Commission snapshot freeze + seat decrement either all take effect or none do (`BKG-9`, `CON-1`). Booking materialization on payment success copies session facts. This is the one place two contexts (Booking and Catalog) share a transaction (CR-1).
-3. **Seat-counter bounds.** `available_seats` for an AvailabilitySlot is never negative and never exceeds capacity (`INV-3`). A 0-seat slot is Fully Booked and unbookable (`CON-3`).
-4. **Last-seat contention.** Under concurrent attempts on the final seat(s), at most enough succeed to reach `available_seats = 0`; all others receive a "now fully booked" outcome (`CON-2`).
-5. **Per-asset slot exclusivity.** Two slots on the same Asset never overlap in time; boundary-touching is allowed; overlap on different Assets is allowed (`CON-4`). Per-vehicle bookings consume 100% of slot capacity (`CON-6`).
-6. **Snapshot immutability.** A captured snapshot is never edited for the life of its Booking (`INV-1`, `FIN-2`); financial corrections are new movement facts.
-7. **Financial identity.** On snapshot values, `gross_amount = net_payout_amount + commission_amount` always holds (`INV-2`, `FIN-1`, `PAY-11`); amounts are whole JPY (`PAY-1`, `FIN-8`).
-8. **Payout/refund mutual exclusion.** For one Booking's funds, payout and refund never both apply to the same captured amount (`FIN-5`, `PAY-8`); a refund voids any payout-queue entry.
-9. **Review eligibility and uniqueness.** A Review exists only for a `COMPLETED` Booking, at most one per Booking (`INV-5`, `BKG-7`); the Rating Score is computed from approved Reviews only (`OPR-6`).
-10. **Verification gating.** A non-`Approved` Provider has zero tourist-visible Listings (`INV-6`); a Listing under an expired License is not `Published` (`INV-7`); publish requires a verified Provider Merchant Account (`INV-12`).
-11. **Historical preservation.** Historical Booking data is preserved (never deleted) when a Listing is Paused, Unlisted, or its District deactivated (`INV-11`, `BKG-8`).
-12. **Eventual consistency across aggregates/contexts.** Everything *across* aggregate or context boundaries is eventually consistent and reconciled by idempotent event reactions — rating recalculation after approval, listing pause after license expiry, payout queuing after completion, notification dispatch — all of which must tolerate delay, reordering, and redelivery (`FIN-10`).
-13. **Convergence to external truth.** Payments facts converge to external-rail settlement truth; divergence is a reconcilable defect, never a silent loss (`FIN-11`). Bank-transfer reconciliation is manual (`PAY-9`).
-14. **Idempotent restoration.** Seat restoration on cancellation/session expiry is idempotent so retries cannot push `available_seats` above capacity (`CON-5`, Decision Log `AMB-012`, bounded by `INV-3`).
+## About this document
+
+Restates [Domain models](/docs/30-49-domains/domain-models/domain-models) §5 and business rules as data guarantees. It does not change ownership.
+
+| Topic | Document |
+| --- | --- |
+| Domain models | [Domain models](/docs/30-49-domains/domain-models/domain-models) |
+| Bounded contexts | [Bounded contexts](/docs/30-49-domains/bounded-contexts) |
+| Invariants | [Invariants](/docs/70-79-business/business-rules/invariants) |
 
 ---
 
-## 13. Cross-Context Integration Constraints
+## Data consistency rules
 
-The model's integrity depends on constraints on *how* data crosses boundaries ([./contexts/index](/docs/30-49-domains/bounded-contexts) "Boundary enforcement"; [./overview.md](/docs/30-49-domains/system-design/overview) "Cross-Context Integration").
+1. **Intra-aggregate strong consistency.** One aggregate changes in one atomic step. Nothing inside an aggregate is partially applied.
 
-1. **No shared tables / no internal access.** A context's data is reachable only through its commands, queries, and published events. No context reads or writes another's internals.
-2. **Identity-only references.** Foreign aggregates are named by stable identifier; no aggregate embeds or co-owns another context's aggregate.
-3. **Single Pricing Authority.** Price is computed only by `Catalog.calculate_quote(...)` and consumed elsewhere as the `PriceBreakdown` value contract; no other context (and no client) recomputes or stores an authoritative price, except as a Booking-owned snapshot (`PRC-1`, `PRC-2`, CR-2).
-4. **Snapshots over live references for durable meaning.** When a downstream record's meaning must not change, the fact is snapshotted at a defined instant rather than referenced live (Price/Commission/Cancellation snapshots; recipient language at send).
-5. **The single shared transaction.** CheckoutSession↔Catalog seat reservation is the only co-transactional cross-context operation (CR-1); it relies on the single shared database and must never become a network call without a redesign (a saga).
-6. **Conformist read of Provider Status.** Catalog conforms to Onboarding's `{ provider_id, status, license_valid_until }` read contract and never replicates verification logic.
-7. **Anti-corruption boundary for Corporate → Booking.** An accepted Quotation enters Booking only through `create_booking_from_quote`, translating corporate vocabulary into Booking's command language; corporate concepts never leak into Booking (CR-7).
-8. **Events carry identities and immutable facts only.** A domain event never carries a reference to another context's live aggregate; consumers are idempotent so redelivery cannot double-act (`FIN-10`).
-9. **Reviews and Payments never mutate Booking.** Reviews consume only the completion fact and key by `booking_id`; Payments reads the Commission Snapshot read-only. Neither alters Booking state or facts.
-10. **Cascades are event-driven, not direct writes.** License expiry → pause listings and district deactivation → unlist flow as events to Catalog (idempotent consumers), never as Onboarding/Geography writing Catalog data (CR-4). The cascade reaches Catalog (listings) and stops at the Booking boundary — historical Bookings are never mutated.
+2. **Atomic checkout unit.** CheckoutSession creation, snapshot freeze, and seat decrement all succeed or all fail (`BKG-9`, `CON-1`). Booking materialization on payment success copies session facts. This is the one shared transaction between Booking and Catalog (`CR-1`).
 
----
+3. **Seat-counter bounds.** `available_seats` on an AvailabilitySlot is never negative and never exceeds capacity (`INV-3`). A zero-seat slot is fully booked and not bookable (`CON-3`).
+
+4. **Last-seat contention.** Concurrent attempts on the final seats succeed only until `available_seats = 0`. Others get a fully-booked outcome (`CON-2`).
+
+5. **Per-asset slot exclusivity.** Two slots on the same Asset do not overlap in time. Boundary-touching is allowed. Overlap on different Assets is allowed (`CON-4`). Per-vehicle bookings use full slot capacity (`CON-6`).
+
+6. **Snapshot immutability.** A captured snapshot is never edited for the life of its Booking (`INV-1`, `FIN-2`). Financial corrections are new movement facts.
+
+7. **Financial identity.** On snapshot values, `gross_amount = net_payout_amount + commission_amount` (`INV-2`, `FIN-1`, `PAY-11`). Amounts are whole JPY (`PAY-1`, `FIN-8`).
+
+8. **Payout and refund mutual exclusion.** For one Booking's funds, payout and refund never both apply to the same captured amount (`FIN-5`, `PAY-8`). A refund voids any payout-queue entry.
+
+9. **Review eligibility and uniqueness.** A Review exists only for a `COMPLETED` Booking, at most one per Booking (`INV-5`, `BKG-7`). Rating Score uses approved Reviews only (`OPR-6`).
+
+10. **Verification gating.** A non-`Approved` Provider has zero tourist-visible Listings (`INV-6`). A Listing under an expired License is not `Published` (`INV-7`). Publish requires a verified Provider Merchant Account (`INV-12`).
+
+11. **Historical preservation.** Historical Booking data is preserved when a Listing is Paused, Unlisted, or its District is deactivated (`INV-11`, `BKG-8`).
+
+12. **Eventual consistency across boundaries.** Cross-aggregate work is eventually consistent and idempotent — rating recalculation, listing pause, payout queueing, notifications. Reactions tolerate delay, reordering, and redelivery (`FIN-10`).
+
+13. **Convergence to external truth.** Payments facts converge to provider settlement truth. Divergence is a reconcilable defect, not silent loss (`FIN-11`). Bank-transfer reconciliation is manual (`PAY-9`).
+
+14. **Idempotent seat restoration.** Seat restoration on cancellation or session expiry is idempotent (`CON-5`, Decision Log `AMB-012`, bounded by `INV-3`).
+
+## Cross-context integration constraints
+
+1. **No shared tables.** A context's data is reachable only through its commands, queries, and events.
+
+2. **Identity-only references.** Foreign aggregates are named by stable id. No context embeds another context's aggregate.
+
+3. **Single Pricing Authority.** Price is computed only by `Catalog.calculate_quote(...)`. Elsewhere it is consumed as `PriceBreakdown` (`PRC-1`, `PRC-2`, `CR-2`). Booking-owned snapshots are the exception for durable price facts.
+
+4. **Snapshots over live references.** When meaning must not change, capture a snapshot at a defined instant (price, commission, cancellation policy; recipient language at send).
+
+5. **The single shared transaction.** CheckoutSession and Catalog seat reservation is the only co-transactional cross-context operation (`CR-1`). It must not become a network call without a saga redesign.
+
+6. **Conformist read of Provider Status.** Catalog reads Onboarding `{ provider_id, status, license_valid_until }`. It does not replicate verification logic.
+
+7. **ACL for Corporate → Booking.** An accepted Quotation enters Booking only through `create_booking_from_quote` (`CR-7`).
+
+8. **Events carry identities and immutable facts only.** Consumers are idempotent (`FIN-10`).
+
+9. **Reviews and Payments never mutate Booking.** Reviews consume the completion fact. Payments reads the Commission Snapshot read-only.
+
+10. **Cascades are event-driven.** License expiry and district deactivation reach Catalog through events. Historical Bookings are never mutated.

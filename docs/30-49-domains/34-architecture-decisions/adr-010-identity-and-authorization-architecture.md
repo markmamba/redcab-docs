@@ -21,113 +21,17 @@ ADR for identity and authorization architecture.
 
 ---
 
-## TL;DR
-
-- **Identity & Access** is supporting: authentication, roles, sessions, language preference — not business authority.
-- Each context owns its domain gates; IAM exposes a minimal contract (`principal`, `role`, `language`).
-
-## About this document
-
-ADR for identity and authorization architecture.
-
-| Topic | Document |
-| --- | --- |
-| Identity context | [Identity & Access](/docs/30-49-domains/bounded-contexts/identity) |
-| API security | [API Design](/docs/30-49-domains/system-design/api-design) |
-
----
-
-## TL;DR
-
-- **Identity & Access** is supporting: authentication, roles, sessions, language preference — not business authority.
-- Each context owns its domain gates; IAM exposes a minimal contract (`principal`, `role`, `language`).
-
-## About this document
-
-ADR for identity and authorization architecture.
-
-| Topic | Document |
-| --- | --- |
-| Identity context | [Identity & Access](/docs/30-49-domains/bounded-contexts/identity) |
-| API security | [API Design](/docs/30-49-domains/system-design/api-design) |
-
----
-
-## TL;DR
-
-- **Identity & Access** is supporting: authentication, roles, sessions, language preference — not business authority.
-- Each context owns its domain gates; IAM exposes a minimal contract (`principal`, `role`, `language`).
-
-## About this document
-
-ADR for identity and authorization architecture.
-
-| Topic | Document |
-| --- | --- |
-| Identity context | [Identity & Access](/docs/30-49-domains/bounded-contexts/identity) |
-| API security | [API Design](/docs/30-49-domains/system-design/api-design) |
-
----
-
-## TL;DR
-
-- **Identity & Access** is supporting: authentication, roles, sessions, language preference — not business authority.
-- Each context owns its domain gates; IAM exposes a minimal contract (`principal`, `role`, `language`).
-
-## About this document
-
-ADR for identity and authorization architecture.
-
-| Topic | Document |
-| --- | --- |
-| Identity context | [Identity & Access](/docs/30-49-domains/bounded-contexts/identity) |
-| API security | [API Design](/docs/30-49-domains/system-design/api-design) |
-
----
-
-## TL;DR
-
-- **Identity & Access** is supporting: authentication, roles, sessions, language preference — not business authority.
-- Each context owns its domain gates; IAM exposes a minimal contract (`principal`, `role`, `language`).
-
-## About this document
-
-ADR for identity and authorization architecture.
-
-| Topic | Document |
-| --- | --- |
-| Identity context | [Identity & Access](/docs/30-49-domains/bounded-contexts/identity) |
-| API security | [API Design](/docs/30-49-domains/system-design/api-design) |
-
----
-
-## TL;DR
-
-- **Identity & Access** is supporting: authentication, roles, sessions, language preference — not business authority.
-- Each context owns its domain gates; IAM exposes a minimal contract (`principal`, `role`, `language`).
-
-## About this document
-
-ADR for identity and authorization architecture.
-
-| Topic | Document |
-| --- | --- |
-| Identity context | [Identity & Access](/docs/30-49-domains/bounded-contexts/identity) |
-| API security | [API Design](/docs/30-49-domains/system-design/api-design) |
-
----
-
 ## Status
 
 Accepted
 
 ## Context
 
-Per [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context, and Identity & Access is one of the two supporting contexts and the dependency root of them all; per [ADR-004-context-integration-model.md](./adr-004-context-integration-model), contexts collaborate only through published contracts — commands, queries, and domain events — and identity-only references, never by reaching across a boundary; per [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries), an invariant can only be protected by the context that owns the state behind it, and consistency stops at the context edge; and per [ADR-009-external-systems-integration.md](./adr-009-external-systems-integration), external systems supply capabilities but never own the business. Those decisions establish that Identity is upstream of everything, that it is reached only through a minimal published contract, and that whatever it supplies is a fact other contexts consume rather than a mandate they obey. What none of them states in its own right is *why identity is deliberately kept separate from business authority* — why the context that answers "who is acting" is intentionally not the context that answers "is this action allowed here." Because every context in the system consumes the authenticated principal, and because the temptation to let identity alone decide business questions is constant, the reasoning that keeps identity a shared upstream fact while keeping authorization local to each owner deserves to be recorded explicitly. This ADR records that reasoning; it changes nothing about what Identity owns, what its contract exposes, or where each business gate is enforced, all of which remain as locked in [../contexts/index](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models), and [/docs/30-49-domains/system-design/api-design](/docs/30-49-domains/system-design/api-design).
+Per [ADR-003](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context, and Identity & Access is one of the two supporting contexts and the dependency root of them all; per [ADR-004](./adr-004-context-integration-model), contexts collaborate only through published contracts — commands, queries, and domain events — and identity-only references, never by reaching across a boundary; per [ADR-007](./adr-007-transaction-and-consistency-boundaries), an invariant can only be protected by the context that owns the state behind it, and consistency stops at the context edge; and per [ADR-009](./adr-009-external-systems-integration), external systems supply capabilities but never own the business. Those decisions establish that Identity is upstream of everything, that it is reached only through a minimal published contract, and that whatever it supplies is a fact other contexts consume rather than a mandate they obey. What none of them states in its own right is *why identity is deliberately kept separate from business authority* — why the context that answers "who is acting" is intentionally not the context that answers "is this action allowed here." Because every context in the system consumes the authenticated principal, and because the temptation to let identity alone decide business questions is constant, the reasoning that keeps identity a shared upstream fact while keeping authorization local to each owner deserves to be recorded explicitly. This ADR records that reasoning; it changes nothing about what Identity owns, what its contract exposes, or where each business gate is enforced, all of which remain as locked in [Bounded contexts](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models), and [/docs/30-49-domains/system-design/api-design](/docs/30-49-domains/system-design/api-design).
 
 The philosophical core of the decision is two sentences: **authentication establishes identity; authorization protects business ownership.** Identity & Access answers a single, generic question — *who is acting, with what coarse Role, in what language* — and answers it once for the whole platform. Whether that actor may then publish a listing, review a booking, set the Commission Rate, or convert a quotation is a *different* question, answered not by identity but by the context that owns the state those actions would change. Everything the architecture asks of identity and authorization follows from that one distinction between *establishing who someone is* and *deciding what they may do to a particular piece of owned business state*.
 
-The dominant force is that **identity is a generic capability, not a place where Red Cab's business is decided**. Identity & Access is classified supporting rather than core precisely because it encodes no Red-Cab-specific competitive logic: accounts, coarse Roles, and Language Preference are the same shape they would be for any marketplace, whereas frozen revenue splits, verified-only participation, never-overbooked inventory, and verified-only reviews are the logic that makes Red Cab what it is (per [ADR-003](./adr-003-bounded-context-architecture), [../contexts/index](/docs/30-49-domains/bounded-contexts) §7). Identity is the dependency root only because *identity precedes everything* — someone must be known before they can act — not because it is domain-central. Treating it as core, and letting it accumulate each context's rules about who-may-do-what, would turn the generic subdomain into a god-context holding authority it does not own, exactly the accumulation the supporting classification exists to prevent.
+The dominant force is that **identity is a generic capability, not a place where Red Cab's business is decided**. Identity & Access is classified supporting rather than core precisely because it encodes no Red-Cab-specific competitive logic: accounts, coarse Roles, and Language Preference are the same shape they would be for any marketplace, whereas frozen revenue splits, verified-only participation, never-overbooked inventory, and verified-only reviews are the logic that makes Red Cab what it is (per [ADR-003](./adr-003-bounded-context-architecture), [Bounded contexts](/docs/30-49-domains/bounded-contexts) §7). Identity is the dependency root only because *identity precedes everything* — someone must be known before they can act — not because it is domain-central. Treating it as core, and letting it accumulate each context's rules about who-may-do-what, would turn the generic subdomain into a god-context holding authority it does not own, exactly the accumulation the supporting classification exists to prevent.
 
 The second force is that **authentication establishes identity but not business authority**. Identity resolves an authenticated principal and a coarse Role — `Tourist | Corporate | Provider | Admin` — and that resolution is a genuine, load-bearing fact every context depends on ([..//docs/70-79-business/business-rules/glossary](/docs/70-79-business/business-rules/glossary) §7, `FR-IAM-005`, `FR-IAM-009`). But knowing *who* is acting does not by itself decide whether a specific business action is permitted, because the permissibility of an action is a function of *owned domain state* the identity context cannot see. A principal being authenticated as a Provider does not make that Provider allowed to publish — the right to operate is a verified, Approved status with a valid license decided in Provider Onboarding & Verification (`INV-6`, `INV-7`, `LC-8`). A principal authenticated as a Tourist is not thereby allowed to review any listing — a review may exist only for a genuinely completed booking owned by that Tourist (`INV-5`, `BKG-7`). Identity establishes the actor; the owning context decides the act.
 
@@ -137,7 +41,7 @@ The fourth force is that **business permissions belong to the context that owns 
 
 The fifth force is that **identity is shared, but authority is local, and identity never transfers ownership of a business decision**. Every context consumes the authenticated principal *by identity only*, exactly as it references any other context's aggregate — holding an identifier and depending on a published fact, never embedding or co-owning the Account, and never reading Account internals (per [ADR-004](./adr-004-context-integration-model), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §2, §3.1). Receiving the principal grants a context the ability to *know who is acting*; it never grants authority over another context's state, just as receiving a domain event grants the right to react but never ownership of the fact ([ADR-008](./adr-008-domain-event-architecture)). A shared identity fact leaves Identity & Access; ownership of any business decision does not leave the context that holds it. This is what lets identity be universal without making Identity powerful: the same principal flows everywhere, and every context still decides its own business questions locally.
 
-The sixth force is that **the published identity contract carries identity without exposing internal implementation**. Identity & Access exposes a deliberately minimal, stable contract — `principal`, `role`, `language` — and nothing else (per [../contexts/index](/docs/30-49-domains/bounded-contexts) §7, [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview) IAM). How an actor was authenticated, and everything an Account holds internally, stays behind that boundary; consumers depend only on the resolved fact. This minimality is not incidental — it is the mitigation for Identity-as-universal-upstream (`CR-6`): because every context depends on this contract, any change to it ripples the widest, so the contract is kept small and stable on purpose. The same published-contract discipline that keeps Catalog's pricing vocabulary and Booking's snapshot behind their surfaces keeps Identity's internals behind its own.
+The sixth force is that **the published identity contract carries identity without exposing internal implementation**. Identity & Access exposes a deliberately minimal, stable contract — `principal`, `role`, `language` — and nothing else (per [Bounded contexts](/docs/30-49-domains/bounded-contexts) §7, [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview) IAM). How an actor was authenticated, and everything an Account holds internally, stays behind that boundary; consumers depend only on the resolved fact. This minimality is not incidental — it is the mitigation for Identity-as-universal-upstream (`CR-6`): because every context depends on this contract, any change to it ripples the widest, so the contract is kept small and stable on purpose. The same published-contract discipline that keeps Catalog's pricing vocabulary and Booking's snapshot behind their surfaces keeps Identity's internals behind its own.
 
 The final force is **evolution of identity without changing the domain**. The authentication methods themselves and the scope of unauthenticated access are deliberately deferred — which methods a principal may be established through (`AMB-021`), how far a Visitor may reach before authenticating (`AMB-022`), and the lockout parameters (`AMB-016`) are all open. That they can be left open is itself the evidence that the architecture accommodates any resolution *without moving a boundary*: because identity is a generic capability behind a minimal contract, and because business authority is decided locally against owned state, an external identity provider that establishes identity is — in the terms of [ADR-009](./adr-009-external-systems-integration) — a *capability the platform invokes*, never an authority for business policy. Whether identity is established one way or another, or by an external provider, the invariants, the ownership map, and the published contracts are untouched. The domain depends on *identity being established*, not on *how* it is established or *who* establishes it.
 
@@ -145,17 +49,17 @@ The final force is **evolution of identity without changing the domain**. The au
 
 The identity-and-authorization posture is fixed as already established:
 
-- **Identity & Access is a supporting, generic bounded context.** It owns authentication, accounts, coarse Roles, and Language Preference, and is the dependency root because identity precedes all action — but it is supporting, not core, because it encodes no Red-Cab-specific competitive logic (per [ADR-003](./adr-003-bounded-context-architecture), [../contexts/index](/docs/30-49-domains/bounded-contexts) §7).
+- **Identity & Access is a supporting, generic bounded context.** It owns authentication, accounts, coarse Roles, and Language Preference, and is the dependency root because identity precedes all action — but it is supporting, not core, because it encodes no Red-Cab-specific competitive logic (per [ADR-003](./adr-003-bounded-context-architecture), [Bounded contexts](/docs/30-49-domains/bounded-contexts) §7).
 - **Authentication establishes identity; it does not establish business authority.** Identity resolves an authenticated principal, a coarse Role, and a language, and answers only "who is acting"; whether a specific business action is permitted is a separate question decided elsewhere (`FR-IAM-005`, `FR-IAM-009`; [/docs/30-49-domains/system-design/api-design](/docs/30-49-domains/system-design/api-design), API Security Model).
 - **Authorization is evaluated within business ownership boundaries.** Identity answers Role; each context applies its own domain-state gates on top before it acts. A command is refused when the Role or the owning context's domain state does not permit it (per [/docs/30-49-domains/system-design/api-design](/docs/30-49-domains/system-design/api-design), Authorization).
 - **Business permissions belong to the owning context.** The right to operate is decided by Onboarding (`INV-6`, `INV-7`, `LC-8`); the right to author, publish, and price a listing by Catalog (`PRC-1`); lifecycle transitions by Booking (`LC-1..6`); the Commission Rate and money movement by Payments (`PAY-2`); review eligibility by Reviews (`INV-5`, `BKG-7`). No permission over owned state is owned by Identity.
 - **User Roles alone are insufficient to determine business authority.** Role gates which surface an actor reaches (`FR-IAM-009`, `NFR-SEC-004`) but is necessary, not sufficient; business authority is the Role narrowed by the owning context's invariants and domain state. The surface a request arrives on confers no authority by itself.
 - **Identity never transfers ownership of a business decision.** Contexts consume the principal by identity only, never reading or mutating Account internals and never acquiring authority over another context's state; knowing who acts is a shared fact, not a grant of ownership (per [ADR-004](./adr-004-context-integration-model), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models) §2).
-- **The published identity contract carries identity without exposing internals.** Identity exposes a deliberately minimal, stable contract (`principal`, `role`, `language`); how identity was established and what an Account holds internally stay behind that boundary, kept small on purpose to limit ripple (`CR-6`; [../contexts/index](/docs/30-49-domains/bounded-contexts) §7).
+- **The published identity contract carries identity without exposing internals.** Identity exposes a deliberately minimal, stable contract (`principal`, `role`, `language`); how identity was established and what an Account holds internally stay behind that boundary, kept small on purpose to limit ripple (`CR-6`; [Bounded contexts](/docs/30-49-domains/bounded-contexts) §7).
 - **Identity is shared while business authority remains local.** The same authenticated principal flows to every context, yet every context decides its own business questions against its own owned state; a universal identity does not centralize authority.
 - **External identity providers supply a capability, never business policy.** An external provider may establish identity, but the authoritative decision of whether an action is allowed is always an in-domain policy owned by the responsible context; no external identity source becomes authoritative for right-to-operate, pricing, lifecycle, money, or review eligibility (per [ADR-009](./adr-009-external-systems-integration); `AMB-021`).
 
-This decision records *why the architecture separates identity from business ownership*; it changes nothing about what Identity owns, the shape of its contract, the Roles it issues, or where each business gate is enforced, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [../contexts/index](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models), and [/docs/30-49-domains/system-design/api-design](/docs/30-49-domains/system-design/api-design). The authentication methods (`AMB-021`), guest-access scope (`AMB-022`), and lockout parameters (`AMB-016`) remain open and are not decided here.
+This decision records *why the architecture separates identity from business ownership*; it changes nothing about what Identity owns, the shape of its contract, the Roles it issues, or where each business gate is enforced, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models), and [/docs/30-49-domains/system-design/api-design](/docs/30-49-domains/system-design/api-design). The authentication methods (`AMB-021`), guest-access scope (`AMB-022`), and lockout parameters (`AMB-016`) remain open and are not decided here.
 
 ## Consequences
 
@@ -210,12 +114,12 @@ Rejected because it transfers ownership through the back door the architecture e
 
 ## Related Documents
 
-- [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes Identity a supporting context and every business permission the property of the context that owns the state it protects.
-- [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the published-contract, identity-only discipline by which the authenticated principal is consumed without exposing Identity's internals or transferring ownership.
-- [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries) — the rule that an invariant is upheld only by the context that owns its state, of which per-owner authorization is the decision-authority expression.
-- [ADR-008-domain-event-architecture.md](./adr-008-domain-event-architecture) — the "a fact leaves its owner, ownership does not" principle that identity consumption mirrors.
-- [ADR-009-external-systems-integration.md](./adr-009-external-systems-integration) — the capability-versus-decision distinction that keeps an external identity provider a supplier of identity, never an authority for business policy.
-- [overview.md](/docs/30-49-domains/system-design/overview) — top-level architecture, the IAM supporting context, the role-confined consumer surfaces, and the verified-participation trust drivers.
-- [contexts/index](/docs/30-49-domains/bounded-contexts) — authoritative context structure, the Identity & Access §7 definition, the minimal `principal`/`role`/`language` contract, and the `CR-6` universal-upstream coupling risk.
-- [api-design.md](/docs/30-49-domains/system-design/api-design) — the API Security Model where authentication resolves the principal and authorization is owned by the context that owns each capability.
-- [domain-models.md](/docs/30-49-domains/domain-models/domain-models) — the Identity & Access aggregate ownership, the coarse Role value object, and the reference-by-identity rules across contexts.
+- [ADR-003](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes Identity a supporting context and every business permission the property of the context that owns the state it protects.
+- [ADR-004](./adr-004-context-integration-model) — the published-contract, identity-only discipline by which the authenticated principal is consumed without exposing Identity's internals or transferring ownership.
+- [ADR-007](./adr-007-transaction-and-consistency-boundaries) — the rule that an invariant is upheld only by the context that owns its state, of which per-owner authorization is the decision-authority expression.
+- [ADR-008](./adr-008-domain-event-architecture) — the "a fact leaves its owner, ownership does not" principle that identity consumption mirrors.
+- [ADR-009](./adr-009-external-systems-integration) — the capability-versus-decision distinction that keeps an external identity provider a supplier of identity, never an authority for business policy.
+- [System design overview](/docs/30-49-domains/system-design/overview) — top-level architecture, the IAM supporting context, the role-confined consumer surfaces, and the verified-participation trust drivers.
+- [Bounded contexts](/docs/30-49-domains/bounded-contexts) — authoritative context structure, the Identity & Access §7 definition, the minimal `principal`/`role`/`language` contract, and the `CR-6` universal-upstream coupling risk.
+- [API design](/docs/30-49-domains/system-design/api-design) — the API Security Model where authentication resolves the principal and authorization is owned by the context that owns each capability.
+- [Domain models](/docs/30-49-domains/domain-models/domain-models) — the Identity & Access aggregate ownership, the coarse Role value object, and the reference-by-identity rules across contexts.

@@ -11,156 +11,7 @@ description: Top-level architecture guide for Red Cab Marketplace.
 - **Catalog** is the single pricing authority; checkout + seat reservation is the one deliberate shared transaction.
 - Cross-context work is **sync where invariants must hold together**, **async via domain events** for reactions and notifications.
 - Open decisions cite `AMB-###` in the ambiguity register — this overview does not assume them.
-
-## About this document
-
-Top-level architecture guide: context, container, module, and principles — **not** implementation (no code, Rails layout, or schemas).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map (authoritative) | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Aggregates & ownership | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Observable behavior | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Red Cab is a **modular monolith**: one Rails API deployable and one PostgreSQL database, partitioned into **6 core + 2 supporting** bounded contexts.
-- **Booking** owns money facts (immutable snapshots); **Payments** owns money movement and the commission rate.
-- **Catalog** is the single pricing authority; checkout + seat reservation is the one deliberate shared transaction.
-- Cross-context work is **sync where invariants must hold together**, **async via domain events** for reactions and notifications.
-- Open decisions cite `AMB-###` in the ambiguity register — this overview does not assume them.
-
-## About this document
-
-Top-level architecture guide: context, container, module, and principles — **not** implementation (no code, Rails layout, or schemas).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map (authoritative) | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Aggregates & ownership | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Observable behavior | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Red Cab is a **modular monolith**: one Rails API deployable and one PostgreSQL database, partitioned into **6 core + 2 supporting** bounded contexts.
-- **Booking** owns money facts (immutable snapshots); **Payments** owns money movement and the commission rate.
-- **Catalog** is the single pricing authority; checkout + seat reservation is the one deliberate shared transaction.
-- Cross-context work is **sync where invariants must hold together**, **async via domain events** for reactions and notifications.
-- Open decisions cite `AMB-###` in the ambiguity register — this overview does not assume them.
-
-## About this document
-
-Top-level architecture guide: context, container, module, and principles — **not** implementation (no code, Rails layout, or schemas).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map (authoritative) | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Aggregates & ownership | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Observable behavior | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Red Cab is a **modular monolith**: one Rails API deployable and one PostgreSQL database, partitioned into **6 core + 2 supporting** bounded contexts.
-- **Booking** owns money facts (immutable snapshots); **Payments** owns money movement and the commission rate.
-- **Catalog** is the single pricing authority; checkout + seat reservation is the one deliberate shared transaction.
-- Cross-context work is **sync where invariants must hold together**, **async via domain events** for reactions and notifications.
-- Open decisions cite `AMB-###` in the ambiguity register — this overview does not assume them.
-
-## About this document
-
-Top-level architecture guide: context, container, module, and principles — **not** implementation (no code, Rails layout, or schemas).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map (authoritative) | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Aggregates & ownership | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Observable behavior | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Red Cab is a **modular monolith**: one Rails API deployable and one PostgreSQL database, partitioned into **6 core + 2 supporting** bounded contexts.
-- **Booking** owns money facts (immutable snapshots); **Payments** owns money movement and the commission rate.
-- **Catalog** is the single pricing authority; checkout + seat reservation is the one deliberate shared transaction.
-- Cross-context work is **sync where invariants must hold together**, **async via domain events** for reactions and notifications.
-- Open decisions cite `AMB-###` in the ambiguity register — this overview does not assume them.
-
-## About this document
-
-Top-level architecture guide: context, container, module, and principles — **not** implementation (no code, Rails layout, or schemas).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map (authoritative) | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Aggregates & ownership | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Observable behavior | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Red Cab is a **modular monolith**: one Rails API deployable and one PostgreSQL database, partitioned into **6 core + 2 supporting** bounded contexts.
-- **Booking** owns money facts (immutable snapshots); **Payments** owns money movement and the commission rate.
-- **Catalog** is the single pricing authority; checkout + seat reservation is the one deliberate shared transaction.
-- Cross-context work is **sync where invariants must hold together**, **async via domain events** for reactions and notifications.
-- Open decisions cite `AMB-###` in the ambiguity register — this overview does not assume them.
-
-## About this document
-
-Top-level architecture guide: context, container, module, and principles — **not** implementation (no code, Rails layout, or schemas).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Context map (authoritative) | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Aggregates & ownership | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Observable behavior | [Requirements](/docs/70-79-business/requirements) |
-| Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Red Cab is a **modular monolith**: one Rails API deployable and one PostgreSQL database, partitioned into **6 core + 2 supporting** bounded contexts.
-- **Booking** owns money facts (immutable snapshots); **Payments** owns money movement and the commission rate.
-- **Catalog** is the single pricing authority; checkout + seat reservation is the one deliberate shared transaction.
-- Cross-context work is **sync where invariants must hold together**, **async via domain events** for reactions and notifications.
-- Open decisions cite `AMB-###` in the ambiguity register — this overview does not assume them.
+- Context relationships and integration styles: [Bounded contexts — Context map](/docs/30-49-domains/bounded-contexts#context-map).
 
 ## About this document
 
@@ -184,8 +35,8 @@ Top-level architecture guide: context, container, module, and principles — **n
 Red Cab is a two-sided marketplace that connects inbound travelers (Tourists) and corporate groups (Corporate Clients) with verified Japanese transport and tour Providers, earning a commission on each booking. This document is the single entry point for understanding **how the system is shaped to deliver that behavior while protecting a small set of high-value invariants** — frozen revenue splits, never-overbooked inventory, verified-only reviews, and a strict booking lifecycle.
 
 This overview is the reconciliation point across the planning set:
-- It sits **above** the requirements ([/docs/70-79-business/requirements/functional-requirements](/docs/70-79-business/requirements/functional-requirements), [../requirements/non-functional-requirements.md](/docs/70-79-business/requirements/non-functional-requirements)) — it explains the structure that those observable behaviors run on.
-- It sits **alongside** the strategic design docs ([./contexts/index](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models)) — it summarizes and assembles them into one picture without redefining them.
+- It sits **above** the requirements ([Functional requirements](/docs/70-79-business/requirements/functional-requirements), [Non-functional requirements](/docs/70-79-business/requirements/non-functional-requirements)) — it explains the structure that those observable behaviors run on.
+- It sits **alongside** the strategic design docs ([Bounded contexts](/docs/30-49-domains/bounded-contexts), [Domain models](/docs/30-49-domains/domain-models/domain-models)) — it summarizes and assembles them into one picture without redefining them.
 - It is **subordinate** to the business rules and lifecycle/payments docs — where they overlap, those documents govern and this overview conforms (mirroring the precedence rule in [/docs/70-79-business/requirements](/docs/70-79-business/requirements) §9).
 
 It deliberately contains no decisions of its own. Where the architecture admits more than one shape, the choice is deferred to the relevant `AMB-###` item (see [Open Architectural Decisions](#open-architectural-decisions)).
@@ -201,7 +52,7 @@ The forces that shaped the architecture, grouped as business drivers, technical 
 - **Trust on both sides of the market.** Providers must be verified before they are visible (`INV-6`, `INV-7`, `LC-7..9`); reviews must come only from real, completed bookings (`INV-5`, `BKG-7`). Trust mechanics are first-class, not afterthoughts.
 - **Two distinct demand channels.** Instant B2C checkout (Tourist) and negotiated Corporate quotation/invoicing (Corporate Client) have different intake, artifacts, payment paths, and evolution speeds — which is why they are separated at the context level (Corporate ≠ Booking).
 - **Inbound, bilingual audience.** The platform serves EN-primary inbound travelers and JA-primary corporate/provider operations; language is a cross-cutting concern (`OPR-9`) rather than a feature of one screen.
-- **Operational leverage for a small team.** Time-based alerts (license/trial expiry, overdue registrations, overdue quotations/payments) and Admin oversight let a small operator run a verified marketplace (`OPR-3..5`, `OPR-10`).
+- **Operational efficiency for a small team.** Time-based alerts (license/trial expiry, overdue registrations, overdue quotations/payments) and Admin oversight let a small operator run a verified marketplace (`OPR-3..5`, `OPR-10`).
 
 ## Technical drivers
 - **Atomic correctness at checkout.** Booking creation, snapshot freezing, and seat reservation must commit as one indivisible unit (`BKG-2`, `CON-1`); overbooking must be impossible even under concurrent contention for the last seat (`CON-2`, `CON-3`). This drives both the [Atomic Capacity Reservation](#atomic-capacity-reservation) principle and the single-database container choice.
@@ -213,7 +64,7 @@ The forces that shaped the architecture, grouped as business drivers, technical 
 
 ## Constraints
 - **Whole-yen money only.** All monetary amounts are integer JPY; no fractional yen exists anywhere (`PAY-1`, `FIN-8`). Single-currency (JPY) is the working baseline (`AMB-025`).
-- **One deployable, one PostgreSQL database.** Contexts are logical modules in a single modular monolith with no network boundary between them (per [./contexts/index](/docs/30-49-domains/bounded-contexts)). The one place two contexts share a transaction (CheckoutSession↔Catalog seat reservation, CR-1) depends on this.
+- **One deployable, one PostgreSQL database.** Contexts are logical modules in a single modular monolith with no network boundary between them (per [Bounded contexts](/docs/30-49-domains/bounded-contexts)). The one place two contexts share a transaction (CheckoutSession↔Catalog seat reservation, CR-1) depends on this.
 - **Japanese regulatory and document constraints.** corporate formal documents (Omitsumorisho/Seikyusho) must itemize 10% consumption tax (`PAY-10`) and render kanji/kana correctly (`AMB-031`); merchant/seller-of-record posture has tax consequences (`AMB-032`).
 - **Snapshots are immutable; requirements cannot override invariants.** No part of the system may edit a frozen snapshot, introduce a new lifecycle transition, or relax a concurrency guarantee except by amending the authoritative document (often via an `AMB-###` resolution).
 - **Verification gates participation.** Nothing tourist-visible or bookable exists for a non-Approved or expired-license Provider (`INV-6`, `INV-7`).
@@ -223,6 +74,8 @@ The forces that shaped the architecture, grouped as business drivers, technical 
 ## System Context
 
 Red Cab as a black box: who and what interacts with it across the system boundary. Actors are defined in [/docs/70-79-business/business-rules/glossary](/docs/70-79-business/business-rules/glossary) (cross-cutting terms).
+
+This diagram is illustrative: actors and external rails at the system boundary, not internal bounded contexts.
 
 ```mermaid
 graph TD
@@ -263,6 +116,8 @@ The optional external SMS rail for a **future** phase. May additionally carry no
 
 Red Cab is a small number of deployable/runtime units. "Container" here means an independently runnable process or store, not a Docker artifact specifically.
 
+This diagram is illustrative: deployable units and stores, not bounded-context modules inside the API.
+
 ```mermaid
 graph TD
   subgraph Client
@@ -288,10 +143,10 @@ graph TD
 
 ## React Router Web Application
 
-The single front-end application (React Router v7, framework mode with SSR), presenting marketplace role-confined surfaces — the **Tourist App**, the **Client Portal** (Corporate + Provider), and the **Admin Panel** (`/team`, Admin principal) — so each Actor reaches only permitted surfaces (`FR-IAM-009`, `NFR-SEC-004`). It renders in the Actor's Language Preference (EN/JA, `OPR-9`) and **never computes price**; it displays the Price Breakdown returned by the single pricing authority (`PRC-1`). It holds no financial truth. Implementation conventions: JavaScript (not TypeScript), `app/routes/`, `app/api/`, `app/domains/` ([../engineering/frontend-conventions.md](/docs/50-59-frontend/conventions/frontend)).
+The single front-end application (React Router v7, framework mode with SSR), presenting marketplace role-confined surfaces — the **Tourist App**, the **Client Portal** (Corporate + Provider), and the **Admin Panel** (`/team`, Admin principal) — so each Actor reaches only permitted surfaces (`FR-IAM-009`, `NFR-SEC-004`). It renders in the Actor's Language Preference (EN/JA, `OPR-9`) and **never computes price**; it displays the Price Breakdown returned by the single pricing authority (`PRC-1`). It holds no financial truth. Implementation conventions: JavaScript (not TypeScript), `app/routes/`, `app/api/`, `app/domains/` ([Frontend conventions](/docs/50-59-frontend/conventions/frontend)).
 
 ## Rails API Modular Monolith
-The single server-side deployable that owns all domain logic. Internally it is partitioned into the eight bounded contexts (next section), which integrate **in-process** — synchronously via commands/queries, asynchronously via in-process domain events — with no network boundary between them. It exposes the API the web app consumes, receives payment-provider events, and enqueues asynchronous work. Module boundaries and contracts (not distribution) enforce the discipline. Implementation conventions: Request → Manager → Validator, `app/domains/`, explicit routes ([../engineering/backend-conventions.md](/docs/20-29-backend/conventions/backend)).
+The single server-side deployable that owns all domain logic. Internally it is partitioned into the eight bounded contexts (next section), which integrate **in-process** — synchronously via commands/queries, asynchronously via in-process domain events — with no network boundary between them. It exposes the API the web app consumes, receives payment-provider events, and enqueues asynchronous work. Module boundaries and contracts (not distribution) enforce the discipline. Implementation conventions: Request → Manager → Validator, `app/domains/`, explicit routes ([Backend conventions](/docs/20-29-backend/conventions/backend)).
 
 ## PostgreSQL
 The single relational database shared by all contexts. Each context owns its own tables and exposes them only through commands, queries, and events — never direct cross-context table access. The single shared database is what makes the one deliberate cross-context shared transaction possible (seat reservation, CR-1) and keeps the hottest read paths (discovery, pricing) free of cross-context chatter. It is the system of record for all domain facts, including the immutable Booking snapshots.
@@ -306,28 +161,9 @@ The outbound adapter that renders message templates in the recipient's language 
 
 ## Modular Monolith Structure
 
-The Rails API is partitioned into the locked **6 core + 2 supporting** bounded contexts (authoritative in [./contexts/index](/docs/30-49-domains/bounded-contexts)). Each is a logical ownership boundary with its own ubiquitous language, aggregates, and a guarded public surface of commands, queries, and events. Context codes follow [/docs/70-79-business/requirements](/docs/70-79-business/requirements) §6.
+The Rails API is partitioned into the locked **6 core + 2 supporting** bounded contexts (authoritative in [Bounded contexts](/docs/30-49-domains/bounded-contexts)). Each is a logical ownership boundary with its own ubiquitous language, aggregates, and a guarded public surface of commands, queries, and events. Context codes follow [/docs/70-79-business/requirements](/docs/70-79-business/requirements) §6.
 
-```mermaid
-graph TD
-  IAM[Identity & Access - supporting] --> PRV[Provider Verification - core]
-  IAM --> BKG[Booking - core]
-  IAM --> CORP[Corporate - core]
-  PRV -->|provider status, conformist read| CAT[Catalog - core]
-  CAT -->|calculate_quote, availability, guarded reserve| BKG
-  CAT -->|calculate_quote| CORP
-  CORP -->|create-booking-from-quote ACL| BKG
-  BKG -->|commission snapshot| PAY[Payments - core]
-  CORP -->|bank-transfer reconciliation| PAY
-  BKG -->|completion enables review| REV[Reviews - core]
-  IAM -. events .-> NOT[Notifications - supporting]
-  PRV -. events .-> NOT
-  CAT -. events .-> NOT
-  BKG -. events .-> NOT
-  PAY -. events .-> NOT
-  CORP -. events .-> NOT
-  REV -. events .-> NOT
-```
+The strategic **context map** (relationships, sync vs async integration, and Notifications fan-out) lives in one canonical place: [Bounded contexts — Context map](/docs/30-49-domains/bounded-contexts#context-map). The subsections below describe each context's responsibilities without duplicating that diagram.
 
 ## IAM — Identity & Access *(supporting, generic)*
 Authentication, accounts, coarse roles, sessions, and Language Preference. The **dependency root** — every context consumes its authenticated principal and role — but supporting rather than core because it encodes no Red-Cab-specific competitive logic. Owns `Account`, Role assignment, and Language Preference. Exposes a deliberately minimal, stable contract (`principal`, `role`, `language`) to limit ripple (CR-6). Anchors `OPR-1`. Open: auth methods (`AMB-021`), guest scope (`AMB-022`).
@@ -339,7 +175,7 @@ Takes a Provider from registration to Approved/Active and keeps their right to o
 Everything a Provider publishes and a Tourist discovers and prices. Internal modules: **Geography**, **Listings**, **Pricing**, **Availability**, **Search** (Geography and Search are modules, not contexts, because they own no independent domain logic / no data). Owns `Geography` (`catalog_countries` + `catalog_geographies` tree; District/Area as discovery roles — see [Geography](/docs/30-49-domains/patterns/geography), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)), `Listing`, `PricingPolicy`, and `AvailabilitySlot` — including `available_seats`. Hosts the **single pricing authority** `calculate_quote(...)` (`PRC-1`) and the **guarded seat-reservation command** that Booking invokes co-transactionally (CR-1). Anchors `INV-3`, `INV-8`, `INV-10`, `PRC-1..8`, `CON-3`, `CON-4`.
 
 ## Booking — Booking & Checkout *(core)*
-Turns a selected Slot into a Booking and runs its lifecycle; **owns money facts** (the frozen snapshots). Internal modules: **Checkout** and **Order Lifecycle**. Owns `Booking` (Price/Commission/Cancellation snapshots + state), `PassengerManifest`, `BundleBooking`. Its critical transaction — snapshot freeze + seat reservation + booking creation — commits atomically or not at all (`BKG-2`, `CON-1`). Publishes the immutable Commission Snapshot that Payments consumes and the completion fact that Reviews consumes. Lifecycle is authoritative in [./booking-state-machine.md](/docs/30-49-domains/patterns/booking-state-machine). Anchors `INV-1..5`, `INV-11`, `LC-1..6`, `BKG-1..8`, `CON-1`, `CON-2`, `CON-5`.
+Turns a selected Slot into a Booking and runs its lifecycle; **owns money facts** (the frozen snapshots). Internal modules: **Checkout** and **Order Lifecycle**. Owns `Booking` (Price/Commission/Cancellation snapshots + state), `PassengerManifest`, `BundleBooking`. Its critical transaction — snapshot freeze + seat reservation + booking creation — commits atomically or not at all (`BKG-2`, `CON-1`). Publishes the immutable Commission Snapshot that Payments consumes and the completion fact that Reviews consumes. Lifecycle is authoritative in [Booking state machine](/docs/30-49-domains/patterns/booking-state-machine). Anchors `INV-1..5`, `INV-11`, `LC-1..6`, `BKG-1..8`, `CON-1`, `CON-2`, `CON-5`.
 
 ## Payments — Payments & Payouts *(core)*
 **Owns money movement** and the Commission Rate setting: charges, captures, settlement-release instructions, refunds, reconciliation. Owns `Payment`/`Charge`, `ProviderMerchantAccount`, `PayoutQueueEntry`, `Refund`, `CommissionRateSetting`, `ReconciliationRecord`. Reads the Booking Commission Snapshot read-only and **never authors or mutates it**. Custody sits with the licensed payment provider (`INV-13`, `PAY-13`, [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation)). Each money operation is individually transactional and idempotent (`FIN-10`); state converges to external-rail truth via provider events (`FIN-11`). Anchors `PAY-1..17`, `FIN-1..14`, `LC-6`, `LC-13`, `LC-14`. Remaining open: refund-failure (`AMB-006`), post-settlement disputes (`AMB-008`), capture timing (`AMB-039`), provider selection (`AMB-040`).
@@ -357,10 +193,10 @@ Renders and dispatches email/SMS in the recipient's language, reacting to domain
 
 ## Cross-Context Integration
 
-How the eight contexts cooperate without sharing mutable state. The governing rule of thumb (from [./contexts/index](/docs/30-49-domains/bounded-contexts)): **state-changing invariants that must hold together are synchronous and co-transactional; cross-context reactions and notifications are asynchronous.**
+How the eight contexts cooperate without sharing mutable state. The governing rule of thumb (from [Bounded contexts](/docs/30-49-domains/bounded-contexts)): **state-changing invariants that must hold together are synchronous and co-transactional; cross-context reactions and notifications are asynchronous.**
 
 ## Domain Events
-Contexts integrate primarily through **past-tense, in-process domain events** that carry identities and immutable facts — never references to another context's live aggregate. Events are the asynchronous spine: Notifications consumes the full catalog; cross-context cascades (license expiry → pause listings; district deactivation → unlist; completion → enable review; completion → queue payout) all flow as events. Because events can be redelivered or arrive out of order, **every consumer must be idempotent** (`FIN-10`); a failed reaction is retried independently and never rolls back the committed transition that emitted it. The full catalog and producer/consumer mapping live in [./contexts/index](/docs/30-49-domains/bounded-contexts).
+Contexts integrate primarily through **past-tense, in-process domain events** that carry identities and immutable facts — never references to another context's live aggregate. Events are the asynchronous spine: Notifications consumes the full catalog; cross-context cascades (license expiry → pause listings; district deactivation → unlist; completion → enable review; completion → queue payout) all flow as events. Because events can be redelivered or arrive out of order, **every consumer must be idempotent** (`FIN-10`); a failed reaction is retried independently and never rolls back the committed transition that emitted it. The full catalog and producer/consumer mapping live in [Bounded contexts](/docs/30-49-domains/bounded-contexts).
 
 ## Pricing Authority
 Price crosses context boundaries only as a **computed value contract** (`PriceBreakdown`), never as a recomputation. Three callers — listing display, search filtering, and checkout snapshotting — could each independently derive price and drift (coupling risk CR-2). The integration rule is that **only `Catalog.calculate_quote(...)` computes price** (`PRC-1`); every other context and the SPA consume the breakdown. This guarantees that display, filter, and checkout prices for the same inputs are identical (`PRC-2`, `NFR-PERF-002`). See the [Single Pricing Authority](#single-pricing-authority) principle.
@@ -369,7 +205,7 @@ Price crosses context boundaries only as a **computed value contract** (`PriceBr
 At checkout, Booking captures **immutable snapshots** of the facts it needs from upstream — the Price Snapshot, the Commission Snapshot, and the Cancellation Policy Snapshot — and thereafter owns them as Booking facts (`INV-1`, `PAY-2`, `PAY-4`). This is the integration mechanism that decouples a Booking's commercial terms from later upstream edits: Catalog may change a listing's price or policy and Payments may change the Commission Rate, but a created Booking is unaffected (`BKG-8`, `INV-11`). Downstream contexts (Payments, refunds) **read** the snapshot and never mutate it. See the [Snapshot Pattern](#snapshot-pattern) principle.
 
 ## Payment Flows
-Booking and Payments are joined along the **money-facts vs money-movement** seam ([./payments-architecture.md](/docs/30-49-domains/patterns/payments-architecture)). Booking authors the immutable financial fact (the Commission Snapshot, in the same atomic transaction as creation and seat reservation); Payments reads that fact and instructs movement against the external rail — it never holds funds itself (`INV-13`). Charges, settlements, and refunds are computed from the snapshot, never a live rate (`PAY-6`, `FIN-6`). Settlement outcomes arrive asynchronously as provider events and are authoritative (`FIN-11`); the settlement/refund interlock (`FIN-5`, `PAY-8`) must hold across the async gap so the same funds are never both settled and refunded (coupling risk CR-3). Corporate bank-transfer funds are collected by the payment provider through a per-transaction virtual account and confirmed by provider event (`PAY-9`). Custody sits with the provider while control of transaction completion stays with Red Cab (`PAY-15`, `PAY-16`) — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) and [Open Architectural Decisions](#open-architectural-decisions).
+Booking and Payments are joined along the **money-facts vs money-movement** seam ([Payments architecture](/docs/30-49-domains/patterns/payments-architecture)). Booking authors the immutable financial fact (the Commission Snapshot, in the same atomic transaction as creation and seat reservation); Payments reads that fact and instructs movement against the external rail — it never holds funds itself (`INV-13`). Charges, settlements, and refunds are computed from the snapshot, never a live rate (`PAY-6`, `FIN-6`). Settlement outcomes arrive asynchronously as provider events and are authoritative (`FIN-11`); the settlement/refund interlock (`FIN-5`, `PAY-8`) must hold across the async gap so the same funds are never both settled and refunded (coupling risk CR-3). Corporate bank-transfer funds are collected by the payment provider through a per-transaction virtual account and confirmed by provider event (`PAY-9`). Custody sits with the provider while control of transaction completion stays with Red Cab (`PAY-15`, `PAY-16`) — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) and [Open Architectural Decisions](#open-architectural-decisions).
 
 ## The one shared transaction
 The single place two contexts share a transaction is **CheckoutSession↔Catalog seat reservation** (CR-1): CheckoutSession creation decrements Catalog's `available_seats` through a *guarded reserve command* within the same transaction, because both run in the same database. Booking materialization on payment success copies the session's hold. This is the deliberate, documented exception to "no shared transactions," and it exists solely to uphold the atomic-overbooking invariant (`CON-1`, `CON-2`, `BKG-9`). It must never become a network call without a redesign (a saga). Everywhere else, contexts integrate by event or by id-reference only.
@@ -414,7 +250,7 @@ Booking creation, snapshot freezing, and seat decrement either all take effect o
 Cross-context reactions — notifications, payout queuing, rating recalculation, listing pause/restore cascades — are driven by past-tense domain events consumed asynchronously, never by direct cross-context writes (CR-4). Consumers are idempotent and retriable; a committed transition is never rolled back by a failed reaction (`FIN-10`, `FIN-11`). This keeps request latency decoupled from external delivery and preserves the 60-second confirmation SLA (`OPR-8`).
 
 ## Money Facts vs Money Movement
-Financial responsibility is split along a single seam: **Booking owns money facts** (the immutable snapshots — what was owed, to whom, at what split) and **Payments owns money movement and configuration** (the Commission Rate, charges, payouts, refunds, reconciliation). Payments reads facts and moves money; it never authors or mutates a Booking's facts (`FIN-3`, `FIN-5`, [./payments-architecture.md](/docs/30-49-domains/patterns/payments-architecture)). This isolates external-rail volatility from the order aggregate while keeping the snapshot transaction intact.
+Financial responsibility is split along a single seam: **Booking owns money facts** (the immutable snapshots — what was owed, to whom, at what split) and **Payments owns money movement and configuration** (the Commission Rate, charges, payouts, refunds, reconciliation). Payments reads facts and moves money; it never authors or mutates a Booking's facts (`FIN-3`, `FIN-5`, [Payments architecture](/docs/30-49-domains/patterns/payments-architecture)). This isolates external-rail volatility from the order aggregate while keeping the snapshot transaction intact.
 
 ## Modular Monolith First
 The system is one deployable over one database, partitioned into logical contexts that integrate in-process and are enforced by module boundaries and contracts — not by distribution. Contexts expose commands, queries, and events, never their tables. This minimizes coordination and consistency cost at the current scale; a context (e.g. Search) graduates to its own service only against a documented fitness function, never speculatively.
@@ -437,7 +273,7 @@ Listed below: **remaining open items** by the architectural seam they most affec
 - **`AMB-009` — commission base (P1)** and **`AMB-010` — snapshot scope (P1).** Confirm commission on gross incl. mandatory charges and full snapshot scope at CheckoutSession creation.
 
 ## Booking lifecycle
-- **`AMB-013` — missing operational lifecycle paths (P1)** and **`AMB-014` — terminal-state overloading & initiator attribute (P1).** Complete cancellation/refund paths; ensure the refund rule stays derivable.
+- **`AMB-013` — missing operational lifecycle paths (P1)** and **`AMB-014` — terminal-state overloading & initiator attribute (P1).** Complete cancellation/refund paths; keep the refund rule derivable.
 - **`AMB-026` — provider suspension/expiry mid-flight (P1).** In-flight booking treatment — in no case mutating historical facts.
 
 ## Catalog, discovery & identity
@@ -451,4 +287,4 @@ Listed below: **remaining open items** by the architectural seam they most affec
 ## Notifications & operations
 - **`AMB-016` — login lockout parameters (P2)**, **`AMB-035` — support monetization after trial (P2)**, **`AMB-015` — holiday-calendar presets (P2)**, **`AMB-018` — multi-day single-provider scope (P2).**
 
-> Note on scope: no open decision above changes the aggregate or context **boundaries** defined in [./contexts/index](/docs/30-49-domains/bounded-contexts) and [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models). Each affects value objects, lifecycle detail, external-rail topology, or a cross-context contract within a single owning context — which is the purpose of drawing the boundaries where they are.
+> Note on scope: no open decision above changes the aggregate or context **boundaries** defined in [Bounded contexts](/docs/30-49-domains/bounded-contexts) and [Domain models](/docs/30-49-domains/domain-models/domain-models). Each affects value objects, lifecycle detail, external-rail topology, or a cross-context contract within a single owning context — which is the purpose of drawing the boundaries where they are.

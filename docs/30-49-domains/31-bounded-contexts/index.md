@@ -25,132 +25,6 @@ Strategic DDD design: ownership boundaries, integration contracts, domain events
 
 ---
 
-## TL;DR
-
-- Eight bounded contexts: **six core** (Onboarding, Catalog, Booking, Payments, Corporate, Reviews) and **two supporting** (Identity, Notifications).
-- Contexts integrate **in-process** — sync commands/queries or async domain events — with no network boundary between them.
-- **Catalog** computes price and owns seat inventory; **Booking** runs checkout and owns snapshots; **Payments** moves money against those facts.
-- The only shared transaction is checkout + guarded seat reservation (`CR-1`).
-
-## About this document
-
-Strategic DDD design: ownership boundaries, integration contracts, domain events, and coupling risks.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Money flows | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Code mapping | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
-
----
-
-## TL;DR
-
-- Eight bounded contexts: **six core** (Onboarding, Catalog, Booking, Payments, Corporate, Reviews) and **two supporting** (Identity, Notifications).
-- Contexts integrate **in-process** — sync commands/queries or async domain events — with no network boundary between them.
-- **Catalog** computes price and owns seat inventory; **Booking** runs checkout and owns snapshots; **Payments** moves money against those facts.
-- The only shared transaction is checkout + guarded seat reservation (`CR-1`).
-
-## About this document
-
-Strategic DDD design: ownership boundaries, integration contracts, domain events, and coupling risks.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Money flows | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Code mapping | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
-
----
-
-## TL;DR
-
-- Eight bounded contexts: **six core** (Onboarding, Catalog, Booking, Payments, Corporate, Reviews) and **two supporting** (Identity, Notifications).
-- Contexts integrate **in-process** — sync commands/queries or async domain events — with no network boundary between them.
-- **Catalog** computes price and owns seat inventory; **Booking** runs checkout and owns snapshots; **Payments** moves money against those facts.
-- The only shared transaction is checkout + guarded seat reservation (`CR-1`).
-
-## About this document
-
-Strategic DDD design: ownership boundaries, integration contracts, domain events, and coupling risks.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Money flows | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Code mapping | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
-
----
-
-## TL;DR
-
-- Eight bounded contexts: **six core** (Onboarding, Catalog, Booking, Payments, Corporate, Reviews) and **two supporting** (Identity, Notifications).
-- Contexts integrate **in-process** — sync commands/queries or async domain events — with no network boundary between them.
-- **Catalog** computes price and owns seat inventory; **Booking** runs checkout and owns snapshots; **Payments** moves money against those facts.
-- The only shared transaction is checkout + guarded seat reservation (`CR-1`).
-
-## About this document
-
-Strategic DDD design: ownership boundaries, integration contracts, domain events, and coupling risks.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Money flows | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Code mapping | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
-
----
-
-## TL;DR
-
-- Eight bounded contexts: **six core** (Onboarding, Catalog, Booking, Payments, Corporate, Reviews) and **two supporting** (Identity, Notifications).
-- Contexts integrate **in-process** — sync commands/queries or async domain events — with no network boundary between them.
-- **Catalog** computes price and owns seat inventory; **Booking** runs checkout and owns snapshots; **Payments** moves money against those facts.
-- The only shared transaction is checkout + guarded seat reservation (`CR-1`).
-
-## About this document
-
-Strategic DDD design: ownership boundaries, integration contracts, domain events, and coupling risks.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Money flows | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Code mapping | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
-
----
-
-## TL;DR
-
-- Eight bounded contexts: **six core** (Onboarding, Catalog, Booking, Payments, Corporate, Reviews) and **two supporting** (Identity, Notifications).
-- Contexts integrate **in-process** — sync commands/queries or async domain events — with no network boundary between them.
-- **Catalog** computes price and owns seat inventory; **Booking** runs checkout and owns snapshots; **Payments** moves money against those facts.
-- The only shared transaction is checkout + guarded seat reservation (`CR-1`).
-
-## About this document
-
-Strategic DDD design: ownership boundaries, integration contracts, domain events, and coupling risks.
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Money flows | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
-| Code mapping | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
-
----
-
 ## Strategic overview
 Red Cab is a single modular-monolith application (one deployable, one PostgreSQL database). "Bounded context" here is a **logical ownership boundary**: a module with its own ubiquitous language, its own aggregates, and a guarded public surface. Contexts integrate **in-process** — synchronously via published commands/queries, or asynchronously via in-process domain events. There is no network boundary between contexts; the discipline is enforced by module boundaries and contracts, not by distribution.
 Baseline (locked after three review rounds: 10 → 5+1 → 6+2):
@@ -163,6 +37,9 @@ Design principles applied:
 - Split across an independent **evolution axis**: Corporate Quotation ≠ Booking.
 
 ## Context map
+
+This diagram is illustrative: it shows how the eight contexts depend on one another and which integrations are synchronous versus event-driven.
+
 ```mermaid
 graph TD
   Identity[Identity and Access - supporting] -->|authenticated principal| Onboard[Provider Onboarding and Verification]
@@ -185,6 +62,8 @@ graph TD
 ```
 
 Relationship types (DDD strategic patterns):
+
+This diagram is illustrative: it names the DDD relationship styles used on the map above (supplier, conformist, ACL, published events).
 
 ```mermaid
 graph LR

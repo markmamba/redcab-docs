@@ -21,109 +21,13 @@ ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
 
 ---
 
-## TL;DR
-
-- Freeze Price, Commission, and Cancellation Policy snapshots at checkout; **never edit** them for the life of a Booking.
-- Corrections are new facts (refunds, movements), not edits to frozen snapshots.
-
-## About this document
-
-ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
-
-| Topic | Document |
-| --- | --- |
-| Snapshots | [Immutable Snapshots](/docs/30-49-domains/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- Freeze Price, Commission, and Cancellation Policy snapshots at checkout; **never edit** them for the life of a Booking.
-- Corrections are new facts (refunds, movements), not edits to frozen snapshots.
-
-## About this document
-
-ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
-
-| Topic | Document |
-| --- | --- |
-| Snapshots | [Immutable Snapshots](/docs/30-49-domains/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- Freeze Price, Commission, and Cancellation Policy snapshots at checkout; **never edit** them for the life of a Booking.
-- Corrections are new facts (refunds, movements), not edits to frozen snapshots.
-
-## About this document
-
-ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
-
-| Topic | Document |
-| --- | --- |
-| Snapshots | [Immutable Snapshots](/docs/30-49-domains/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- Freeze Price, Commission, and Cancellation Policy snapshots at checkout; **never edit** them for the life of a Booking.
-- Corrections are new facts (refunds, movements), not edits to frozen snapshots.
-
-## About this document
-
-ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
-
-| Topic | Document |
-| --- | --- |
-| Snapshots | [Immutable Snapshots](/docs/30-49-domains/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- Freeze Price, Commission, and Cancellation Policy snapshots at checkout; **never edit** them for the life of a Booking.
-- Corrections are new facts (refunds, movements), not edits to frozen snapshots.
-
-## About this document
-
-ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
-
-| Topic | Document |
-| --- | --- |
-| Snapshots | [Immutable Snapshots](/docs/30-49-domains/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- Freeze Price, Commission, and Cancellation Policy snapshots at checkout; **never edit** them for the life of a Booking.
-- Corrections are new facts (refunds, movements), not edits to frozen snapshots.
-
-## About this document
-
-ADR for immutable snapshot strategy (`INV-1`, `BKG-8`).
-
-| Topic | Document |
-| --- | --- |
-| Snapshots | [Immutable Snapshots](/docs/30-49-domains/data-model/snapshots) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
 ## Status
 
 Accepted
 
 ## Context
 
-Per [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context; per [ADR-004-context-integration-model.md](./adr-004-context-integration-model), contexts collaborate only through published contracts and identity-only references; and per [ADR-005-single-pricing-authority.md](./adr-005-single-pricing-authority), price is computed in exactly one authoritative place. Those decisions answer *how ownership is divided, how contexts cooperate, and where price is made*. They do not by themselves explain *why a Booking freezes the commercial facts it depends on rather than reading them live from upstream*. Snapshotting is the single mechanism that most directly protects the platform's financial and legal correctness, so the reasoning behind it deserves to be recorded on its own. This ADR records that reasoning; it changes nothing about which facts are snapshotted, who owns them, or when they are frozen.
+Per [ADR-003](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context; per [ADR-004](./adr-004-context-integration-model), contexts collaborate only through published contracts and identity-only references; and per [ADR-005](./adr-005-single-pricing-authority), price is computed in exactly one authoritative place. Those decisions answer *how ownership is divided, how contexts cooperate, and where price is made*. They do not by themselves explain *why a Booking freezes the commercial facts it depends on rather than reading them live from upstream*. Snapshotting is the single mechanism that most directly protects the platform's financial and legal correctness, so the reasoning behind it deserves to be recorded on its own. This ADR records that reasoning; it changes nothing about which facts are snapshotted, who owns them, or when they are frozen.
 
 The dominant architectural force is that **history must never change**. A Booking is a commercial and legal act — a buyer agreed to specific terms, at a specific price, under a specific cancellation policy, with a specific revenue split — and that act happened at a fixed moment in time. The commercial truth of a completed transaction is a fact about the past. Any architecture that lets the past be rewritten by the present has, by construction, no reliable history: the record of what a Tourist agreed to and paid could silently become something else after the fact. The whole platform's honesty rests on the guarantee that a Booking's terms are frozen once and never edited (`INV-1`, `BKG-8`).
 
@@ -148,7 +52,7 @@ The immutable-snapshot strategy is fixed as already established:
 - **Corrections create new facts; they never edit old facts.** A change to a settled transaction is expressed as a *new* immutable fact that supersedes, not a mutation of the frozen one — a refund is a new money movement, not an edit of the original charge or the snapshot it was computed from (`PAY-6`, `PAY-8`). The historical snapshot remains intact as the basis the correction was computed against.
 - **corporate quotations become bookings by snapshotting, like every other Booking.** When an `Accepted` Quotation converts into a Booking (`LC-11`), that Booking freezes its own snapshots at creation exactly as a B2C checkout does, through the anti-corruption boundary that translates corporate vocabulary into Booking's language (per [ADR-004](./adr-004-context-integration-model)). The corporate order thereby holds the same permanent, auditable commercial truth as any other Booking.
 
-This decision records *why the architecture already freezes immutable business snapshots*; it changes nothing about which facts are snapshotted, the aggregate that owns them, the moment they are frozen, or the contexts that consume them, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [../contexts/index](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models), and [../../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants).
+This decision records *why the architecture already freezes immutable business snapshots*; it changes nothing about which facts are snapshotted, the aggregate that owns them, the moment they are frozen, or the contexts that consume them, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models), and [../../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants).
 
 ## Consequences
 
@@ -199,10 +103,10 @@ Rejected because keeping orders "in sync" with the present is the opposite of wh
 
 ## Related Documents
 
-- [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes Booking the one home for the immutable money facts it freezes.
-- [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the published-contract, identity-only integration model within which snapshotting decouples Booking from later upstream edits.
-- [ADR-005-single-pricing-authority.md](./adr-005-single-pricing-authority) — the single pricing authority whose computed result the Price Snapshot freezes for the life of the Booking.
-- [overview.md](/docs/30-49-domains/system-design/overview) — top-level architecture, the Snapshot Pattern and Booking Snapshots sections, and the money-facts / money-movement seam.
-- [contexts/index](/docs/30-49-domains/bounded-contexts) — authoritative context structure, Booking's ownership of the frozen snapshots, the Commission Snapshot value contract, and the coupling-risk register.
-- [api-design.md](/docs/30-49-domains/system-design/api-design) — how the snapshotting boundaries and the contracts crossing them are expressed at the platform edge.
-- [domain-models.md](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, the snapshot philosophy, immutable-vs-mutable facts, and the aggregate-boundary rules that keep snapshots owned by Booking.
+- [ADR-003](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes Booking the one home for the immutable money facts it freezes.
+- [ADR-004](./adr-004-context-integration-model) — the published-contract, identity-only integration model within which snapshotting decouples Booking from later upstream edits.
+- [ADR-005](./adr-005-single-pricing-authority) — the single pricing authority whose computed result the Price Snapshot freezes for the life of the Booking.
+- [System design overview](/docs/30-49-domains/system-design/overview) — top-level architecture, the Snapshot Pattern and Booking Snapshots sections, and the money-facts / money-movement seam.
+- [Bounded contexts](/docs/30-49-domains/bounded-contexts) — authoritative context structure, Booking's ownership of the frozen snapshots, the Commission Snapshot value contract, and the coupling-risk register.
+- [API design](/docs/30-49-domains/system-design/api-design) — how the snapshotting boundaries and the contracts crossing them are expressed at the platform edge.
+- [Domain models](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, the snapshot philosophy, immutable-vs-mutable facts, and the aggregate-boundary rules that keep snapshots owned by Booking.

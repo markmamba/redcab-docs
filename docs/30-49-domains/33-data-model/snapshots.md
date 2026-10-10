@@ -1,12 +1,29 @@
 ---
 title: Immutable Snapshots
 sidebar_position: 4
-description: Conceptual data model for Red Cab Marketplace.
+description: Write-once Price, Commission, Cancellation Policy, and Service Timezone snapshots at checkout.
 ---
 
-## 8. Immutable Snapshot Structures
+## TL;DR
 
-Snapshots are the model's central protection device: they make a record's commercial meaning permanent regardless of later upstream change ([./overview.md](/docs/30-49-domains/system-design/overview) Snapshot Pattern; `INV-1`, `PAY-2`, `BKG-8`). A snapshot is **write-once**, **owned by the capturing aggregate**, and **read-only to everyone else**.
+- Snapshots freeze commercial meaning at CheckoutSession creation and copy to Booking at materialization.
+- Price, Commission, Cancellation Policy, and Service Timezone are canonical snapshots (`INV-1`, `BKG-9`).
+- Corrections are new Payments facts. Snapshots are never edited.
+
+## About this document
+
+Conceptual snapshot structures. See [Payments architecture](/docs/30-49-domains/patterns/payments-architecture) for the facts vs movement seam.
+
+| Topic | Document |
+| --- | --- |
+| Domain models | [Domain models](/docs/30-49-domains/domain-models/domain-models) |
+| ADR-006, ADR-014 | [Architecture decisions](/docs/30-49-domains/architecture-decisions) |
+
+---
+
+## Immutable snapshot structures
+
+Snapshots are the model's central protection device: they make a record's commercial meaning permanent regardless of later upstream change ([System design overview](/docs/30-49-domains/system-design/overview) Snapshot Pattern; `INV-1`, `PAY-2`, `BKG-8`). A snapshot is **write-once**, **owned by the capturing aggregate**, and **read-only to everyone else**.
 
 The canonical snapshots are captured by **CheckoutSession at session creation** and copied to **Booking** at materialization; thereafter owned as Booking facts:
 
@@ -24,6 +41,8 @@ Structural rules these snapshots obey:
 - **Single financial reference.** All later money movement (payout, refund) derives from these snapshots, never a live rate or edited policy (`PAY-6`, `FIN-6`).
 - **Corrections are new facts.** A refund or adjustment is a *new* movement in Payments, never an edit of a snapshot (`§ Money Facts vs Money Movement`).
 - **Other snapshots in the model.** Notifications captures a **language snapshot** of the recipient at send time; a Review's submitted original content is immutable once submitted. These follow the same write-once principle within their owning aggregates.
+
+This diagram is illustrative: checkout and booking snapshots and their capture-time provenance (dashed edges are not live dependencies).
 
 ```mermaid
 erDiagram

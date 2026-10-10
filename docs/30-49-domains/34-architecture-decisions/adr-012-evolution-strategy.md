@@ -22,115 +22,13 @@ ADR for long-term evolution strategy without redesigning settled decisions.
 
 ---
 
-## TL;DR
-
-- Architecture evolves **within** fixed context boundaries — additive contracts, new facts not edits, events for new reactions.
-- Extraction to separate deployables only against a **documented fitness function**, preserving ownership and contracts.
-
-## About this document
-
-ADR for long-term evolution strategy without redesigning settled decisions.
-
-| Topic | Document |
-| --- | --- |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| All ADRs | [Architecture Decisions](/docs/30-49-domains/architecture-decisions) |
-| Open items | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Architecture evolves **within** fixed context boundaries — additive contracts, new facts not edits, events for new reactions.
-- Extraction to separate deployables only against a **documented fitness function**, preserving ownership and contracts.
-
-## About this document
-
-ADR for long-term evolution strategy without redesigning settled decisions.
-
-| Topic | Document |
-| --- | --- |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| All ADRs | [Architecture Decisions](/docs/30-49-domains/architecture-decisions) |
-| Open items | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Architecture evolves **within** fixed context boundaries — additive contracts, new facts not edits, events for new reactions.
-- Extraction to separate deployables only against a **documented fitness function**, preserving ownership and contracts.
-
-## About this document
-
-ADR for long-term evolution strategy without redesigning settled decisions.
-
-| Topic | Document |
-| --- | --- |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| All ADRs | [Architecture Decisions](/docs/30-49-domains/architecture-decisions) |
-| Open items | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Architecture evolves **within** fixed context boundaries — additive contracts, new facts not edits, events for new reactions.
-- Extraction to separate deployables only against a **documented fitness function**, preserving ownership and contracts.
-
-## About this document
-
-ADR for long-term evolution strategy without redesigning settled decisions.
-
-| Topic | Document |
-| --- | --- |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| All ADRs | [Architecture Decisions](/docs/30-49-domains/architecture-decisions) |
-| Open items | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Architecture evolves **within** fixed context boundaries — additive contracts, new facts not edits, events for new reactions.
-- Extraction to separate deployables only against a **documented fitness function**, preserving ownership and contracts.
-
-## About this document
-
-ADR for long-term evolution strategy without redesigning settled decisions.
-
-| Topic | Document |
-| --- | --- |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| All ADRs | [Architecture Decisions](/docs/30-49-domains/architecture-decisions) |
-| Open items | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
-## TL;DR
-
-- Architecture evolves **within** fixed context boundaries — additive contracts, new facts not edits, events for new reactions.
-- Extraction to separate deployables only against a **documented fitness function**, preserving ownership and contracts.
-
-## About this document
-
-ADR for long-term evolution strategy without redesigning settled decisions.
-
-| Topic | Document |
-| --- | --- |
-| Overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| All ADRs | [Architecture Decisions](/docs/30-49-domains/architecture-decisions) |
-| Open items | [Open Questions](/docs/70-79-business/planning/open-questions) |
-
----
-
 ## Status
 
 Accepted
 
 ## Context
 
-Per [ADR-001-modular-monolith.md](./adr-001-modular-monolith), Red Cab is one deployable over one database, with in-process integration and a single deliberate shared-transaction seam; per [ADR-002-technology-stack.md](./adr-002-technology-stack), the chosen stack serves the domain model rather than defining it; per [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture), every concept has exactly one owning context inside 6 core + 2 supporting bounded contexts; per [ADR-004-context-integration-model.md](./adr-004-context-integration-model), contexts collaborate only through published contracts — commands, queries, and domain events — and identity-only references; per [ADR-005-single-pricing-authority.md](./adr-005-single-pricing-authority), price is computed in exactly one authoritative place and consumed everywhere else as a value contract; per [ADR-006-immutable-snapshot-strategy.md](./adr-006-immutable-snapshot-strategy), a Booking freezes the commercial facts it depends on as immutable, write-once truth and corrections are new facts, never edits; per [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries), transactional consistency stops at the context edge and cross-context collaboration is choreography, not one shared transaction; per [ADR-008-domain-event-architecture.md](./adr-008-domain-event-architecture), a domain event announces a committed business fact that others may react to but never author; per [ADR-009-external-systems-integration.md](./adr-009-external-systems-integration), external systems supply capabilities but never own the business; per [ADR-010-identity-and-authorization-architecture.md](./adr-010-identity-and-authorization-architecture), business permissions belong to the context that owns the state they protect; and per [ADR-011-financial-authority-model.md](./adr-011-financial-authority-model), business facts determine financial outcomes and Payments executes those outcomes but never rewrites the facts that produced them. Those eleven decisions together constitute a complete, frozen architecture — ownership, integration, snapshots, consistency, events, the outer edge, authorization, and financial authority. What none of them, taken as a series, states in one place is *why the whole is designed to grow without being redesigned* — why the architecture treats evolution as a discipline of extension and preservation rather than as a recurring opportunity to redraw boundaries, reassign ownership, or rewrite history. Because every future capability must fit inside this frozen shape, and because the temptation to shortcut that shape for speed is constant, the reasoning that makes long-term growth safe deserves to be recorded explicitly as the architectural conclusion of the series. This ADR records that reasoning; it changes nothing about the contexts, contracts, invariants, seams, or packaging already locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [../contexts/index](/docs/30-49-domains/bounded-contexts), and the rest of the architecture set.
+Per [ADR-001](./adr-001-modular-monolith), Red Cab is one deployable over one database, with in-process integration and a single deliberate shared-transaction seam; per [ADR-002](./adr-002-technology-stack), the chosen stack serves the domain model rather than defining it; per [ADR-003](./adr-003-bounded-context-architecture), every concept has exactly one owning context inside 6 core + 2 supporting bounded contexts; per [ADR-004](./adr-004-context-integration-model), contexts collaborate only through published contracts — commands, queries, and domain events — and identity-only references; per [ADR-005](./adr-005-single-pricing-authority), price is computed in exactly one authoritative place and consumed everywhere else as a value contract; per [ADR-006](./adr-006-immutable-snapshot-strategy), a Booking freezes the commercial facts it depends on as immutable, write-once truth and corrections are new facts, never edits; per [ADR-007](./adr-007-transaction-and-consistency-boundaries), transactional consistency stops at the context edge and cross-context collaboration is choreography, not one shared transaction; per [ADR-008](./adr-008-domain-event-architecture), a domain event announces a committed business fact that others may react to but never author; per [ADR-009](./adr-009-external-systems-integration), external systems supply capabilities but never own the business; per [ADR-010](./adr-010-identity-and-authorization-architecture), business permissions belong to the context that owns the state they protect; and per [ADR-011](./adr-011-financial-authority-model), business facts determine financial outcomes and Payments executes those outcomes but never rewrites the facts that produced them. Those eleven decisions together constitute a complete, frozen architecture — ownership, integration, snapshots, consistency, events, the outer edge, authorization, and financial authority. What none of them, taken as a series, states in one place is *why the whole is designed to grow without being redesigned* — why the architecture treats evolution as a discipline of extension and preservation rather than as a recurring opportunity to redraw boundaries, reassign ownership, or rewrite history. Because every future capability must fit inside this frozen shape, and because the temptation to shortcut that shape for speed is constant, the reasoning that makes long-term growth safe deserves to be recorded explicitly as the architectural conclusion of the series. This ADR records that reasoning; it changes nothing about the contexts, contracts, invariants, seams, or packaging already locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts), and the rest of the architecture set.
 
 The philosophical core of the decision is two sentences: **architectural evolution extends the system through bounded contexts and published contracts; it never rewrites established business truth or redraws ownership for convenience.** Growth is not a license to revisit what has already been decided — it is the exercise of adding capability *within* the ownership map, *across* the published surfaces, and *alongside* the immutable record of what already happened. Everything the architecture asks of evolution follows from that single distinction between *extending what is true now* and *modifying what was true then*.
 
@@ -148,7 +46,7 @@ The sixth force is that **event-driven collaboration is how the architecture sca
 
 The seventh force is that **external capability isolation keeps vendor and channel change from becoming domain change**. [ADR-009](./adr-009-external-systems-integration) fixed that external systems execute capabilities, never author business policy; that vendor concepts stay at the anti-corruption edge; and that a rail or channel can be reconfigured or replaced without moving a boundary or touching an invariant (`AMB-001`..`AMB-008`, `AMB-034`). The same principle extends inward: Identity establishes who acts but never decides business authority ([ADR-010](./adr-010-identity-and-authorization-architecture)); Payments moves money against frozen facts but never rewrites them ([ADR-011](./adr-011-financial-authority-model)). Evolution of suppliers, authentication methods, or movement topology is deliberately isolated from evolution of ownership and truth.
 
-The eighth force is that **modular monolith first is an evolution strategy, not merely a starting posture**. [ADR-001](./adr-001-modular-monolith) chose one deployable and one database because the domain's strongest invariants — atomic checkout, singular pricing authority, snapshot integrity — are best upheld in-process at current scale and team size. The modular monolith is not a promise to stay monolithic forever; it is a promise to extract only when a documented fitness function — a business need such as independent scaling or a dedicated search engine — justifies the cost, never when a technology preference does (per [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), Modular Monolith First; [../contexts/index](/docs/30-49-domains/bounded-contexts), Search rationale). Extraction preserves the contracts and ownership map; it changes only how a single owner's published surface is reached. Premature distribution would fracture the ownership discipline the whole series exists to establish.
+The eighth force is that **modular monolith first is an evolution strategy, not merely a starting posture**. [ADR-001](./adr-001-modular-monolith) chose one deployable and one database because the domain's strongest invariants — atomic checkout, singular pricing authority, snapshot integrity — are best upheld in-process at current scale and team size. The modular monolith is not a promise to stay monolithic forever; it is a promise to extract only when a documented fitness function — a business need such as independent scaling or a dedicated search engine — justifies the cost, never when a technology preference does (per [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), Modular Monolith First; [Bounded contexts](/docs/30-49-domains/bounded-contexts), Search rationale). Extraction preserves the contracts and ownership map; it changes only how a single owner's published surface is reached. Premature distribution would fracture the ownership discipline the whole series exists to establish.
 
 The final force is that **architectural integrity is preserved by minimizing ripple effects**. Every prior ADR contributes a constraint on how change may spread: singular ownership prevents duplicated logic from drifting (`CR-2`); snapshots prevent upstream edits from corrupting history; consistency boundaries prevent one context's failure from rolling back another's committed work; events prevent emitters from depending on consumers; the external edge prevents vendor volatility from reaching aggregates; local authorization prevents Identity from becoming a god-context (`CR-6`); the facts/movement seam prevents financial operations from redefining commercial truth (`CR-3`). Taken together, these constraints mean that a well-scoped change stays inside one owner, crosses only published contracts, adds rather than edits historical facts, and leaves every other ADR's decision intact. That is the architecture's definition of safe evolution: **extension rather than modification of established business truth**.
 
@@ -169,7 +67,7 @@ The evolution strategy is fixed as already established:
 - **Modular monolith first; extraction only by documented fitness.** The system remains one deployable over one database until a business need — not a technology preference — satisfies a documented fitness function; any extraction preserves exactly one authoritative owner per concept and the published contracts between owners (per [ADR-001](./adr-001-modular-monolith), [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview)).
 - **Architectural changes minimize ripple effects.** A change is successful when it is contained within one owner, crosses only stable contracts, adds rather than edits historical facts, and leaves every prior ADR's decision intact.
 
-This decision records *why the architecture was designed to evolve safely without redesign*; it changes nothing about the contexts, contracts, invariants, seams, or packaging already locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [../contexts/index](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models), and [../../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants). Open ambiguity items (`AMB-001`..`AMB-035`) remain in the register and are resolved within this strategy, not by moving boundaries or rewriting history.
+This decision records *why the architecture was designed to evolve safely without redesign*; it changes nothing about the contexts, contracts, invariants, seams, or packaging already locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models), and [../../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants). Open ambiguity items (`AMB-001`..`AMB-035`) remain in the register and are resolved within this strategy, not by moving boundaries or rewriting history.
 
 ## Consequences
 
@@ -236,23 +134,23 @@ Rejected because shared table access and live references are forbidden integrati
 
 ## Related Documents
 
-- [ADR-001-modular-monolith.md](./adr-001-modular-monolith) — the modular monolith first posture and the packaging inside which bounded contexts evolve in-process until a documented fitness function justifies extraction.
-- [ADR-002-technology-stack.md](./adr-002-technology-stack) — the stack choice subordinated to the domain model, not the driver of architectural change.
-- [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes each context the unit of safe change and independent evolution.
-- [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the published-contract integration model through which change propagates additively and with bounded ripple.
-- [ADR-005-single-pricing-authority.md](./adr-005-single-pricing-authority) — the single pricing authority that any future extraction must preserve as exactly one calculation point.
-- [ADR-006-immutable-snapshot-strategy.md](./adr-006-immutable-snapshot-strategy) — the extension-not-modification rule for historical business truth and correction-as-new-fact.
-- [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries) — the business-defined consistency boundaries that survive packaging change and confine strong consistency to where it is genuinely required.
-- [ADR-008-domain-event-architecture.md](./adr-008-domain-event-architecture) — the past-tense event spine by which new reactions attach without modifying committed facts or coupling emitters to consumers.
-- [ADR-009-external-systems-integration.md](./adr-009-external-systems-integration) — the capability-versus-decision distinction that keeps vendor and channel evolution outside the domain.
-- [ADR-010-identity-and-authorization-architecture.md](./adr-010-identity-and-authorization-architecture) — the identity/business-authority separation that lets authentication evolve without moving authorization boundaries.
-- [ADR-011-financial-authority-model.md](./adr-011-financial-authority-model) — the facts/movement seam that financial evolution must preserve so commercial truth is never rewritten by money operations.
-- [overview.md](/docs/30-49-domains/system-design/overview) — top-level architecture, the Modular Monolith First and Snapshot Pattern principles, and the Open Architectural Decisions note that ambiguity resolves within fixed boundaries.
-- [contexts/index](/docs/30-49-domains/bounded-contexts) — authoritative context structure, integration contracts, the domain-events catalog, the Search extraction fitness rationale, and the `CR-1`–`CR-7` coupling-risk register.
-- [api-design.md](/docs/30-49-domains/system-design/api-design) — how ownership boundaries and published contracts are expressed at the platform edge.
-- [payments-architecture.md](/docs/30-49-domains/patterns/payments-architecture) — the money-facts / money-movement seam and financial invariants (`FIN-1`..`FIN-11`) that evolution must uphold.
-- [domain-models.md](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, snapshot philosophy, consistency boundaries, and identity-only reference rules.
-- [business-rules.md](/docs/70-79-business/business-rules/invariants) — authoritative invariants (`INV-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `LC-`, `OPR-`) that evolution may not override.
-- [glossary.md](/docs/70-79-business/business-rules/glossary) — the ubiquitous language that evolution extends without importing vendor or convenience terms.
-- [functional-requirements.md](/docs/70-79-business/requirements/functional-requirements) — observable behaviors that run on the frozen architecture without redefining it.
-- [non-functional-requirements.md](/docs/70-79-business/requirements/non-functional-requirements) — quality constraints, including security and performance, that evolution must continue to satisfy.
+- [ADR-001](./adr-001-modular-monolith) — the modular monolith first posture and the packaging inside which bounded contexts evolve in-process until a documented fitness function justifies extraction.
+- [ADR-002](./adr-002-technology-stack) — the stack choice subordinated to the domain model, not the driver of architectural change.
+- [ADR-003](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes each context the unit of safe change and independent evolution.
+- [ADR-004](./adr-004-context-integration-model) — the published-contract integration model through which change propagates additively and with bounded ripple.
+- [ADR-005](./adr-005-single-pricing-authority) — the single pricing authority that any future extraction must preserve as exactly one calculation point.
+- [ADR-006](./adr-006-immutable-snapshot-strategy) — the extension-not-modification rule for historical business truth and correction-as-new-fact.
+- [ADR-007](./adr-007-transaction-and-consistency-boundaries) — the business-defined consistency boundaries that survive packaging change and confine strong consistency to where it is genuinely required.
+- [ADR-008](./adr-008-domain-event-architecture) — the past-tense event spine by which new reactions attach without modifying committed facts or coupling emitters to consumers.
+- [ADR-009](./adr-009-external-systems-integration) — the capability-versus-decision distinction that keeps vendor and channel evolution outside the domain.
+- [ADR-010](./adr-010-identity-and-authorization-architecture) — the identity/business-authority separation that lets authentication evolve without moving authorization boundaries.
+- [ADR-011](./adr-011-financial-authority-model) — the facts/movement seam that financial evolution must preserve so commercial truth is never rewritten by money operations.
+- [System design overview](/docs/30-49-domains/system-design/overview) — top-level architecture, the Modular Monolith First and Snapshot Pattern principles, and the Open Architectural Decisions note that ambiguity resolves within fixed boundaries.
+- [Bounded contexts](/docs/30-49-domains/bounded-contexts) — authoritative context structure, integration contracts, the domain-events catalog, the Search extraction fitness rationale, and the `CR-1`–`CR-7` coupling-risk register.
+- [API design](/docs/30-49-domains/system-design/api-design) — how ownership boundaries and published contracts are expressed at the platform edge.
+- [Payments architecture](/docs/30-49-domains/patterns/payments-architecture) — the money-facts / money-movement seam and financial invariants (`FIN-1`..`FIN-11`) that evolution must uphold.
+- [Domain models](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, snapshot philosophy, consistency boundaries, and identity-only reference rules.
+- [Invariants](/docs/70-79-business/business-rules/invariants) — authoritative invariants (`INV-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `LC-`, `OPR-`) that evolution may not override.
+- [Glossary](/docs/70-79-business/business-rules/glossary) — the ubiquitous language that evolution extends without importing vendor or convenience terms.
+- [Functional requirements](/docs/70-79-business/requirements/functional-requirements) — observable behaviors that run on the frozen architecture without redefining it.
+- [Non-functional requirements](/docs/70-79-business/requirements/non-functional-requirements) — quality constraints, including security and performance, that evolution must continue to satisfy.

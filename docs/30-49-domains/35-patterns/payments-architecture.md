@@ -49,15 +49,17 @@ Financial responsibility is split along a **money-facts vs money-movement** seam
 - **Payments & Payouts** owns money *movement instruction and configuration*: the platform **Commission Rate** setting (`PAY-2`), payment initiation, settlement release instructions, refunds, Payout Queue Entries, and reconciliation. Payments reads Booking/CheckoutSession snapshots; it does not author them.
 - **The payment provider** owns *custody*: it receives, holds, splits, and releases funds as the licensed party. It executes amounts the domain fixed; it never defines them (`ADR-009`, `ADR-011`).
 
+This diagram is illustrative: facts on Booking, instructions from Payments, custody on the licensed provider.
+
 ```mermaid
 graph LR
-  Session[CheckoutSession - snapshot authority] -->|"copy on materialize"| Booking[(Booking - money facts)]
-  Payments[Payments and Payouts - instruction and config] -->|reads snapshot| Booking
-  Payments -->|"initiate / release / refund"| PSP[Payment Provider - custody]
-  PSP -->|"holds funds"| PSP
-  PSP -->|net settlement| ProviderAcct[Provider Merchant Account]
-  PSP -->|platform fee| RedCab[Red Cab - commission only]
-  Admin[Admin] -->|sets| Rate[Commission Rate config]
+  Session[CheckoutSession snapshots] -->|copy on materialize| Booking[(Booking money facts)]
+  Payments[Payments movement and config] -->|read-only snapshot| Booking
+  Payments -->|initiate release refund| PSP[Payment provider custody]
+  PSP -->|holds funds| PSP
+  PSP -->|net settlement| ProviderAcct[Provider merchant account]
+  PSP -->|platform fee| RedCab[Red Cab commission]
+  Admin[Admin] -->|sets| Rate[Commission rate]
   Rate --> Payments
 ```
 
@@ -110,6 +112,8 @@ Rules that follow:
 - **Persisted external references are provider-neutral** — a provider discriminator plus an opaque reference, never provider-named columns.
 
 ## Payment lifecycle (B2C / card)
+
+This diagram is illustrative: checkout freezes facts and holds seats before a verified provider event materializes the Booking.
 
 ```mermaid
 sequenceDiagram
@@ -167,9 +171,11 @@ Guarantees:
 - Refund before `DISBURSED` voids the queue entry when it is still `QUEUED` or `FAILED` (`PAY-8`, `FIN-5`). Entries in `PROCESSING` require settlement outcome or designed reversal (W5, `AMB-038`).
 - The queue entry is the **evidentiary artifact** of Red Cab's control over transaction completion. It is not an internal convenience and MUST NOT be bypassed.
 
+This diagram is illustrative: payout queue states after completion determination; refund voids queued or failed entries before disbursement.
+
 ```mermaid
 graph LR
-  Completed[Booking COMPLETED + determination PAY-16] -->|create entry| Queued[QUEUED]
+  Completed[Booking COMPLETED PAY-16] -->|create entry| Queued[QUEUED]
   Queued --> Processing[PROCESSING]
   Processing --> Disbursed[DISBURSED]
   Processing --> Failed[FAILED]

@@ -101,7 +101,7 @@ Principles:
 - The detailed mapping lives in the traceability matrix (a separate document in this set); this README defines the philosophy, not the matrix itself.
 
 ## 6. Grouping by bounded context
-Functional requirements are grouped by the owning bounded context from [../architecture/contexts](/docs/30-49-domains/bounded-contexts). Context codes:
+Functional requirements are grouped by the owning bounded context from [Bounded contexts](/docs/30-49-domains/bounded-contexts). Context codes:
 
 - `IAM` — Identity & Access (supporting)
 - `PRV` — Provider Onboarding & Verification
@@ -120,23 +120,25 @@ Grouping rules:
 ## 7. Relationship to the authoritative documents
 Requirements are downstream of, and bounded by, these documents. Where they overlap, the document below governs and the requirement conforms.
 
-- **[../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants)** — invariants and operational rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`). Requirements express observable behavior consistent with these; they never weaken or contradict them. Terminology follows [/docs/70-79-business/business-rules/glossary](/docs/70-79-business/business-rules/glossary).
-- **[../architecture/booking-state-machine.md](/docs/30-49-domains/patterns/booking-state-machine)** — the authoritative Booking lifecycle. Requirements about booking behavior reference states/transitions but do not redefine them.
-- **[../architecture/payments-architecture.md](/docs/30-49-domains/patterns/payments-architecture)** — money-facts vs money-movement, financial invariants (`FIN-`). Requirements about payment behavior conform to these and to the snapshot rules.
-- **[../architecture/contexts](/docs/30-49-domains/bounded-contexts)** — defines the owning contexts and their boundaries used for grouping (§6).
-- **[/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models)** — defines the concepts, aggregates, and source-of-truth ownership that requirements describe behavior over. Requirements use these concept names exactly.
-- **[/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions)** — the open-decision register (§8).
+- **[Invariants](/docs/70-79-business/business-rules/invariants)** — invariants and operational rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`). Requirements express observable behavior consistent with these; they never weaken or contradict them. Terminology follows [Glossary](/docs/70-79-business/business-rules/glossary).
+- **[Booking state machine](/docs/30-49-domains/patterns/booking-state-machine)** — the authoritative Booking lifecycle. Requirements about booking behavior reference states/transitions but do not redefine them.
+- **[Payments architecture](/docs/30-49-domains/patterns/payments-architecture)** — money-facts vs money-movement, financial invariants (`FIN-`). Requirements about payment behavior conform to these and to the snapshot rules.
+- **[Bounded contexts](/docs/30-49-domains/bounded-contexts)** — defines the owning contexts and their boundaries used for grouping (§6).
+- **[Domain models](/docs/30-49-domains/domain-models/domain-models)** — defines the concepts, aggregates, and source-of-truth ownership that requirements describe behavior over. Requirements use these concept names exactly.
+- **[Open questions](/docs/70-79-business/planning/open-questions)** — the open-decision register (§8).
+
+This diagram is illustrative: requirements sit downstream of governing docs and cite open decisions without resolving them.
 
 ```mermaid
 graph TD
-  PRD[PRD + meeting notes] --> REQ[Requirements - observable behavior]
-  Glossary[glossary.md] --> REQ
-  Rules[business-rules.md] --> REQ
-  SM[booking-state-machine.md] --> REQ
-  Pay[payments-architecture.md] --> REQ
-  BC[contexts/index] --> REQ
-  DM[domain-models.md] --> REQ
-  REQ -->|references, never resolves| AMB[open-questions.md]
+  PRD[PRD and meeting notes] --> REQ[Requirements observable behavior]
+  Glossary[Glossary] --> REQ
+  Rules[Invariants] --> REQ
+  SM[Booking state machine] --> REQ
+  Pay[Payments architecture] --> REQ
+  BC[Bounded contexts] --> REQ
+  DM[Domain models] --> REQ
+  REQ -->|references never resolves| AMB[Open questions]
 ```
 
 ## 8. How ambiguities are referenced
@@ -155,10 +157,10 @@ Requirements are **subordinate** to the rules and models that govern correctness
 - A requirement cannot introduce a new lifecycle transition, alter snapshot immutability, change seat-concurrency guarantees, or move a source-of-truth boundary. Such changes occur only by amending the authoritative document (often via an `AMB-###` resolution), after which requirements follow.
 
 ## 10. Documents in this set
-- `README.md` (this document) — requirements architecture and conventions.
-- `functional-requirements.md` — FRs grouped by bounded context (§6).
-- `non-functional-requirements.md` — NFRs grouped by category (§3.1).
-- `traceability-matrix.md` — the mapping of PRD stories ↔ requirement IDs ↔ governing rules/contexts ↔ acceptance criteria.
+- [Requirements overview](/docs/70-79-business/requirements) (this document) — requirements architecture and conventions.
+- [Functional requirements](/docs/70-79-business/requirements/functional-requirements) — FRs grouped by bounded context (§6).
+- [Non-functional requirements](/docs/70-79-business/requirements/non-functional-requirements) — NFRs grouped by category (§3.1).
+- [Traceability matrix](/docs/70-79-business/requirements/traceability-matrix) — the mapping of PRD stories ↔ requirement IDs ↔ governing rules/contexts ↔ acceptance criteria.
 
 ## 11. Lifecycle and conformance of a requirement
 - **Status values:** `Draft`, `Provisional` (depends on an open `AMB-###`), `Approved`, `Deprecated`.

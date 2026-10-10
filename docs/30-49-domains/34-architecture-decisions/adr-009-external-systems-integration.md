@@ -22,115 +22,13 @@ ADR for external systems integration.
 
 ---
 
-## TL;DR
-
-- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
-- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
-
-## About this document
-
-ADR for external systems integration.
-
-| Topic | Document |
-| --- | --- |
-| External integrations | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
-- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
-
-## About this document
-
-ADR for external systems integration.
-
-| Topic | Document |
-| --- | --- |
-| External integrations | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
-- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
-
-## About this document
-
-ADR for external systems integration.
-
-| Topic | Document |
-| --- | --- |
-| External integrations | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
-- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
-
-## About this document
-
-ADR for external systems integration.
-
-| Topic | Document |
-| --- | --- |
-| External integrations | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
-- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
-
-## About this document
-
-ADR for external systems integration.
-
-| Topic | Document |
-| --- | --- |
-| External integrations | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- External systems (payment provider, email, SMS) are **capabilities at the edge** — they do not own business policy or invariants.
-- On the payment path this principle carries a **regulatory** consequence, not only an architectural one: custody sits with the licensed provider while control stays with Red Cab — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
-- Domain converges to external settlement truth asynchronously (`FIN-11`); vendors can change behind anti-corruption boundaries.
-
-## About this document
-
-ADR for external systems integration.
-
-| Topic | Document |
-| --- | --- |
-| External integrations | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Payments | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
 ## Status
 
 Accepted
 
 ## Context
 
-Per [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context; per [ADR-004-context-integration-model.md](./adr-004-context-integration-model), contexts collaborate only through published contracts — commands, queries, and domain events — and identity-only references; per [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries), transactional consistency stops at the context edge and everything beyond it is reconciled asynchronously; and per [ADR-008-domain-event-architecture.md](./adr-008-domain-event-architecture), a domain event announces a committed business fact that others may react to but never author. Those decisions govern *how the domain is divided and how its own contexts cooperate*. They do not, on their own, state *how the domain relates to the systems that are not part of it* — the external rails that execute card charges, marketplace payouts and refunds, and the external channels that deliver email and optional SMS. Those systems sit **across the platform's system boundary** (per [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), System Context and External Integrations): they are named as actors and rails, and they are pointedly **not** among the 6 core + 2 supporting bounded contexts that constitute the domain. Because the entire two-sided marketplace depends on money actually moving and messages actually being delivered by systems Red Cab does not own, the reasoning that keeps those systems *outside* the domain — suppliers of capability rather than participants in it — deserves to be recorded explicitly. This ADR records that reasoning; it changes nothing about which external systems the platform depends on, what each is responsible for, or where the money-facts / money-movement seam lies, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [../contexts/index](/docs/30-49-domains/bounded-contexts), and [/docs/30-49-domains/patterns/payments-architecture](/docs/30-49-domains/patterns/payments-architecture).
+Per [ADR-003](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context; per [ADR-004](./adr-004-context-integration-model), contexts collaborate only through published contracts — commands, queries, and domain events — and identity-only references; per [ADR-007](./adr-007-transaction-and-consistency-boundaries), transactional consistency stops at the context edge and everything beyond it is reconciled asynchronously; and per [ADR-008](./adr-008-domain-event-architecture), a domain event announces a committed business fact that others may react to but never author. Those decisions govern *how the domain is divided and how its own contexts cooperate*. They do not, on their own, state *how the domain relates to the systems that are not part of it* — the external rails that execute card charges, marketplace payouts and refunds, and the external channels that deliver email and optional SMS. Those systems sit **across the platform's system boundary** (per [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), System Context and External Integrations): they are named as actors and rails, and they are pointedly **not** among the 6 core + 2 supporting bounded contexts that constitute the domain. Because the entire two-sided marketplace depends on money actually moving and messages actually being delivered by systems Red Cab does not own, the reasoning that keeps those systems *outside* the domain — suppliers of capability rather than participants in it — deserves to be recorded explicitly. This ADR records that reasoning; it changes nothing about which external systems the platform depends on, what each is responsible for, or where the money-facts / money-movement seam lies, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts), and [/docs/30-49-domains/patterns/payments-architecture](/docs/30-49-domains/patterns/payments-architecture).
 
 The philosophical core of the decision is two sentences: **external systems provide capabilities; they never own the business.** An external system can be *asked* to move funds, transfer a Provider's net share, execute a refund, or deliver a message — but the decision that funds are owed, the split by which they divide, the policy by which a refund is computed, and the event that warrants a message are all made *inside* the domain, before any external system is ever engaged. Everything the architecture asks of external integration follows from that single distinction between a *capability that is executed* and a *business truth that is authored*.
 
@@ -150,7 +48,7 @@ The final force is **long-term vendor independence**. External payment-rail deta
 
 The external-systems posture is fixed as already established:
 
-- **External systems are outside the domain model.** The card-and-payout rail and the email/optional-SMS channels sit across the platform's system boundary; they are external rails and actors, never bounded contexts. The domain is exactly the 6 core + 2 supporting contexts, and no external system is among them (per [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [../contexts/index](/docs/30-49-domains/bounded-contexts)).
+- **External systems are outside the domain model.** The card-and-payout rail and the email/optional-SMS channels sit across the platform's system boundary; they are external rails and actors, never bounded contexts. The domain is exactly the 6 core + 2 supporting contexts, and no external system is among them (per [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts)).
 - **Business rules and invariants remain inside their owning contexts.** Price (`PRC-1`), the frozen revenue split (`INV-1`, `INV-2`), right-to-operate (`INV-6`, `INV-7`), inventory integrity (`INV-3`), review eligibility (`INV-5`), and the Commission Rate (`PAY-2`) are authored and enforced by their single owners; no external system holds, derives, or shares an invariant.
 - **External providers supply capabilities, not business decisions.** A rail executes charges, payouts, and refunds; a channel delivers messages. The decisions that a charge is warranted, that a payout is owed on the frozen Net Payout Amount (`LC-6`), that a refund is due under the snapshotted policy (`PAY-6`, `PAY-7`), and that and *when* a message should be sent and in which language (`OPR-8`, `OPR-9`) are made inside the domain before any external system is engaged.
 - **The domain owns business truth; external systems execute requested capabilities.** Booking authors the immutable money fact and the external rail moves money against it; the applied split is required to match the snapshot, never to define it (`INV-2`, `PAY-4`, `FIN-3`). The Notifications adapter carries what the publishing contexts decided to say and makes no domain decision.
@@ -160,7 +58,7 @@ The external-systems posture is fixed as already established:
 - **External systems are authoritative for outcomes, never for policy.** External settlement truth is authoritative only for whether a requested movement occurred (`FIN-11`); it is never an authoritative source of price, split, right-to-operate, or any other business policy, which are owned inside the domain.
 - **Integrations are replaceable without changing the domain.** Because the domain depends on capabilities behind published contracts and an edge — not on a particular supplier — remaining payment-rail open items (`AMB-006`, `AMB-008`, `AMB-039`, `AMB-040`) and SMS vendor sub-notes (`AMB-034`) can resolve either way, and a rail or channel can be reconfigured or replaced, without moving a boundary or touching an invariant.
 
-This decision records *why the architecture isolates external systems from the domain*; it changes nothing about which external systems are depended on, the responsibility split with each, or the seams they touch, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [../contexts/index](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/patterns/payments-architecture](/docs/30-49-domains/patterns/payments-architecture), and [../../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants).
+This decision records *why the architecture isolates external systems from the domain*; it changes nothing about which external systems are depended on, the responsibility split with each, or the seams they touch, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts), [/docs/30-49-domains/patterns/payments-architecture](/docs/30-49-domains/patterns/payments-architecture), and [../../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants).
 
 ## Consequences
 
@@ -216,13 +114,13 @@ Rejected because it forfeits long-term vendor independence for no architectural 
 
 ## Related Documents
 
-- [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes every business truth the property of exactly one in-domain owner, and no external system a context.
-- [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the published-contract, identity-only, anti-corruption discipline whose outward application keeps external vocabulary and volatility out of the domain.
-- [ADR-006-immutable-snapshot-strategy.md](./adr-006-immutable-snapshot-strategy) — the money-facts / money-movement seam and the frozen facts an external rail executes against but never authors or mutates.
-- [ADR-007-transaction-and-consistency-boundaries.md](./adr-007-transaction-and-consistency-boundaries) — the consistency boundaries beyond which external work is reconciled asynchronously, and the rule that a failed reaction never rolls back a committed fact.
-- [ADR-008-domain-event-architecture.md](./adr-008-domain-event-architecture) — the past-tense committed facts on whose asynchronous spine external integration and reconciliation ride.
-- [overview.md](/docs/30-49-domains/system-design/overview) — top-level architecture, the System Context and External Integrations sections, and the Open Architectural Decisions that isolate external detail from the domain.
-- [contexts/index](/docs/30-49-domains/bounded-contexts) — authoritative context structure, the outbound-adapter role of Notifications, and the `CR-1`–`CR-7` coupling-risk register.
-- [payments-architecture.md](/docs/30-49-domains/patterns/payments-architecture) — the money-facts / money-movement seam, the async boundaries, and the convergence-to-external-truth invariants (`FIN-1`..`FIN-11`).
-- [api-design.md](/docs/30-49-domains/system-design/api-design) — how the domain's published surfaces and its outer boundaries are expressed at the platform edge.
-- [domain-models.md](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, identity-only references, and the snapshot philosophy that keeps business truth inside the domain.
+- [ADR-003](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes every business truth the property of exactly one in-domain owner, and no external system a context.
+- [ADR-004](./adr-004-context-integration-model) — the published-contract, identity-only, anti-corruption discipline whose outward application keeps external vocabulary and volatility out of the domain.
+- [ADR-006](./adr-006-immutable-snapshot-strategy) — the money-facts / money-movement seam and the frozen facts an external rail executes against but never authors or mutates.
+- [ADR-007](./adr-007-transaction-and-consistency-boundaries) — the consistency boundaries beyond which external work is reconciled asynchronously, and the rule that a failed reaction never rolls back a committed fact.
+- [ADR-008](./adr-008-domain-event-architecture) — the past-tense committed facts on whose asynchronous spine external integration and reconciliation ride.
+- [System design overview](/docs/30-49-domains/system-design/overview) — top-level architecture, the System Context and External Integrations sections, and the Open Architectural Decisions that isolate external detail from the domain.
+- [Bounded contexts](/docs/30-49-domains/bounded-contexts) — authoritative context structure, the outbound-adapter role of Notifications, and the `CR-1`–`CR-7` coupling-risk register.
+- [Payments architecture](/docs/30-49-domains/patterns/payments-architecture) — the money-facts / money-movement seam, the async boundaries, and the convergence-to-external-truth invariants (`FIN-1`..`FIN-11`).
+- [API design](/docs/30-49-domains/system-design/api-design) — how the domain's published surfaces and its outer boundaries are expressed at the platform edge.
+- [Domain models](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, identity-only references, and the snapshot philosophy that keeps business truth inside the domain.

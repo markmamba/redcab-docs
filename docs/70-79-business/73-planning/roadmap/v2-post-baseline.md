@@ -39,7 +39,7 @@ Tracked in [/docs/70-79-business/planning/open-questions](/docs/70-79-business/p
 | Automated bank reconciliation        | AMB-030 (automation beyond manual)                                                                     |
 | OCR license extraction               | — (future)                                                                                             |
 | Bundle discounts                     | — (future)                                                                                             |
-| Dedicated search engine (OpenSearch) | Catalog fitness function in [../architecture/contexts](/docs/30-49-domains/bounded-contexts) |
+| Dedicated search engine (OpenSearch) | Catalog fitness function in [Bounded contexts](/docs/30-49-domains/bounded-contexts) |
 | Support monetization after trial     | AMB-035                                                                                                |
 | Multi-currency beyond JPY            | AMB-025                                                                                                |
 

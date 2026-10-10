@@ -4,9 +4,23 @@ sidebar_position: 1
 description: System structure, integration patterns, and architectural decisions for Red Cab Marketplace.
 ---
 
-# Architecture
+## TL;DR
 
-Defines system structure and integration patterns for the Red Cab Marketplace.
+- This area holds **domain structure**: bounded contexts, domain models, conceptual data model, patterns, system design, and ADRs.
+- Start with [Overview](/docs/30-49-domains/system-design/overview), then [Bounded Contexts](/docs/30-49-domains/bounded-contexts).
+- Business rules and requirements live under `70-79-business`; these pages record **architecture and ownership**, not observable product requirements.
+
+## About this document
+
+Hub for the `30-49-domains` Johnny Decimal area.
+
+| Topic | Document |
+| --- | --- |
+| Glossary | [Glossary](/docs/70-79-business/business-rules/glossary) |
+| Invariants | [Invariants](/docs/70-79-business/business-rules/invariants) |
+| Requirements | [Requirements](/docs/70-79-business/requirements) |
+
+---
 
 ## Documents
 

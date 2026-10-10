@@ -6,8 +6,8 @@ description: Architecture Decision Records (ADRs) for Red Cab Marketplace.
 
 ## TL;DR
 
-- Nineteen architecture decision records (ADR-001–019) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, geography administrative tree, service timezone, tourist public URLs, web authentication enforcement, and session technology.
+- Twenty architecture decision records (ADR-001–020) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, geography administrative tree, service timezone, tourist public URLs, web authentication enforcement, session technology, and review post-publication moderation.
 - **ADR-015 is Proposed**, not Accepted — it records the payment custody/control separation pending legal counsel opinion.
 - **ADR-018 and ADR-019 are Accepted** (2026-09-30) — web enforcement model and Phase 1 session technology; see the [authentication series](/docs/90-99-engineering-meta/authentication) and roadmap Phase 1 [Review record](/docs/90-99-engineering-meta/authentication/implementation-roadmap#review-record-phase-1).
 - They record **why** — they do not introduce new boundaries or override business rules.

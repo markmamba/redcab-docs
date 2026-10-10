@@ -1,12 +1,30 @@
 ---
 title: Financial Ownership
 sidebar_position: 5
-description: Conceptual data model for Red Cab Marketplace.
+description: Booking owns money facts; Payments owns movement, commission rate, and reconciliation.
 ---
 
-## 9. Financial Ownership Boundaries
+## TL;DR
 
-Financial data is split along the **money-facts vs money-movement** seam ([./payments-architecture.md](/docs/30-49-domains/patterns/payments-architecture); [./overview.md](/docs/30-49-domains/system-design/overview) Money Facts vs Money Movement).
+- **Booking** owns immutable Price, Commission, and Cancellation snapshots.
+- **Payments** owns charges, payouts, refunds, and Commission Rate. It reads snapshots read-only.
+- Payout and refund are mutually exclusive for the same captured amount (`FIN-5`).
+- Custody sits with the licensed provider ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation)).
+
+## About this document
+
+Financial ownership in the conceptual model. Aligns with [Payments architecture](/docs/30-49-domains/patterns/payments-architecture).
+
+| Topic | Document |
+| --- | --- |
+| Invariants | [Invariants](/docs/70-79-business/business-rules/invariants) |
+| Snapshots | [Immutable snapshots](/docs/30-49-domains/data-model/snapshots) |
+
+---
+
+## Financial ownership boundaries
+
+Financial data is split along the **money-facts vs money-movement** seam ([Payments architecture](/docs/30-49-domains/patterns/payments-architecture); [System design overview](/docs/30-49-domains/system-design/overview) Money Facts vs Money Movement).
 
 - **Booking owns money *facts*.** The immutable Price/Commission/Cancellation snapshots — "what was owed, to whom, at what split" — are Booking-owned and never mutated by anyone, including Payments (`INV-1`, `FIN-2`).
 - **Payments owns money *movement* and *configuration*.** The Commission Rate setting, charges, captures, payouts, refunds, and reconciliation are Payments-owned. Payments **reads** the Booking's Commission Snapshot and **never authors or mutates it** (`FIN-3`, `FIN-5`).
@@ -21,12 +39,14 @@ Ownership boundary rules the model holds:
 - **Custody is external.** No Payments record represents funds held by Red Cab (`INV-13`, `PAY-13`); the context holds only instructions issued and outcomes observed. Control of settlement release stays with Red Cab (`PAY-15`, `PAY-16`) — see [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation).
 - **Post-settlement liability** sits with the Provider as merchant-of-record; recovery is by clawback and remains unresolved (`FIN-14`, `AMB-038`).
 
+This diagram is illustrative: Booking owns frozen facts; Payments owns movement and rate configuration; payout and refund exclude each other.
+
 ```mermaid
 graph LR
-  subgraph BKG["Booking & Checkout — money FACTS (immutable)"]
+  subgraph BKG["Booking and Checkout — money facts"]
     CS["Commission Snapshot\n{gross, rate, commission, net}"]
   end
-  subgraph PAY["Payments & Payouts — money MOVEMENT (configuration + facts)"]
+  subgraph PAY["Payments and Payouts — money movement"]
     Rate["CommissionRateSetting"]
     Pmt["Payment / Charge"]
     Pay["PayoutQueueEntry"]

@@ -362,6 +362,8 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 
 ## 6. Domain Event Flow Overview (choreography, not implementation)
 
+This diagram is illustrative: past-tense reactions across contexts (not guaranteed delivery order or a single transaction).
+
 ```mermaid
 graph TD
   Reg[AccountRegistered] --> NotifA[Notifications]

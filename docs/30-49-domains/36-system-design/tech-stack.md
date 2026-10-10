@@ -25,138 +25,12 @@ Locked technology choices and why each fits the architecture — no versions, pa
 
 ---
 
-## TL;DR
-
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
-- Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
-
-## About this document
-
-Locked technology choices and why each fits the architecture — no versions, packages, config, or folder layout.
-
-| Topic | Document |
-| --- | --- |
-| Architecture overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Bounded contexts | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Domain models | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
-- Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
-
-## About this document
-
-Locked technology choices and why each fits the architecture — no versions, packages, config, or folder layout.
-
-| Topic | Document |
-| --- | --- |
-| Architecture overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Bounded contexts | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Domain models | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
-- Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
-
-## About this document
-
-Locked technology choices and why each fits the architecture — no versions, packages, config, or folder layout.
-
-| Topic | Document |
-| --- | --- |
-| Architecture overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Bounded contexts | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Domain models | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
-- Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
-
-## About this document
-
-Locked technology choices and why each fits the architecture — no versions, packages, config, or folder layout.
-
-| Topic | Document |
-| --- | --- |
-| Architecture overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Bounded contexts | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Domain models | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
-- Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
-
-## About this document
-
-Locked technology choices and why each fits the architecture — no versions, packages, config, or folder layout.
-
-| Topic | Document |
-| --- | --- |
-| Architecture overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Bounded contexts | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Domain models | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
-## TL;DR
-
-- **Locked stack:** Rails API modular monolith, React Router v7 SSR (JavaScript), PostgreSQL, email MVP notifications. **The payment provider is not locked** (`AMB-040`).
-- Stack choices **realize** the architecture (atomic checkout, single pricing authority, in-process contexts) — they do not redefine boundaries.
-- Background jobs, auth methods, SMS, PDF library, and the **entire payment provider selection** remain open under `AMB-###`.
-
-## About this document
-
-Locked technology choices and why each fits the architecture — no versions, packages, config, or folder layout.
-
-| Topic | Document |
-| --- | --- |
-| Architecture overview | [Architecture Overview](/docs/30-49-domains/system-design/overview) |
-| Bounded contexts | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Domain models | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-| Financial rules | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-
----
-
 ## How to read this document
 
 - This document **records** decisions already fixed by the authoritative set; it does not make new ones. It introduces no new bounded contexts, no new business rules, and no architecture redesign.
-- A choice is marked **Locked** when it is stated as the implementation stack in [../index.md](/docs) and the [Container View](/docs/30-49-domains/system-design/overview#container-view) of the architecture overview.
+- A choice is marked **Locked** when it is stated as the implementation stack in [Documentation index](/docs) and the [Container View](/docs/30-49-domains/system-design/overview#container-view) of the architecture overview.
 - A choice is marked **Locked (category); vendor open** when the architecture commits to a *capability* (e.g. background jobs, email delivery, PDF generation) but the specific product/decision is still governed by an open `AMB-###` in [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions). This document **does not resolve** those items; it cites them.
-- Per [../index.md](/docs) precedence, where this document overlaps Business Rules, Requirements, Domain Models, or higher Architecture docs, **those govern and this conforms**.
+- Per [Documentation index](/docs) precedence, where this document overlaps Business Rules, Requirements, Domain Models, or higher Architecture docs, **those govern and this conforms**.
 
 ---
 
@@ -183,11 +57,11 @@ Locked technology choices and why each fits the architecture — no versions, pa
 **Why it fits the architecture.**
 - The architecture is explicitly a **modular monolith over one database** ([Modular Monolith First](/docs/30-49-domains/system-design/overview#modular-monolith-first)); Rails gives one deployable that hosts all eight contexts as logical modules with guarded public surfaces, with module boundaries — not distribution — enforcing the discipline.
 - The single most load-bearing requirement is the **atomic checkout unit** — snapshot freeze + seat reservation + booking creation commit together (`BKG-2`, `CON-1`). A single Rails process over a single relational database makes the one deliberate cross-context shared transaction (Booking↔Catalog seat reserve, **CR-1**) possible without a saga.
-- Rails' request/transaction model and in-process event dispatch match the **"invariants that must hold together are synchronous and co-transactional; cross-context reactions are asynchronous"** rule from [./contexts/index](/docs/30-49-domains/bounded-contexts).
+- Rails' request/transaction model and in-process event dispatch match the **"invariants that must hold together are synchronous and co-transactional; cross-context reactions are asynchronous"** rule from [Bounded contexts](/docs/30-49-domains/bounded-contexts).
 - It naturally receives **payment-provider events** and **enqueues asynchronous work** as described in the [Container View](/docs/30-49-domains/system-design/overview#container-view).
-- Implementation conventions (Request → Manager → Validator, `app/domains/`, explicit routes, DBML-first schema) are documented in [../engineering/backend-conventions.md](/docs/20-29-backend/conventions/backend).
+- Implementation conventions (Request → Manager → Validator, `app/domains/`, explicit routes, DBML-first schema) are documented in [Backend conventions](/docs/20-29-backend/conventions/backend).
 
-**Status.** Locked (stated as the implementation backend in [../index.md](/docs) and the architecture overview).
+**Status.** Locked (stated as the implementation backend in [Documentation index](/docs) and the architecture overview).
 
 ---
 
@@ -199,7 +73,7 @@ Locked technology choices and why each fits the architecture — no versions, pa
 - The system context defines exactly three role surfaces gated by Role (`FR-IAM-009`, `NFR-SEC-004`); one web app with role-confined routing matches the [React Router Web Application](/docs/30-49-domains/system-design/overview#react-router-web-application) container.
 - The web app **holds no financial truth and never computes price**: it renders the `PriceBreakdown` returned by the single pricing authority (`PRC-1`, `PRC-2`). The client is a faithful consumer of server value contracts (`PriceBreakdown`, `AvailabilitySnapshot`, Commission Snapshot reads) rather than re-deriving them — directly supporting the [Single Pricing Authority](/docs/30-49-domains/system-design/overview#single-pricing-authority) principle and closing pricing-leakage risk **CR-2** on the client side.
 - It must render in the Actor's Language Preference (EN/JA, `OPR-9`); SSR + client hydration fits the cross-cutting i18n concern.
-- Implementation conventions (routes, API clients, forms, auth HOCs) are documented in [../engineering/frontend-conventions.md](/docs/50-59-frontend/conventions/frontend).
+- Implementation conventions (routes, API clients, forms, auth HOCs) are documented in [Frontend conventions](/docs/50-59-frontend/conventions/frontend).
 
 **Status.** Locked.
 
@@ -317,4 +191,4 @@ To stay at the architecture level and avoid making new decisions, the following 
 - Payment provider selection and its custody/release mechanics (`AMB-040`), cross-border exemption applicability (`AMB-037`), clawback (`AMB-038`), and capture timing (`AMB-039`).
 - Authentication methods and guest scope (`AMB-021`, `AMB-022`); SMS provider and phone verification for a future SMS channel (`AMB-034` sub-notes); PDF library (`AMB-031`); language defaults/supported set (`AMB-024`); currency beyond the JPY baseline (`AMB-025`).
 
-> No choice recorded here changes the bounded-context or aggregate boundaries in [./contexts/index](/docs/30-49-domains/bounded-contexts) and [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models). Each technology realizes an existing container or context; none introduces a new one.
+> No choice recorded here changes the bounded-context or aggregate boundaries in [Bounded contexts](/docs/30-49-domains/bounded-contexts) and [Domain models](/docs/30-49-domains/domain-models/domain-models). Each technology realizes an existing container or context; none introduces a new one.

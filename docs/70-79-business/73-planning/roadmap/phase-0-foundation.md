@@ -134,7 +134,7 @@ Login (`/login`) links to all three sign-up pages and exposes Google sign-in.
 
 - [x] In-process domain event bus — `Shared::DomainEvents::Publisher` (publish → synchronous handler)
 - [x] Background job runtime — Sidekiq + Redis for Active Job; `bin/jobs` starts Sidekiq worker
-- [x] Error response format — `Errors::*` hierarchy per [../engineering/backend-conventions.md](/docs/20-29-backend/conventions/backend)
+- [x] Error response format — `Errors::*` hierarchy per [Backend conventions](/docs/20-29-backend/conventions/backend)
 - [x] DBML + migrations for identity/profile foundation:
   - `docs/db/identities.dbml`, `tourists.dbml`, `corporate.dbml` (corporate client only), `providers.dbml`, `notifications.dbml`, `redcab.dbml`
   - Thin Account + role-extension profiles (see **Actor-scoped signups** above)

@@ -1,19 +1,56 @@
 ---
-title: Notifications (Context)
+title: Notifications
 sidebar_label: Notifications (Context)
 sidebar_position: 9
-description: Bounded context documentation for Red Cab Marketplace.
+description: Supporting context — event-driven email and SMS in the recipient's language.
 ---
 
-### 8. Notifications (supporting, generic, event-driven)
-- **Purpose:** Render and dispatch email/SMS in the recipient's language, reacting to domain events and scheduled alerts.
-- **Aggregates owned:** `NotificationRequest`/dispatch record, message templates.
-- **Transactional boundary:** each dispatch is independent and idempotent.
-- **Upstream deps:** every core context's events; Identity (recipient language).
-- **Downstream consumers:** external email/SMS providers.
-- **Sync (exposes):** essentially none for domain callers (it is reaction-driven); may expose a send command for direct transactional emails (e.g. verification).
-- **Async (consumes):** the full event catalog above; **publishes** `NotificationDispatched`/`NotificationFailed` for observability.
-- **Why supporting, not core (expanded below):** it is an outbound adapter, not a place where domain decisions live.
-- **Rules anchored here:** `OPR-8`, `OPR-9`, `G-01..G-04`.
+## TL;DR
+
+- **Supporting** context: outbound adapter for email and SMS.
+- Reacts to domain events and scheduled alerts. It does not own domain decisions.
+- Each dispatch is independent and **idempotent**.
+- Reads recipient language from Identity at send time.
+
+## About this document
+
+Bounded context overview for Notifications (supporting).
+
+| Topic | Document |
+| --- | --- |
+| Domain models | [Domain models](/docs/30-49-domains/domain-models/domain-models) |
+| Invariants | [Invariants](/docs/70-79-business/business-rules/invariants) |
+| Domain events | [Domain events catalog](/docs/30-49-domains/bounded-contexts/domain-events) |
+| Code mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
 
 ---
+
+## Purpose
+
+This context renders and dispatches email and SMS in the recipient's language.
+
+It reacts to events from core contexts and to scheduled operational alerts.
+
+## Core concepts
+
+**Aggregates:** `NotificationRequest` / dispatch record; message templates.
+
+Domain callers do not route business logic through Notifications.
+
+Direct send commands may exist for transactional mail (for example verification).
+
+## Integrations
+
+**Upstream:** events from every core context; Identity (recipient language).
+
+**Downstream:** external email and SMS providers.
+
+**Sync (exposes):** minimal surface for domain callers; optional direct send for transactional email.
+
+**Async (consumes):** the [domain events catalog](/docs/30-49-domains/bounded-contexts/domain-events).
+
+**Async (publishes):** `NotificationDispatched`, `NotificationFailed` (observability).
+
+## Related requirements
+
+`OPR-8`, `OPR-9`, `G-01`..`G-04`.

@@ -1,14 +1,29 @@
 ---
 title: Conceptual ERD Diagrams
 sidebar_position: 7
-description: Conceptual data model for Red Cab Marketplace.
+description: Mermaid ERDs — domain concepts and identity references, not database tables.
 ---
 
-## 11. Conceptual ERD Diagrams
+## TL;DR
 
-These diagrams are **conceptual**: entities are domain concepts (glossary terms), and associations are domain relationships and identity references — not tables, foreign keys, or storage relationships. Cross-context associations are drawn with the understanding that they are realized by **identity reference, snapshot, or published contract**, never by shared mutable state.
+- Diagrams are **conceptual**: glossary entities and domain associations, not SQL schema.
+- Cross-context links use **identity reference**, **snapshot**, or **published contract**.
+- Intra-context diagrams match sections in [Entity relationships](/docs/30-49-domains/data-model/entity-relationships).
 
-### 11.1 Whole-domain conceptual ERD (cross-context, by identity)
+## About this document
+
+Visual index for the conceptual data model.
+
+| Topic | Document |
+| --- | --- |
+| Entity relationships | [Entity relationships](/docs/30-49-domains/data-model/entity-relationships) |
+| Domain models | [Domain models](/docs/30-49-domains/domain-models/domain-models) |
+
+---
+
+## Whole-domain ERD (cross-context, by identity)
+
+This diagram is illustrative: cross-context links are identity references, snapshots, or ACLs — not shared tables.
 
 ```mermaid
 erDiagram
@@ -47,7 +62,9 @@ erDiagram
 
 > Reading guide: `||--o{` = one-to-many, `||--o|` = one-to-(zero-or-one), `||--||` = one-to-one, `||--|{` = one-to-(two-or-more) domain associations. "id ref" and "ACL" labels mark associations realized by identity reference or across the anti-corruption boundary, not by ownership.
 
-### 11.2 Catalog & Inventory (intra-context)
+## Catalog and Inventory (intra-context)
+
+This diagram is illustrative: listing, pricing, geography, and availability inside Catalog only.
 
 ```mermaid
 erDiagram
@@ -63,7 +80,9 @@ erDiagram
   ASSET ||--o{ AVAILABILITY_SLOT : "consumed by (per-asset overlap)"
 ```
 
-### 11.3 Booking & Checkout with its snapshots and links (intra-context)
+## Booking and Checkout (intra-context)
+
+This diagram is illustrative: immutable snapshots and lifecycle state owned by Booking (and CheckoutSession before materialization).
 
 ```mermaid
 erDiagram
@@ -78,7 +97,9 @@ erDiagram
   BUNDLE_BOOKING ||--|{ BOOKING : "two independent legs"
 ```
 
-### 11.4 Payments & Payouts (intra-context, with Booking facts read-only)
+## Payments and Payouts (intra-context)
+
+This diagram is illustrative: movement records read snapshotted commission facts; they never rewrite Booking.
 
 ```mermaid
 erDiagram
@@ -89,7 +110,9 @@ erDiagram
   RECONCILIATION_RECORD ||--o| PAYMENT : "bank-transfer receipt fact"
 ```
 
-### 11.5 Corporate and Reviews (intra-context)
+## Corporate and Reviews (intra-context)
+
+This diagram is illustrative: quotation and review aggregates in their owning contexts (Corporate conversion to Booking is an ACL, not an ERD edge).
 
 ```mermaid
 erDiagram

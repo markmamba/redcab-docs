@@ -22,114 +22,6 @@ Invariant-driven Booking lifecycle — behavior and guarantees only (no code or 
 
 ---
 
-## TL;DR
-
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
-- Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
-- **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
-- Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
-
-## About this document
-
-Invariant-driven Booking lifecycle — behavior and guarantees only (no code or enums).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`LC-`, `INV-`, `CON-`, `PAY-`, `BKG-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
-- Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
-- **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
-- Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
-
-## About this document
-
-Invariant-driven Booking lifecycle — behavior and guarantees only (no code or enums).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`LC-`, `INV-`, `CON-`, `PAY-`, `BKG-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
-- Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
-- **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
-- Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
-
-## About this document
-
-Invariant-driven Booking lifecycle — behavior and guarantees only (no code or enums).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`LC-`, `INV-`, `CON-`, `PAY-`, `BKG-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
-- Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
-- **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
-- Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
-
-## About this document
-
-Invariant-driven Booking lifecycle — behavior and guarantees only (no code or enums).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`LC-`, `INV-`, `CON-`, `PAY-`, `BKG-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
-- Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
-- **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
-- Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
-
-## About this document
-
-Invariant-driven Booking lifecycle — behavior and guarantees only (no code or enums).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`LC-`, `INV-`, `CON-`, `PAY-`, `BKG-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- B2C card checkout materializes a Booking in **`CONFIRMED`** after payment; **`PENDING`** is for corporate pre-payment only.
-- Lifecycle: `CONFIRMED → COMPLETED → PAYOUT_QUEUED` (or cancel/refund paths); terminal states have no exit.
-- **CheckoutSession** holds snapshots and seat hold before payment; materialization copies facts onto the Booking.
-- Transitions are **sync** (guarded side effects) or **async** (notifications, payout queue, review link).
-
-## About this document
-
-Invariant-driven Booking lifecycle — behavior and guarantees only (no code or enums).
-
-| Topic | Document |
-| --- | --- |
-| Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Rules (`LC-`, `INV-`, `CON-`, `PAY-`, `BKG-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
 ## Scope
 - Governs a single Booking record. Bundle Bookings (`BKG-3`) are two independent Booking records, each running this machine separately.
 - The machine owns only **state and transitions**. Snapshots and Fulfillment Payload are frozen on **CheckoutSession** and copied immutably onto the Booking at materialization (`INV-1`, `BKG-9`).
@@ -153,6 +45,8 @@ State classification:
 
 ## State diagram (B2C card happy path)
 
+This diagram is illustrative: B2C card checkout skips `PENDING` and materializes directly into `CONFIRMED` after payment (`BKG-10`).
+
 ```mermaid
 stateDiagram-v2
   [*] --> CONFIRMED: booking materialized (post-payment)
@@ -163,6 +57,19 @@ stateDiagram-v2
   PAYOUT_QUEUED --> [*]
   CANCELLED --> [*]
   REFUNDED --> [*]
+```
+
+## State diagram (corporate pre-payment)
+
+Corporate bank-transfer bookings may enter at `PENDING` until provider-confirmed receipt (`PAY-9`); pre-payment creation detail remains open (`AMB-027`). After `CONFIRMED`, the same transitions as the B2C diagram apply.
+
+This diagram is illustrative: only the corporate entry and pre-payment exits; not the full post-`CONFIRMED` machine.
+
+```mermaid
+stateDiagram-v2
+  [*] --> PENDING: booking from accepted quote
+  PENDING --> CONFIRMED: bank transfer confirmed
+  PENDING --> CANCELLED: cancel before payment
 ```
 
 ## Pre-entry — CheckoutSession (not a Booking state)

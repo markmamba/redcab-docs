@@ -172,6 +172,8 @@ Legacy `/account/discover/*` redirects accept UUID segments and must resolve the
 
 ### 3.5 Visitor flow
 
+This diagram is illustrative: canonical public URL spine and where authentication is required before checkout (not an exhaustive route list).
+
 ```mermaid
 flowchart TD
   V["Visitor (no account)"] --> H["GET / — home, index follow"]
@@ -276,7 +278,7 @@ Critical path: **[`#134`](https://github.com/markmamba/red-cab-api/issues/134) (
 
 Session B must produce, from this record and nothing new:
 
-1. **Spec `redcab-docs/docs/60-69-initiatives/implementation-specs/56-tourist-access-model-and-route-contract.md`** from `template.md`, `status: approved` only after `review-implementation-spec`, with governing docs `FR-IAM-012`, `NFR-SEC-005`, `FR-CAT-003/004/005/007`, `AMB-020`, `AMB-022`, `PRC-1`, `INV-8`, and [Geography](/docs/30-49-domains/patterns/geography).
+1. **Spec `redcab-docs/docs/60-69-initiatives/implementation-specs/56-tourist-access-model-and-route-contract`** from `template.md`, `status: approved` only after `review-implementation-spec`, with governing docs `FR-IAM-012`, `NFR-SEC-005`, `FR-CAT-003/004/005/007`, `AMB-020`, `AMB-022`, `PRC-1`, `INV-8`, and [Geography](/docs/30-49-domains/patterns/geography).
 2. **The auth-gate matrix and SEO meta table per surface**, satisfying #56's acceptance criteria, derived from §3.2 rather than restated freehand.
 3. **The file-level migration plan for #60** — old path to new path per module, the `loader` conversion list, the constant and path-builder renames in §3.4, and the redirect implementation approach in React Router v7 (resource route versus loader-level `redirect`).
 4. **API-1 and API-2 issue bodies**, including the resolver service name, param rename, fallback removal criteria, and serializer shape for the district embed.

@@ -21,109 +21,13 @@ ADR for single pricing authority (`PRC-1`, `CR-2`).
 
 ---
 
-## TL;DR
-
-- **Only `Catalog.calculate_quote(...)`** computes price; all consumers display or snapshot the returned `PriceBreakdown`.
-- No other context and no client may recompute or author price inputs.
-
-## About this document
-
-ADR for single pricing authority (`PRC-1`, `CR-2`).
-
-| Topic | Document |
-| --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/30-49-domains/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- **Only `Catalog.calculate_quote(...)`** computes price; all consumers display or snapshot the returned `PriceBreakdown`.
-- No other context and no client may recompute or author price inputs.
-
-## About this document
-
-ADR for single pricing authority (`PRC-1`, `CR-2`).
-
-| Topic | Document |
-| --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/30-49-domains/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- **Only `Catalog.calculate_quote(...)`** computes price; all consumers display or snapshot the returned `PriceBreakdown`.
-- No other context and no client may recompute or author price inputs.
-
-## About this document
-
-ADR for single pricing authority (`PRC-1`, `CR-2`).
-
-| Topic | Document |
-| --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/30-49-domains/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- **Only `Catalog.calculate_quote(...)`** computes price; all consumers display or snapshot the returned `PriceBreakdown`.
-- No other context and no client may recompute or author price inputs.
-
-## About this document
-
-ADR for single pricing authority (`PRC-1`, `CR-2`).
-
-| Topic | Document |
-| --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/30-49-domains/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- **Only `Catalog.calculate_quote(...)`** computes price; all consumers display or snapshot the returned `PriceBreakdown`.
-- No other context and no client may recompute or author price inputs.
-
-## About this document
-
-ADR for single pricing authority (`PRC-1`, `CR-2`).
-
-| Topic | Document |
-| --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/30-49-domains/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## TL;DR
-
-- **Only `Catalog.calculate_quote(...)`** computes price; all consumers display or snapshot the returned `PriceBreakdown`.
-- No other context and no client may recompute or author price inputs.
-
-## About this document
-
-ADR for single pricing authority (`PRC-1`, `CR-2`).
-
-| Topic | Document |
-| --- | --- |
-| Catalog context | [Catalog & Inventory](/docs/30-49-domains/bounded-contexts/catalog) |
-| Business rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
-
----
-
 ## Status
 
 Accepted
 
 ## Context
 
-Per [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context, and per [ADR-004-context-integration-model.md](./adr-004-context-integration-model), contexts collaborate only through published contracts. Those decisions answer *how ownership is divided and how contexts cooperate* in general; they do not by themselves explain *why price in particular is owned by Catalog & Inventory and computed in exactly one place*. Price is the single concept where ownership ambiguity does the most damage, so the reasoning behind its placement deserves to be recorded on its own. This ADR records that reasoning; it changes nothing about where price lives or how it is computed.
+Per [ADR-003](./adr-003-bounded-context-architecture), every concept in Red Cab has exactly one owning context, and per [ADR-004](./adr-004-context-integration-model), contexts collaborate only through published contracts. Those decisions answer *how ownership is divided and how contexts cooperate* in general; they do not by themselves explain *why price in particular is owned by Catalog & Inventory and computed in exactly one place*. Price is the single concept where ownership ambiguity does the most damage, so the reasoning behind its placement deserves to be recorded on its own. This ADR records that reasoning; it changes nothing about where price lives or how it is computed.
 
 Price is not one number used in one place — it appears at three moments that must never disagree. A Tourist sees a **display price** on a listing, filters and ranks results by a **search price**, and commits to a **checkout price** that becomes the order. These are the same commercial truth viewed at different moments; if the same inputs can yield three different prices, the platform has lied to the buyer at least twice. The architectural force is therefore consistency: display, search, and checkout for identical inputs MUST resolve to the identical Price Breakdown (`PRC-1`, `PRC-2`). Divergence is not a cosmetic glitch — it is a defect in the platform's financial honesty.
 
@@ -147,7 +51,7 @@ Pricing ownership and the single calculation point are fixed as already establis
 - **The frontend never computes price.** The client renders the Price Breakdown returned by the authority and holds no financial truth.
 - **Search, filter, and display share the authority.** Listing display, search filtering, and checkout all consume the same authoritative pricing result, so the same inputs always yield the same price (`PRC-1`, `PRC-2`), closing the `CR-2` leakage risk.
 
-This decision records *why pricing is owned and computed this way*; it changes nothing about the pricing rules, the owning context, the value contract, or the consumers, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [../contexts/index](/docs/30-49-domains/bounded-contexts), and [../../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants).
+This decision records *why pricing is owned and computed this way*; it changes nothing about the pricing rules, the owning context, the value contract, or the consumers, all of which remain as locked in [/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), [Bounded contexts](/docs/30-49-domains/bounded-contexts), and [../../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants).
 
 ## Consequences
 
@@ -198,9 +102,9 @@ Rejected because it reintroduces exactly the ownership ambiguity and drift the a
 
 ## Related Documents
 
-- [ADR-003-bounded-context-architecture.md](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes Catalog & Inventory the one home for pricing.
-- [ADR-004-context-integration-model.md](./adr-004-context-integration-model) — the published-contract integration model by which the Price Breakdown crosses boundaries as a value contract.
-- [overview.md](/docs/30-49-domains/system-design/overview) — top-level architecture, the Pricing Authority section, and the Single Pricing Authority principle.
-- [contexts/index](/docs/30-49-domains/bounded-contexts) — authoritative context structure, Catalog & Inventory's pricing ownership, the `PriceBreakdown` value contract, and the `CR-2` coupling risk.
-- [api-design.md](/docs/30-49-domains/system-design/api-design) — how the single pricing authority and its value contract are exposed at the platform edge.
-- [domain-models.md](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, the snapshot philosophy, and pricing-as-computed-value-contract.
+- [ADR-003](./adr-003-bounded-context-architecture) — the singular-ownership partitioning that makes Catalog & Inventory the one home for pricing.
+- [ADR-004](./adr-004-context-integration-model) — the published-contract integration model by which the Price Breakdown crosses boundaries as a value contract.
+- [System design overview](/docs/30-49-domains/system-design/overview) — top-level architecture, the Pricing Authority section, and the Single Pricing Authority principle.
+- [Bounded contexts](/docs/30-49-domains/bounded-contexts) — authoritative context structure, Catalog & Inventory's pricing ownership, the `PriceBreakdown` value contract, and the `CR-2` coupling risk.
+- [API design](/docs/30-49-domains/system-design/api-design) — how the single pricing authority and its value contract are exposed at the platform edge.
+- [Domain models](/docs/30-49-domains/domain-models/domain-models) — aggregate ownership, the snapshot philosophy, and pricing-as-computed-value-contract.
