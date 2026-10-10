@@ -53,7 +53,7 @@ Read in this order before generating implementation artifacts:
 5. `30-49-domains/32-domain-models/domain-models.md`
 6. `30-49-domains/36-system-design/overview.md`
 7. `30-49-domains/35-patterns/payments-architecture.md`
-8. `30-49-domains/34-architecture-decisions/adr-001` → `adr-019`
+8. `30-49-domains/34-architecture-decisions/adr-001` → `adr-020`
 9. `70-79-business/73-planning/roadmap/`
 10. `20-29-backend/21-conventions/domain-to-code-mapping.md`
 11. `20-29-backend/21-conventions/backend.md` and/or `50-59-frontend/51-conventions/frontend.md`

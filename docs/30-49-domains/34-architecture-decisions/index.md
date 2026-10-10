@@ -41,6 +41,7 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-017 | [ADR-017: Tourist UI public URL architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | Accepted |
 | ADR-018 | [ADR-018: Red Cab Web Authentication Enforcement Model](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model) | Accepted (2026-09-30) |
 | ADR-019 | [ADR-019: Session Technology for Phase 1 and Phase 2](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2) | Accepted (2026-09-30); production cookie topology closed ([#20](https://github.com/markmamba/redcab-docs/issues/20)) |
+| ADR-020 | [ADR-020: Review Post-Publication Moderation](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation) | Accepted (2026-10-10); supersedes `AMB-019` moderation leg |
 
 ## Amendments convention
 

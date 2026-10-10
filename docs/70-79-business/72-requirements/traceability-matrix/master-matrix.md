@@ -149,10 +149,10 @@ Four-way mapping table for all requirements.
 | FR-REV-001 | F-01 | INV-5, BKG-7; REV | A review is allowed only for a completed booking, at most one per booking. |
 | FR-REV-002 | F-01 | OPR-7, OPR-8; REV | A review invitation issues on completion; a review is accepted only within 14 days. |
 | FR-REV-003 | F-01 | REV | A required star rating plus optional text/photos within limits is accepted. |
-| FR-REV-004 | F-01, F-03 | OPR-6; REV | A submitted review is held pending moderation and not public until Admin approves. |
-| FR-REV-005 | F-03 | REV | Admin can approve/remove with a reason (Tourist notified on removal); flagged reviews prioritized. |
+| FR-REV-004 | F-01, F-03 | OPR-6; REV | A valid tourist-submitted review is public on the Listing immediately. |
+| FR-REV-005 | F-03 | REV | Provider can report; Admin dismisses report or removes with reason (Tourist notified on removal); flagged reviews prioritized. |
 | FR-REV-006 | F-02 | REV | A Provider can respond publicly once; further edits require Admin permission. |
-| FR-REV-007 | F-04 | OPR-6; REV | Rating score and review count are computed from approved reviews only. |
+| FR-REV-007 | F-04 | OPR-6; REV | Rating score and review count are computed from published reviews only (approved, not removed). |
 
 ### 1.8 NOT — Notifications
 | Req ID | Source | Governs (rules / context) | Acceptance criterion (observable) |

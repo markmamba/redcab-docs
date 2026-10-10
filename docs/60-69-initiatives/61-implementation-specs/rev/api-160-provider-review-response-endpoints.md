@@ -22,14 +22,15 @@ epic: "https://github.com/markmamba/red-cab-api/issues/153"
 
 ## Problem
 
-Team moderation (api-159) can publish reviews. Providers need a self-service HTTP surface to post a single public response to each published review on their listings. The `reviews_provider_responses` table exists (api-154) but has no Provider routes or command stack.
+Tourist submit (api-157) publishes reviews. Providers need a self-service HTTP surface to post a single public response to each published review on their listings. The `reviews_provider_responses` table exists (api-154) but has no Provider routes or command stack.
 
 ## Governing docs
 
 | ID | Document | Why |
 | --- | --- | --- |
 | FR-REV-006 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | One public response; admin for further edits |
-| FR-REV-004 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Published review = approved moderation |
+| FR-REV-004 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Published review = approved on submit |
+| ADR-020 | [adr-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation) | Publication lifecycle |
 | api-154 | [api-154-reviews-schema-migrate.md](./api-154-reviews-schema-migrate.md) | `reviews_provider_responses` schema |
 | api-159 | [api-159-team-review-moderation-endpoints.md](./api-159-team-review-moderation-endpoints.md) | Illegal transition → `422` pattern |
 
@@ -150,3 +151,4 @@ bundle exec rubocop
 | --- | --- | --- | --- |
 | 2026-10-10 | Mark | Brief Gate 1 (Q1–Q3) | decisions locked |
 | 2026-10-10 | Build | brief api-160 | approved for implementation |
+| 2026-10-10 | Build (/pkm-build #121) | `review-implementation-spec` | Re-approved after ADR-020 cross-ref amend |

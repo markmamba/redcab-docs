@@ -18,7 +18,8 @@ epic: "https://github.com/markmamba/red-cab-api/issues/153"
 - Ships **server-driven `review_eligibility`** on tourist booking order **show** for web W1-5 / `#68`.
 - Ships **composite FK** from `reviews_reviews` to `bookings_orders (id, tourist_id, listing_id, provider_id)` per api-154 deferral.
 - Publishes **`ReviewSubmitted`** with **no** `Publisher::HANDLERS` entry (W7).
-- Does **not** ship moderation, provider response, rating recalc, notifications, or tourist UI.
+- **Publishes** the review on submit (`approved`, `approved_at`) and calls rating recalc (api-158).
+- Does **not** ship provider report, Team dispute actions, provider response, notifications, or tourist UI.
 
 ## Problem
 
@@ -29,7 +30,8 @@ Phase 2 execution map W1-1 needs the first REV HTTP action. Schema exists from a
 | ID | Document | Why |
 | --- | --- | --- |
 | api-154 | [api-154-reviews-schema-migrate.md](./api-154-reviews-schema-migrate.md) | Table columns, moderation default, composite FK deferral |
-| FR-REV-001..004 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Eligibility, window, content, moderation |
+| FR-REV-001..004 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Eligibility, window, content, publication on submit |
+| ADR-020 | [adr-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation) | Post-publication moderation strategy |
 | INV-5, BKG-7, OPR-6, OPR-7 | [invariants](/docs/70-79-business/business-rules/invariants) | One review per booking; completion gate; window |
 | web-68 | [web-68-tourist-phase-2-placeholder-slots.md](../platform/web-68-tourist-phase-2-placeholder-slots.md) | Eligibility must be API-driven when REV ships |
 
@@ -48,6 +50,8 @@ Phase 2 execution map W1-1 needs the first REV HTTP action. Schema exists from a
 | 9 | **`storage_key` prefix** `reviews/{tourist_uuid}/` | Any object key | Stops tourists from attaching another actor's upload keys |
 | 10 | **Review text max length** 5,000 characters | Unlimited text column | Stops abuse; optional `body` |
 | 11 | **One eligibility module** for show and submit | Split policy classes | Same `now` and rules for `review_eligibility` and POST validation |
+| 12 | **Publish on submit** | `pending_moderation` default | [ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation); set `moderation_status` `approved`, `approved_at` = submit time |
+| 13 | **Recalc after submit** | Defer to Team approve | `RecalculateManager` + `RatingRecalculated` in same transaction boundary as api-158 |
 
 ## API contract
 
@@ -71,7 +75,7 @@ Phase 2 execution map W1-1 needs the first REV HTTP action. Schema exists from a
 
 **Response `201`**
 
-`Reviews::TouristsReviewDetailSerializer` — `uuid`, `rating`, `body`, `moderation_status` (`pending_moderation`), `submitted_at`, `booking_completed_at`, `review_window_ends_at`, `photos[]` (`uuid`, `storage_key`, `content_type`, `byte_size`, `display_order`).
+`Reviews::TouristsReviewDetailSerializer` — `uuid`, `rating`, `body`, `moderation_status` (`approved`), `submitted_at`, `approved_at`, `booking_completed_at`, `review_window_ends_at`, `photos[]` (`uuid`, `storage_key`, `content_type`, `byte_size`, `display_order`).
 
 **Errors**
 
@@ -91,13 +95,14 @@ Phase 2 execution map W1-1 needs the first REV HTTP action. Schema exists from a
 | --- | --- | --- |
 | `can_submit` | boolean | `true` only when completed, in window, no review row |
 | `window_ends_at` | ISO8601 or null | `completed_at + 14 days` when `completed_at` present; else null |
-| `existing_review` | object or null | When a row exists: `uuid`, `rating`, `moderation_status`, `submitted_at` |
+| `existing_review` | object or null | When a row exists: `uuid`, `rating`, `moderation_status`, `submitted_at`, `approved_at` when published |
 
 ## Data / domain touchpoints
 
 - Bounded context: **REV** (write), **BKG** (read order at submit + show preload).
 - Transaction: create `reviews_reviews` + `reviews_review_photos` in one transaction.
 - Copy at submit: `listing_id`, `tourist_id`, `provider_id`, `booking_completed_at`, `review_window_ends_at` from order.
+- After commit: `Reviews::RatingSummaries::RecalculateManager.execute(listing_id:)` then `RatingRecalculated` (api-158).
 - Event: `Reviews::Events::ReviewSubmitted.publish(review:)` after successful transaction.
 - Submit uses one `Time.current` for validation and `submitted_at` so the 14-day window check cannot drift between validator and insert.
 - `Reviews::SubmitEligibility` is the single source for POST validation and order-show `can_submit`.
@@ -124,7 +129,7 @@ Update `docs/db/reviews.dbml` and `docs/db/redcab.dbml` Ref blocks.
 
 ## Out of scope
 
-- Team moderation, provider response, `RatingRecalculated`, catalog `rating_*` writes (W1-2+).
+- Provider report, Team dispute actions, provider response (W1-3+).
 - Notification handlers for `ReviewSubmitted` (W7).
 - Tourist submit UI (web `#68` / W1-5).
 - Tourist edit after submit.
@@ -146,7 +151,8 @@ Update `docs/db/reviews.dbml` and `docs/db/redcab.dbml` Ref blocks.
 
 - [ ] Tourist can submit one review for own completed booking inside 14-day window
 - [ ] Duplicate submit returns conflict; non-owner returns 404
-- [ ] Review row is `pending_moderation` with copied completion fields
+- [ ] Review row is `approved` with `approved_at` and copied completion fields
+- [ ] Listing `rating_average` / `reviews_count` update after submit (api-158 path)
 - [ ] Optional photos persist with display order
 - [ ] Order show returns `review_eligibility` per contract
 - [ ] `ReviewSubmitted` published; no new `HANDLERS` entry
@@ -166,3 +172,4 @@ bundle exec rubocop
 | Date | Reviewer | Tool / model | Outcome |
 | --- | --- | --- | --- |
 | 2026-10-07 | Build (/pkm-build) | brief-aligned | Approved for W1-1 implementation |
+| 2026-10-10 | Build (/pkm-build #121) | `review-implementation-spec` | Re-approved after ADR-020 publish-on-submit amend |
