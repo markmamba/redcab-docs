@@ -34,19 +34,20 @@ They must mirror REV authoritative values so marketplace sorting and cards stay 
 | FR-REV-007 | `docs/70-79-business/72-requirements/functional-requirements/rev.md` | Listing score behavior |
 | FR-CAT-027 | `docs/70-79-business/72-requirements/functional-requirements/cat.md` | Marketplace sorting uses listing rating columns |
 | api-154 D15 | `api-154-reviews-schema-migrate.md` | Full re-aggregate and lazy summary row |
-| api-157 | `api-157-tourist-submit-review.md` | Submit pending does not change public score |
+| api-157 | `api-157-tourist-submit-review.md` | Submit publishes and triggers recalc |
+| ADR-020 | [adr-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation) | Publish-on-submit lifecycle |
 
 ## Design decisions
 
 | # | Decision | Choice |
 | --- | --- | --- |
 | 1 | Scope | Recalculation machinery only, no moderation endpoints |
-| 2 | Trigger source in #158 | Recalculate manager callable by moderation managers in W1-3 |
+| 2 | Trigger sources | Tourist submit manager (api-157) and Team remove manager (api-159); dismiss report does not change approved set |
 | 3 | Aggregate rule | `reviews_count = COUNT(*)` and `rating_average = AVG(rating)` over approved rows |
 | 4 | Zero approved rows | `reviews_count = 0` and `rating_average = NULL` |
 | 5 | Summary row lifecycle | Lazy upsert per listing |
 | 6 | Catalog write path | `RatingRecalculated` event handled by catalog manager |
-| 7 | Execution mode | Synchronous call path from moderation managers |
+| 7 | Execution mode | Synchronous call path from submit and remove managers |
 
 ## API contract
 
@@ -75,7 +76,7 @@ This issue ships domain managers and events only.
 
 ## Out of scope
 
-- Team moderation endpoints and managers.
+- Team dismiss report (no aggregate change).
 - Provider response and notifications.
 - Async job wrapper for recalculation.
 - Backfill scripts.
@@ -96,3 +97,9 @@ bin/rails test test/domains/catalog/listings/apply_rating_recalculated_manager_t
 bundle exec srb tc
 bundle exec rubocop
 ```
+
+## Review record
+
+| Date | Reviewer | Tool / model | Outcome |
+| --- | --- | --- | --- |
+| 2026-10-10 | Build (/pkm-build #121) | `review-implementation-spec` | Re-approved after ADR-020 submit trigger amend |

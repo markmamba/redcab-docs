@@ -249,12 +249,12 @@ Open questions and ambiguity register — architecture-oriented, no implementati
 - **Owner:** Business Owner.
 
 ### AMB-019 — Reviews moderation default & window
-- **Status:** **RESOLVED** — see Decision Log (2026-10-04). Optional Auto-Approve remains deferred to v2 (not in scope of this resolution).
+- **Status:** **PARTIALLY SUPERSEDED** — moderation default revised 2026-10-10 ([ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation), Decision Log below). **14-day window** remains as resolved 2026-10-04. Optional Auto-Approve remains deferred to v2.
 - **Sources:** PRD `F1`, `F2`; `OPR-6`, `OPR-7`.
 - **Classification:** Business.
 - **Question:** Confirm reviews enter Pending Moderation by default (with optional Auto-Approve), and the 14-day review window from completion.
 - **Affected contexts:** Reviews & Ratings, Notifications.
-- **Temporary assumption:** Moderation on by default; 14-day window.
+- **Temporary assumption:** ~~Moderation on by default~~ **Publish on submit**; post-publication provider report + Admin takedown (2026-10-10).
 - **Priority:** P2.
 - **Owner:** Business Owner.
 
@@ -509,7 +509,7 @@ Low-effort confirmations from the PRD Appendix already encoded as baseline rules
 - **E2** Multi-day single-provider v1 — see AMB-018 — P2.
 - **E3** Manual bank-transfer confirmation — see AMB-030 — P2.
 - **E4** PDF character rendering — see AMB-031 — P1.
-- **F1** Reviews moderated by default — **resolved** (`AMB-019`, Decision Log 2026-10-04). Auto-Approve option deferred v2.
+- **F1** Reviews publish on submit; post-publication moderation — **resolved** (`AMB-019` supersede + [ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation), Decision Log 2026-10-10). Auto-Approve option deferred v2.
 - **F2** 14-day review window — **resolved** (`AMB-019`, Decision Log 2026-10-04).
 - **G1** License expiry entered manually by Admin (OCR is v2) — baseline `OPR-3` — confirm: Engineering — P2.
 
@@ -532,6 +532,7 @@ Low-effort confirmations from the PRD Appendix already encoded as baseline rules
 | AMB-023 | Canonical vehicle taxonomy: **PRD set** — Alphard, HiAce, Sedan, Limousine (private car); 20/40/50-seat bands (charter bus). Stored on `provider_assets.vehicle_category`. | Business + Engineering | 2026-07-29 | `glossary.md`, `domain-models.md` |
 | AMB-017 | **Bundle booking:** two linked Booking records with **independent commission** (`BKG-3`, `E1`). **Cross-leg cancellation:** cancelling one leg does **not** auto-cancel the sibling; each leg follows normal cancellation and refund rules independently. | Mark / Product Owner | 2026-10-04 | [bkg.md](/docs/70-79-business/requirements/functional-requirements/bkg) (`FR-BKG-012`), `glossary.md`, `domain-models.md`, `open-items.md`, `api-design.md`, `overview.md`, [phase-2-execution-map](/docs/70-79-business/planning/roadmap/phase-2-execution-map) |
 | AMB-019 | **Reviews:** submitted reviews enter **Pending Moderation** and are not public until Admin approves (`OPR-6`, `FR-REV-004`). **14-day window** from Booking completion for invitation and submission (`OPR-7`, `FR-REV-002`, `NFR-TIME-007`). **Auto-Approve** product knob deferred to v2 (future AMB/FR). | Mark / Product Owner | 2026-10-04 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev), [non-functional-requirements.md](/docs/70-79-business/requirements/non-functional-requirements) (`NFR-TIME-007`), `domain-models.md`, `api-design.md`, `overview.md`, [phase-2-execution-map](/docs/70-79-business/planning/roadmap/phase-2-execution-map) |
+| AMB-019 (moderation supersede) | **Reviews:** tourist submit **publishes** immediately (`FR-REV-004`, `OPR-6`). Provider **report** + Team **dismiss report** or **remove** replace pre-approve moderation ([ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation)). Flagged reviews stay public until remove. **14-day window** unchanged. | Mark / Product Owner | 2026-10-10 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev), [invariants.md](/docs/70-79-business/business-rules/invariants) (`OPR-6`), [api-157](/docs/60-69-initiatives/61-implementation-specs/rev/api-157-tourist-submit-review.md), [api-159](/docs/60-69-initiatives/61-implementation-specs/rev/api-159-team-review-moderation-endpoints.md), [api-161](/docs/60-69-initiatives/61-implementation-specs/rev/api-161-provider-review-report.md) |
 | AMB-034 | **Phase 2 notifications:** **email channel only** for transactional and lifecycle messages (`FR-NOT-004`). **SMS rail deferred** beyond Phase 2. SMS **provider** and **phone verification** requirements for a future SMS channel remain open (not blocking Phase 2 NOT scope freeze). | Mark / Product Owner | 2026-10-04 | [not.md](/docs/70-79-business/requirements/functional-requirements/not) (`FR-NOT-004`), `tech-stack.md`, `overview.md`, `domain-models.md`, [phase-2-marketplace-depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth), [phase-2-execution-map](/docs/70-79-business/planning/roadmap/phase-2-execution-map) |
 | AMB-032 | ~~**Platform merchant-of-record** for card charges; **Provider seller-of-record** for underlying service.~~ **Reversed 2026-08-30** — see below. | Legal + Finance | 2026-07-29 | `payments-architecture.md`, `glossary.md` |
 | AMB-033 | **B2C prices tax-inclusive**; **corporate documents itemize 10% consumption tax** separately (`PAY-12`, `PAY-10`). | Finance + Legal | 2026-07-29 | [Business Rules](/docs/70-79-business/business-rules/invariants), `glossary.md` |

@@ -294,11 +294,11 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 ### Aggregates
 - **Review** (root: `Review`)
   - *Purpose:* one verified tourist's rating/text/photos for a completed Booking, plus the provider response.
-  - *Invariants:* exists only for a `COMPLETED` Booking; at most one per Booking (`INV-5`, `BKG-7`); enters Pending Moderation and is not public until approved (`OPR-6`); review link valid 14 days from completion (`OPR-7`, `F2`, `FR-REV-002`, `NFR-TIME-007`).
-  - *Lifecycle:* `PendingModeration → Approved | Removed`; provider response addable once published.
+  - *Invariants:* exists only for a `COMPLETED` Booking; at most one per Booking (`INV-5`, `BKG-7`); valid tourist submit **publishes** immediately (`OPR-6`, [ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation)); review link valid 14 days from completion (`OPR-7`, `F2`, `FR-REV-002`, `NFR-TIME-007`).
+  - *Lifecycle:* `Approved` on submit → optional provider report flag → `Removed` on Admin takedown; legacy `PendingModeration` rows may exist; provider response addable once published.
 - **RatingSummary** (root: `RatingSummary`)
-  - *Purpose:* per-listing aggregate of approved reviews.
-  - *Invariants:* recalculated only from approved reviews (`OPR-6`, `F-04`).
+  - *Purpose:* per-listing aggregate of published reviews.
+  - *Invariants:* recalculated only from published reviews (`approved`, not `removed`) (`OPR-6`, `F-04`).
 
 ### Entities
 - **ProviderResponse**, review **Photo**.
@@ -307,7 +307,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 - **ReviewRating** (1–5), **ModerationStatus**, **RatingScore** (average + count).
 
 ### Domain events
-- `ReviewSubmitted`, `ReviewApproved`, `ReviewRemoved`, `RatingRecalculated`. Consumes `BookingCompleted`.
+- `ReviewSubmitted`, `ReviewRemoved`, `RatingRecalculated` (optional `ReviewReportDismissed` when W7 needs it). Consumes `BookingCompleted`. `ReviewApproved` is retired ([ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation)).
 
 ### Cross-context references
 - Consumes only the minimal **completion fact**; references `booking_id`, `listing_id`, `tourist_id` by id. **Never mutates a Booking** (§4). Publishes `RatingRecalculated`; Catalog displays it but Reviews remains the source of truth for the score.
@@ -353,7 +353,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 - **Charge succeeds but seat lost.** If payment succeeds after the seat hold expired or was lost, the system MUST reverse the charge and MUST NOT materialize a Booking (`CON-2`, `PAY-5`).
 - **Last-seat contention.** Under concurrent attempts on the final seat(s), at most enough succeed to reach `available_seats = 0`; all others receive a "now fully booked" outcome (`CON-2`). The slot then presents as Fully Booked (`CON-3`).
 - **Idempotent payment/refund handling.** Every money operation is uniquely keyed and idempotent so duplicate webhooks/retries cannot double-charge, double-refund, or double-pay (`FIN-10`). Settlement converges to external-rail truth (`FIN-11`).
-- **Eventual consistency boundaries.** Everything *across* aggregates/contexts is eventually consistent and reconciled by events: rating recalculation after approval, listing pause after license expiry, payout queuing after completion, notification dispatch. These must tolerate delay and reordering.
+- **Eventual consistency boundaries.** Everything *across* aggregates/contexts is eventually consistent and reconciled by events: rating recalculation after publish and remove, listing pause after license expiry, payout queuing after completion, notification dispatch. These must tolerate delay and reordering.
 - **Async reconciliation.** Payments reconciles internal movement facts against asynchronous external settlement events; divergence is a reconcilable defect surfaced for operator action, never a silent loss (`FIN-11`). Bank-transfer reconciliation is manual (`PAY-9`).
 - **Retry safety.** A committed lifecycle transition is never rolled back by a failed downstream reaction; the reaction is retried independently and idempotently. Seat restoration on cancellation/session expiry must be idempotent (`CON-5`, Decision Log `AMB-012`).
 - **The one shared transaction.** The only place two contexts share a transaction is CheckoutSession↔Catalog seat reservation (CR-1). Everywhere else, contexts integrate by event or by id-reference. This exception exists solely to uphold the atomic overbooking invariant and must not be turned into a remote call without a redesign (a saga).
@@ -378,7 +378,8 @@ graph TD
   VoidPayout --> RefundCompleted[RefundCompleted]
   QAccept[QuotationAccepted] --> CreateFromQuote[Booking create-from-quote]
   BankOK[BankTransferConfirmed] --> ConfirmCorp[Booking corporate confirmation]
-  RevApproved[ReviewApproved] --> Recalc[RatingRecalculated]
+  RevSubmitted[ReviewSubmitted] --> Recalc[RatingRecalculated]
+  RevRemoved[ReviewRemoved] --> Recalc
   Recalc --> CatScore[Catalog displays score]
 ```
 

@@ -145,7 +145,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **OPR-3** [Onboarding] When a License is within 30 days of expiry, the Provider is warned; on expiry, all the Provider's Listings are auto-paused; on renewal + Admin update, they are restored. (`A-06`)
 - **OPR-4** [Onboarding] A Pending registration with no Admin action for more than 14 days is flagged Overdue. (`A-05`, `A3`)
 - **OPR-5** [Corporate] A Quotation Request unanswered for more than 3 business days raises an Admin overdue alert; a Bank Transfer past its deadline raises a payment-overdue alert. (`E-05`, `E-07`)
-- **OPR-6** [Reviews] A Review enters **Pending Moderation** and is not public until an Admin approves it; the **Rating Score** is recalculated only from approved Reviews. (`F-01`, `F-03`, `F-04`)
+- **OPR-6** [Reviews] A valid tourist-submitted Review is **published** immediately; the **Rating Score** includes it at once. A Provider may **report** a published Review; it stays public until Admin **removes** it. The score is recalculated from published Reviews only (`approved`, not `removed`). (`F-01`, `F-03`, `F-04`, [ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation))
 - **OPR-7** [Reviews] The Review Link is valid for 14 days from completion; after expiry no Review may be submitted. (`F-01`, `F2`)
 - **OPR-8** [Notifications] Booking confirmation notifications to Tourist and Provider MUST be dispatched within 60 seconds of the triggering event. (`G-01`, `G-02`)
 - **OPR-9** [Notifications] Notifications MUST be rendered in the recipient's stored **Language Preference** (Tourist default EN; Provider/Client Portal default JA). (`G-03`, `G-04`)

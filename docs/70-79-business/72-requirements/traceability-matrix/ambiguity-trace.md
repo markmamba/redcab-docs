@@ -33,7 +33,7 @@ Provisional requirements (README §8) cannot reach Approved until the cited item
 | AMB-014 | Cancellation initiator | FR-BKG-010 |
 | AMB-016 | Lockout parameters | FR-IAM-007; NFR-SEC-002; NFR-TIME-008 |
 | AMB-017 | Bundle cancellation | *(Resolved 2026-10-04 — FR-BKG-012 Approved)* |
-| AMB-019 | Review moderation/window | *(Resolved 2026-10-04 — FR-REV-002, -004; NFR-TIME-007 Approved)* |
+| AMB-019 | Review moderation/window | *(Window resolved 2026-10-04; moderation superseded 2026-10-10 — ADR-020, FR-REV-004/005)* |
 | AMB-020 | Navigation model | *(Resolved — FR-CAT-004 Approved)* |
 | AMB-021 | Auth methods | FR-IAM-008; NFR-SEC-007 |
 | AMB-022 | Guest scope | FR-IAM-012; NFR-SEC-005 |

@@ -141,7 +141,7 @@ flowchart TD
 
 1. Review submit (tourist, completed booking only).
 2. Rating summary recalculation → update `catalog_listings.rating_average` / `reviews_count`.
-3. Team moderation (approve / remove).
+3. Provider review report + Team dispute queue (dismiss report / remove).
 4. Provider public response (once per published review).
 5. Marketplace read: approved reviews on listing detail (paginated).
 
@@ -159,14 +159,15 @@ flowchart TD
 | # | Title | Repo | Spec context |
 | --- | --- | --- | --- |
 | W1-1 | Tourist submit review endpoint | api | `rev/` |
-| W1-2 | Rating summary job on approve/remove | api | `rev/` |
-| W1-3 | Team review moderation endpoints | api | `rev/` |
+| W1-2 | Rating summary recalc on submit/remove | api | `rev/` |
+| W1-3 | Team review dispute endpoints (dismiss report / remove) | api | `rev/` |
+| W1-3b | Provider review report endpoint | api | `rev/` |
 | W1-4 | Provider review response endpoint | api | `rev/` |
 | W1-5 | Wire tourist review submit UI (`#68`) | web | `rev/` |
-| W1-6 | Team moderation pages | web | `rev/` |
+| W1-6 | Team dispute queue pages (dismiss report / remove) | web | `rev/` |
 | W1-7 | Provider response UI | web | `rev/` |
 
-**Events for W7:** `ReviewSubmitted`, `ReviewApproved`, review invitation on `BookingCompleted` (`FR-REV-002`).
+**Events for W7:** `ReviewSubmitted`, `ReviewRemoved`, optional `ReviewReportDismissed`, review invitation on `BookingCompleted` (`FR-REV-002`). `ReviewApproved` is retired ([ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation)).
 
 ---
 

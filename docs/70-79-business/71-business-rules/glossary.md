@@ -143,9 +143,10 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 ## 6. Reviews & Ratings (core)
 
 - **Review** — a verified-booking-only star rating (1–5) + optional text + photos, tied to a Completed booking (`F-01`).
-- **Pending Moderation** — review state before public visibility; Admin approves/removes (`F-01`, `F-03`).
+- **Pending Moderation** — legacy `moderation_status` enum value; new tourist submits **publish** immediately ([ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation), `OPR-6`).
+- **Provider report** — Provider flags a published review for Team Admin; the review stays public until Admin removes it (`F-03`, `FR-REV-005`).
 - **Provider Response** — public reply by the Provider to a review (`F-02`).
-- **Rating Score** — listing's average of approved reviews, with review count (`F-04`).
+- **Rating Score** — listing average and review count from **published** reviews only (`approved`, not `removed`) (`F-04`, `OPR-6`).
 - **Review Link** — emailed link valid 14 days from completion; one review per booking (`F-01`).
 
 ## 7. Identity & Access (supporting)
