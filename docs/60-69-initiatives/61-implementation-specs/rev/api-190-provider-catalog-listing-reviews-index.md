@@ -28,8 +28,8 @@ Web #134 needs a provider listing detail surface with rating context and recent 
 
 | ID | Document | Why |
 | --- | --- | --- |
-| FR-REV-004 | [rev.md](/docs/70-79-business/72-requirements/functional-requirements/rev) | Published review = approved |
-| FR-REV-007 | [rev.md](/docs/70-79-business/72-requirements/functional-requirements/rev) | Aggregates from published reviews only |
+| FR-REV-004 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Published review = approved |
+| FR-REV-007 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Aggregates from published reviews only |
 | api-154 | [api-154-reviews-schema-migrate.md](./api-154-reviews-schema-migrate.md) | `reviews_reviews` schema |
 
 ## Design decisions

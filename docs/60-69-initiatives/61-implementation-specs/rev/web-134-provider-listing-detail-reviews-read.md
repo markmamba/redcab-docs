@@ -27,7 +27,7 @@ Providers need reputation context on listing detail. Booking detail (web #123) i
 
 | ID | Document | Why |
 | --- | --- | --- |
-| FR-REV-007 | [rev.md](/docs/70-79-business/72-requirements/functional-requirements/rev) | Display API aggregates only |
+| FR-REV-007 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Display API aggregates only |
 | web-123 | [web-123-provider-review-response-ui.md](./web-123-provider-review-response-ui.md) | Provider portal loader pattern |
 | api-190 | [api-190-provider-catalog-listing-reviews-index.md](./api-190-provider-catalog-listing-reviews-index.md) | Reviews index HTTP |
 
