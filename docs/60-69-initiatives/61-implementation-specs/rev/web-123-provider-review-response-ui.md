@@ -1,4 +1,3 @@
----
 title: "Provider review response UI (W1-7)"
 sidebar_label: Web · REV provider response
 issue: "https://github.com/markmamba/red-cab-web/issues/123"
@@ -11,7 +10,6 @@ depends_on:
   - "docs/60-69-initiatives/61-implementation-specs/rev/api-160-provider-review-response-endpoints.md"
   - "docs/60-69-initiatives/61-implementation-specs/rev/api-186-provider-booking-review-embed.md"
 epic: "https://github.com/markmamba/red-cab-web/issues/120"
----
 
 ## TL;DR
 

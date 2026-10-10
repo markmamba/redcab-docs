@@ -72,7 +72,7 @@ api-159 exposes Team moderation HTTP. Team admins need pages to work the dispute
 
 ## Out of scope
 
-- Provider report UI (web #123).
+- Provider response UI (web #123).
 - Tourist submit UI (web #121).
 - Pre-moderation approve action.
 - Marketplace listing deep links from team detail.
