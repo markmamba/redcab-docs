@@ -1,4 +1,3 @@
----
 title: "Provider review response UI (W1-7)"
 sidebar_label: Web · REV provider response
 issue: "https://github.com/markmamba/red-cab-web/issues/123"
@@ -10,86 +9,89 @@ context: REV
 depends_on:
   - "docs/60-69-initiatives/61-implementation-specs/rev/api-160-provider-review-response-endpoints.md"
   - "docs/60-69-initiatives/61-implementation-specs/rev/api-186-provider-booking-review-embed.md"
-epic: "https://github.com/markmamba/red-cab-web/issues/55"
----
+epic: "https://github.com/markmamba/red-cab-web/issues/120"
 
 ## TL;DR
 
-- Ships provider **public response** on `/providers/bookings/:bookingId` when show includes `review_id`.
-- Uses api-160 `GET` and `POST` on `/providers/reviews/:review_id/provider_response`.
-- Page owns POST submit; domain form uses RHF + zod; `revalidator.revalidate()` after success.
-- `GET` show `404` means empty form. Duplicate create uses api-160 `422` (not tourist `409`).
-- Does not ship provider report UI (api-161) or tourist review excerpt.
+- Ships provider **public response** UI on `/providers/bookings/:bookingId` when booking show includes `review_id`.
+- Loader reads provider booking show (api-186 embed) and `GET` provider response (api-160) when `review_id` is present.
+- Page owns POST create; domain folder `reviews-provider-response` owns form, summary, and payload helpers.
+- One response per review; after submit, show read-only summary (no edit).
+- **Co-ship:** deploy api-186 (and api-160) before web merge so `review_id` resolves in staging.
 
 ## Problem
 
-api-160 exposes provider response HTTP. Providers need self-service UI to post one response per published review. Web must discover `review_id` from provider booking show (api-186 embed).
+api-160 exposes provider response HTTP. Providers need a booking-detail surface to post a single public response after a tourist review is live. Listing detail (web #134) is for monitoring aggregates, not responding on a booking.
 
 ## Governing docs
 
 | ID | Document | Why |
 | --- | --- | --- |
-| FR-REV-006 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | One public response per review |
-| api-160 | [api-160-provider-review-response-endpoints.md](./api-160-provider-review-response-endpoints.md) | HTTP contract |
-| api-186 | [api-186-provider-booking-review-embed.md](./api-186-provider-booking-review-embed.md) | `review_id` on booking show |
-| web-121 | [web-121-tourist-review-submit-ui.md](./web-121-tourist-review-submit-ui.md) | Page-owned POST pattern |
+| api-160 | [api-160-provider-review-response-endpoints.md](./api-160-provider-review-response-endpoints.md) | POST and GET by `review_id` |
+| api-186 | [api-186-provider-booking-review-embed.md](./api-186-provider-booking-review-embed.md) | `review_id` on provider booking show |
+| FR-REV-006 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | One public response per published review |
+| frontend.md | [frontend conventions](/docs/50-59-frontend/conventions/frontend) | Provider portal loader pattern |
 
 ## Design decisions
 
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
-| 1 | Domain folder `reviews-provider-response` | Extend `reviews-review` | Brief; separate tourist surface |
-| 2 | Embed on provider booking detail | Dedicated review route | Brief Gate 1 Q2=B |
-| 3 | No tourist review excerpt | Block on read API | Brief Gate 1 Q1=A |
-| 4 | Loader optional GET when `review_id` set | POST-only | Pre-fill existing response |
-| 5 | Duplicate `422` → form field errors | `409` toast | api-160 matrix |
+| 1 | Embed on provider booking detail | Standalone review page | Brief W1-7; pairs with tourist submit on booking |
+| 2 | Domain folder `reviews-provider-response` | Inline in bookings | Parallel to `reviews-review` tourist domain |
+| 3 | Section hidden without `review_id` | Always show empty form | No review or not approved → no UUID |
+| 4 | Loader 404 on missing response → `null` | Fail page | First visit before create |
+| 5 | Body only in UI | Rating or photos | api-160 body field only |
+| 6 | 422 maps to form fields | Toast only | Match tourist submit pattern |
 
 ## Web contract
 
 | Surface | Route | Loader | API module | Notes |
 | --- | --- | --- | --- | --- |
-| Provider booking detail | `/providers/bookings/:bookingId` | `clientLoader` | `providers-bookings-booking-api.js` (existing), `providers-reviews-provider-response-api.js` (new) | Response section when `review_id` present |
+| Booking detail | `/providers/bookings/:bookingId` | `clientLoader` | `providers-bookings-booking-api.js`, `providers-reviews-provider-response-api.js` | `noindex` |
 
 ### HTTP used
 
 | Method | Path | When |
 | --- | --- | --- |
-| GET | `/providers/bookings/orders/:booking_id` | Loader (includes `review_id` when embed live) |
-| GET | `/providers/reviews/:review_id/provider_response` | Loader when `review_id` present; tolerate `404` |
+| GET | `/providers/bookings/orders/:booking_id` | Loader (includes `review_id` when approved) |
+| GET | `/providers/reviews/:review_id/provider_response` | Loader when `review_id` present |
 | POST | `/providers/reviews/:review_id/provider_response` | Form submit |
 
 ### Files to create or modify (Web)
 
 - `app/api/providers-reviews-provider-response-api.js`
-- `app/api/providers-reviews-provider-response-api.spec.js`
 - `app/domains/reviews-provider-response/reviews-provider-response-schema.js`
 - `app/domains/reviews-provider-response/reviews-provider-response-service.js`
 - `app/domains/reviews-provider-response/reviews-provider-response-form.jsx`
 - `app/domains/reviews-provider-response/reviews-provider-response-summary.jsx`
-- `app/domains/reviews-provider-response/reviews-provider-response-schema.spec.js`
 - `app/domains/bookings-booking/bookings-booking-provider-detail-view.jsx`
-- `app/domains/bookings-booking/bookings-booking-service.js`
 - `app/routes/provider/provider-bookings-detail-page.jsx`
-- `app/routes/provider/provider-bookings-detail-page.spec.jsx`
+- Matching `*.spec.js` / `*.spec.jsx` under the above paths
 
 ## Out of scope
 
-- Provider report UI (api-161).
-- Provider reviews inbox.
-- Tourist review text or rating on this page.
-- Edit response after submit.
+- Provider report review UI (separate issue).
+- Team moderation pages (web #122).
+- Listing-level reviews read UI (web #134).
+- Edit or delete after response is published.
 
 ## Acceptance criteria
 
-- [ ] When `review_id` is present and no response exists, provider sees empty response form.
-- [ ] Successful POST shows stored body and hides duplicate submit affordance.
-- [ ] `GET` `404` does not fail the page loader.
-- [ ] `422` maps to form fields; client POST sends only `body`.
-- [ ] PR states api-160 and api-186 verified in staging before merge.
+- [ ] When `review_id` is present and no response exists, provider sees form and can submit body.
+- [ ] After successful POST, page revalidates and shows summary; success toast uses live copy.
+- [ ] When response exists, form is hidden and summary is shown.
+- [ ] When `review_id` is absent, response section is not rendered.
+- [ ] 422 maps to form fields; other errors use toast defaults.
 
 ## Verification
 
 ```bash
-npm run test -- app/api/providers-reviews-provider-response-api.spec.js app/domains/reviews-provider-response app/routes/provider/provider-bookings-detail-page.spec.jsx
+npm run test -- app/domains/reviews-provider-response app/routes/provider/provider-bookings-detail-page.spec.jsx
 npm run lint
 ```
+
+## Review record
+
+| Date | Reviewer | Tool / model | Outcome |
+| --- | --- | --- | --- |
+| 2026-10-10 | Build (W1-7) | brief-aligned | Approved for codegen |
