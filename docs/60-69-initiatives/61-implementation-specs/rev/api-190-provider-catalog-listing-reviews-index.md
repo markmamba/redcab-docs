@@ -63,6 +63,7 @@ Each review:
 | `rating` | integer | 1–5 |
 | `body` | string | Review text |
 | `submitted_at` | string | ISO8601 |
+| `is_flagged_by_provider` | boolean | `true` when provider reported via api-161; drives web #135 Reported state |
 
 ### Errors
 
