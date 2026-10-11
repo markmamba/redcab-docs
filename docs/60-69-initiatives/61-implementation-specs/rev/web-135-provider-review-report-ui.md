@@ -31,7 +31,7 @@ api-161 exposes provider report HTTP. Providers need a surface where rating and 
 | --- | --- | --- |
 | api-161 | [api-161-provider-review-report.md](./api-161-provider-review-report.md) | POST report |
 | api-190 | [api-190-provider-catalog-listing-reviews-index.md](./api-190-provider-catalog-listing-reviews-index.md) | Index row flag |
-| ADR-020 | [adr-020-review-post-publication-moderation.md](/docs/30-49-domains/34-architecture-decisions/adr-020-review-post-publication-moderation) | Review stays public until Team remove |
+| ADR-020 | [adr-020-review-post-publication-moderation.md](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation) | Review stays public until Team remove |
 | web-134 | [web-134-provider-listing-detail-reviews-read.md](./web-134-provider-listing-detail-reviews-read.md) | Host page |
 
 ## Design decisions
