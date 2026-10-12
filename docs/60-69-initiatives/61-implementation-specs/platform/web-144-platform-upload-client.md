@@ -41,9 +41,9 @@ Security rule **F6** forbids sending user-controlled paths to presign endpoints;
 | ID | Document | Why |
 | --- | --- | --- |
 | api-197 | [api-197-object-storage-direct-upload.md](./api-197-object-storage-direct-upload.md) | Grant paths, response fields, register coupling |
-| FR-PRV-004 | [prv.md](/docs/70-79-business/72-requirements/functional-requirements/prv) | Document types and size |
-| FR-CAT-011 | [cat.md](/docs/70-79-business/72-requirements/functional-requirements/cat) | Listing photo rules (helper only in #144) |
-| NFR-SEC-006 | [non-functional-requirements](/docs/70-79-business/72-requirements/non-functional-requirements) | Client-side pre-check before grant |
+| FR-PRV-004 | [prv.md](/docs/70-79-business/requirements/functional-requirements/prv) | Document types and size |
+| FR-CAT-011 | [cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Listing photo rules (helper only in #144) |
+| NFR-SEC-006 | [non-functional-requirements](/docs/70-79-business/requirements/non-functional-requirements) | Client-side pre-check before grant |
 | web-121 | [web-121-tourist-review-submit-ui.md](../rev/web-121-tourist-review-submit-ui.md) | Review photos still deferred |
 | web-122 | [web-122-team-review-moderation-pages.md](../rev/web-122-team-review-moderation-pages.md) | Team photo metadata-only unchanged |
 | frontend.md | [frontend conventions](/docs/50-59-frontend/conventions/frontend) | Domain modules, forms, ky clients |

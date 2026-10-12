@@ -38,13 +38,13 @@ Marketplace serializers expose photo metadata without a delivery URL, so the web
 
 | ID | Document | Why |
 | --- | --- | --- |
-| FR-PRV-004 | [prv.md](/docs/70-79-business/72-requirements/functional-requirements/prv) | Provider document upload limits |
-| FR-CAT-011 | [cat.md](/docs/70-79-business/72-requirements/functional-requirements/cat) | Listing photo format and size |
-| FR-REV-003 | [rev.md](/docs/70-79-business/72-requirements/functional-requirements/rev) | Review photo limits (when used) |
-| NFR-SEC-006 | [non-functional-requirements](/docs/70-79-business/72-requirements/non-functional-requirements) | Reject bad size and format |
-| NFR-PRIV-002 | [non-functional-requirements](/docs/70-79-business/72-requirements/non-functional-requirements) | License document access |
-| NFR-PRIV-004 | [non-functional-requirements](/docs/70-79-business/72-requirements/non-functional-requirements) | Personal data protection (NFR status: **Draft** — directional only) |
-| INV-10 | [invariants](/docs/70-79-business/71-business-rules/invariants) | Publish requires photos (unchanged) |
+| FR-PRV-004 | [prv.md](/docs/70-79-business/requirements/functional-requirements/prv) | Provider document upload limits |
+| FR-CAT-011 | [cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Listing photo format and size |
+| FR-REV-003 | [rev.md](/docs/70-79-business/requirements/functional-requirements/rev) | Review photo limits (when used) |
+| NFR-SEC-006 | [non-functional-requirements](/docs/70-79-business/requirements/non-functional-requirements) | Reject bad size and format |
+| NFR-PRIV-002 | [non-functional-requirements](/docs/70-79-business/requirements/non-functional-requirements) | License document access |
+| NFR-PRIV-004 | [non-functional-requirements](/docs/70-79-business/requirements/non-functional-requirements) | Personal data protection (NFR status: **Draft** — directional only) |
+| INV-10 | [invariants](/docs/70-79-business/business-rules/invariants) | Publish requires photos (unchanged) |
 | api-157 | [api-157-tourist-submit-review.md](../rev/api-157-tourist-submit-review.md) | Review `storage_key` prefix and photo payload |
 | Design plan | `redcab-docs/scratchpad/design-direct-upload-local-s3.md` | Adapter and flow baseline |
 
