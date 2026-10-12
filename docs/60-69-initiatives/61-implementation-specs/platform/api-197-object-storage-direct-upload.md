@@ -46,6 +46,7 @@ Marketplace serializers expose photo metadata without a delivery URL, so the web
 | NFR-PRIV-004 | [non-functional-requirements](/docs/70-79-business/requirements/non-functional-requirements) | Personal data protection (NFR status: **Draft** — directional only) |
 | INV-10 | [invariants](/docs/70-79-business/business-rules/invariants) | Publish requires photos (unchanged) |
 | api-157 | [api-157-tourist-submit-review.md](../rev/api-157-tourist-submit-review.md) | Review `storage_key` prefix and photo payload |
+| ADR-021 | [adr-021-object-storage-direct-upload](/docs/30-49-domains/architecture-decisions/adr-021-object-storage-direct-upload) | Normative architecture |
 | Design plan | `redcab-docs/scratchpad/design-direct-upload-local-s3.md` | Adapter and flow baseline |
 
 ### Explicit deferrals (not closed)
@@ -291,7 +292,7 @@ Provider-facing listing photo serializers remain without `storage_key` (unchange
 - Orphan-object sweeper (follow-on rake task; see **Explicit deferrals**).
 - Removing unused Active Storage migrations.
 - Team review photo image preview URLs (metadata-only UI may remain).
-- ADR publication (recommended before production cutover; use `write-doc`).
+- ADR-021 (published; see governing docs table).
 
 ## Tasks
 

@@ -40,6 +40,7 @@ Security rule **F6** forbids sending user-controlled paths to presign endpoints;
 
 | ID | Document | Why |
 | --- | --- | --- |
+| ADR-021 | [adr-021-object-storage-direct-upload](/docs/30-49-domains/architecture-decisions/adr-021-object-storage-direct-upload) | Direct upload architecture |
 | api-197 | [api-197-object-storage-direct-upload.md](./api-197-object-storage-direct-upload.md) | Grant paths, response fields, register coupling |
 | FR-PRV-004 | [prv.md](/docs/70-79-business/requirements/functional-requirements/prv) | Document types and size |
 | FR-CAT-011 | [cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Listing photo rules (helper only in #144) |

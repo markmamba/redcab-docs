@@ -6,8 +6,8 @@ description: Architecture Decision Records (ADRs) for Red Cab Marketplace.
 
 ## TL;DR
 
-- Twenty architecture decision records (ADR-001–020) documenting choices already established in the planning set.
-- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, geography administrative tree, service timezone, tourist public URLs, web authentication enforcement, session technology, and review post-publication moderation.
+- Twenty-one architecture decision records (ADR-001–021) documenting choices already established in the planning set.
+- ADRs cover modular monolith, tech stack, bounded contexts, integration, pricing, snapshots, consistency, events, externals, identity, financial authority, evolution strategy, geography reference data, geography administrative tree, service timezone, tourist public URLs, web authentication enforcement, session technology, review post-publication moderation, and object storage direct upload.
 - **ADR-015 is Proposed**, not Accepted — it records the payment custody/control separation pending legal counsel opinion.
 - **ADR-018 and ADR-019 are Accepted** (2026-09-30) — web enforcement model and Phase 1 session technology; see the [authentication series](/docs/90-99-engineering-meta/authentication) and roadmap Phase 1 [Review record](/docs/90-99-engineering-meta/authentication/implementation-roadmap#review-record-phase-1).
 - They record **why** — they do not introduce new boundaries or override business rules.
@@ -42,6 +42,7 @@ Index of architecture decision records. Each ADR is authoritative for its decisi
 | ADR-018 | [ADR-018: Red Cab Web Authentication Enforcement Model](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model) | Accepted (2026-09-30) |
 | ADR-019 | [ADR-019: Session Technology for Phase 1 and Phase 2](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2) | Accepted (2026-09-30); production cookie topology closed ([#20](https://github.com/markmamba/redcab-docs/issues/20)) |
 | ADR-020 | [ADR-020: Review Post-Publication Moderation](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation) | Accepted (2026-10-10); supersedes `AMB-019` moderation leg |
+| ADR-021 | [ADR-021: Object Storage and Direct Upload](/docs/30-49-domains/architecture-decisions/adr-021-object-storage-direct-upload) | Accepted (2026-10-12) |
 
 ## Amendments convention
 
