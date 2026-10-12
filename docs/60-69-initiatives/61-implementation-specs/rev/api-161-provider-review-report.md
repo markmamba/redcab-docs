@@ -1,7 +1,7 @@
 ---
 title: "Provider review report (W1-3b)"
 sidebar_label: API · REV provider report
-issue: "https://github.com/markmamba/red-cab-api/issues/161"
+issue: "https://github.com/markmamba/red-cab-api/issues/153"
 repos:
   - red-cab-api
 status: approved
@@ -14,6 +14,8 @@ epic: "https://github.com/markmamba/red-cab-api/issues/153"
 ---
 
 ## TL;DR
+
+> **Tracker:** This spec’s docs slug is `api-161-provider-review-report`. [red-cab-api#161](https://github.com/markmamba/red-cab-api/issues/161) is **[CAT] marketplace discover filters** — see [cat/api-161-marketplace-listing-index-discover-filters.md](../cat/api-161-marketplace-listing-index-discover-filters.md). Track REV provider report work under epic [#153](https://github.com/markmamba/red-cab-api/issues/153) until a dedicated GitHub issue exists.
 
 - Ships Provider **report** for a **published** review on the Provider's Listing (`FR-REV-005`).
 - Sets `is_flagged_by_provider` and `flagged_at`; review **stays public** until Team Admin removes it ([ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation)).
