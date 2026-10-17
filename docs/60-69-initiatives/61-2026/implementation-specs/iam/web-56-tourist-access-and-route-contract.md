@@ -49,6 +49,10 @@ Evidence and verdicts for each row are recorded in the Session A alignment matri
 
 ## Design decisions
 
+:::caution Superseded (partial)
+Decisions **#2**, **#3**, and **#7** below (canonical URL family, resolver alias, redirect matrix) are superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). Decisions **#1**, **#5**, **#6**, and **#8** (access, checkout gate, SSR, API slug work) remain in force until a successor route spec amends them.
+:::
+
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
 | 1 | `AMB-022` resolves **Option A — public browse, auth at checkout only**. No partial gate, no price masking. | (B) Full auth-gated discover (current code); (C) partial gate — show districts/areas publicly, gate listing detail | Requirements already encode public browse (`FR-IAM-012`, `NFR-SEC-005`); code was the outlier, not the requirement. Product Owner confirmed Option A explicitly and excluded partial-gate variants. |
@@ -74,6 +78,10 @@ _No API code changes are proposed or implemented by this issue._ `red-cab-web` i
 `#60`'s acceptance criteria must cite [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) (epic [#130](https://github.com/markmamba/red-cab-api/issues/130)) as the API dependency — not unfilled `API-1`/`API-2` placeholders.
 
 ## Web contract
+
+:::caution Superseded (partial)
+The path table below reflects the District → Area URL family superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). Access and loader columns remain reference for migration work until a successor spec replaces routes.
+:::
 
 | Surface | Path | Route file | Page module | Layout | Auth HOC | Loader | API module | `meta` robots |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -111,6 +119,10 @@ Reserved query params on the listings-in-area route (no new path segments for th
 - `tourist-dashboard-layout.jsx`, `tourist-public-layout.jsx`: nav "Discover" link target becomes `/districts` (label wording is `#58`'s call)
 
 ## Redirect / migration
+
+:::caution Superseded (partial)
+Redirect targets in this section assume the superseded District → Area URL family. See [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia).
+:::
 
 | Old path | New path | Redirect type |
 | --- | --- | --- |

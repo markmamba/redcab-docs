@@ -35,11 +35,21 @@ When Admin deactivates or archives a geography node with active Listings anywher
 - Source: B-05. Governs: OPR-10, INV-11. Status: Approved.
 
 ### FR-CAT-003 — Discovery of districts and areas
+
+:::caution Superseded (partial)
+This section is superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia) and [discoverability completeness](/docs/30-49-domains/catalog/catalog-decisions#discoverability-completeness). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
+:::
+
 The system **shall** present only discovery roots (Districts) and listable nodes (Areas) whose subtree contains at least one Published Listing, and **shall** indicate when an area has no available services.
 - Source: B-01, B-02. Governs: INV-8. Status: Approved.
 - **Access:** Unauthenticated per `AMB-022` Option A (`FR-IAM-012`, `NFR-SEC-005`) — visitors may browse districts and areas without an account; auth is required only at checkout initiation. Route contract: [web-56 spec](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract).
 
 ### FR-CAT-004 — Primary discovery navigation
+
+:::caution Superseded (partial)
+This section is superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
+:::
+
 The system **shall** allow Tourists to discover services through the location hierarchy (District then Area). The two-level navigation is a projection of a deeper administrative tree. Service type **shall** be available as a filter, not as the primary navigation axis.
 - Source: B-01–B-03. Status: Approved (Decision Log `AMB-020`).
 - **Access:** Unauthenticated per `AMB-022` Option A — same as `FR-CAT-003`; public URL family `/districts/{districtSlug}/areas/{areaSlug}/listings`.
@@ -129,10 +139,20 @@ The system **shall** allow filtering by supported language and by group size, ap
 - Source: D-03. Status: Provisional (AMB-024 supported languages).
 
 ### FR-CAT-026 — Filter by price range
+
+:::caution Superseded (partial)
+This section is superseded by [Catalog decisions — marketplace filter combination](/docs/30-49-domains/catalog/catalog-decisions#marketplace-filter-combination) (clear filters) and [open forks — package vs tiers](/docs/30-49-domains/catalog/catalog-decisions#open-forks) (price range semantics). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
+:::
+
 The system **shall** allow filtering by price range using the Listing's starting price, and **shall** allow clearing all filters.
 - Source: D-04. Governs: PRC-2. Status: Approved.
 
 ### FR-CAT-027 — Sort results
+
+:::caution Superseded (partial)
+This section is superseded by [Catalog decisions — marketplace sort options](/docs/30-49-domains/catalog/catalog-decisions#marketplace-sort-options), [most booked sort](/docs/30-49-domains/catalog/catalog-decisions#most-booked-sort), and [top rated sort](/docs/30-49-domains/catalog/catalog-decisions#top-rated-sort). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
+:::
+
 The system **shall** allow sorting by recommended, price (both directions), rating, review count, and newest.
 - Source: D-05. Status: Approved.
 - **Phased web delivery (Milestone C — [web-67](/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-67-listing-sort-control-url-params)):** Public area listings index ships URL-driven sort with **newest** (`published_at`, descending) live. **Rating** appears as a disabled UI stub until the reviews (REV) milestone enables tourist rating sort. **Recommended**, **price** (both directions), and **review count** remain deferred until marketplace index ordering and product rules are specified for those columns; no client-side re-sort of listing rows.
@@ -160,6 +180,11 @@ The system **shall** allow Tourists to discover Areas (listable geography nodes)
 - Source: [ADR-013](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree). Governs: INV-8. Status: Approved.
 
 ### FR-CAT-033 — Listing attaches to listable node
+
+:::caution Superseded (partial)
+This section is superseded by [Catalog decisions — destination structure](/docs/30-49-domains/catalog/catalog-decisions#destination-structure). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
+:::
+
 The system **shall** allow a Listing to attach only to a geography node with `is_listable = true`. The system **shall** reject create/update when the submitted geography node is a discovery root without listable children (e.g. a designated city node).
 - Source: [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree). Governs: INV-8. Status: Approved.
 

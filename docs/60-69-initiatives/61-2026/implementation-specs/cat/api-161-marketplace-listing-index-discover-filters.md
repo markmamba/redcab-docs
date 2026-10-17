@@ -4,12 +4,15 @@ sidebar_label: API · CAT discover filters
 issue: "https://github.com/markmamba/red-cab-api/issues/161"
 repos:
   - red-cab-api
-status: approved
+status: superseded
+superseded_by: /docs/30-49-domains/catalog/catalog-decisions#marketplace-filter-combination
 phase: 2
 context: CAT
 related:
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-67-listing-sort-control-url-params.md"
 ---
+
+{/* codegen: do not use spec_path when status is superseded */}
 
 ## TL;DR
 

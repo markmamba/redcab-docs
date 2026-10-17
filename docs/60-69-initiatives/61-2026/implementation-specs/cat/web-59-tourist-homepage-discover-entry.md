@@ -5,7 +5,8 @@ issue: "https://github.com/markmamba/red-cab-web/issues/59"
 repos:
   - red-cab-web
   - red-cab-api
-status: approved
+status: superseded
+superseded_by: /docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia
 phase: 1
 context: CAT
 depends_on:
@@ -16,9 +17,15 @@ depends_on:
   - "red-cab-web#60"
 ---
 
+{/* codegen: do not use spec_path when status is superseded (featured API may inform successor) */}
+
+:::caution Superseded (partial)
+**Information architecture** (home discover entry, `/districts` CTA, region-first home) is superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). **`featured=true` districts API** sections below may still inform a successor spec until replaced.
+:::
+
 ## TL;DR
 
-- **Superseded (IA only):** A future `web-146` home v2 wireframe spec will own Home section order, Explore CTA, marketing, and guides stub. This spec remains the record for `featured=true` loader and API co-ship.
+- **Superseded (IA only):** Region-first home and discover entry replace the `/districts` primary CTA model in [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). This file remains a historical record for `featured=true` loader and API co-ship until a successor spec exists.
 - **Ships:** replace Phase 0 placeholder at `/` with a marketplace landing page in `TouristPublicLayout`; primary CTA → `/districts`; `index, follow` robots; canonical tag for `/`.
 - **Ships API + web together:** `featured=true` query param on districts index; co-shipped in this spec (no separate API issue). **API deploys before web.**
 - **Resilient homepage:** hero + primary CTA always render; featured district grid only when loader returns `districts.length > 0`; API errors degrade to CTA-only via `handleLoaderError`.
