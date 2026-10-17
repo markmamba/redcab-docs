@@ -21,7 +21,7 @@ ADR for REV moderation lifecycle after issue #121 product direction (2026-10-10)
 | Functional requirements | [Reviews functional requirements](/docs/70-79-business/requirements/functional-requirements/rev) (`FR-REV-004`, `FR-REV-005`, `FR-REV-007`) |
 | Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) (`OPR-6`) |
 | Decision log | [Open Questions](/docs/70-79-business/planning/open-questions) (supersedes `AMB-019` moderation leg) |
-| Implementation | [api-157](/docs/60-69-initiatives/implementation-specs/rev/api-157-tourist-submit-review), [api-159](/docs/60-69-initiatives/implementation-specs/rev/api-159-team-review-moderation-endpoints), [api-161](/docs/60-69-initiatives/implementation-specs/rev/api-161-provider-review-report) |
+| Implementation | [api-157](/docs/60-69-initiatives/61-2026/implementation-specs/rev/api-157-tourist-submit-review), [api-159](/docs/60-69-initiatives/61-2026/implementation-specs/rev/api-159-team-review-moderation-endpoints), [api-161](/docs/60-69-initiatives/61-2026/implementation-specs/rev/api-161-provider-review-report) |
 
 ---
 

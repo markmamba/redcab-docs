@@ -52,7 +52,7 @@ Rewrites may reduce word count. They may not drop facts.
 
 Every technical reference includes its kind:
 
-- `docs/60-69-initiatives/61-implementation-specs/_template.md`
+- `docs/60-69-initiatives/61-2026/implementation-specs/_template.md`
 - `Booking::Reservation` in `red-cab-api`
 - column `bookings.status` (table plus column)
 - invariant `INV-3` with link to the invariants page

@@ -27,7 +27,7 @@ Planning tier index for product owners, tech leads, and agents. Implementation d
 
 ## How to use planning docs
 
-1. **Pick your horizon:** product phase (roadmap) vs cross-repo program (web platform strategy) vs a single issue spec (`60-69-initiatives/61-implementation-specs/`).
+1. **Pick your horizon:** product phase (roadmap) vs cross-repo program (web platform strategy) vs a single issue spec (`60-69-initiatives/61-2026/implementation-specs/`).
 2. **Respect precedence:** business rules → requirements → architecture/ADRs → engineering authentication series → implementation specs → code.
 3. **Do not serial-block unrelated tracks:** tourist shell and funnel work does not wait for policy-route migration; production launch of authenticated surfaces waits for auth Phase 0.
 4. **Spec-first for code:** approved implementation spec before codegen in `red-cab-api` / `red-cab-web`.
@@ -38,10 +38,10 @@ When work touches routes, auth, or tourist surfaces:
 
 1. Read [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) for track boundaries and gates.
 2. Read the track-specific doc ([tourist UI](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) or [auth roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap)).
-3. Confirm the issue’s implementation spec is `status: approved` in `docs/60-69-initiatives/61-implementation-specs/`.
+3. Confirm the issue’s implementation spec is `status: approved` in `docs/60-69-initiatives/61-2026/implementation-specs/`.
 4. Update planning snapshots when closing milestones (tourist snapshot table, program strategy “where we stand”).
 
 ## Related documents
 
 - [Product](/docs/70-79-business) — product tier entry
-- [Engineering specs README](/docs/60-69-initiatives/implementation-specs/) — spec workflow and template
+- [Engineering specs README](/docs/60-69-initiatives/61-2026/implementation-specs/) — spec workflow and template

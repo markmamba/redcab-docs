@@ -11,7 +11,7 @@ description: How the tourist pre–Phase 2 track and the web authentication rede
 - **Milestone B** of the tourist track (`red-cab-web#55` issues `#56`–`#64`) is **complete in code**; resume at verification, Milestone C/D (`#65`–`#68`), or polish (`#69`).
 - **Auth Phase 0** does not block tourist UI development; it **does** block **production** launch of any authenticated surface.
 - **Auth Phase 3** does not block finishing tourist pre–Phase 2; **new Phase 2 tourist features** that add authenticated routes wait for `tourist-required-policy`.
-- **Epic `#23`** (split-panel `PublicAuthLayout`) continues for **provider/corporate** portals only; **tourist** IAM chrome is owned by [`web-64`](/docs/60-69-initiatives/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment) (`TouristAuthContent` in shell).
+- **Epic `#23`** (split-panel `PublicAuthLayout`) continues for **provider/corporate** portals only; **tourist** IAM chrome is owned by [`web-64`](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment) (`TouristAuthContent` in shell).
 
 ## About this document
 
@@ -46,7 +46,7 @@ This document records **how to proceed** from the natural pause after **`#64`**.
 
 1. **Rails is the boundary.** Web guards shape journeys only; see [ADR-018](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model).
 2. **One surface per PR** for auth migration — never HOC and policy on the same subtree.
-3. **Spec-first** — auth platform specs under `60-69-initiatives/61-implementation-specs/iam/auth-platform/` before Phase 0/3 codegen (backlog in [auth roadmap § Implementation spec backlog](/docs/90-99-engineering-meta/authentication/implementation-roadmap#implementation-spec-backlog)).
+3. **Spec-first** — auth platform specs under `60-69-initiatives/61-2026/implementation-specs/iam/auth-platform/` before Phase 0/3 codegen (backlog in [auth roadmap § Implementation spec backlog](/docs/90-99-engineering-meta/authentication/implementation-roadmap#implementation-spec-backlog)).
 4. **Tourist placeholders before Phase 2 APIs** — Milestone D scaffolds slots; wiring waits on Phase 2 specs and (for new authenticated pages) auth Phase 3.
 5. **Docs stay honest** — when code passes a milestone, update the tourist snapshot and this section’s status table.
 
@@ -145,7 +145,7 @@ Milestone D (**`#68`**) is **not** behind G3 — placeholders on existing pages 
 
 | # | Work | Owner | Output |
 | --- | --- | --- | --- |
-| 1 | Complete `#64` manual QA or record waivers | Web | Checklist in [web-64](/docs/60-69-initiatives/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment) |
+| 1 | Complete `#64` manual QA or record waivers | Web | Checklist in [web-64](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment) |
 | 2 | Run auth **Phase 2 verification** (public catalog, guest Book → login → checkout) | Web | **Done** — [#82](https://github.com/markmamba/red-cab-web/issues/82); [Review record (Phase 2)](/docs/90-99-engineering-meta/authentication/implementation-roadmap#review-record-phase-2) |
 | 3 | Auth **Phase 1** review — Accept ADR-018/019; answer/defer OQ 2–4 | Architect + PO | **Done** — [#19](https://github.com/markmamba/redcab-docs/issues/19); [roadmap Review record](/docs/90-99-engineering-meta/authentication/implementation-roadmap#review-record-phase-1) |
 | 4 | Update epic `#23` description (tourist out of split-panel scope) | PM/Tech lead | GitHub epic only |
@@ -238,8 +238,8 @@ Delegated to [auth roadmap open questions](/docs/90-99-engineering-meta/authenti
 ## Agent session playbook
 
 1. Read this document to choose **Track T**, **Track A**, or **Track B (`#23`)**.
-2. Never implement codegen without an **approved** spec in `docs/60-69-initiatives/61-implementation-specs/`.
-3. For tourist routes: [web-56](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract) layout table still applies; HOCs on `/account/**` until Phase 3.
+2. Never implement codegen without an **approved** spec in `docs/60-69-initiatives/61-2026/implementation-specs/`.
+3. For tourist routes: [web-56](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) layout table still applies; HOCs on `/account/**` until Phase 3.
 4. For auth work: read [Authentication](/docs/90-99-engineering-meta/authentication) in order once, then [entry rules](/docs/90-99-engineering-meta/authentication/entry-rules) for lookups.
 5. After closing an issue, update **Where we stand** here or the tourist snapshot — whichever track moved.
 

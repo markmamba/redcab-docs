@@ -21,7 +21,7 @@ This page is the canonical reference for human-readable prose across `redcab-doc
 | Requirements normativity | [Requirements overview](/docs/70-79-business/requirements) |
 | Approved terms | [Glossary](/docs/70-79-business/business-rules/glossary) |
 | API user errors | [Backend conventions — error messages](/docs/20-29-backend/conventions/backend#error-messages-for-users) |
-| Spec workflow | [Implementation specs](/docs/60-69-initiatives/implementation-specs) |
+| Spec workflow | [Implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/) |
 
 ---
 
@@ -99,7 +99,7 @@ The web repo targets **B1–B2** English for issues, PR descriptions, and commen
 
 ## Tier A — implementation specs
 
-In `60-69-initiatives/61-implementation-specs/`:
+In `60-69-initiatives/61-2026/implementation-specs/`:
 
 | Section | STE |
 | --- | --- |

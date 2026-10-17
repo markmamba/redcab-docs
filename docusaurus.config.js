@@ -8,15 +8,15 @@ import johnnyDecimalRedirects from './scripts/johnny-decimal-redirects.json';
 
 /** Map legacy paths to valid Docusaurus routes (category indexes use trailing `/`). */
 const redirectTargetFixes = {
-  '/docs/60-69-initiatives/implementation-specs/README': '/docs/60-69-initiatives/implementation-specs/',
-  '/docs/60-69-initiatives/implementation-specs/_template': '/docs/60-69-initiatives/implementation-specs/',
-  '/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08/index':
-    '/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08/',
+  '/docs/60-69-initiatives/61-2026/implementation-specs/README': '/docs/60-69-initiatives/61-2026/implementation-specs/',
+  '/docs/60-69-initiatives/61-2026/implementation-specs/_template': '/docs/60-69-initiatives/61-2026/implementation-specs/',
+  '/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08/index':
+    '/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08/',
   '/docs/70-79-business/business-rules/': '/docs/70-79-business/business-rules/glossary',
   '/docs/30-49-domains/domain-models/': '/docs/30-49-domains/domain-models/domain-models',
   '/docs/70-79-business/requirements': '/docs/70-79-business/requirements/',
   '/docs/70-79-business/planning/roadmap': '/docs/70-79-business/planning/roadmap/',
-  '/docs/60-69-initiatives/implementation-specs': '/docs/60-69-initiatives/implementation-specs/',
+  '/docs/60-69-initiatives/implementation-specs': '/docs/60-69-initiatives/61-2026/implementation-specs/',
 };
 
 const extraRedirects = [
@@ -25,7 +25,11 @@ const extraRedirects = [
   {from: '/docs/business-rules/glossary', to: '/docs/70-79-business/business-rules/glossary'},
   {from: '/docs/business-rules/invariants', to: '/docs/70-79-business/business-rules/invariants'},
   {from: '/docs/domain/domain-models', to: '/docs/30-49-domains/domain-models/domain-models'},
-  {from: '/docs/specs', to: '/docs/60-69-initiatives/implementation-specs/'},
+  {from: '/docs/specs', to: '/docs/60-69-initiatives/61-2026/implementation-specs/'},
+  {
+    from: '/docs/60-69-initiatives/implementation-specs/',
+    to: '/docs/60-69-initiatives/61-2026/implementation-specs/',
+  },
 ];
 
 /** Deduplicate redirects that would write the same HTML file (e.g. `/foo` vs `/foo/`). */
@@ -57,6 +61,7 @@ const config = {
   projectName: 'redcab-docs',
 
   onBrokenLinks: 'throw',
+  onBrokenAnchors: 'throw',
 
   markdown: {
     mermaid: true,

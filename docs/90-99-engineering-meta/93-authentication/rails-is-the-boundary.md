@@ -114,5 +114,5 @@ Deleted auth HOC modules are not a security boundary — only Rails protects dat
 
 - Previous: [Entry rules](/docs/90-99-engineering-meta/authentication/entry-rules)
 - Next: [Worked examples](/docs/90-99-engineering-meta/authentication/worked-examples)
-- [IAM audit §6 — AuthN / AuthZ model](/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08#6-authn--authz-model)
+- [IAM audit §6 — AuthN / AuthZ model](/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08#6-authn--authz-model)
 - [Backend conventions](/docs/20-29-backend/conventions/backend)

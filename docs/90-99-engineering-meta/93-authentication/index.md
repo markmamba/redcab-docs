@@ -101,5 +101,5 @@ flowchart LR
 - [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) — how tourist UI and auth redesign proceed in parallel
 - [ADR-010](/docs/30-49-domains/architecture-decisions/adr-010-identity-and-authorization-architecture), [ADR-017](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture), [ADR-018](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model), [ADR-019](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2)
 - [FR-IAM](/docs/70-79-business/requirements/functional-requirements/iam), [Non-functional requirements](/docs/70-79-business/requirements/non-functional-requirements) (`NFR-SEC-004`, `NFR-SEC-005`)
-- [web-56 spec](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract), [IAM audit 2026-08](/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08)
+- [web-56 spec](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract), [IAM audit 2026-08](/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08)
 - [Frontend conventions](/docs/50-59-frontend/conventions/frontend), [Backend conventions](/docs/20-29-backend/conventions/backend)

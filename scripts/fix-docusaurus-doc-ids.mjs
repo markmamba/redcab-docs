@@ -28,8 +28,10 @@ const REPLACEMENTS = [
   ['/docs/30-49-domains/35-patterns', '/docs/30-49-domains/patterns'],
   ['/docs/30-49-domains/36-system-design/', '/docs/30-49-domains/system-design/'],
   ['/docs/30-49-domains/36-system-design', '/docs/30-49-domains/system-design'],
-  ['/docs/60-69-initiatives/61-implementation-specs/', '/docs/60-69-initiatives/implementation-specs/'],
-  ['/docs/60-69-initiatives/61-implementation-specs', '/docs/60-69-initiatives/implementation-specs'],
+  ['/docs/60-69-initiatives/61-2026/implementation-specs/', '/docs/60-69-initiatives/61-2026/implementation-specs/'],
+  ['/docs/60-69-initiatives/61-2026/implementation-specs', '/docs/60-69-initiatives/61-2026/implementation-specs'],
+  ['/docs/60-69-initiatives/implementation-specs/', '/docs/60-69-initiatives/61-2026/implementation-specs/'],
+  ['/docs/60-69-initiatives/implementation-specs', '/docs/60-69-initiatives/61-2026/implementation-specs'],
   ['/docs/20-29-backend/21-conventions/', '/docs/20-29-backend/conventions/'],
   ['/docs/20-29-backend/21-conventions', '/docs/20-29-backend/conventions'],
   ['/docs/20-29-backend/22-infrastructure/', '/docs/20-29-backend/infrastructure/'],
@@ -38,7 +40,7 @@ const REPLACEMENTS = [
   ['/docs/50-59-frontend/51-conventions', '/docs/50-59-frontend/conventions'],
   ['/docs/90-99-engineering-meta/93-authentication/', '/docs/90-99-engineering-meta/authentication/'],
   ['/docs/90-99-engineering-meta/93-authentication', '/docs/90-99-engineering-meta/authentication'],
-  ['60-69-initiatives/61-implementation-specs/README', '60-69-initiatives/implementation-specs/README'],
+  ['60-69-initiatives/61-2026/implementation-specs/README', '60-69-initiatives/61-2026/implementation-specs/README'],
 ];
 
 function walk(dir, cb) {

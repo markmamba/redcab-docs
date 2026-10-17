@@ -6,9 +6,11 @@ description: Recommended reading path for product owners, business analysts, and
 
 ## TL;DR
 
-- Read in order: **Glossary → Business rules → Requirements → Roadmap → Open questions**.
+- Read [Documentation system](/docs/00-09-meta/conventions/documentation-system#documentation-system) first if you work on docs structure, Catalog revamp, or implementation specs.
+- Then: **Glossary → Business rules → Requirements → Roadmap → Open questions**.
 - Use [Explainers](/docs/70-79-business/explainers) for plain-language walkthroughs ([ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) Tier A); they link to normative sources.
 - Engineering detail lives under [Architecture](/docs/30-49-domains) and [Engineering](/docs/90-99-engineering-meta).
+- Catalog normative docs (pilot): [Catalog overview](/docs/30-49-domains/catalog/overview/).
 
 ## Recommended path
 
@@ -30,4 +32,4 @@ description: Recommended reading path for product owners, business analysts, and
 
 - [Architecture overview](/docs/30-49-domains/system-design/overview) — system structure and integration
 - [Domain models](/docs/30-49-domains/domain-models/domain-models) — aggregates and ownership
-- [Implementation specs](/docs/60-69-initiatives/implementation-specs) — per-issue design (engineers only)
+- [Implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/) — per-issue design (engineers only)

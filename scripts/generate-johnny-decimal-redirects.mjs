@@ -30,7 +30,7 @@ const PREFIX_MAP = [
   ['architecture/payments-architecture', '30-49-domains/35-patterns/payments-architecture'],
   ['architecture/geography', '30-49-domains/35-patterns/geography'],
   ['architecture/index', '30-49-domains/index'],
-  ['engineering/specs', '60-69-initiatives/61-implementation-specs'],
+  ['engineering/specs', '60-69-initiatives/61-2026/implementation-specs'],
   ['engineering/conventions/backend', '20-29-backend/21-conventions/backend'],
   ['engineering/conventions/frontend', '50-59-frontend/51-conventions/frontend'],
   ['engineering/conventions/domain-to-code-mapping', '20-29-backend/21-conventions/domain-to-code-mapping'],
@@ -42,7 +42,7 @@ const PREFIX_MAP = [
   ['requirements', '70-79-business/72-requirements'],
   ['roadmap', '70-79-business/73-planning/roadmap'],
   ['domain', '30-49-domains/32-domain-models'],
-  ['specs', '60-69-initiatives/61-implementation-specs'],
+  ['specs', '60-69-initiatives/61-2026/implementation-specs'],
   ['ambiguities/open-questions', '70-79-business/73-planning/open-questions'],
 ];
 

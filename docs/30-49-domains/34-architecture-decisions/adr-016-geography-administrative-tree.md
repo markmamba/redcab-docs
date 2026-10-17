@@ -23,7 +23,7 @@ ADR for the administrative geography tree inside Catalog. Supersedes the flat Di
 | Prior ADR | [ADR-013: Geography Reference Data](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data) |
 | Service timezone | [ADR-014: Service Timezone Model](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) |
 | Public URL contract | [Session A — Tourist UI access model](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) |
-| Blueprint | [Geography data model review](/docs/60-69-initiatives/implementation-specs/cat/geography/design-review-data-model) |
+| Blueprint | [Geography data model review](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model) |
 | Parent epic | [red-cab-api#130](https://github.com/markmamba/red-cab-api/issues/130) |
 
 ---

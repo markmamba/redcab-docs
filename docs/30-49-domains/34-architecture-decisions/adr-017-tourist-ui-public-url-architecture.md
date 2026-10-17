@@ -245,14 +245,14 @@ Green is unauthenticated and indexable; red requires a tourist JWT and is `noind
 
 | Proposed issue | Repo | Depends on | Notes |
 | --- | --- | --- | --- |
-| **API-1** — resolve marketplace district and area path segments by slug | `red-cab-api` | — | **Delivered** as [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) (geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130); spec [`api-134-marketplace-geography-slug-and-ancestors`](/docs/60-69-initiatives/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors)). Session A traceability alias only — do not file a duplicate issue. |
+| **API-1** — resolve marketplace district and area path segments by slug | `red-cab-api` | — | **Delivered** as [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) (geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130); spec [`api-134-marketplace-geography-slug-and-ancestors`](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors)). Session A traceability alias only — do not file a duplicate issue. |
 | **API-2** — embed district in marketplace area and listing payloads | `red-cab-api` | — | **Delivered** in the same [`#134`](https://github.com/markmamba/red-cab-api/issues/134) PR (Session A traceability alias). |
 | **API-3** — remove the UUID fallback from marketplace geography resolution | `red-cab-api` | API-1, #60 deployed | Deprecation cleanup in the PR-08 style; slug-only afterwards |
 | **WEB-1** — remove legacy `/account/discover` redirects | `red-cab-web` | #60 shipped one release | Drops the legacy tier from the redirect matrix |
 | **WEB-2** — sitemap.xml and canonical tags for public discovery | `red-cab-web` | #60 | Could fold into #60; kept separate so SEO plumbing is reviewable on its own |
 | **CAT-1** — add `slug` to `catalog_listings` and adopt slug listing URLs | `red-cab-api` + `red-cab-web` | API-1, #60 | Deferred beyond this track. Needs a DBML change, uniqueness scope, backfill, and a 301 from the UUID path |
 
-Critical path: **[`#134`](https://github.com/markmamba/red-cab-api/issues/134) (API-1 + API-2) → #60 → #61(closed)/#62** with #57, #58, #59 running alongside. `#134` closed the API gap; `#60` is unblocked on the API side once [web-56 corpus closeout](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract) lands.
+Critical path: **[`#134`](https://github.com/markmamba/red-cab-api/issues/134) (API-1 + API-2) → #60 → #61(closed)/#62** with #57, #58, #59 running alongside. `#134` closed the API gap; `#60` is unblocked on the API side once [web-56 corpus closeout](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) lands.
 
 ---
 
@@ -278,7 +278,7 @@ Critical path: **[`#134`](https://github.com/markmamba/red-cab-api/issues/134) (
 
 Session B must produce, from this record and nothing new:
 
-1. **Spec `redcab-docs/docs/60-69-initiatives/implementation-specs/56-tourist-access-model-and-route-contract`** from `template.md`, `status: approved` only after `review-implementation-spec`, with governing docs `FR-IAM-012`, `NFR-SEC-005`, `FR-CAT-003/004/005/007`, `AMB-020`, `AMB-022`, `PRC-1`, `INV-8`, and [Geography](/docs/30-49-domains/patterns/geography).
+1. **Spec `redcab-docs/docs/60-69-initiatives/61-2026/implementation-specs/56-tourist-access-model-and-route-contract`** from `template.md`, `status: approved` only after `review-implementation-spec`, with governing docs `FR-IAM-012`, `NFR-SEC-005`, `FR-CAT-003/004/005/007`, `AMB-020`, `AMB-022`, `PRC-1`, `INV-8`, and [Geography](/docs/30-49-domains/patterns/geography).
 2. **The auth-gate matrix and SEO meta table per surface**, satisfying #56's acceptance criteria, derived from §3.2 rather than restated freehand.
 3. **The file-level migration plan for #60** — old path to new path per module, the `loader` conversion list, the constant and path-builder renames in §3.4, and the redirect implementation approach in React Router v7 (resource route versus loader-level `redirect`).
 4. **API-1 and API-2 issue bodies**, including the resolver service name, param rename, fallback removal criteria, and serializer shape for the district embed.
@@ -290,4 +290,4 @@ Session B does not revisit `AMB-022`, the URL scheme, or the web/API split. Thos
 
 ## Addendum (2026-09-23)
 
-Session A labels **API-1** and **API-2** are traceability aliases only. Both shipped in [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) under geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130). Readers of §5 should treat `#134` as the closed API dependency for web issue #60 — not an open API-1/API-2 gap. Authoritative access-model and redirect contract: [web-56 spec](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract).
+Session A labels **API-1** and **API-2** are traceability aliases only. Both shipped in [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) under geography epic [#130](https://github.com/markmamba/red-cab-api/issues/130). Readers of §5 should treat `#134` as the closed API dependency for web issue #60 — not an open API-1/API-2 gap. Authoritative access-model and redirect contract: [web-56 spec](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract).

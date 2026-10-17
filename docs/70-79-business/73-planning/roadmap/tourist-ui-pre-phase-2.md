@@ -47,7 +47,7 @@ Phase 1 and Phase 2 roadmaps list **functional web deliverables** (pages that ex
 | Discover funnel (`/account/discover/…`) | Implemented; auth-gated |
 | Listing detail, checkout, bookings | Implemented |
 | Homepage `/` | Phase 0 placeholder; not linked to discover |
-| Public discover (guest browse) | Not implemented — `AMB-022` resolved (public browse); route contract in [web-56 spec](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract) |
+| Public discover (guest browse) | Not implemented — `AMB-022` resolved (public browse); route contract in [web-56 spec](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) |
 | Near-me / map pins | Not started |
 | Phase 2 UI slots (filter bar, review, cancel) | Not scaffolded |
 
@@ -81,11 +81,11 @@ Plan and implement in this sequence. Skipping a step causes rework.
 
 ## Milestone A — Foundations
 
-**Output:** written decisions + route map (can live in this doc or a linked spec under `docs/60-69-initiatives/61-implementation-specs/` when implementation starts).
+**Output:** written decisions + route map (can live in this doc or a linked spec under `docs/60-69-initiatives/61-2026/implementation-specs/` when implementation starts).
 
 ### A1 — Access model (locked)
 
-**Locked (`AMB-022` resolved — Option A, 2026-09-20):** Public browse of districts, areas, listings, and indicative pricing. Authentication required only at checkout initiation. Full contract: [60-69-initiatives/61-implementation-specs/iam/web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract).
+**Locked (`AMB-022` resolved — Option A, 2026-09-20):** Public browse of districts, areas, listings, and indicative pricing. Authentication required only at checkout initiation. Full contract: [60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract).
 
 | Decision | Current `red-cab-web` | Requirements / ambiguity |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ Plan and implement in this sequence. Skipping a step causes rework.
 | Account | `/account` | Required | `noindex, nofollow` |
 | Sitemap | `/sitemap.xml` | None | n/a (`#57`) |
 
-> **Redirect / migration** (implemented in `#60`; full matrix in [spec #56](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract#redirect--migration)):
+> **Redirect / migration** (implemented in `#60`; full matrix in [spec #56](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract#redirect--migration)):
 >
 > | Old path | New path | Redirect |
 > | --- | --- | --- |
@@ -147,7 +147,7 @@ Home
                 → Bookings list
 ```
 
-**Deliverables** (locked in [web-57 spec](/docs/60-69-initiatives/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links)):
+**Deliverables** (locked in [web-57 spec](/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links)):
 
 - [x] Sitemap with layout assignment (public shell vs account shell)
 - [x] Breadcrumb rules per level (geography nav + booking context)
@@ -164,7 +164,7 @@ One tourist chrome across public and account surfaces.
 - [x] Footer (legal links, language hint, support contact placeholder) — `#58`
 - [x] Shared empty, error, and loading patterns for catalog and bookings domains — `#58` (`TouristEmptyState`, `TouristErrorState`, `TouristShellPending` on public loaders via `#60`)
 - [ ] Minimal design tokens documented (Bootstrap-first; overrides in `_variables.scss` per [frontend conventions](/docs/50-59-frontend/conventions/frontend)) — Milestone E / `#69`
-- [x] Tourist marketplace IAM in-shell chrome (`TouristAuthContent`) — `#64` / [web-64](/docs/60-69-initiatives/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment)
+- [x] Tourist marketplace IAM in-shell chrome (`TouristAuthContent`) — `#64` / [web-64](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment)
 
 ---
 
@@ -246,12 +246,12 @@ Scaffold **named slots** on existing pages. Do not implement Phase 2 API clients
 
 Not required to start Milestone B, but recommended before high-traffic pages go to production.
 
-Implementation spec: [web-69-tourist-brand-visual-polish](/docs/60-69-initiatives/implementation-specs/platform/web-69-tourist-brand-visual-polish) ([#69](https://github.com/markmamba/red-cab-web/issues/69)).
+Implementation spec: [web-69-tourist-brand-visual-polish](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-69-tourist-brand-visual-polish) ([#69](https://github.com/markmamba/red-cab-web/issues/69)).
 
-Wireframes (canonical on GitHub Pages): [web-69 spec — Wireframes](/docs/60-69-initiatives/implementation-specs/platform/web-69-tourist-brand-visual-polish#wireframes).
+Wireframes (canonical on GitHub Pages): [web-69 spec — Wireframes](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-69-tourist-brand-visual-polish#wireframes).
 
 - [ ] Brand tokens in `app/styles/_variables.scss`
-- [x] Wireframes for Home, listing detail, checkout — [web-69 exports](/docs/60-69-initiatives/implementation-specs/platform/web-69-tourist-brand-visual-polish#wireframes)
+- [x] Wireframes for Home, listing detail, checkout — [web-69 exports](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-69-tourist-brand-visual-polish#wireframes)
 - [ ] EN/JA copy patterns for discovery and checkout
 - [ ] Card/list patterns aligned across discover and bookings
 
@@ -271,7 +271,7 @@ Audit baseline aligned with `red-cab-web@c4ce884` (2026-09-26). Program sequenci
 | Homepage in funnel | `[x]` | Discover entry (`#59`) |
 | Public discover (`AMB-022`) | `[x]` | Verified 2026-10-01 — [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82); [Review record (Phase 2)](/docs/90-99-engineering-meta/authentication/implementation-roadmap#review-record-phase-2) |
 | Listing detail public URL | `[x]` | Per web-56 / `#60` |
-| Unified tourist shell | `[~]` | `#58` + `#64`; manual QA matrix open in [web-64](/docs/60-69-initiatives/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment) |
+| Unified tourist shell | `[~]` | `#58` + `#64`; manual QA matrix open in [web-64](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment) |
 | Near-me / maps | `[ ]` | `#65`–`#66` |
 | Phase 2 placeholder slots | `[ ]` | `#68` |
 
@@ -314,7 +314,7 @@ When picking up tourist UI work:
 2. Read this document for milestone order and exit criteria.
 3. Confirm Milestone A decisions before changing routes or auth policies.
 4. Read [frontend conventions](/docs/50-59-frontend/conventions/frontend) and [domain-to-code-mapping](/docs/20-29-backend/conventions/domain-to-code-mapping).
-5. For behavior tied to Phase 2 APIs, scaffold placeholders only until the matching [implementation spec](/docs/60-69-initiatives/implementation-specs/) is `approved`.
+5. For behavior tied to Phase 2 APIs, scaffold placeholders only until the matching [implementation spec](/docs/60-69-initiatives/61-2026/implementation-specs/) is `approved`.
 6. Milestone B is complete (`#56`–`#64`); resume at verification, `#68`, or Milestone C/E per program strategy.
 
 ---

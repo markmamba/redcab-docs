@@ -22,7 +22,9 @@ Set `RED_CAB_DOCS_PATH` to the absolute path of `docs/` when working outside thi
 | Backend | `docs/20-29-backend/` | API conventions, infrastructure |
 | Domains | `docs/30-49-domains/` | Bounded contexts, ADRs, domain models |
 | Frontend | `docs/50-59-frontend/` | Web conventions |
-| Initiatives | `docs/60-69-initiatives/61-implementation-specs/` | Per-issue implementation specs |
+| Initiatives | `docs/60-69-initiatives/61-2026/` | Programs + `implementation-specs/` |
+| Catalog (pilot domain) | `docs/30-49-domains/38-catalog/` | Normative Catalog rulings (growing) |
+| Legacy | `docs/80-89-legacy/` | Superseded material, alias table |
 | Business | `docs/70-79-business/` | Rules, requirements, planning |
 | Engineering meta | `docs/90-99-engineering-meta/` | Authentication series, cross-cutting |
 
@@ -30,25 +32,19 @@ Legacy URLs under `/docs/product/`, `/docs/architecture/`, and `/docs/engineerin
 
 ## Document precedence
 
-1. Business Rules (`docs/70-79-business/71-business-rules/`)
-2. Requirements (`docs/70-79-business/72-requirements/`)
-3. Domain Models (`docs/30-49-domains/32-domain-models/`)
-4. Architecture + ADRs (`docs/30-49-domains/`)
-5. Engineering conventions (`docs/20-29-backend/`, `docs/50-59-frontend/`, `docs/90-99-engineering-meta/`)
-6. **Implementation specs** (`docs/60-69-initiatives/61-implementation-specs/`) — per-issue design
-7. Code (`red-cab-api/`, `red-cab-web/`)
+See `docs/00-09-meta/conventions/documentation-system.md` (global rules → platform ADRs → domain rulings → engineering → **approved** specs → code). Program pages under `61-2026/` are not normative.
 
 ## Spec-first workflow
 
 Before implementation code is written in api/web repos:
 
-1. Create `docs/60-69-initiatives/61-implementation-specs/{context}/{repo}-{issue}-{slug}.md` from `docs/60-69-initiatives/61-implementation-specs/_template.md`.
+1. Create `docs/60-69-initiatives/61-2026/implementation-specs/{context}/{repo}-{issue}-{slug}.md` from `docs/60-69-initiatives/61-2026/implementation-specs/_template.md`.
 2. Review with `review-implementation-spec` skill (in api or web `.ai/skills/`).
 3. Set `status: approved` in spec frontmatter.
 4. Implement using codegen skills with `spec_path` argument.
 5. Link spec in PR description.
 
-See [docs/60-69-initiatives/61-implementation-specs/README.md](docs/60-69-initiatives/61-implementation-specs/README.md).
+See [docs/60-69-initiatives/61-2026/implementation-specs/README.md](docs/60-69-initiatives/61-2026/implementation-specs/README.md).
 
 ## Prose (ASD-STE100)
 
@@ -81,7 +77,7 @@ Per-issue shipping design uses `write-implementation-spec` / `review-implementat
 
 ## Multi-PR audit series
 
-Large audits live as spec series under `docs/60-69-initiatives/61-implementation-specs/{context}/` (e.g. `iam/iam-audit-2026-08/`). Link from specs when an issue is part of that series.
+Programs (for example `61-2026/catalog-revamp-2026/`) are non-normative. Multi-PR audit series may live under `implementation-specs/{context}/` (e.g. `iam/iam-audit-2026-08/`); mark `doc_type: program` when they are not API contracts.
 
 ## Before generating code (auth or routes)
 

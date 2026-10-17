@@ -42,8 +42,8 @@ const REPLACEMENTS = [
   ['/docs/architecture/geography', '/docs/30-49-domains/35-patterns/geography'],
   ['/docs/architecture/', '/docs/30-49-domains/'],
   ['/docs/architecture', '/docs/30-49-domains'],
-  ['/docs/engineering/specs/', '/docs/60-69-initiatives/61-implementation-specs/'],
-  ['/docs/engineering/specs', '/docs/60-69-initiatives/61-implementation-specs'],
+  ['/docs/engineering/specs/', '/docs/60-69-initiatives/61-2026/implementation-specs/'],
+  ['/docs/engineering/specs', '/docs/60-69-initiatives/61-2026/implementation-specs/'],
   ['/docs/engineering/conventions/backend', '/docs/20-29-backend/21-conventions/backend'],
   ['/docs/engineering/conventions/frontend', '/docs/50-59-frontend/51-conventions/frontend'],
   ['/docs/engineering/conventions/domain-to-code-mapping', '/docs/20-29-backend/21-conventions/domain-to-code-mapping'],
@@ -58,7 +58,7 @@ const REPLACEMENTS = [
   ['docs/product/', 'docs/70-79-business/'],
   ['docs/architecture/contexts/', 'docs/30-49-domains/31-bounded-contexts/'],
   ['docs/architecture/', 'docs/30-49-domains/'],
-  ['docs/engineering/specs/', 'docs/60-69-initiatives/61-implementation-specs/'],
+  ['docs/engineering/specs/', 'docs/60-69-initiatives/61-2026/implementation-specs/'],
   ['docs/engineering/authentication/', 'docs/90-99-engineering-meta/93-authentication/'],
   ['docs/engineering/conventions/backend.md', 'docs/20-29-backend/21-conventions/backend.md'],
   ['docs/engineering/conventions/frontend.md', 'docs/50-59-frontend/51-conventions/frontend.md'],
@@ -68,7 +68,7 @@ const REPLACEMENTS = [
   ['product/planning/', '70-79-business/73-planning/'],
   ['architecture/contexts/', '30-49-domains/31-bounded-contexts/'],
   ['architecture/decisions/', '30-49-domains/34-architecture-decisions/'],
-  ['engineering/specs/', '60-69-initiatives/61-implementation-specs/'],
+  ['engineering/specs/', '60-69-initiatives/61-2026/implementation-specs/'],
   ['engineering/authentication/', '90-99-engineering-meta/93-authentication/'],
 ];
 

@@ -216,7 +216,7 @@ Open a new ADR that supersedes this one when **any** of these happens:
 
 - [ADR-010](/docs/30-49-domains/architecture-decisions/adr-010-identity-and-authorization-architecture)
 - [ADR-018](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model)
-- [IAM audit 2026-08](/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08) — PR-02 (revocation), PR-03 (per-request cookie names)
+- [IAM audit 2026-08](/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08) — PR-02 (revocation), PR-03 (per-request cookie names)
 - [Changing a session](/docs/90-99-engineering-meta/authentication/changing-a-session)
 
 ## Amendments

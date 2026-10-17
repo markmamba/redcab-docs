@@ -20,6 +20,6 @@ Custody and control separation (ADR-015). Checkout flows tie to booking snapshot
 
 Implementation specs live at:
 
-`docs/60-69-initiatives/61-implementation-specs/{context}/{repo}-{issue}-{slug}.md`
+`docs/60-69-initiatives/61-2026/implementation-specs/{context}/{repo}-{issue}-{slug}.md`
 
 Frontmatter `status: approved` is required before codegen skills run.

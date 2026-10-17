@@ -10,7 +10,7 @@ Read `.ai/skills/write-tier-a-prose/SKILL.md` first.
 
 The issue body is Tier A prose. An engineer must start cold from the issue alone.
 
-Do not invent a full implementation spec in the issue. Direction stays high level; detailed design belongs in `60-69-initiatives/61-implementation-specs/` via `write-implementation-spec` in api or web.
+Do not invent a full implementation spec in the issue. Direction stays high level; detailed design belongs in `60-69-initiatives/61-2026/implementation-specs/` via `write-implementation-spec` in api or web.
 
 ## Repos
 

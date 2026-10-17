@@ -149,13 +149,13 @@ Supported formats: string, `{ label, isClickable }`, or function `({ params }) =
 
 ### SEO / public catalog routes
 
-Public catalog routes (`/`, `/districts`, `/districts/:districtSlug`, listings funnel) follow the [web-56 route contract](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract):
+Public catalog routes (`/`, `/districts`, `/districts/:districtSlug`, listings funnel) follow the [web-56 route contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract):
 
 | Rule | Convention |
 | --- | --- |
 | Server `loader` | Indexable public catalog pages use server `loader`, not `clientLoader`, so crawlers receive SSR content |
 | Canonical `<link>` | Each indexable catalog page emits `<link rel="canonical" href="…">` at its slug path **without** pagination or filter query params (`page`, `service_type`, `order_by`, `order_dir`, `date`) |
-| Sitemap | `/sitemap.xml` is a resource route (`routes/marketplace/sitemap.xml.js`) with a server `loader`; generation ships in a follow-on web issue (contract in [`web-57`](/docs/60-69-initiatives/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links)) |
+| Sitemap | `/sitemap.xml` is a resource route (`routes/marketplace/sitemap.xml.js`) with a server `loader`; generation ships in a follow-on web issue (contract in [`web-57`](/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links)) |
 | Stale slugs | Catalog loaders compare URL slug segments to API payload slugs and `redirect(canonicalPath, 301)` when they differ |
 
 Account routes (`/account/**`) stay `noindex, nofollow` and may keep `clientLoader`.

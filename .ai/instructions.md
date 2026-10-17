@@ -12,20 +12,14 @@ Resolve `docs/` in this order:
 
 Application code (read-only for fact-checking):
 
-- `red-cab-api/` — DBML under `app/docs/db/`, domains under `app/domains/`
+- `red-cab-api/` — DBML under `docs/db/`, domains under `app/domains/`
 - `red-cab-web/` — routes under `app/routes/`, API clients under `app/api/`
 
 ## Document precedence
 
-When sources disagree, higher layers win:
+See `docs/00-09-meta/conventions/documentation-system.md`. Programs under `60-69-initiatives/61-2026/` (outside `implementation-specs/`) are not normative.
 
-1. Business rules (`70-79-business/71-business-rules/`)
-2. Requirements (`70-79-business/72-requirements/`)
-3. Domain models (`30-49-domains/32-domain-models/`)
-4. Architecture and ADRs (`30-49-domains/34-architecture-decisions/`)
-5. Engineering conventions (`20-29-backend/`, `50-59-frontend/`, `90-99-engineering-meta/`)
-6. Implementation specs (`60-69-initiatives/61-implementation-specs/`)
-7. Application code
+Filesystem path for specs: `60-69-initiatives/61-2026/implementation-specs/`.
 
 ## Prose
 

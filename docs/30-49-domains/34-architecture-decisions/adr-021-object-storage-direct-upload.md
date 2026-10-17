@@ -20,11 +20,11 @@ This ADR records the object storage and direct-upload architecture.
 
 Tracking issues: [api #197](https://github.com/markmamba/red-cab-api/issues/197), [web #144](https://github.com/markmamba/red-cab-web/issues/144).
 
-- API spec: [api-197](/docs/60-69-initiatives/implementation-specs/platform/api-197-object-storage-direct-upload).
-- Web spec: [web-144](/docs/60-69-initiatives/implementation-specs/platform/web-144-platform-upload-client).
+- API spec: [api-197](/docs/60-69-initiatives/61-2026/implementation-specs/platform/api-197-object-storage-direct-upload).
+- Web spec: [web-144](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-144-platform-upload-client).
 - Upload constraints: [NFR-SEC-006](/docs/70-79-business/requirements/non-functional-requirements).
 - License privacy: [NFR-PRIV-002](/docs/70-79-business/requirements/non-functional-requirements).
-- Review keys: [api-157](/docs/60-69-initiatives/implementation-specs/rev/api-157-tourist-submit-review).
+- Review keys: [api-157](/docs/60-69-initiatives/61-2026/implementation-specs/rev/api-157-tourist-submit-review).
 - External systems: [ADR-009](/docs/30-49-domains/architecture-decisions/adr-009-external-systems-integration).
 
 ---
@@ -77,7 +77,7 @@ Large uploads must not stream through the Rails process in production.
 7. **Web upload client.** `red-cab-web` uses ky for grant and register and **`fetch` for PUT** to presigned or disk URLs (cross-origin safe; no CSRF on S3).
 8. **Environment parity.** The same key layout is used in dev and prod; only the adapter changes.
 
-Implementation detail lives in [api-197](/docs/60-69-initiatives/implementation-specs/platform/api-197-object-storage-direct-upload) and [web-144](/docs/60-69-initiatives/implementation-specs/platform/web-144-platform-upload-client).
+Implementation detail lives in [api-197](/docs/60-69-initiatives/61-2026/implementation-specs/platform/api-197-object-storage-direct-upload) and [web-144](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-144-platform-upload-client).
 
 ## Consequences
 

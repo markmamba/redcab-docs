@@ -122,7 +122,7 @@ function main() {
   writeJson('60-69-initiatives/_category_.json', {
     label: 'Initiatives',
     position: 6,
-    link: { type: 'doc', id: '60-69-initiatives/61-implementation-specs/README' },
+    link: { type: 'doc', id: '60-69-initiatives/61-2026/implementation-specs/README' },
   });
 
   writeJson('90-99-engineering-meta/_category_.json', {
@@ -142,7 +142,7 @@ function main() {
 
 - Single site for product, architecture, and engineering — organized with [Johnny Decimal](https://johnnydecimal.com/) area numbers.
 - **Document precedence** still applies: business rules → requirements → domain → ADRs → engineering → implementation specs → code.
-- Implementation specs live under [Initiatives](/docs/60-69-initiatives/61-implementation-specs/).
+- Implementation specs live under [Initiatives](/docs/60-69-initiatives/61-2026/implementation-specs/).
 
 ## Area ranges
 
@@ -187,7 +187,7 @@ Numbers apply at **area** and **category** only so new pages can be inserted wit
 
 - Folders: kebab-case (\`bounded-contexts\`, \`implementation-specs\`).
 - Main page: \`index.md\` per folder.
-- Implementation specs: \`{repo}-{issue}-{slug}.md\` under \`60-69-initiatives/61-implementation-specs/{context}/\`.
+- Implementation specs: \`{repo}-{issue}-{slug}.md\` under \`60-69-initiatives/61-2026/implementation-specs/{context}/\`.
 
 ## Links
 
@@ -203,7 +203,7 @@ When documents disagree, higher layers win:
 3. Domain models (\`30-49-domains/32-domain-models/\`)
 4. Architecture + ADRs (\`30-49-domains/\`)
 5. Engineering conventions (\`20-29-backend/\`, \`50-59-frontend/\`, \`90-99-engineering-meta/\`)
-6. Implementation specs (\`60-69-initiatives/61-implementation-specs/\`)
+6. Implementation specs (\`60-69-initiatives/61-2026/implementation-specs/\`)
 7. Application code (\`red-cab-api/\`, \`red-cab-web/\`)
 `,
   );

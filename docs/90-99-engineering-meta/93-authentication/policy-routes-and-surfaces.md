@@ -205,4 +205,4 @@ A Corporate account on `/account/checkout` goes to `/corporate`. `FR-IAM-012` le
 - Previous: [Changing a session](/docs/90-99-engineering-meta/authentication/changing-a-session)
 - Next: [Policy middleware](/docs/90-99-engineering-meta/authentication/policy-middleware)
 - [Entry rules](/docs/90-99-engineering-meta/authentication/entry-rules)
-- [web-56 web contract](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract#web-contract)
+- [web-56 web contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract#web-contract)

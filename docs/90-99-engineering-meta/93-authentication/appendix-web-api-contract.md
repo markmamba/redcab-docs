@@ -119,4 +119,4 @@ For each row above, `red-cab-api` tests assert:
 
 - [Changing a session](/docs/90-99-engineering-meta/authentication/changing-a-session)
 - [Rails is the boundary](/docs/90-99-engineering-meta/authentication/rails-is-the-boundary)
-- [IAM audit §4.4 — target endpoint map](/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08#44-target-endpoint-map)
+- [IAM audit §4.4 — target endpoint map](/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08#44-target-endpoint-map)

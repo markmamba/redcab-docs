@@ -25,7 +25,7 @@ This ADR records how `red-cab-web` enforces authentication on its routes. It doe
 | Topic | Document |
 | --- | --- |
 | Identity and authorization posture | [ADR-010](/docs/30-49-domains/architecture-decisions/adr-010-identity-and-authorization-architecture) |
-| Public tourist browse (`AMB-022`) | [ADR-017](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture), [web-56 spec](/docs/60-69-initiatives/implementation-specs/iam/web-56-tourist-access-and-route-contract) |
+| Public tourist browse (`AMB-022`) | [ADR-017](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture), [web-56 spec](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) |
 | Session technology | [ADR-019](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2) |
 | How the model works, page by page | [Authentication series](/docs/90-99-engineering-meta/authentication) |
 | Execution plan | [Authentication roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap) |
@@ -223,7 +223,7 @@ Return a `provider_access.state` word in the account payload, as the reference p
 - [ADR-019](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2) — session technology and refresh rules.
 - [Authentication series](/docs/90-99-engineering-meta/authentication) — how the model works.
 - [Entry rules specification](/docs/90-99-engineering-meta/authentication/appendix-entry-rules-spec) — every rule, every state.
-- [IAM audit 2026-08](/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08) — API correctness baseline; `IAM-Q2` closed with D4 + api-145.
+- [IAM audit 2026-08](/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08) — API correctness baseline; `IAM-Q2` closed with D4 + api-145.
 
 ## Revisit triggers
 

@@ -20,8 +20,8 @@ description: Phased execution plan for ADR-018 and ADR-019 — goals, exit crite
 | --- | --- |
 | Decisions | [ADR-018](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model), [ADR-019](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2) |
 | Tourist UI track | [Tourist UI — Pre–Phase 2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) |
-| API baseline | [IAM audit 2026-08](/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08) |
-| Spec workflow | [Implementation specs](/docs/60-69-initiatives/implementation-specs/) |
+| API baseline | [IAM audit 2026-08](/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08) |
+| Spec workflow | [Implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/) |
 
 **Audited:** 2026-09-26 against `red-cab-api@d8ed9b7` and `red-cab-web@c4ce884`, by static reading. No test suite was run for this plan.
 
@@ -257,7 +257,7 @@ flowchart LR
 | Policy export contract | `app/routes/policies/policy-export-contract.spec.js` | Forbids `shouldRevalidate` / `clientLoader` on policies |
 | A1 boundary | Static read `public-root.jsx`, `team-root.jsx`, `root-route-error-boundary.jsx` | No `useEffect` navigate on `401`; **Sign in again** targets surface login + `redirect_to` |
 
-**Evidence pointer:** [web-88 spec](/docs/60-69-initiatives/implementation-specs/iam/auth-platform/web-88-remove-auth-hocs); auth series alignment [redcab-docs#32](https://github.com/markmamba/redcab-docs/issues/32).
+**Evidence pointer:** [web-88 spec](/docs/60-69-initiatives/61-2026/implementation-specs/iam/auth-platform/web-88-remove-auth-hocs); auth series alignment [redcab-docs#32](https://github.com/markmamba/redcab-docs/issues/32).
 
 ### Phase 5 — Server-side sessions (conditional)
 
@@ -267,7 +267,7 @@ Runs only if a new ADR supersedes ADR-019 (see its revisit triggers). Scope is i
 
 ## Implementation spec backlog
 
-Create each from `60-69-initiatives/61-implementation-specs/_template.md`, `status: draft`, under `60-69-initiatives/61-implementation-specs/iam/auth-platform/`. Replace `NNN` with the GitHub issue number.
+Create each from `60-69-initiatives/61-2026/implementation-specs/_template.md`, `status: draft`, under `60-69-initiatives/61-2026/implementation-specs/iam/auth-platform/`. Replace `NNN` with the GitHub issue number.
 
 | # | Phase | Suggested file | Suggested issue title | Acceptance criteria (summary) |
 | --- | --- | --- | --- | --- |
@@ -315,15 +315,15 @@ Applied in the auth series bootstrap and Phase 1 ([#19](https://github.com/markm
 | `30-49-domains/34-architecture-decisions/adr-018-*.md`, `adr-019-*.md` | Accepted; historical audit tables; prerequisite / leak findings updated |
 | `90-99-engineering-meta/93-authentication/index.md` | Normative target + phased applicability |
 | `70-79-business/73-planning/web-platform-program-strategy.md` | Phase 0 mostly merged; Phase 1 done |
-| `AGENTS.md` (workspace + `redcab-docs`) | Auth series + `docs/60-69-initiatives/61-implementation-specs/{context}/…` spec path |
+| `AGENTS.md` (workspace + `redcab-docs`) | Auth series + `docs/60-69-initiatives/61-2026/implementation-specs/{context}/…` spec path |
 | `.cursor/rules/00-spec-first.mdc` (workspace, api, web) | Correct implementation spec path |
-| `60-69-initiatives/61-implementation-specs/iam/iam-audit-2026-08/index.md` | **IAM-Q2** closed (narrative); IAM-Q1 tied to PO sign-off |
+| `60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08/index.md` | **IAM-Q2** closed (narrative); IAM-Q1 tied to PO sign-off |
 
 Still to do (content or ticks — not pointer fixes):
 
 | File | Change | When |
 | --- | --- | --- |
-| `60-69-initiatives/61-implementation-specs/iam/iam-audit-2026-08/index.md` | Tick PR-03 and PR-08 when those PRs land; optional full §7 re-tick | Phase 0 / PR-08 |
+| `60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08/index.md` | Tick PR-03 and PR-08 when those PRs land; optional full §7 re-tick | Phase 0 / PR-08 |
 | `engineering/conventions/backend.md` | Error table: add `ForbiddenError (403)` and its codes | Phase 0 spec 4 follow-up |
 | `30-49-domains/34-architecture-decisions/adr-010-identity-and-authorization-architecture.md` | Remove duplicate TL;DR blocks (formatting defect) | Separate hygiene PR |
 | `red-cab-web/.ai/instructions.md`, `red-cab-web/.cursor/rules/10-routes-api-forms.mdc` | HOC → policy wording | **Done** ([#88](https://github.com/markmamba/red-cab-web/issues/88) PR [#113](https://github.com/markmamba/red-cab-web/pull/113)) |
@@ -346,4 +346,4 @@ Still to do (content or ticks — not pointer fixes):
 - [Authentication series overview](/docs/90-99-engineering-meta/authentication)
 - [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy)
 - [Tourist UI — Pre–Phase 2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2)
-- [IAM audit 2026-08](/docs/60-69-initiatives/implementation-specs/iam/iam-audit-2026-08)
+- [IAM audit 2026-08](/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08)
