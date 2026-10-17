@@ -30,6 +30,7 @@ Pilot **domain-decisions** page per [Documentation system](/docs/00-09-meta/conv
 | Program audit | [Catalog revamp phase 0 audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#audit-tldr) |
 | Domain entry | [Catalog overview](/docs/30-49-domains/catalog/overview/#catalog-overview) |
 | Term index | [Glossary](/docs/70-79-business/business-rules/glossary) |
+| Naming and legacy aliases | [Naming and legacy aliases](/docs/30-49-domains/catalog/naming-and-legacy-aliases/#naming-tldr) |
 | Verified code baseline | [Audit — verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts) |
 
 Decisions live **only** here. Do not add acceptance-criteria tables or end-to-end flows on this page. Link to future `requirements/` pages (phase 1) and approved implementation specs when they exist.
