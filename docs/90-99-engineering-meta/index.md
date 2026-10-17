@@ -83,23 +83,33 @@ Engineering conventions **must not** override invariants, context ownership, or 
 | **Red Cab domain rules** | Same docs + business rules + ADRs | No client price, snapshot immutability, seat reservation guard, Corporate ACL |
 | **Actor / folder mapping** | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | `marketplace/` vs `tourists/`, surface → route groups |
 
-When scaffolding `.ai/instructions.md` in each repo, copy the baseline patterns verbatim and append Red Cab–specific rules from this folder.
+When scaffolding agent instructions in each repo, copy the baseline patterns verbatim and append Red Cab–specific rules from this folder.
 
 ---
 
 ## What gets created at implementation time
 
-When `red-cab-api` and `red-cab-web` repos are scaffolded, each should include a standard AI/tooling layout:
+**`redcab-docs`** (this repo) uses Claude Code as the canonical skill host:
 
 ```
-.ai/
-  instructions.md          # Single source of truth (derived from docs in this folder)
-  skills/                  # new-endpoint, new-model, creating-route-pages, etc.
-.cursor/rules/             # Thin pointers to .ai/instructions.md and skills
+.claude/
+  instructions.md          # Single source of truth for docs agents
+  skills/                  # write-issue, write-doc, system-design, etc.
+.cursor/rules/             # Optional pointers to .claude/skills/
 AGENTS.md                  # Entry point for agents
 ```
 
-The files in this `engineering/` folder are the **planning-time source** for those `.ai/instructions.md` files. Do not duplicate them into implementation repos until scaffolding begins.
+**`red-cab-api`** and **`red-cab-web`** use the same pattern with `.ai/` as the canonical skill host (`.claude/skills/` may hold thin pointers for Claude Code):
+
+```
+.ai/
+  instructions.md          # Derived from docs in this folder
+  skills/                  # new-endpoint, new-model, creating-route-pages, etc.
+.cursor/rules/             # Thin pointers to .ai/instructions.md and skills
+AGENTS.md
+```
+
+The files in this `engineering/` folder are the **planning-time source** for implementation-repo `.ai/instructions.md`. Do not duplicate them into api/web until scaffolding begins.
 
 ---
 

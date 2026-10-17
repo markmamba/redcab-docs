@@ -6,4 +6,4 @@ alwaysApply: false
 
 # /write-issue
 
-Read and follow the instructions in `.ai/skills/write-issue/SKILL.md`.
+Read and follow the instructions in `.claude/skills/write-issue/SKILL.md`.

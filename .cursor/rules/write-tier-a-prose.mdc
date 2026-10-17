@@ -6,4 +6,4 @@ alwaysApply: false
 
 # /write-tier-a-prose
 
-Read and follow the instructions in `.ai/skills/write-tier-a-prose/SKILL.md`.
+Read and follow the instructions in `.claude/skills/write-tier-a-prose/SKILL.md`.

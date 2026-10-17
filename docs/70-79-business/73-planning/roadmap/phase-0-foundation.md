@@ -64,7 +64,7 @@ Login (`/login`) links to all three sign-up pages and exposes Google sign-in.
 **red-cab-api**
 
 - [x] Rails 8 API-only modular monolith scaffold
-- [x] `.ai/instructions.md`, `.cursor/rules/`, and skills per [/docs/90-99-engineering-meta](/docs/90-99-engineering-meta)
+- [x] `.claude/instructions.md`, `.cursor/rules/`, and skills per [/docs/90-99-engineering-meta](/docs/90-99-engineering-meta)
 - [x] CI pipeline — Brakeman + RuboCop + Minitest on push/PR
 - [x] PostgreSQL — `database.yml` + identities / profile migrations applied
 - [x] Redis — JWT session store, OAuth state, and Sidekiq backend; Active Job uses Sidekiq (db index 2)
@@ -72,7 +72,7 @@ Login (`/login`) links to all three sign-up pages and exposes Google sign-in.
 **red-cab-web**
 
 - [x] React Router v7 SSR scaffold (JavaScript)
-- [x] `.ai/instructions.md`, `.cursor/rules/`, and skills per [/docs/90-99-engineering-meta](/docs/90-99-engineering-meta)
+- [x] `.claude/instructions.md`, `.cursor/rules/`, and skills per [/docs/90-99-engineering-meta](/docs/90-99-engineering-meta)
 - [x] CI pipeline — ESLint + Vitest (`npm run ci:test`) on push/PR
 
 #### Identity & Access (`IAM`) + role profiles

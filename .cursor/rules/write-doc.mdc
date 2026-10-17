@@ -6,4 +6,4 @@ alwaysApply: false
 
 # /write-doc
 
-Read and follow the instructions in `.ai/skills/write-doc/SKILL.md`.
+Read and follow the instructions in `.claude/skills/write-doc/SKILL.md`.

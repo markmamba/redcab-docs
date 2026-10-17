@@ -39,7 +39,7 @@ See `docs/00-09-meta/conventions/documentation-system.md` (global rules → plat
 Before implementation code is written in api/web repos:
 
 1. Create `docs/60-69-initiatives/61-2026/implementation-specs/{context}/{repo}-{issue}-{slug}.md` from `docs/60-69-initiatives/61-2026/implementation-specs/_template.md`.
-2. Review with `review-implementation-spec` skill (in api or web `.ai/skills/`).
+2. Review with `review-implementation-spec` skill (in api or web `.claude/skills/` or `.ai/skills/`).
 3. Set `status: approved` in spec frontmatter.
 4. Implement using codegen skills with `spec_path` argument.
 5. Link spec in PR description.
@@ -53,7 +53,7 @@ See [docs/60-69-initiatives/61-2026/implementation-specs/README.md](docs/60-69-i
 
 ## AI skills (this repo)
 
-Conventions: `.ai/instructions.md`. Catalog: `.ai/README.md`.
+Conventions: `.claude/instructions.md`. Skill catalog: `.claude/README.md`.
 
 | Skill | Purpose |
 | --- | --- |

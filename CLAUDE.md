@@ -1,6 +1,6 @@
 # Red Cab Docs — Claude Code
 
-Read and follow `.ai/instructions.md`. Task prompts live in `.ai/skills/`.
+Read and follow `.claude/instructions.md`. Task prompts live in `.claude/skills/`.
 
 ## Skills
 

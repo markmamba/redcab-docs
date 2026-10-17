@@ -1,6 +1,6 @@
 # Red Cab Docs — AI instructions
 
-Canonical planning repository. Human readers use the Docusaurus site; agents use this file plus `.ai/skills/`.
+Canonical planning repository. Human readers use the Docusaurus site; agents use this file plus `.claude/skills/`.
 
 ## Docs root
 

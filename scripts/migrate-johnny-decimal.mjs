@@ -20,7 +20,7 @@ const DIR_MOVES = [
   ['architecture/decisions', '30-49-domains/34-architecture-decisions'],
   ['architecture/patterns', '30-49-domains/35-patterns'],
   ['architecture/system', '30-49-domains/36-system-design'],
-  ['engineering/specs', '60-69-initiatives/61-implementation-specs'],
+  ['engineering/specs', '60-69-initiatives/61-2026/implementation-specs'],
   ['engineering/infrastructure', '20-29-backend/22-infrastructure'],
   ['engineering/authentication', '90-99-engineering-meta/93-authentication'],
 ];
