@@ -22,6 +22,7 @@ This page locks how the documentation repository is organized. Agents and humans
 | Prose tiers | [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) |
 | Shipping specs | [Implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/) |
 | Catalog revamp program | [Catalog revamp 2026](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/) |
+| Catalog phase 0 audit | [Catalog revamp phase 0 audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#audit-tldr) |
 
 ---
 
