@@ -4,7 +4,8 @@ sidebar_label: Web · Near me
 issue: "https://github.com/markmamba/red-cab-web/issues/65"
 repos:
   - red-cab-web
-status: approved
+status: superseded
+superseded_by: /docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia
 phase: 1
 context: CAT
 depends_on:
@@ -16,6 +17,8 @@ depends_on:
   - "red-cab-api#135"
 epic: "https://github.com/markmamba/red-cab-web/issues/55"
 ---
+
+{/* codegen: do not use spec_path when status is superseded */}
 
 ## TL;DR
 

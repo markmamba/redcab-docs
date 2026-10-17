@@ -110,3 +110,4 @@ New Catalog work uses **sentence titles** in navigation, not `FR-CAT-*` or `ADR-
 | Date | Change |
 | --- | --- |
 | 2026-10-17 | Initial documentation system; specs under `61-2026/implementation-specs/`; programs as siblings under `61-2026/`. |
+| 2026-10-17 | Catalog revamp PR 4: pilot [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions/) (`doc_type: domain-decisions`) and supersession map updates. |

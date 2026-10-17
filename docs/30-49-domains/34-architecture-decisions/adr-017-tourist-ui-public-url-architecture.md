@@ -8,10 +8,8 @@ description: Architecture decision record resolving AMB-022, the public tourist 
 ## TL;DR
 
 - `AMB-022` is **RESOLVED — Option A**: public browse of districts, areas, listings and indicative pricing; authentication is required only at checkout initiation.
-- Canonical public path family is **`/districts/{districtSlug}/areas/{areaSlug}/listings/{listingUuid}`** per [Geography](/docs/30-49-domains/patterns/geography). `/discover` is rejected outright.
-- District and Area URL segments are **slugs**; the Listing segment stays a **UUID** for Phase 1 (no listing slug column exists).
-- Slug segments **require API work** — all four marketplace geography lookups resolve `find_by(uuid:)` today. Delivered by geography epic [red-cab-api#130](https://github.com/markmamba/red-cab-api/issues/130) ([ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)); blocks web issue #60.
-- **URL family unchanged** by the geography tree redesign — `/districts/{districtSlug}/areas/{areaSlug}/listings` is a projection of `catalog_geographies`, not a storage shape change.
+- **Access and SSR decisions on this page remain normative.** The District → Area **URL family and IA** clauses are superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia) (successor route spec TBD).
+- `/discover` remains rejected outright.
 - The public funnel currently uses `clientLoader`, so crawlers receive an empty shell. Moving to server `loader` is a **P0 SEO blocker**, not polish.
 
 ## Status
@@ -89,6 +87,10 @@ Consequences, all binding on Session B:
 6. `INV-8` continues to hide zero-listing Districts and Areas — public exposure does not widen what is discoverable.
 
 ### 3.2 Chosen URL scheme
+
+:::caution Superseded (partial)
+This section is superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). It remains for history until moved to [Legacy](/docs/80-89-legacy/). Access model §3.1 and SSR decisions are unchanged.
+:::
 
 Four schemes were scored 1–5 on six axes (higher is better):
 

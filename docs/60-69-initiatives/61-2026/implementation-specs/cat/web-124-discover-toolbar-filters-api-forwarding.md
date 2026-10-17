@@ -4,7 +4,8 @@ sidebar_label: Web · Discover filters
 issue: "https://github.com/markmamba/red-cab-web/issues/124"
 repos:
   - red-cab-web
-status: approved
+status: superseded
+superseded_by: /docs/30-49-domains/catalog/catalog-decisions#marketplace-filter-combination
 phase: 2
 context: CAT
 depends_on:
@@ -13,6 +14,8 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots.md"
 epic: "https://github.com/markmamba/red-cab-web/issues/55"
 ---
+
+{/* codegen: do not use spec_path when status is superseded */}
 
 ## TL;DR
 
