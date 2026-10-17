@@ -111,3 +111,4 @@ New Catalog work uses **sentence titles** in navigation, not `FR-CAT-*` or `ADR-
 | --- | --- |
 | 2026-10-17 | Initial documentation system; specs under `61-2026/implementation-specs/`; programs as siblings under `61-2026/`. |
 | 2026-10-17 | Catalog revamp PR 4: pilot [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions/) (`doc_type: domain-decisions`) and supersession map updates. |
+| 2026-10-17 | Catalog revamp PR 5: global invariant amendments (`INV-8`, `LC-10`, `PRC-2`, `BKG-11`) align `70-79` with domain decisions; domain pages link upward, not downward. |

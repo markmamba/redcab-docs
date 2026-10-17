@@ -47,7 +47,7 @@ Summary of audit recommendations. PR 4 applies them. See the [audit](/docs/60-69
 | `AMB-020`, `AMB-022` (URL clause) | Supersede clauses in register | [Tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia); `AMB-022` Option A access unchanged. |
 | `web-57`, `web-59` (IA), `web-65`, `web-66`, `web-67`, `web-124`, `api-161` | `status: superseded` | Decisions anchors above; successor specs TBD. |
 | `web-56` (URL and redirect sections) | Section banners | [Tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia); whole file stays `approved`. |
-| `INV-8`, `LC-10`, `PRC-2`, `BKG-11` | Pending | PR 5 after forks are ruled. See [invariants](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#inventory-invariants) and [open forks](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#open-forks). |
+| `INV-8`, `LC-10`, `PRC-2`, `BKG-11` | Amended (PR 5) | [Invariants](/docs/70-79-business/business-rules/invariants); partial forks in [open forks](/docs/30-49-domains/catalog/catalog-decisions#open-forks). |
 | `FR-CAT-001`, `002`, `006` to `025`, `028` to `032`, `034`; `api-131` to `api-136`; `ADR-013`, `ADR-016` | Carry | No change. |
 | `phase-2-execution-map.md` and two other roadmap pages | Fix in follow-up | See [planning drift](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#inventory-planning-drift). |
 
@@ -59,7 +59,7 @@ Summary of audit recommendations. PR 4 applies them. See the [audit](/docs/60-69
 | Program index (Step 2) | This page | Done |
 | Phase 0 audit (PR 3) | [`audit.md`](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#audit-tldr) | Complete in this PR |
 | Apply audit dispositions (PR 4) | [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions/), banners, `superseded` statuses | **Done** (this PR) |
-| Invariant and booking rule edits (PR 5) | `INV-8`, `LC-10`, `PRC-2`, `BKG-11` | Planned |
+| Invariant and booking rule edits (PR 5) | `INV-8`, `LC-10`, `PRC-2`, `BKG-11` | **Done** (this PR) |
 | Domain requirements pages (phase 1) | First pages under `38-catalog/requirements/` | Planned |
 
 ## Change log \{#program-change-log}
@@ -67,3 +67,10 @@ Summary of audit recommendations. PR 4 applies them. See the [audit](/docs/60-69
 | Date | Change |
 | --- | --- |
 | 2026-10-17 | PR 4 of 5: add [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions/), glossary stubs, supersession banners, and `superseded` specs per [audit § recommended-pr4](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#recommended-pr4). |
+| 2026-10-17 | PR 5 of 5: amend global [`INV-8`](/docs/70-79-business/business-rules/invariants), [`LC-10`](/docs/70-79-business/business-rules/invariants), [`PRC-2`](/docs/70-79-business/business-rules/invariants), [`BKG-11`](/docs/70-79-business/business-rules/invariants); sync glossary and Catalog decisions cross-links. |
+
+## Review record \{#review-record\}
+
+| Date | Reviewer | Outcome |
+| --- | --- | --- |
+| 2026-10-17 | Product Owner | **Pending PO** — global invariant amendments await Product Owner sign-off on this program slice. |
