@@ -19,7 +19,7 @@ legacy_ids:
 
 - Normative Catalog **product decisions** for the [2026 revamp](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/) live on this page only.
 - Requirements under `70-79` and implementation specs link here; they do not restate these rules.
-- [Open forks](#open-forks) block price packages, region storage, and some invariant text until owners rule.
+- [Open forks](#open-forks) block price packages and region storage; global invariants [`INV-8`](/docs/70-79-business/business-rules/invariants), [`LC-10`](/docs/70-79-business/business-rules/invariants), [`PRC-2`](/docs/70-79-business/business-rules/invariants), and [`BKG-11`](/docs/70-79-business/business-rules/invariants) carry the revamp baseline (PR 5).
 
 ## About this document
 
@@ -280,7 +280,7 @@ Useful precision without map editing or address-level registration in MVP.
 
 **Supersedes**
 
-- Gap where geography pattern deferred provider coverage polygons (partial; does not amend `BKG-11` text — PR 5).
+- Gap where geography pattern deferred provider coverage polygons (partial). Fulfillment and booking location: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
 
 **Evidence**
 
@@ -309,7 +309,7 @@ Instant booking after payment requires a clear gate before confirmation without 
 
 **Supersedes**
 
-- None of `BKG-11` invariant text (PR 5). This records product direction only.
+- Product-only pickup timing text before global rules. Normative checkout payload and validation gate: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
 
 **Evidence**
 
@@ -340,7 +340,7 @@ Separates preparation from public visibility and matches existing draft → publ
 
 **Supersedes**
 
-- None of `LC-10` / `INV-10` / `INV-12` text (PR 5 for discoverability predicate detail).
+- Stricter discoverability predicate: [`LC-10`](/docs/70-79-business/business-rules/invariants), [`INV-8`](/docs/70-79-business/business-rules/invariants). Publish gates (`INV-10`, `INV-12`, `LC-12`) unchanged.
 
 **Evidence**
 
@@ -367,7 +367,7 @@ Tourists should not discover listings they cannot complete through the standard 
 
 **Supersedes**
 
-- Partial intent of `FR-CAT-003` / `INV-8` presentation rules (full invariant edits PR 5).
+- `FR-CAT-003` district/area presentation intent. Global geography presentation rule: [`INV-8`](/docs/70-79-business/business-rules/invariants).
 
 **Evidence**
 
@@ -398,7 +398,7 @@ Matches B2C instant-booking intent and current materialization on payment succes
 
 **Supersedes**
 
-- None of `BKG-11` text (PR 5).
+- Checkout validation ordering before global `BKG-11` amendment. Normative payload: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
 
 **Evidence**
 
@@ -416,9 +416,9 @@ This section mirrors the [audit open forks table](/docs/60-69-initiatives/61-202
 | Package vs tiers | `FR-CAT-005`, `FR-CAT-013`, `FR-CAT-026`, `PRC-2`, W2 planning row | Does a listing hold many packages, or one policy with group-size tiers? Which price is the starting price? **Decision Q2 is not decided on this page.** |
 | Region model | `FR-CAT-001`, `FR-CAT-003`, `FR-CAT-004`, `FR-CAT-032`, `ADR-016`, `AMB-036`, `api-134`, `INV-8` | Is a region a tree node, a grouping table, or a presentation layer? |
 | Destination granularity | `FR-CAT-033`, `INV-8` | At what geography level can primary and additional destinations attach? |
-| Coverage timing | `FR-CAT-033`, `BKG-11` | Does pickup coverage apply at publish, at search, or at checkout? |
-| BKG-11 vs booking location | `BKG-11`, `BKG-9` payload | Does free-text pickup stay, or does checkout add structured location? |
+| Coverage timing | `FR-CAT-033`, `BKG-11` | **Partially ruled:** pickup coverage validation at checkout before confirmation ([`BKG-11`](/docs/70-79-business/business-rules/invariants), [pickup coverage validation timing](#pickup-coverage-validation-timing)). Open: whether incomplete coverage hides a listing at **search** vs only at checkout ([discoverability completeness](#discoverability-completeness)). |
+| BKG-11 vs booking location | `BKG-11`, `BKG-9` payload | **Partially ruled:** free-text **pickup address** satisfies **booking location** until structured location ships ([`BKG-11`](/docs/70-79-business/business-rules/invariants), [Glossary — Booking location](/docs/70-79-business/business-rules/glossary)). Open: structured coordinates or geography node at checkout. |
 | Vehicle types | `FR-CAT-024`, `FR-CAT-029`, `AMB-023` | Does the vehicle taxonomy change, and does it become a filter? |
-| Discoverability fields | `INV-8`, `INV-10`, `LC-10`, `FR-CAT-012` | Which fields make a Published listing discoverable? |
+| Discoverability fields | `INV-8`, `INV-10`, `LC-10`, `FR-CAT-012` | **Partially ruled:** `Published` plus completeness predicate ([`LC-10`](/docs/70-79-business/business-rules/invariants), [discoverability completeness](#discoverability-completeness)). Open: authoritative required-field inventory (successor spec). |
 
 **Term collision:** Global glossary **Multi-Day Package** (`E-04`) is not the same concept as a sellable **package** in the package-vs-tiers fork. Do not conflate them when ruling Q2.

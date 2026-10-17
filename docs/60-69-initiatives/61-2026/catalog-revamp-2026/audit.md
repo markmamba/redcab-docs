@@ -136,12 +136,12 @@ Source pages: `docs/70-79-business/71-business-rules/invariants.md`. PR 5 owns e
 
 | ID / artifact | Current location | Disposition | Replacement / notes | Code gap |
 | --- | --- | --- | --- | --- |
-| `INV-8` Empty roots and nodes hidden | `invariants.md`, line 47 | pending | Reword for region scope and discoverability. PR 5. | partial: `districts/marketplace_index_manager.rb:30-33` applies `discoverable` to roots |
+| `INV-8` Empty roots and nodes hidden | `invariants.md`, line 47 | carry | PR 5: discoverable subtree rule; presentation-agnostic discovery roots and listable nodes. Region storage fork open. | partial: `districts/marketplace_index_manager.rb:30-33` applies `discoverable` to roots |
 | `INV-10` No publish with zero photos | `invariants.md`, line 49 | carry | A stricter discoverability gate is a new rule (fork [discoverability fields](#open-forks)). | exists: `providers_publish_validator.rb:77-84` |
-| `LC-10` Listing status values | `invariants.md`, line 75 | pending | "Only Published is tourist-visible" conflicts with the stricter-discoverability goal. PR 5 decides. | exists: `marketplace_index_manager.rb:60` filters `status_published` only |
-| `PRC-2` Price breakdown derivation | `invariants.md`, line 86 | pending | Starting-price definition depends on fork [package model](#open-forks). PR 5. | partial: quote uses base rate only (`calculate_quote_service.rb:99-101`) |
+| `LC-10` Listing status values | `invariants.md`, line 75 | carry | PR 5: `Published` necessary but not sufficient; discoverable predicate links to Catalog decisions. | exists: `marketplace_index_manager.rb:60` filters `status_published` only |
+| `PRC-2` Price breakdown derivation | `invariants.md`, line 86 | carry | PR 5: single-policy starting price via `PRC-1`; package fork deferred. | partial: quote uses base rate only (`calculate_quote_service.rb:99-101`) |
 | `BKG-9` Checkout session freeze | `invariants.md`, line 126 | carry | None. Revamp must not change it. | exists: `bookings/checkout_sessions/tourists_create_manager.rb:91-111`; `snapshot_attributes.rb` |
-| `BKG-11` Fulfillment payload | `invariants.md`, line 128 | pending | Pickup address is mandatory free text. Coverage rules may add a location check (fork [BKG-11 vs booking location](#open-forks)). PR 5. | exists: `bookings.dbml:483` `pickup_address text`; web `bookings-checkout-session-schema.js:4-6` |
+| `BKG-11` Fulfillment payload | `invariants.md`, line 128 | carry | PR 5: booking location + coverage gate before confirm; pickup address satisfies location until structured fork ruled. Drop-off mandatory. | exists: `bookings.dbml:483` `pickup_address text`; web `bookings-checkout-session-schema.js:4-6`; coverage validation not implemented |
 | `CON-2` Last-seat concurrency | `invariants.md`, line 134 | carry | None. | exists: `catalog/availability/reserve_seats_service.rb:20` |
 | `INV-3`, `INV-6`, `INV-11`, `INV-12`, `LC-8`, `LC-12`, `CON-3`, `CON-4`, `CON-6`, `OPR-10` | `invariants.md`; cross-refs in `cat.md` | carry | Core seat, provider, and publish-gate rules. No revamp change. | exists (see FR-CAT rows 002, 009, 010, 019-021, 029-031, 034) |
 | `PRC-1`, `PRC-3` to `PRC-7`, `BKG-8` | `invariants.md`; cross-refs in `cat.md` | carry | `PRC-1` single pricing authority stays. Other `PRC-` rules follow the FR-CAT-013 to 018 rows. | partial (see FR-CAT-014 to 018 rows) |
@@ -271,9 +271,7 @@ Carry as-is (no banner):
 - `api-131` to `api-136`, `docs-13`
 - `ADR-004`, `ADR-007`, `ADR-013`, `ADR-016` (amend `ADR-016` only after the region fork)
 
-Left for PR 5:
-
-- `INV-8`, `LC-10`, `PRC-2`, `BKG-11` edits.
+PR 5 (complete): `INV-8`, `LC-10`, `PRC-2`, `BKG-11` amended in [invariants](/docs/70-79-business/business-rules/invariants).
 
 Planning pages to fix in a docs follow-up:
 
@@ -286,3 +284,4 @@ Planning pages to fix in a docs follow-up:
 | Date | Change |
 | --- | --- |
 | 2026-10-17 | PR 3 of 5: add phase 0 audit with FR-CAT, ADR, open question, invariant, spec, and planning drift inventories. |
+| 2026-10-17 | PR 5 of 5: `INV-8`, `LC-10`, `PRC-2`, `BKG-11` dispositions updated to **carry** with amended global text. |

@@ -42,6 +42,7 @@ This section is superseded by [Catalog decisions — tourist discovery IA](/docs
 
 The system **shall** present only discovery roots (Districts) and listable nodes (Areas) whose subtree contains at least one Published Listing, and **shall** indicate when an area has no available services.
 - Source: B-01, B-02. Governs: INV-8. Status: Approved.
+- **Normative update (PR 5):** geography presentation follows [`INV-8`](/docs/70-79-business/business-rules/invariants) (discoverable Listings in the subtree, not `Published` alone).
 - **Access:** Unauthenticated per `AMB-022` Option A (`FR-IAM-012`, `NFR-SEC-005`) — visitors may browse districts and areas without an account; auth is required only at checkout initiation. Route contract: [web-56 spec](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract).
 
 ### FR-CAT-004 — Primary discovery navigation
@@ -57,6 +58,7 @@ The system **shall** allow Tourists to discover services through the location hi
 ### FR-CAT-005 — Service list presentation
 The system **shall** present, for a selected Area, each Published Listing with at least its service name, provider name, representative photo, starting price, service type, rating, and review count.
 - Source: B-03. Governs: PRC (starting price), REV (rating). Status: Approved.
+- **Starting price (current model):** see [`PRC-2`](/docs/70-79-business/business-rules/invariants). Package-vs-tiers fork remains open — [Catalog decisions — open forks](/docs/30-49-domains/catalog/catalog-decisions#open-forks).
 
 ### FR-CAT-006 — Fully booked visibility
 The system **shall** continue to present a Listing that is fully booked for a selected date, marked as fully booked rather than hidden.
@@ -146,6 +148,7 @@ This section is superseded by [Catalog decisions — marketplace filter combinat
 
 The system **shall** allow filtering by price range using the Listing's starting price, and **shall** allow clearing all filters.
 - Source: D-04. Governs: PRC-2. Status: Approved.
+- **Normative update (PR 5):** starting price and filter authority follow [`PRC-2`](/docs/70-79-business/business-rules/invariants) (single pricing policy per Listing until package fork is ruled).
 
 ### FR-CAT-027 — Sort results
 
