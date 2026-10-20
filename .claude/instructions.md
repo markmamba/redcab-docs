@@ -25,7 +25,7 @@ Filesystem path for specs: `60-69-initiatives/61-2026/implementation-specs/`.
 
 Tier A/B/C rules live in `docs/00-09-meta/conventions/prose-and-ste100.md`.
 
-Before drafting or rewriting team-facing prose, run skill **`write-tier-a-prose`** (or follow it when another skill says to load it first).
+Before drafting or rewriting team-facing prose, run skill **`write-plain-english`** (or follow it when another skill says to load it first). Use **`write-tier-a-prose`** with `prose-and-ste100.md` to pick Tier A/B/C.
 
 ## Spec-first (implementation work)
 

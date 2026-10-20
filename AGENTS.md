@@ -48,7 +48,8 @@ See [docs/60-69-initiatives/61-2026/implementation-specs/README.md](docs/60-69-i
 
 ## Prose (ASD-STE100)
 
-- Tier A/B rules: `docs/00-09-meta/conventions/prose-and-ste100.md`
+- Tier A/B/C rules: `docs/00-09-meta/conventions/prose-and-ste100.md`
+- Load `.claude/skills/write-plain-english/` before any team-facing prose; use `write-tier-a-prose` to pick the tier.
 - Spec narrative, explainers, issues/PRs (via web `.ai/instructions.md`), and user-facing errors use Tier A unless noted.
 
 ## AI skills (this repo)
@@ -57,7 +58,8 @@ Conventions: `.claude/instructions.md`. Skill catalog: `.claude/README.md`.
 
 | Skill | Purpose |
 | --- | --- |
-| `write-tier-a-prose` | Tier A/B prose, bullets, naming; check scripts |
+| `write-plain-english` | Prose for the team; check scripts; `references/examples.md` |
+| `write-tier-a-prose` | STE Tier A/B/C; load with `prose-and-ste100.md` |
 | `write-issue` | GitHub issue bodies for api, web, or docs |
 | `write-doc` | Explainers, ADRs, bounded-context pages, conventions |
 | `system-design` | Design plan before an implementation spec |

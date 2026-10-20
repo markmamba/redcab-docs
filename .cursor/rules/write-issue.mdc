@@ -1,5 +1,5 @@
 ---
-description: Draft a GitHub issue for red-cab-api, red-cab-web, or redcab-docs — Context, Problem, Direction, stable section names, and gh workflow. Loads write-tier-a-prose first.
+description: Draft a GitHub issue for red-cab-api, red-cab-web, or redcab-docs — Context, Problem, Direction, stable section names, templates A–E, and gh workflow. Loads write-plain-english first.
 globs: []
 alwaysApply: false
 ---

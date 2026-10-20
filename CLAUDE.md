@@ -6,7 +6,8 @@ Read and follow `.claude/instructions.md`. Task prompts live in `.claude/skills/
 
 | Skill | Purpose |
 | --- | --- |
-| `write-tier-a-prose` | STE prose and check scripts |
+| `write-plain-english` | Prose rules and check scripts |
+| `write-tier-a-prose` | STE Tier A/B/C summary |
 | `write-issue` | GitHub issues |
 | `write-doc` | Docusaurus pages (not implementation specs) |
 | `system-design` | Design plan before a spec |

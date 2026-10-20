@@ -1,0 +1,9 @@
+---
+description: Writing rules for everything the Red Cab team writes for each other, in docs, specs, GitHub issues, PR descriptions, DBML notes, code comments and review comments. Use before writing or rewriting any prose for the team, even one paragraph, and whenever another skill says to load it first. Covers the sentence rule from ASD-STE100, the bullet shape, how to name things, words to avoid, what a doc must contain, and check scripts. For Tier A/B/C applicability see write-tier-a-prose and prose-and-ste100.md.
+globs: []
+alwaysApply: false
+---
+
+# /write-plain-english
+
+Read and follow the instructions in `.claude/skills/write-plain-english/SKILL.md`.

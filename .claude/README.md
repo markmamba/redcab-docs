@@ -19,11 +19,12 @@ Implementation specs and codegen skills live in `red-cab-api` and `red-cab-web` 
 
 | Skill | Purpose |
 | --- | --- |
-| `write-tier-a-prose` | STE Tier A/B prose, bullets, naming; run check scripts |
-| `write-issue` | GitHub issue: Context → Problem → Direction |
+| `write-plain-english` | Sentence, bullet, naming, words, doc contents; check scripts; `references/examples.md` |
+| `write-tier-a-prose` | STE Tier A/B/C summary; load after `write-plain-english` |
+| `write-issue` | GitHub issue: Context → Problem → Direction; templates A–E; `gh` workflow |
 | `write-doc` | Docusaurus pages (explainer, ADR, bounded context, convention) |
 | `system-design` | Design plan before an implementation spec |
-| `mermaid-diagram` | Mermaid blocks for architecture and flows |
+| `mermaid-diagram` | Mermaid layout, colors, MDX-safe blocks; flows and state machines |
 
 ## Add a skill
 

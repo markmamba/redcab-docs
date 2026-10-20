@@ -1,5 +1,5 @@
 ---
-description: Red Cab prose rules for Tier A and Tier B text — STE profile, bullet shape, naming, words to avoid, and local check scripts. Load before write-issue, write-doc, or any rewrite of team-facing markdown.
+description: Red Cab STE Tier A/B/C — when prose rules apply, glossary tie-in, and hand-off checklist. Load write-plain-english first for sentence, bullet, naming, and check scripts.
 globs: []
 alwaysApply: false
 ---
