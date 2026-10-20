@@ -70,7 +70,7 @@ Tier A prose applies to this page.
 
 **Evidence**
 
-- Design scratchpad §3.5 Decision Q1 (non-canonical hypothesis source).
+- Design review (2026-10-17): keyword search matches listing title, description, primary and additional destination names, and provider name.
 - [Audit verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): no `q` or keyword parameter on the marketplace listings index today; web search input disabled.
 
 **Product direction vs code today**
@@ -114,7 +114,8 @@ The District → Area funnel matches today's code but not the revamp UX target (
 
 **Evidence**
 
-- Scratchpad §3.1–3.2 (region browse, prefecture filter, popular destinations).
+- Design review (2026-10-17): home page presents **Region** cards; region listings support keyword search and a **prefecture** filter within the region.
+- Design review (2026-10-17): **popular destinations** (for example Tokyo within Kanto) open destination-scoped listing pages within the region model.
 - [Audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#inventory-fr-cat): supersede dispositions for `FR-CAT-003`, `FR-CAT-004`.
 - [Verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): web routes use `/districts/:districtSlug/areas/:areaSlug/...`; no region node in `catalog_geographies`.
 
@@ -155,7 +156,8 @@ Tourists need acceptable alternatives inside a category and combined preferences
 
 **Evidence**
 
-- Scratchpad §3.5 Decision Q3.
+- Design review (2026-10-17): use **OR** within each filter category and **AND** across categories.
+- Design review (2026-10-17): tourists may multi-select Service Type, Language, and Vehicle Type.
 - [Verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): index supports single-value filters today; multi-select is product direction.
 
 ---
@@ -189,7 +191,7 @@ Measures recent demand without lifetime popularity dominating results.
 
 **Evidence**
 
-- Scratchpad §3.5 Decision Q4.
+- Design review (2026-10-17): **Most booked** ranks by distinct qualifying bookings confirmed in the rolling **90 days** before the current time.
 - [Verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): no most-booked order column on the marketplace index today.
 
 ---
@@ -221,7 +223,9 @@ Transparent ranking without a minimum review threshold or confidence-adjusted sc
 
 **Evidence**
 
-- Scratchpad §3.5 Decision Q5.
+- Design review (2026-10-17): **Top rated** uses average customer rating.
+- Unrated listings follow all rated listings; there is no minimum rating count.
+- Higher rating count breaks ties when averages match.
 - Spec `cat/web-67-listing-sort-control-url-params.md` (superseded; successor TBD).
 
 ---
@@ -252,7 +256,9 @@ Price sort depends on which price represents a listing when multiple packages or
 
 **Evidence**
 
-- Scratchpad §3.2 BR-15; audit [open forks](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#open-forks).
+- Design review (2026-10-17): sort control includes **Recently added** (`published_at`, newest first), **Most booked**, and **Top rated**.
+- **Price: low to high** waits on the package model fork.
+- Audit [open forks](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#open-forks).
 
 ---
 
@@ -283,7 +289,9 @@ Multi-location services need one clear primary label and broader discovery witho
 
 **Evidence**
 
-- Scratchpad §3.5 Decision Q6.
+- Design review (2026-10-17): each listing has one **primary destination**.
+- Each listing may have zero or more **additional destinations**.
+- Destination associations do not imply pickup coverage.
 - [Verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): one `geography_id` per listing; no additional-destination table.
 
 **Product direction vs code today**
@@ -325,7 +333,9 @@ Useful precision without map editing or address-level registration in MVP.
 
 **Evidence**
 
-- Scratchpad §3.5 Decision Q7.
+- Design review (2026-10-17): providers register pickup at **prefecture** and/or **city, municipality, or ward**.
+- Map-drawn boundaries are out of MVP scope for pickup registration.
+- Per-address pickup registration is out of MVP scope.
 - [Verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): no pickup-coverage table in DBML.
 
 ---
@@ -340,7 +350,8 @@ Useful precision without map editing or address-level registration in MVP.
 - Before a booking becomes **confirmed**, RedCab must validate the tourist's **booking location** against the listing's **latest saved** pickup coverage.
 - If the location is outside coverage, the booking must **not** confirm.
 - If coverage cannot be validated reliably, the booking must **not** confirm.
-- After confirmation, coverage changes do not invalidate the booking (aligned with scratchpad BR-07 / AC-48 intent).
+- After confirmation, coverage changes do not invalidate the booking.
+- Confirmed bookings stay valid when the provider later changes registered pickup coverage.
 
 **Why**
 
@@ -357,7 +368,9 @@ Instant booking after payment requires a clear gate before confirmation without 
 
 **Evidence**
 
-- Scratchpad §3.5 Decisions Q7 and Q10; §3.2 BR-17.
+- Design review (2026-10-17): validate booking location against the listing's latest saved pickup coverage before confirmation.
+- Design review (2026-10-17): confirm the booking after successful payment when all required validations pass; provider acceptance is not required.
+- Design review (2026-10-17): pickup coverage must be validated before confirmation; later coverage changes do not invalidate confirmed bookings.
 - [Verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): `pickup_address` is free text at checkout; no coverage validation in code today.
 
 **Pending (open fork)**
@@ -393,7 +406,7 @@ Separates preparation from public visibility and matches existing draft → publ
 
 **Evidence**
 
-- Scratchpad §3.5 Decision Q8.
+- Design review (2026-10-17): providers save **drafts** and must **explicitly publish**; saving or updating configuration does not make a listing tourist-visible.
 - `red-cab-api`: create leaves `draft`; publish endpoint sets `published` (audit and LC-10 references).
 
 ---
@@ -427,7 +440,7 @@ Tourists should not discover listings they cannot complete through the standard 
 
 **Evidence**
 
-- Scratchpad §3.5 Decision Q9.
+- Design review (2026-10-17): listings missing **required booking information** must stay hidden from public marketplace search and browse until complete.
 - [Verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): index filters `status_published` only; no completeness gate.
 
 **Pending (open fork)**
@@ -462,7 +475,7 @@ Matches B2C instant-booking intent and current materialization on payment succes
 
 **Evidence**
 
-- Scratchpad §3.5 Decision Q10.
+- Design review (2026-10-17): booking becomes **confirmed** after reliable **successful payment** and all required validations pass; provider acceptance is not required.
 - [Verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts): booking `confirmed` after payment in `materialize_order_manager.rb`.
 
 ---
