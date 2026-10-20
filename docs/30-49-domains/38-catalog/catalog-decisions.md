@@ -23,7 +23,9 @@ legacy_ids:
 
 ## About this document
 
-Pilot **domain-decisions** page per [Documentation system](/docs/00-09-meta/conventions/documentation-system#documentation-system). Tier A prose.
+Pilot **domain-decisions** page per [Documentation system](/docs/00-09-meta/conventions/documentation-system#documentation-system).
+
+Tier A prose applies to this page.
 
 | Topic | Document |
 | --- | --- |
@@ -33,7 +35,9 @@ Pilot **domain-decisions** page per [Documentation system](/docs/00-09-meta/conv
 | Naming and legacy aliases | [Naming and legacy aliases](/docs/30-49-domains/catalog/naming-and-legacy-aliases/#naming-tldr) |
 | Verified code baseline | [Audit — verified code facts](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#verified-code-facts) |
 
-Decisions live **only** here. Do not add acceptance-criteria tables or end-to-end flows on this page. Link to future `requirements/` pages (phase 1) and approved implementation specs when they exist.
+- Decisions live **only** here.
+- Do not add acceptance-criteria tables or end-to-end flows on this page.
+- Link to future `requirements/` pages (phase 1) and approved implementation specs when they exist.
 
 ---
 
@@ -43,11 +47,16 @@ Decisions live **only** here. Do not add acceptance-criteria tables or end-to-en
 
 **What we decided**
 
-When a tourist activates keyword search on marketplace listings, include a listing if the keyword matches any of these fields: listing **title**, listing **description**, **primary destination** display name, **additional destination** display name(s), and **provider** display name. Keyword search combines with the current listing scope, active filters, and sort. It does not replace them.
+- Tourist keyword search applies to marketplace listings.
+- Include a listing when the keyword matches any searchable field.
+- Searchable fields are listing **title**, listing **description**, **primary destination** display name, **additional destination** display name(s), and **provider** display name.
+- Keyword search combines with the current listing scope, active filters, and sort.
+- Keyword search does not replace scope, filters, or sort.
 
 **Why**
 
-Tourists identify services by what the service is, where it goes, and who provides it. Destination matches must include **additional** destinations, not only the primary destination.
+- Tourists identify services by what the service is, where it goes, and who provides it.
+- Destination matches must include **additional** destinations, not only the primary destination.
 
 **What this rules out**
 
@@ -81,8 +90,11 @@ Tourists identify services by what the service is, where it goes, and who provid
 - **Prefecture** (administrative subdivision) is a **filter** within the current region scope, not the top-level IA axis.
 - **Service type** stays a **filter**, not a top-level navigation axis (carries `D-02` intent).
 - **Popular destinations** (for example Tokyo within Kanto) are entry points to destination-scoped listing pages within the region model.
-- **Public browse** without login at discovery remains valid (`AMB-022` Option A). This decision does not reopen the access model.
-- A **new public URL family** replaces the District → Area-primary path family. Exact paths are **successor spec TBD**; do not treat `/districts/{districtSlug}/areas/{areaSlug}/listings` as the long-term canonical family.
+- **Public browse** without login at discovery remains valid (`AMB-022` Option A).
+- This decision does not reopen the access model.
+- A **new public URL family** replaces the District → Area-primary path family.
+- Exact paths are **successor spec TBD**.
+- Do not treat `/districts/{districtSlug}/areas/{areaSlug}/listings` as the long-term canonical family.
 
 **Why**
 
@@ -113,7 +125,8 @@ The District → Area funnel matches today's code but not the revamp UX target (
 
 **Pending (open fork)**
 
-- How a **Region** is stored or derived is **not** decided here. See [Region model](#open-forks).
+- How a **Region** is stored or derived is **not** decided here.
+- See [Region model](#open-forks).
 
 ---
 
@@ -153,7 +166,14 @@ Tourists need acceptable alternatives inside a category and combined preferences
 
 **What we decided**
 
-When the tourist selects **Most booked**, rank listings by the count of **distinct qualifying bookings** in descending order. A booking qualifies when payment succeeded, its current status is **Confirmed** or **Completed**, and its **confirmation** timestamp falls in the rolling **90 days** before the current time. Exclude **Cancelled**, **Failed**, and fully refunded bookings. Count each booking at most once. Use confirmation time, not service date or completion date, for window membership. On equal counts, rank the **newer listing** first.
+- When the tourist selects **Most booked**, rank listings by the count of **distinct qualifying bookings** in descending order.
+- A booking qualifies when payment succeeded.
+- Its current status is **Confirmed** or **Completed**.
+- Its **confirmation** timestamp falls in the rolling **90 days** before the current time.
+- Exclude **Cancelled**, **Failed**, and fully refunded bookings.
+- Count each booking at most once.
+- Use confirmation time, not service date or completion date, for window membership.
+- On equal counts, rank the **newer listing** first.
 
 **Why**
 
@@ -180,7 +200,12 @@ Measures recent demand without lifetime popularity dominating results.
 
 **What we decided**
 
-When the tourist selects **Top rated**, order listings by **average customer rating** descending, using the same published-review basis as `FR-REV-007`. Listings without a rating appear **after** all rated listings. There is **no** minimum rating count. When averages tie, higher **rating count** wins; when average and count both tie, rank the **newer listing** first.
+- When the tourist selects **Top rated**, order listings by **average customer rating** descending.
+- Use the same published-review basis as `FR-REV-007`.
+- Listings without a rating appear **after** all rated listings.
+- There is **no** minimum rating count.
+- When averages tie, higher **rating count** wins.
+- When average and count both tie, rank the **newer listing** first.
 
 **Why**
 
@@ -207,7 +232,11 @@ Transparent ranking without a minimum review threshold or confidence-adjusted sc
 
 **What we decided**
 
-The revamp marketplace sort control includes at least: **Recently added** (newest first), **Most booked** ([rules](#most-booked-sort)), and **Top rated** ([rules](#top-rated-sort)). **Price** sort (low to high and high to low) and **recommended** sort are **out of scope** until the [package vs tiers](#open-forks) fork is ruled.
+- The revamp marketplace sort control includes **Recently added** (newest first).
+- It includes **Most booked** ([rules](#most-booked-sort)).
+- It includes **Top rated** ([rules](#top-rated-sort)).
+- **Price** sort (low to high and high to low) is **out of scope** until the [package vs tiers](#open-forks) fork is ruled.
+- **Recommended** sort is **out of scope** until that fork is ruled.
 
 **Why**
 
@@ -233,7 +262,12 @@ Price sort depends on which price represents a listing when multiple packages or
 
 **What we decided**
 
-Each listing has exactly **one primary destination** and **zero or more additional destinations**. Destination-based browse and keyword scope include a listing when the page scope or keyword matches the primary **or** any additional destination. Additional destinations widen discovery only; they do **not** imply pickup coverage.
+- Each listing has exactly **one primary destination**.
+- Each listing has **zero or more additional destinations**.
+- Destination-based browse includes a listing when page scope matches the primary **or** any additional destination.
+- Keyword scope includes a listing when the keyword matches the primary **or** any additional destination.
+- Additional destinations widen discovery only.
+- Additional destinations do **not** imply pickup coverage.
 
 **Why**
 
@@ -269,7 +303,12 @@ Multi-location services need one clear primary label and broader discovery witho
 
 **What we decided**
 
-Providers register **pickup coverage** per listing separately from service destinations. MVP granularity: **entire prefecture** (subdivision) and/or specific **city, municipality, or ward** listable nodes. Selecting a prefecture means coverage throughout that prefecture with **no** arbitrary exclusions inside the prefecture in MVP. Map-drawn boundaries and per-address coverage registration are **out of scope** for MVP.
+- Providers register **pickup coverage** per listing separately from service destinations.
+- MVP granularity is **entire prefecture** (subdivision) and/or specific **city, municipality, or ward** listable nodes.
+- Selecting a prefecture means coverage throughout that prefecture.
+- MVP allows **no** arbitrary exclusions inside a selected prefecture.
+- Map-drawn boundaries are **out of scope** for MVP pickup registration.
+- Per-address coverage registration is **out of scope** for MVP.
 
 **Why**
 
@@ -281,7 +320,8 @@ Useful precision without map editing or address-level registration in MVP.
 
 **Supersedes**
 
-- Gap where geography pattern deferred provider coverage polygons (partial). Fulfillment and booking location: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
+- Gap where geography pattern deferred provider coverage polygons (partial).
+- Fulfillment and booking location: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
 
 **Evidence**
 
@@ -297,7 +337,9 @@ Useful precision without map editing or address-level registration in MVP.
 **What we decided**
 
 - Providers **register** pickup coverage when they configure the listing (see [Pickup coverage registration](#pickup-coverage-registration)).
-- Before a booking becomes **confirmed**, RedCab must validate the tourist's **booking location** against the listing's **latest saved** pickup coverage. If the location is outside coverage or coverage cannot be validated reliably, the booking must **not** confirm.
+- Before a booking becomes **confirmed**, RedCab must validate the tourist's **booking location** against the listing's **latest saved** pickup coverage.
+- If the location is outside coverage, the booking must **not** confirm.
+- If coverage cannot be validated reliably, the booking must **not** confirm.
 - After confirmation, coverage changes do not invalidate the booking (aligned with scratchpad BR-07 / AC-48 intent).
 
 **Why**
@@ -310,7 +352,8 @@ Instant booking after payment requires a clear gate before confirmation without 
 
 **Supersedes**
 
-- Product-only pickup timing text before global rules. Normative checkout payload and validation gate: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
+- Product-only pickup timing text before global rules.
+- Normative checkout payload and validation gate: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
 
 **Evidence**
 
@@ -329,7 +372,11 @@ Instant booking after payment requires a clear gate before confirmation without 
 
 **What we decided**
 
-Providers save listings as **drafts** and must **explicitly publish** when ready. Saving or updating configuration does not make a listing tourist-visible. There is **no** per-listing administrator approval workflow in this revamp (provider approval remains orthogonal).
+- Providers save listings as **drafts**.
+- Providers must **explicitly publish** when ready.
+- Saving or updating configuration does not make a listing tourist-visible.
+- This revamp has **no** per-listing administrator approval workflow.
+- Provider approval remains orthogonal.
 
 **Why**
 
@@ -341,7 +388,8 @@ Separates preparation from public visibility and matches existing draft → publ
 
 **Supersedes**
 
-- Stricter discoverability predicate: [`LC-10`](/docs/70-79-business/business-rules/invariants), [`INV-8`](/docs/70-79-business/business-rules/invariants). Publish gates (`INV-10`, `INV-12`, `LC-12`) unchanged.
+- Stricter discoverability predicate: [`LC-10`](/docs/70-79-business/business-rules/invariants), [`INV-8`](/docs/70-79-business/business-rules/invariants).
+- Publish gates (`INV-10`, `INV-12`, `LC-12`) unchanged.
 
 **Evidence**
 
@@ -356,7 +404,13 @@ Separates preparation from public visibility and matches existing draft → publ
 
 **What we decided**
 
-Public marketplace **search and browse** include only listings that are **published** and **complete** per an authoritative required-field inventory (implementation spec TBD). Listings missing **required booking information** (for example valid pickup coverage when required) must **not** appear in tourist discovery, even if status remains `published`. Missing **optional** attributes do not hide a listing by themselves; active filters may still exclude them.
+- Public marketplace **search and browse** include only **published** listings.
+- They include only **complete** listings per an authoritative required-field inventory (implementation spec TBD).
+- Listings missing **required booking information** must **not** appear in tourist discovery.
+- That rule applies even when status remains `published`.
+- Example required booking information: valid pickup coverage when required.
+- Missing **optional** attributes do not hide a listing by themselves.
+- Active filters may still exclude listings with missing optional attributes.
 
 **Why**
 
@@ -368,7 +422,8 @@ Tourists should not discover listings they cannot complete through the standard 
 
 **Supersedes**
 
-- `FR-CAT-003` district/area presentation intent. Global geography presentation rule: [`INV-8`](/docs/70-79-business/business-rules/invariants).
+- `FR-CAT-003` district/area presentation intent.
+- Global geography presentation rule: [`INV-8`](/docs/70-79-business/business-rules/invariants).
 
 **Evidence**
 
@@ -387,7 +442,10 @@ Tourists should not discover listings they cannot complete through the standard 
 
 **What we decided**
 
-A booking becomes **confirmed** only after RedCab receives reliable confirmation of **successful payment** and all **required booking validations** pass. **Provider acceptance is not required** (instant booking). Pickup coverage validation runs before confirmation per [Pickup coverage validation timing](#pickup-coverage-validation-timing).
+- A booking becomes **confirmed** only after RedCab receives reliable confirmation of **successful payment**.
+- All **required booking validations** must pass before confirmation.
+- **Provider acceptance is not required** (instant booking).
+- Pickup coverage validation runs before confirmation per [Pickup coverage validation timing](#pickup-coverage-validation-timing).
 
 **Why**
 
@@ -399,7 +457,8 @@ Matches B2C instant-booking intent and current materialization on payment succes
 
 **Supersedes**
 
-- Checkout validation ordering before global `BKG-11` amendment. Normative payload: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
+- Checkout validation ordering before global `BKG-11` amendment.
+- Normative payload: [`BKG-11`](/docs/70-79-business/business-rules/invariants).
 
 **Evidence**
 
@@ -410,7 +469,9 @@ Matches B2C instant-booking intent and current materialization on payment succes
 
 ## Open forks \{#open-forks}
 
-This section mirrors the [audit open forks table](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#open-forks). It gives **no** new rulings. Each fork needs an owner decision before blocked artifacts can leave **pending**.
+- This section mirrors the [audit open forks table](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#open-forks).
+- It gives **no** new rulings.
+- Each fork needs an owner decision before blocked artifacts can leave **pending**.
 
 | Fork | Blocks (audit) | Owner decision needed |
 | --- | --- | --- |
@@ -422,4 +483,7 @@ This section mirrors the [audit open forks table](/docs/60-69-initiatives/61-202
 | Vehicle types | `FR-CAT-024`, `FR-CAT-029`, `AMB-023` | Does the vehicle taxonomy change, and does it become a filter? |
 | Discoverability fields | `INV-8`, `INV-10`, `LC-10`, `FR-CAT-012` | **Partially ruled:** `Published` plus completeness predicate ([`LC-10`](/docs/70-79-business/business-rules/invariants), [discoverability completeness](#discoverability-completeness)). Open: authoritative required-field inventory (successor spec). |
 
-**Term collision:** Global glossary **Multi-Day Package** (`E-04`) is not the same concept as a sellable **package** in the package-vs-tiers fork. Do not conflate them when ruling Q2.
+**Term collision**
+
+- Global glossary **Multi-Day Package** (`E-04`) is not the same concept as a sellable **package** in the package-vs-tiers fork.
+- Do not conflate them when ruling Q2.
