@@ -75,6 +75,7 @@ Per-issue shipping design uses `write-implementation-spec` / `review-implementat
 - `docs/70-79-business/73-planning/web-platform-program-strategy.md`
 - Relevant `docs/70-79-business/72-requirements/functional-requirements/{ctx}.md`
 - Relevant `docs/30-49-domains/31-bounded-contexts/{context}.md`
+- Catalog work: `docs/30-49-domains/38-catalog/index.md` (front door with the current Catalog rules)
 - `docs/20-29-backend/21-conventions/domain-to-code-mapping.md`
 
 ## Multi-PR audit series
