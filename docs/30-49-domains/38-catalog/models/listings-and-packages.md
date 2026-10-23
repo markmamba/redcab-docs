@@ -88,7 +88,7 @@ Destinations and coverage are two tables with two meanings.
 The matching rule is in the Project note of the DBML file.
 
 ```text
-# red-cab-api/docs/db/catalog.dbml:580-583
+# red-cab-api/docs/db/catalog.dbml:581-584
     COVERAGE RULE (DP-6c)
     - A booking location node L is covered when one coverage node C on the listing matches:
       L.path = C.path OR L.path LIKE C.path || '/%'.
@@ -119,17 +119,18 @@ The table `catalog_listing_packages` has one row for each sellable option.
 | A package is available when it is `active` and has an active pool asset. | discovery | A package with only a retired vehicle is not available. |
 | The pricing policy sets pricing mode and cancellation for all packages. | pricing | Both packages of a tour are priced per vehicle. |
 | A package with bookings is archived and never deleted. | provider save | An old package stays for booking history. |
+| Until slice S4 ships, a listing may have one package, which the system creates by default. | provider save | Release 2 creates one default full-day package for each listing. |
 | Pricing tiers, seasonal overrides and extra charges stay on the policy until Phase 2. | pricing | No change in this model. |
 
 The DBML Project note holds the CHECK rules of the package.
 
 ```text
-# red-cab-api/docs/db/catalog.dbml:93-97
-    - catalog_listing_packages: CHECK (duration_minutes > 0)                              -- DP-7b (ships in: S4)
-    - catalog_listing_packages: CHECK (latest_start_time >= earliest_start_time)          -- B-4 (ships in: S4)
-    - catalog_listing_packages: CHECK (start_interval_minutes > 0)                        -- B-4 (ships in: S4)
-    - catalog_listing_packages: CHECK (buffer_minutes IS NULL OR buffer_minutes >= 0)     -- B-7 (ships in: S4)
-    - catalog_listing_packages: CHECK (max_passengers >= 1)                               -- DP-7c (ships in: S4)
+# red-cab-api/docs/db/catalog.dbml:94-98
+    - catalog_listing_packages: CHECK (duration_minutes > 0)                              -- DP-7b (ships in: S5)
+    - catalog_listing_packages: CHECK (latest_start_time >= earliest_start_time)          -- B-4 (ships in: S5)
+    - catalog_listing_packages: CHECK (start_interval_minutes > 0)                        -- B-4 (ships in: S5)
+    - catalog_listing_packages: CHECK (buffer_minutes IS NULL OR buffer_minutes >= 0)     -- B-7 (ships in: S5)
+    - catalog_listing_packages: CHECK (max_passengers >= 1)                               -- DP-7c (ships in: S5)
 ```
 
 ## Price caches \{#price-caches\}
@@ -149,7 +150,7 @@ Two columns hold display prices, and one service writes both.
 The scope `Catalog::Listing.discoverable` is a query and stores nothing.
 
 ```text
-# red-cab-api/docs/db/catalog.dbml:475-479
+# red-cab-api/docs/db/catalog.dbml:476-480
     DISCOVERABLE = Catalog::Listing.discoverable (one scope, calculated at query time, DP-11):
     - status = :published
     - starting_price_jpy IS NOT NULL (>= 1 :active package with >= 1 :active pool asset, C2)

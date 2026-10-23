@@ -129,6 +129,7 @@ Each rule has one section in [Catalog decisions](/docs/30-49-domains/catalog/cat
 | Popular destinations and images | [popular-destinations-and-images](/docs/30-49-domains/catalog/catalog-decisions/#popular-destinations-and-images) |
 | Legacy geography roles | [legacy-geography-roles](/docs/30-49-domains/catalog/catalog-decisions/#legacy-geography-roles) |
 | Schema ground rules | [schema-ground-rules](/docs/30-49-domains/catalog/catalog-decisions/#schema-ground-rules) |
+| Release order | [release-order](/docs/30-49-domains/catalog/catalog-decisions/#release-order) |
 
 ## Do not do \{#do-not-do\}
 
@@ -141,21 +142,31 @@ Each rule has one section in [Catalog decisions](/docs/30-49-domains/catalog/cat
 - Do not change a confirmed booking when catalog data changes (`INV-1`).
 - Do not cite the scratchpad or `80-89-legacy` pages as rules.
 
-## Delivery slices \{#delivery-slices\}
+## Delivery releases and slices \{#delivery-slices\}
 
-Each slice ships with one approved implementation spec.
+Catalog ships in five releases, and each slice has one approved implementation spec.
 
-| Slice | Content |
-| --- | --- |
-| S1 | Region tree and seed |
-| S2 | Primary destination |
-| S3 | Additional destinations |
-| S4 | Packages and package asset pool, together with S5 |
-| S5 | Asset schedules, closures and holds, which replace slots, together with the Bookings checkout change |
-| S6 | Pickup coverage |
-| S7 | Listing slug |
-| S8 | Sort extras: Top rated index and Most booked count |
-| S9 | Cleanup: legacy geography roles and slot code |
+| Release | Slices | Tourists get |
+| --- | --- | --- |
+| 1. Browse | S1, S2, S3, S7 and keyword search | Region cards, region and prefecture pages, keyword search, and Recently added and Top rated sort. The card keeps today's single price. |
+| 2. Holds | S5 | No visible change. Slots become asset holds, and each listing has one default full-day package. |
+| 3. Packages | S4 | Many packages, timed packages, the price, vehicle and group size filters, and Price: low to high sort. |
+| 4. Coverage and booking | S6 | Pickup coverage, one booking location and the coverage check. |
+| 5. Cleanup | S8 and S9 | Most booked sort. Legacy roles and slot code are removed. |
+
+The ruling is [Release order](/docs/30-49-domains/catalog/catalog-decisions/#release-order).
+
+| Slice | Content | Release |
+| --- | --- | --- |
+| S1 | Region tree and seed | 1 |
+| S2 | Primary destination | 1 |
+| S3 | Additional destinations | 1 |
+| S4 | Many packages, timed packages, display prices and filters | 3 |
+| S5 | Asset holds, schedules, closures, the package table with its asset pool, and one default package for each listing | 2 |
+| S6 | Pickup coverage | 4 |
+| S7 | Listing slug | 1 |
+| S8 | Sort extras: Top rated index in release 1, Most booked count in release 5 | 1 and 5 |
+| S9 | Cleanup: legacy geography roles and slot code | 5 |
 
 ## Open questions \{#open-questions\}
 

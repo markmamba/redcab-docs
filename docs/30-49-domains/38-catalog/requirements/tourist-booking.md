@@ -68,13 +68,13 @@ This page describes what the tourist does and sees at booking, without screens, 
 | A listing with no coverage, or a check that cannot finish, blocks confirmation. | US-3 | The coverage service is down, so no booking is confirmed. |
 | A destination alone never counts as coverage. | US-3 | A Tokyo tour with Kanagawa as extra destination fails a Yokohama pickup without coverage. |
 | A listing that appears in results can still fail a check at booking time. | US-3 | A discoverable listing still blocks a location outside its coverage. |
+| RedCab checks coverage and the hold again just before payment starts. | US-3 | The provider removes Nishi-ku while the tourist fills in checkout, so the check fails before payment. |
+| If a check fails after payment succeeds, RedCab reverses the charge and makes no booking. | US-4 | The provider removes the coverage seconds after payment, so the charge is reversed and no booking exists. |
 | RedCab confirms a booking only after reliable proof of successful payment and after all checks pass. | US-4 | Payment succeeds and coverage passes, so the booking is `confirmed`. |
 | The provider does not accept the booking. | US-4 | No acceptance step exists for a tourist booking. |
 | An abandoned or expired checkout, or a failed payment, makes no booking and releases the hold. | US-4 | The session expires, and the asset is free again. |
 | A confirmed booking stays valid when the provider changes coverage, packages, the pool or the schedule. | US-4 | The provider removes Nishi-ku later, and the booking stays. |
 | A direct link to a listing with no active package shows "currently unavailable" and blocks checkout. | US-5 | A shared link opens the page, and the book button is off. |
-
-The policy for a payment that succeeds when a check fails at booking is not decided (see [Open questions](/docs/30-49-domains/catalog/catalog-decisions/#open-forks)).
 
 ## Worked example \{#worked-example\}
 
