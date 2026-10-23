@@ -5,6 +5,10 @@ sidebar_position: 16
 description: Architecture decision record 016 — country entity and self-referencing administrative geography tree with discovery projection.
 ---
 
+:::warning Partly replaced
+The tree has a fourth level, `region`, above the prefecture. See [Region is the top level of the geography tree](/docs/30-49-domains/catalog/architecture-decisions/region-level). The District and Area roles are deprecated.
+:::
+
 ## TL;DR
 
 - Geography is stored as **`catalog_countries`** (Phase 1: `JP`) plus a self-referencing **`catalog_geographies`** tree — **level** (Subdivision/Municipality/Ward) is administrative fact; **District/Area** are discovery *roles* (`is_discovery_root`, `is_listable`).

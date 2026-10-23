@@ -43,7 +43,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Platform Admin** — internal Red Cab staff with full override access. Authenticates via a **separate Admin principal** (`Identities::Admin` / `admin_users`); Admin is **not** a value on marketplace `Account.role`.
 - **Platform** — Red Cab itself, the technology intermediary that earns commission.
 - **Money / JPY minor units** — all monetary values are integers in Japanese Yen (JPY has no decimal subunit in practice; stored as whole yen). No floats for money. Commission rounding uses `FLOOR(gross × rate)`; `net = gross − commission` (`PAY-11`).
-- **Service Timezone** — the IANA timezone of the **listable geography node** where a Listing is located (`catalog_geographies.timezone`, e.g. `Asia/Tokyo`; seeded from `catalog_countries.default_timezone`). Slot windows, cancellation-tier cutoffs, and completion timers are evaluated in this zone; **CheckoutSession / Booking** snapshoot `service_timezone` at session creation so historical orders are immune to later geography edits ([ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)). Persisted instants use `TIMESTAMPTZ` (UTC storage). Phase 1 Japan seeds all nodes as `Asia/Tokyo`.
+- **Service Timezone** — the IANA timezone of the **primary destination** prefecture of a Listing (`catalog_geographies.timezone`, e.g. `Asia/Tokyo`; seeded from `catalog_countries.default_timezone`). Service windows, cancellation-tier cutoffs, and completion timers are evaluated in this zone; **CheckoutSession / Booking** snapshoot `service_timezone` at session creation so historical orders are immune to later geography edits ([ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)). Persisted instants use `TIMESTAMPTZ` (UTC storage). Phase 1 Japan seeds all nodes as `Asia/Tokyo`.
 - **Snapshot** — an immutable copy of a value (price, commission rate, cancellation policy, fulfillment payload) frozen at a defined instant (CheckoutSession creation) so later changes never alter an in-flight or historical record. See [Business Rules](/docs/70-79-business/business-rules/invariants).
 - **Domain Event** — a past-tense, in-process notification (e.g. `ProviderApproved`, `BookingCompleted`) that decouples contexts; consumed by Notifications and cross-context cascades.
 - **Bounded Context** — a logical module boundary with its own ubiquitous language; in this project a namespaced module inside one modular-monolith Rails app.
@@ -68,7 +68,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 
 ## 2. Catalog & Inventory (core)
 
-> Owns geography taxonomy, listings, pricing configuration + calculation authority, availability/seat inventory, and provider assets. Internal modules: **Geography**, **Listings**, **Pricing**, **Availability**, **Search**.
+> Owns geography taxonomy, listings, pricing configuration + calculation authority, asset availability, and provider assets. Internal modules: **Geography**, **Listings**, **Pricing**, **Availability**, **Search**.
 
 Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog/naming-and-legacy-aliases/#naming-tldr).
 
@@ -83,7 +83,7 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Pickup coverage** — provider-registered geography where pickup is allowed for a listing, separate from destinations. See [Catalog decisions — pickup coverage registration](/docs/30-49-domains/catalog/catalog-decisions#pickup-coverage-registration).
 - **Booking location** — tourist-selected pickup point for the booking flow; default drop-off on platform. Municipality/ward picker per [Naming — browse geography](/docs/30-49-domains/catalog/naming-and-legacy-aliases/#browse-geography). Validated against pickup coverage (`BKG-11`).
 - **Popular destination** — curated prefecture highlight on home or region (often booking-weighted). Not the legacy **Featured** flag. Distinct from future **Tourism tag**.
-- **Package (listing)** — sellable price option on one listing (for example Standard 6-hour, Premium 8-hour). Not **Multi-Day Package** (`E-04`).
+- **Package (listing)** — sellable option on one listing with its own vehicle category, passenger limit, duration, start window and price (for example Standard 6-hour, Premium 8-hour). Not **Multi-Day Package** (`E-04`).
 - **Verified provider** — provider account meets platform gates required to publish listings (replaces legacy “operable provider”). Distinct from **Provider Merchant Account** verification alone.
 
 - **District** — **(Legacy IA)** a geography node **presented as a top-level navigation unit** — a node with `is_discovery_root = true` ([ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)). Phase 1 Japan (C1): 47 prefectures + 20 designated cities. Carries EN + JA labels and slug. Shown only if its subtree has ≥1 published listing (`B-01`, `B-05`, `INV-8`). In URLs and JSON payloads, maps to `{districtSlug}` / `district_id`.
@@ -99,9 +99,9 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Listing (Service Listing)** — a bookable service published by a Provider, typed by Provider Type, with photos, pricing, location, and availability (`C-01`).
 - **Listing Status** — `Draft | Published | Paused/Unpublished | Unlisted`. `Published` is required for marketplace discovery but is not sufficient alone (`LC-10`). Unlisted = hidden by Admin/geography action; historical bookings always preserved (`C-11`, `B-05`).
 - **Provider Asset (`provider_assets`)** — a first-class, Provider-owned physical resource: a specific vehicle or guide instance (`id`, `provider_id`, `license_plate_or_vin`, `capacity`, `vehicle_category`). Slots reference `asset_id`; overlap constraints are **per-asset** (`CON-4`). Canonical vehicle categories follow PRD taxonomy: Alphard, HiAce, Sedan, Limousine (private car); 20 / 40 / 50-seat bands (charter bus).
-- **Asset** — synonym for **Provider Asset** in domain docs; the resource a Slot consumes.
+- **Asset** — synonym for **Provider Asset** in domain docs; the resource an **Asset Hold** consumes.
 - **Photo** — JPG/PNG/WebP image ≤5MB; first photo is the thumbnail; ≥1 required to publish (`C-02`).
-- **Pricing Mode** — `Per Person` (price × seats) or `Per Vehicle / Flat Rate` (flat regardless of pax). Per-vehicle bookings consume 100% of slot capacity (`CON-6`). (`C-03`)
+- **Pricing Mode** — `Per Person` (price × seats) or `Per Vehicle / Flat Rate` (flat regardless of pax). In MVP every booking holds the whole asset (`CON-6`). (`C-03`)
 - **Group Size Tier** — a `(min pax, max pax, price)` band; up to 5; non-overlapping (`C-04`).
 - **Duration Pricing** — rates per duration option: 2-Hour / Half-Day / Full-Day / Custom (`C-05`).
 - **Seasonal Override** — a date-range price override or multiplier with a label (e.g. "New Year Rate") (`C-06`).
@@ -109,14 +109,16 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Cancellation Policy** — up to 4 tiers of `(hours before service, refund %)`; Platform Default applies if none set; immutable for confirmed bookings (`C-08`).
 - **Pricing (module)** — the single authority that computes a **Price Breakdown** via `calculate_quote(listing, params, at:)`. No other context computes price.
 - **Price Breakdown / Quote** — computed result: base price, tier/duration/seasonal adjustments, extra charges, total (tax-inclusive for B2C). Distinct from a corporate **Quotation**.
-- **Availability Slot (Slot)** — a bookable window: date, start time, end time, max capacity, bound to a specific Provider Asset (`C-09`). Times authored and displayed in the Listing's **Service Timezone** (from its listable geography node).
-- **Seat Counter / available_seats** — remaining capacity on a slot; owned here, decremented transactionally during CheckoutSession seat hold (`E-11`).
-- **Fully Booked** — slot with `available_seats = 0`; shown but not bookable (`B-03`, `E-11`).
-- **Search / Filter / Sort** — discovery over published listings by date, type, language, group size, price; sorts: Recommended / Price / Rating / Reviews / Newest (`D-01..D-05`). Primary navigation: **District → Area** hierarchy; service type is a filter (`D-02`).
+- **Availability Slot (Slot)** — **(Legacy)** a bookable window bound to a Provider Asset (`C-09`). Replaced by **Asset Hold**; slice S5 of the [Catalog domain](/docs/30-49-domains/catalog/) removes it.
+- **Asset Hold** — one row for each booking attempt that holds one Provider Asset for one time range. It replaces the Slot seat counter (`INV-3`, `CON-4`). See [Catalog decisions — asset holds](/docs/30-49-domains/catalog/catalog-decisions#asset-holds).
+- **Asset Schedule / Closure** — the weekly working pattern of a Provider Asset for a date range, and the single days it does not work. Open days are calculated from them.
+- **Seat Counter / available_seats** — **(Legacy)** remaining capacity on a slot. Replaced by **Asset Hold** (`INV-3`).
+- **Fully Booked** — **(Legacy)** slot with `available_seats = 0`. A date or start time with no free asset is shown as unavailable (`CON-3`).
+- **Search / Filter / Sort** — discovery over discoverable listings by date, type, language, vehicle type, group size, price; sorts: Recently added / Price / Most booked / Top rated (see [Marketplace sort options](/docs/30-49-domains/catalog/catalog-decisions#marketplace-sort-options)). Primary navigation: **Region → Prefecture**; service type is a filter (`D-02`).
 
 ## 3. Booking & Checkout (core)
 
-> Internal modules: **Checkout** (CheckoutSession + Payment Attempt + seat hold) and **Order Lifecycle** (state machine, completion determination, manifest, bundle, multi-day).
+> Internal modules: **Checkout** (CheckoutSession + Payment Attempt + asset hold) and **Order Lifecycle** (state machine, completion determination, manifest, bundle, multi-day).
 
 - **CheckoutSession** — pre-booking aggregate created when a Tourist initiates checkout. Holds frozen Price Snapshot, Commission Snapshot, Cancellation Policy Snapshot, Fulfillment Payload, Terms of Use acceptance (`PAY-17`), seat reservation, and a link to the **Payment Attempt** with the configured payment provider. On verified payment success, a Booking is materialized from the session (`BKG-9`).
 - **Payment Attempt** — the provider-side payment record keyed to a CheckoutSession, referenced by a provider discriminator plus an opaque reference rather than a provider-named identifier. *(Formerly "Stripe PaymentIntent".)*
@@ -125,9 +127,9 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Fulfillment Payload** — operational fields captured at checkout and copied immutably onto the Booking: **booking location** (pickup address until structured location ships), drop-off address, optional flight number, passenger name, passenger phone, luggage count, optional special notes (`BKG-11`).
 - **Price Snapshot** — the Price Breakdown frozen at CheckoutSession creation; immune to later provider changes (`C1`, `E-02`, `PRC-8`).
 - **Booking State** — `PENDING | CONFIRMED | COMPLETED | PAYOUT_QUEUED | CANCELLED | REFUNDED`. B2C card path enters at `CONFIRMED`; `PENDING` retained for corporate / pre-payment paths. Governed by the Booking State Machine (`E-09`).
-- **Seat Reservation** — atomic decrement of `available_seats` during CheckoutSession creation (or restoration on session expiry/cancel); Booking materialization inherits the held seats (`CON-1`, `BKG-9`).
+- **Seat Reservation** — **(Legacy)** atomic decrement of `available_seats` during CheckoutSession creation. Replaced by creating an **Asset Hold** (`CON-1`, `BKG-9`).
 - **Bundle Booking** — a car + guide booked together; creates 2 Booking records linked by `bundle_booking_id`; commission per sub-booking (`E-03`). Cancelling one leg does not auto-cancel the other; each leg is cancelled and refunded on its own (`FR-BKG-012`, Decision Log `AMB-017`).
-- **Multi-Day Package** — a single-provider day-by-day itinerary booked as one purchase; all days' availability checked before checkout (`E-04`). **Term collision:** not the same as a sellable **package** in the catalog revamp [package vs tiers open fork](/docs/30-49-domains/catalog/catalog-decisions#open-forks) (`BKG-4` itinerary concept vs listing price packages).
+- **Multi-Day Package** — a single-provider day-by-day itinerary booked as one purchase; all days' availability checked before checkout (`E-04`). **Term collision:** not the same as a sellable **package** in [Catalog decisions — packages and pricing policy](/docs/30-49-domains/catalog/catalog-decisions#packages-and-pricing-policy) (`BKG-4` itinerary concept vs listing price packages).
 - **Passenger Manifest** — list of passenger names/age-groups for a group booking, viewable by the Provider (`E-08`).
 
 ## 4. Payments & Payouts (core)

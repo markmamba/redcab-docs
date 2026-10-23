@@ -58,7 +58,7 @@ The system **shall** allow Tourists to discover services through the location hi
 ### FR-CAT-005 — Service list presentation
 The system **shall** present, for a selected Area, each Published Listing with at least its service name, provider name, representative photo, starting price, service type, rating, and review count.
 - Source: B-03. Governs: PRC (starting price), REV (rating). Status: Approved.
-- **Starting price (current model):** see [`PRC-2`](/docs/70-79-business/business-rules/invariants). Package-vs-tiers fork remains open — [Catalog decisions — open forks](/docs/30-49-domains/catalog/catalog-decisions#open-forks).
+- **Starting price (current model):** see [`PRC-2`](/docs/70-79-business/business-rules/invariants). The starting price is the lowest quote among the available packages — [Catalog decisions — starting price and price filter](/docs/30-49-domains/catalog/catalog-decisions#starting-price-and-price-filter).
 
 ### FR-CAT-006 — Fully booked visibility
 The system **shall** continue to present a Listing that is fully booked for a selected date, marked as fully booked rather than hidden.
@@ -143,7 +143,7 @@ The system **shall** allow filtering by supported language and by group size, ap
 ### FR-CAT-026 — Filter by price range
 
 :::caution Superseded (partial)
-This section is superseded by [Catalog decisions — marketplace filter combination](/docs/30-49-domains/catalog/catalog-decisions#marketplace-filter-combination) (clear filters) and [open forks — package vs tiers](/docs/30-49-domains/catalog/catalog-decisions#open-forks) (price range semantics). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
+This section is superseded by [Catalog decisions — marketplace filter combination](/docs/30-49-domains/catalog/catalog-decisions#marketplace-filter-combination) (clear filters) and [starting price and price filter](/docs/30-49-domains/catalog/catalog-decisions#starting-price-and-price-filter) (price range semantics). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
 :::
 
 The system **shall** allow filtering by price range using the Listing's starting price, and **shall** allow clearing all filters.

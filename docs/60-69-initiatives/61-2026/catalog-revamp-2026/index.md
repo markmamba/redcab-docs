@@ -10,7 +10,7 @@ status: active
 ## TL;DR \{#catalog-revamp-2026\}
 
 - **Non-normative** program index for marketplace IA, search, destinations, pickup coverage, and provider publish rules.
-- Normative outcomes will live under [Catalog](/docs/30-49-domains/catalog/overview/) and in new **approved** [implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/).
+- Normative outcomes will live under [Catalog](/docs/30-49-domains/catalog/) and in new **approved** [implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/).
 - Phase 0 [audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#audit-tldr) inventories legacy FR-CAT, ADRs, specs, and code gaps. It recommends dispositions; PR 4 applies them.
 
 ## About this document
@@ -20,7 +20,7 @@ Planning only. Behavior is defined in domain rulings and approved specs, not on 
 | Topic | Document |
 | --- | --- |
 | Documentation system | [Documentation system](/docs/00-09-meta/conventions/documentation-system#documentation-system) |
-| Catalog domain entry | [Catalog overview](/docs/30-49-domains/catalog/overview/#catalog-overview) |
+| Catalog domain entry | [Catalog domain](/docs/30-49-domains/catalog/#catalog-overview) |
 | Legacy ID mapping | [Document alias table](/docs/80-89-legacy/document-alias-table) |
 | Phase 0 audit | [Catalog revamp phase 0 audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#audit-tldr) |
 
@@ -47,7 +47,7 @@ Summary of audit recommendations. PR 4 applies them. See the [audit](/docs/60-69
 | `AMB-020`, `AMB-022` (URL clause) | Supersede clauses in register | [Tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia); `AMB-022` Option A access unchanged. |
 | `web-57`, `web-59` (IA), `web-65`, `web-66`, `web-67`, `web-124`, `api-161` | `status: superseded` | Decisions anchors above; successor specs TBD. |
 | `web-56` (URL and redirect sections) | Section banners | [Tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia); whole file stays `approved`. |
-| `INV-8`, `LC-10`, `PRC-2`, `BKG-11` | Amended (PR 5) | [Invariants](/docs/70-79-business/business-rules/invariants); partial forks in [open forks](/docs/30-49-domains/catalog/catalog-decisions#open-forks). |
+| `INV-8`, `LC-10`, `PRC-2`, `BKG-11` | Amended (PR 5) | [Invariants](/docs/70-79-business/business-rules/invariants); open items in [open questions](/docs/30-49-domains/catalog/catalog-decisions#open-forks). |
 | `FR-CAT-001`, `002`, `006` to `025`, `028` to `032`, `034`; `api-131` to `api-136`; `ADR-013`, `ADR-016` | Carry | No change. |
 | `phase-2-execution-map.md` and two other roadmap pages | Fix in follow-up | See [planning drift](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#inventory-planning-drift). |
 

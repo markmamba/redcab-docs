@@ -6,7 +6,7 @@ description: Layers, precedence, doc types, and migration rules for redcab-docs.
 
 ## TL;DR \{#documentation-system\}
 
-- Docs use [Johnny Decimal](https://johnnydecimal.com/) areas; **normative** product truth for Catalog lives under [Catalog](/docs/30-49-domains/catalog/overview/).
+- Docs use [Johnny Decimal](https://johnnydecimal.com/) areas; **normative** product truth for Catalog lives under [Catalog](/docs/30-49-domains/catalog/).
 - **Precedence:** global business rules → platform rulings → domain rulings → engineering → **approved** implementation specs → code.
 - **Programs** (revamp plans, audits) are **not** in the precedence chain.
 - Superseded pages get banners in place first; long-term home is [Legacy](/docs/80-89-legacy/).
@@ -112,3 +112,4 @@ New Catalog work uses **sentence titles** in navigation, not `FR-CAT-*` or `ADR-
 | 2026-10-17 | Initial documentation system; specs under `61-2026/implementation-specs/`; programs as siblings under `61-2026/`. |
 | 2026-10-17 | Catalog revamp PR 4: pilot [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions/) (`doc_type: domain-decisions`) and supersession map updates. |
 | 2026-10-17 | Catalog revamp PR 5: global invariant amendments (`INV-8`, `LC-10`, `PRC-2`, `BKG-11`) align `70-79` with domain decisions; domain pages link upward, not downward. |
+| 2026-10-23 | Catalog source of truth: a front door, requirements, models and architecture-decisions pages under `38-catalog/`. Invariants `INV-3`, `INV-4`, `INV-8`, `PRC-2`, `PRC-3`, `PAY-5`, `BKG-9`, `CON-1` to `CON-6` and `OPR-12` amended. Scratchpad design notes retired. |

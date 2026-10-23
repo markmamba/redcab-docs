@@ -35,7 +35,7 @@ Sources read in `redcab-docs`:
 - `docs/70-79-business/73-planning/roadmap/phase-2-marketplace-depth.md`
 - `docs/70-79-business/73-planning/roadmap/tourist-ui-pre-phase-2.md`
 - `docs/30-49-domains/34-architecture-decisions/adr-004`, `adr-007`, `adr-013`, `adr-016`, `adr-017`
-- `docs/30-49-domains/38-catalog/overview/index.md`
+- `docs/30-49-domains/38-catalog/index.md`
 - Every file under `docs/60-69-initiatives/61-2026/implementation-specs/cat/` (including `geography/`)
 - `docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract.md`
 
