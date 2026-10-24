@@ -7,7 +7,7 @@ doc_type: domain-decisions
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-23
+last_reviewed: 2026-10-24
 supersedes:
   - FR-CAT-003 (partial)
   - FR-CAT-004 (partial)
@@ -293,7 +293,7 @@ Popular destinations are a curated list of prefectures.
 - A prefecture has a rank when it is popular, and other prefectures have none.
 - A hand-made rank is final, though booking counts may suggest a rank later.
 - Region and popular destination images are static web files with a placeholder.
-- The file key is open, and [Open questions](#open-forks) lists it.
+- The image file key is the region slug, for example `public/images/regions/kanto.jpg`.
 - Why: there are no bookings before launch, so a booking-based list would be empty.
 - Replaces: the "featured" flag on districts.
 
@@ -345,7 +345,6 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | What is the most additional destinations a listing can have? | Set in the provider listing spec | Provider listing spec |
 | Which provider field does keyword search use? | Legal business name; `business_name` for operators and `display_name` for guides until IAM stores it | Keyword spec |
 | How does a label in `service_prefectures` map to a prefecture? | A label that does not map is skipped and the provider is told | Provider listing spec |
-| Is the image file key the slug or the geography ID? | Slug | Home page spec |
 | Which discoverable tests apply before their table ships? | A test turns on in the release that ships its table | Release 1 spec |
 | Do shared seats sell single seats to strangers? | Not in MVP | A later ruling |
 | How does a Multi-Day Package (`E-04`) hold assets over many days? | Not designed; `BKG-4` still names slots | A later ruling |
