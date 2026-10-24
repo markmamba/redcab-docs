@@ -99,17 +99,18 @@ When scaffolding agent instructions in each repo, copy the baseline patterns ver
 AGENTS.md                  # Entry point for agents
 ```
 
-**`red-cab-api`** and **`red-cab-web`** use the same pattern with `.ai/` as the canonical skill host (`.claude/skills/` may hold thin pointers for Claude Code):
+**`red-cab-api`** and **`red-cab-web`** use:
 
 ```
-.ai/
-  instructions.md          # Derived from docs in this folder
-  skills/                  # new-endpoint, new-model, creating-route-pages, etc.
-.cursor/rules/             # Thin pointers to .ai/instructions.md and skills
-AGENTS.md
+AGENTS.md                  # Always-relevant conventions (entry point for agents)
+app/domains/AGENTS.md      # Class patterns (api + web); IAM section on api
+db/AGENTS.md               # DBML / migrations (api only)
+app/routes/AGENTS.md       # Route registry (web only)
+.claude/skills/            # Codegen and review skills (full SKILL.md + templates)
+.cursor/rules/             # Pointers to AGENTS.md and .claude/skills/
 ```
 
-The files in this `engineering/` folder are the **planning-time source** for implementation-repo `.ai/instructions.md`. Do not duplicate them into api/web until scaffolding begins.
+Planning docs in this folder are the **planning-time source** for implementation-repo `AGENTS.md`. When conventions change here, update api/web `AGENTS.md` to match.
 
 ---
 

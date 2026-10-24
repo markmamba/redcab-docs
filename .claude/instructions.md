@@ -34,7 +34,7 @@ Per-issue design for `red-cab-api` / `red-cab-web` belongs in an **implementatio
 | Step | Skill / location |
 | --- | --- |
 | GitHub issue body | `write-issue` (this repo) |
-| Implementation spec | `write-implementation-spec` in `red-cab-api` or `red-cab-web` |
+| Implementation spec | `docs/60-69-initiatives/61-2026/implementation-specs/_template.md` in this repo |
 | Spec review | `review-implementation-spec` in api or web |
 | Codegen | `new-endpoint`, `new-model`, `creating-route-pages`, etc. with `spec_path` |
 

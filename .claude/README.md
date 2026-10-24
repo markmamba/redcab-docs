@@ -13,7 +13,7 @@
 .cursor/rules/        # Optional Cursor rule pointers per skill
 ```
 
-Implementation specs and codegen skills live in `red-cab-api` and `red-cab-web` (those repos still use `.ai/` for agent instructions).
+Implementation specs live in this repo (`implementation-specs/`). Codegen and review skills live in `red-cab-api` and `red-cab-web` under `.claude/skills/`; conventions in each repo's `AGENTS.md`.
 
 ## Skills
 

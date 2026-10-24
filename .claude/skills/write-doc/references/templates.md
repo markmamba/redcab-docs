@@ -1,6 +1,6 @@
 # Doc templates
 
-Per-issue shipping design is not a `write-doc` page. Use `write-implementation-spec` in `red-cab-api` or `red-cab-web`.
+Per-issue shipping design is not a `write-doc` page. Use `implementation-specs/` in this repo.
 
 ## Facts ledger (all doc types)
 

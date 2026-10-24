@@ -111,7 +111,7 @@ Common words, used with their own meaning.
   - History belongs on an ADR or explainer, and the text links to it.
 - Do not rely on an initiative name as context the reader must already know, state the rule itself.
 
-Per-issue shipping design is not a `write-doc` page. Use `write-implementation-spec` in `red-cab-api` or `red-cab-web`.
+Per-issue shipping design is not a `write-doc` page. Use `implementation-specs/` in this repo.
 
 ## Self-check
 

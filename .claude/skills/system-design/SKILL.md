@@ -6,7 +6,7 @@ argument-hint: "[topic]"
 
 # system-design
 
-Help the user decide **before** `write-implementation-spec` runs in `red-cab-api` or `red-cab-web`.
+Help the user decide **before** they write an implementation spec in `redcab-docs` (`implementation-specs/`).
 
 Output: `scratchpad/design-{slug}.md`. Not a committed doc unless the user promotes it to an ADR or explainer via `write-doc`.
 

@@ -461,10 +461,11 @@ Env hiding is **not** API security — backend must enforce authorization indepe
 
 ## AI tooling (at scaffold time)
 
-When `red-cab-web` is created, set up the standard layout:
+`red-cab-web` agent layout:
 
-- `.ai/instructions.md` — derived from this document and [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping)
-- Skills: `creating-route-pages`, `creating-api-clients`, `creating-domain-forms`, `creating-domain-views`, `team-domain-page`
+- `AGENTS.md` — derived from this document and [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping)
+- `app/routes/AGENTS.md`, `app/domains/AGENTS.md`
+- `.claude/skills/`: `creating-route-pages`, `creating-api-clients`, `creating-domain-forms`, `creating-domain-views`, `team-domain-page`, `review-react-style`
 - `.cursor/rules/00-repo-core.mdc`, `10-routes-api-forms.mdc`, etc.
 
 ---

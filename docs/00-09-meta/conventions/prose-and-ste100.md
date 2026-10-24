@@ -13,7 +13,7 @@ description: When and how to use Simplified Technical English for Red Cab docs, 
 
 ## About this document
 
-This page is the canonical reference for human-readable prose across `redcab-docs`, GitHub issues, PRs, and user-facing application text. Implementation repos (`red-cab-api`, `red-cab-web`) mirror the tiers in `.ai/instructions.md` and review skills.
+This page is the canonical reference for human-readable prose across `redcab-docs`, GitHub issues, PRs, and user-facing application text. Implementation repos (`red-cab-api`, `red-cab-web`) mirror the tiers in each repo's `AGENTS.md` and review skills under `.claude/skills/`.
 
 | Topic | Document |
 | --- | --- |
@@ -107,7 +107,7 @@ In `60-69-initiatives/61-2026/implementation-specs/`:
 | Governing docs table, API/Web contract tables, file paths | Tables and IDs; keep precise |
 | Design decisions | Prefer short rationale sentences; alternatives can be terse bullets |
 
-`review-implementation-spec` includes an optional **prose** checklist; see skills in `red-cab-api` and `red-cab-web`.
+When reviewing implementation specs, check narrative sections against Tier A before setting `status: approved`.
 
 ---
 
@@ -131,8 +131,7 @@ Explainers under `70-79-business/74-explainers/` are **non-normative**. They **m
 | --- | --- |
 | `redcab-docs` | This page; skills `write-plain-english`, `write-tier-a-prose`, `write-issue`, `write-doc` in `redcab-docs/.claude/skills/` |
 | `redcab-docs/.claude/instructions.md` | Docs repo agent conventions |
-| `red-cab-web/.ai/instructions.md` | Team plain English + Tier A |
-| `red-cab-api/.ai/instructions.md` | User-facing plain language + Tier A |
-| `write-implementation-spec` | Fill spec narrative sections with Tier A STE |
-| `review-implementation-spec` | Prose checklist (Tier A sections) |
+| `red-cab-web/AGENTS.md` | Team plain English + Tier A |
+| `red-cab-api/AGENTS.md` | User-facing plain language + Tier A |
+| `implementation-specs/` in this repo | Spec narrative sections use Tier A STE |
 | `review-react-style` / `review-rails-style` | User-facing error strings in changed files |

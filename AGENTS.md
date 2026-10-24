@@ -39,9 +39,8 @@ See `docs/00-09-meta/conventions/documentation-system.md` (global rules → plat
 Before implementation code is written in api/web repos:
 
 1. Create `docs/60-69-initiatives/61-2026/implementation-specs/{context}/{repo}-{issue}-{slug}.md` from `docs/60-69-initiatives/61-2026/implementation-specs/_template.md`.
-2. Review with `review-implementation-spec` skill (in api or web `.claude/skills/` or `.ai/skills/`).
-3. Set `status: approved` in spec frontmatter.
-4. Implement using codegen skills with `spec_path` argument.
+2. Review the spec against governing docs and invariants; set `status: approved` in frontmatter when ready.
+3. Implement using codegen skills in `red-cab-api` or `red-cab-web` `.claude/skills/` (approved spec path required).
 5. Link spec in PR description.
 
 See [docs/60-69-initiatives/61-2026/implementation-specs/README.md](docs/60-69-initiatives/61-2026/implementation-specs/README.md).
@@ -50,7 +49,7 @@ See [docs/60-69-initiatives/61-2026/implementation-specs/README.md](docs/60-69-i
 
 - Tier A/B/C rules: `docs/00-09-meta/conventions/prose-and-ste100.md`
 - Load `.claude/skills/write-plain-english/` before any team-facing prose; use `write-tier-a-prose` to pick the tier.
-- Spec narrative, explainers, issues/PRs (via web `.ai/instructions.md`), and user-facing errors use Tier A unless noted.
+- Spec narrative, explainers, issues/PRs (via `red-cab-api/AGENTS.md` and `red-cab-web/AGENTS.md`), and user-facing errors use Tier A unless noted.
 
 ## AI skills (this repo)
 
@@ -65,7 +64,7 @@ Conventions: `.claude/instructions.md`. Skill catalog: `.claude/README.md`.
 | `system-design` | Design plan before an implementation spec |
 | `mermaid-diagram` | Mermaid blocks in Docusaurus pages |
 
-Per-issue shipping design uses `write-implementation-spec` / `review-implementation-spec` in `red-cab-api` or `red-cab-web`, not `write-doc`.
+Per-issue shipping design lives in `implementation-specs/` (not `write-doc`). Create specs from `_template.md` in this repo.
 
 ## Read first (new feature work)
 

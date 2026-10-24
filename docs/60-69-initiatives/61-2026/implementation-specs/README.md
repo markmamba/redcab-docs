@@ -31,7 +31,7 @@ Narrative sections (TL;DR, Problem, Out of scope, Acceptance criteria) follow [P
 
 ## Workflow
 
-1. **Write** — Copy `60-69-initiatives/61-2026/implementation-specs/_template.md` → `{context}/{repo}-{issue}-{slug}.md`. Fill all sections. Run skill `write-implementation-spec` if using AI.
+1. **Write** — Copy `60-69-initiatives/61-2026/implementation-specs/_template.md` → `{context}/{repo}-{issue}-{slug}.md`. Fill all sections (Tier A prose; see `write-plain-english` in `redcab-docs/.claude/skills/`).
 2. **Review** — Run skill `review-implementation-spec`. Fix findings. Set `status: approved` in frontmatter.
 3. **Implement** — Use repo codegen skills (`new-endpoint`, `creating-route-pages`, etc.) with `spec_path` pointing at this file.
 4. **Verify** — Run verification commands in the spec. Run `review-rails-style` / `review-react-style`.

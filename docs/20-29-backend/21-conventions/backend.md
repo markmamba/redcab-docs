@@ -449,11 +449,11 @@ DBML files live in `app/docs/db/` (red-cab-api) per [Domain-to-Code Mapping](/do
 
 ## AI tooling (at scaffold time)
 
-When `red-cab-api` is created, set up the standard layout:
+`red-cab-api` agent layout:
 
-- `.ai/instructions.md` — derived from this document and [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping)
-- `.ai/skills/new-endpoint/SKILL.md`
-- `.ai/skills/new-model/SKILL.md`
+- `AGENTS.md` — derived from this document and [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping)
+- `app/domains/AGENTS.md`, `db/AGENTS.md`
+- `.claude/skills/new-endpoint/`, `.claude/skills/new-model/`, `.claude/skills/review-rails-style/`
 - `.cursor/rules/redcab-conventions.mdc`
 
 ---

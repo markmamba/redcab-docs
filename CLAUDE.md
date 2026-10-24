@@ -13,7 +13,7 @@ Read and follow `.claude/instructions.md`. Task prompts live in `.claude/skills/
 | `system-design` | Design plan before a spec |
 | `mermaid-diagram` | Mermaid in docs |
 
-Implementation specs: use `write-implementation-spec` in `red-cab-api` or `red-cab-web`.
+Implementation specs: create under `docs/60-69-initiatives/61-2026/implementation-specs/` from `_template.md` in this repo.
 
 ```bash
 npm run build

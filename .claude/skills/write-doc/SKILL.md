@@ -22,7 +22,7 @@ The reader starts cold. They must understand the page in one read.
 | Architecture decision record | **ADR** | `docs/30-49-domains/34-architecture-decisions/adr-{NNN}-{slug}.md` |
 | Bounded context overview | **Context** | `docs/30-49-domains/31-bounded-contexts/{context}.md` |
 | Engineering how-to or convention | **Convention** | Under `20-29-backend/`, `50-59-frontend/`, or `90-99-engineering-meta/` |
-| Per-issue shipping design | **Not this skill** | `write-implementation-spec` in `red-cab-api` or `red-cab-web` |
+| Per-issue shipping design | **Not this skill** | `implementation-specs/` in this repo (`_template.md`) |
 | Early design before a spec | **Not this skill** | `system-design` → scratchpad, then issue and implementation spec |
 
 When the type is unclear, ask one question with two likely types.
