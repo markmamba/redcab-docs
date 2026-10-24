@@ -58,7 +58,7 @@ Pricing edits are transactional within `PricingPolicy`.
 
 ## Integrations
 
-**Upstream:** Onboarding (Provider Status); Payments (`payout_capability` for publish gate, `INV-12`); Identity (principal).
+**Upstream:** Onboarding (Provider Status, and the provider type and name that keyword search reads, read only); Payments (`payout_capability` for publish gate, `INV-12`); Identity (principal).
 
 **Downstream:** Booking and Corporate (pricing and availability); Notifications.
 
