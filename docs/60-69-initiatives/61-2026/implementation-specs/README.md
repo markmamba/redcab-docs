@@ -32,7 +32,7 @@ Narrative sections (TL;DR, Problem, Out of scope, Acceptance criteria) follow [P
 ## Workflow
 
 1. **Write** — Copy `60-69-initiatives/61-2026/implementation-specs/_template.md` → `{context}/{repo}-{issue}-{slug}.md`. Fill all sections (Tier A prose; see `write-plain-english` in `redcab-docs/.claude/skills/`).
-2. **Review** — Run skill `review-implementation-spec`. Fix findings. Set `status: approved` in frontmatter.
+2. **Review** — The owner reviews the spec in the docs PR. Fix findings. Set `status: approved` in frontmatter.
 3. **Implement** — Use repo codegen skills (`new-endpoint`, `creating-route-pages`, etc.) with `spec_path` pointing at this file.
 4. **Verify** — Run verification commands in the spec. Run `review-rails-style` / `review-react-style`.
 5. **PR** — Link the spec path in the PR description.
@@ -73,7 +73,7 @@ Examples:
 | Status | Meaning |
 | --- | --- |
 | `draft` | Work in progress; not ready for review |
-| `review` | Ready for `review-implementation-spec` |
+| `review` | Ready for the owner to review |
 | `approved` | Design locked; codegen may proceed |
 | `superseded` | Replaced by a newer spec or domain ruling; do not use for `spec_path` |
 | `implemented` | Optional: merged; historical record (not required) |

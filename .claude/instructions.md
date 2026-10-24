@@ -35,7 +35,7 @@ Per-issue design for `red-cab-api` / `red-cab-web` belongs in an **implementatio
 | --- | --- |
 | GitHub issue body | `write-issue` (this repo) |
 | Implementation spec | `docs/60-69-initiatives/61-2026/implementation-specs/_template.md` in this repo |
-| Spec review | `review-implementation-spec` in api or web |
+| Spec review | The owner reviews the spec in the docs PR and sets `status: approved` |
 | Codegen | `new-endpoint`, `new-model`, `creating-route-pages`, etc. with `spec_path` |
 
 Do not use `write-doc` for implementation specs. Point the user at the api/web spec skills instead.

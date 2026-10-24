@@ -15,7 +15,7 @@ description: Per-issue specs for ADR-018/019 execution (Phase 0–4). Create fro
 
 1. Open a GitHub issue in `red-cab-api` or `red-cab-web` as appropriate.
 2. Copy `60-69-initiatives/61-2026/implementation-specs/_template.md` to `web-NNN-{slug}.md` or `api-NNN-{slug}.md` in this folder (template is repo-only; not published on the docs site).
-3. Run `review-implementation-spec`; set `status: approved`.
+3. The owner reviews the spec in the docs PR; set `status: approved`.
 4. Implement with `spec_path` pointing at the committed file.
 
 ## Related documents

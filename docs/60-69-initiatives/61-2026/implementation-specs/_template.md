@@ -113,6 +113,6 @@ npm run test
 
 ## Review record
 
-| Date | Reviewer | Tool / model | Outcome |
-| --- | --- | --- | --- |
-| | | `review-implementation-spec` | |
+| Date | Reviewer | Outcome |
+| --- | --- | --- |
+| | | |

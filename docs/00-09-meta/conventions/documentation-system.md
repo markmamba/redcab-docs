@@ -89,7 +89,7 @@ New Catalog work uses **sentence titles** in navigation, not `FR-CAT-*` or `ADR-
 | Status | Meaning |
 | --- | --- |
 | `draft` | Work in progress |
-| `review` | Ready for `review-implementation-spec` |
+| `review` | Ready for the owner to review |
 | `approved` | Design locked; codegen may use `spec_path` |
 | `superseded` | Replaced; do not use for codegen; set `superseded_by:` when known |
 | `implemented` | Optional historical note after merge (not required) |
