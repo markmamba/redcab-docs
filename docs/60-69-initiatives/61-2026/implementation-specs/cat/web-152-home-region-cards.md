@@ -4,7 +4,7 @@ sidebar_label: Web · Home region cards
 issue: "https://github.com/markmamba/red-cab-web/issues/152"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
