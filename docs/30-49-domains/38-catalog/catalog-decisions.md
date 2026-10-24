@@ -231,6 +231,8 @@ Payment confirms a booking when all checks pass.
 
 - RedCab confirms after reliable proof of successful payment.
 - Every required check must pass first, including pickup coverage.
+- RedCab checks coverage and the hold again just before payment starts.
+- If a check fails after payment succeeds, RedCab reverses the charge and makes no booking.
 - The provider does not accept the booking.
 - Corporate checkout is out of scope.
 - Why: B2C instant booking already works this way.
@@ -242,6 +244,7 @@ A package is one sellable option of a listing.
 
 - A package has a vehicle category, a passenger limit, a duration, a start window and a price.
 - A listing has at most 5 packages that are not archived.
+- Until slice S4 ships, a listing may have one package, which the system creates by default.
 - The pricing policy stays one for each listing and sets pricing mode and cancellation for all packages.
 - A package is available when its status is `active`.
 - One service writes two stored display prices for discovery, and checkout never reads them.
@@ -316,6 +319,22 @@ The DBML file is the target design.
 - Why: unused columns promise behavior that nothing builds or tests.
 - Replaces: reserved Phase 2 columns added early.
 
+## Release order \{#release-order\}
+
+Catalog ships in five releases, and browse comes first.
+
+- Release 1 ships slices S1, S2, S3 and S7, with keyword search and Top rated sort.
+- Release 1 keeps today's single price on the card.
+- Release 2 ships slice S5: asset holds, schedules and closures, the package table and one default package.
+- Release 3 ships slice S4: many packages, timed packages, and the price, vehicle and group size filters.
+- Release 3 also ships the Price: low to high sort.
+- Release 4 ships slice S6: pickup coverage, one booking location and the coverage check.
+- Release 5 ships slices S8 and S9: Most booked sort, and the cleanup of legacy roles and slot code.
+- Each release needs its own approved implementation spec, and no fixed date applies.
+- Why: a hold needs a package and the price filter needs packages, so browse ships first.
+- Replaces: the order of tourist first, then provider, then booking.
+- Front door: [Delivery releases and slices](/docs/30-49-domains/catalog/#delivery-slices).
+
 ## Open questions \{#open-forks\}
 
 These items are proposed, not agreed, and no page may treat them as rules.
@@ -327,7 +346,7 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | Which provider field does keyword search use? | Legal business name; `business_name` for operators and `display_name` for guides until IAM stores it | Keyword spec |
 | How does a label in `service_prefectures` map to a prefecture? | A label that does not map is skipped and the provider is told | Provider listing spec |
 | Is the image file key the slug or the geography ID? | Slug | Home page spec |
-| What happens if payment succeeds and a check fails at materialization? | Refund, with a pre-payment check where possible | Checkout spec |
+| Which discoverable tests apply before their table ships? | A test turns on in the release that ships its table | Release 1 spec |
 | Do shared seats sell single seats to strangers? | Not in MVP | A later ruling |
 | How does a Multi-Day Package (`E-04`) hold assets over many days? | Not designed; `BKG-4` still names slots | A later ruling |
 | What happens to a listing whose additional destination is in a node that an admin deactivates (`OPR-10`)? | Not decided; `OPR-10` names the subtree of the primary destination | Team geography spec |

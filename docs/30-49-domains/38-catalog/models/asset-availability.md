@@ -69,7 +69,7 @@ About 50 files use the availability slot today: 29 in Catalog and 19 in Bookings
 The Project note of the DBML file holds the overlap rule.
 
 ```text
-# red-cab-api/docs/db/catalog.dbml:112-116
+# red-cab-api/docs/db/catalog.dbml:113-117
     - catalog_asset_holds: EXCLUDE USING gist (
         provider_asset_id WITH =,
         tstzrange(blocked_from, blocked_until, '[)') WITH &&)
@@ -95,7 +95,7 @@ Bookings copies the hold id, the package id, the package name and the service st
 | A provider cannot shorten a schedule so that a live hold falls outside it. | provider save | Ending the schedule on 28 October fails for the same reason. |
 
 ```text
-# red-cab-api/docs/db/catalog.dbml:103-105
+# red-cab-api/docs/db/catalog.dbml:104-106
     - catalog_asset_schedules: EXCLUDE USING gist (
         provider_asset_id WITH =,
         daterange(starts_on, ends_on, '[]') WITH &&)                                      -- B-3 (ships in: S5)

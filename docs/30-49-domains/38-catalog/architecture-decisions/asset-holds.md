@@ -60,6 +60,7 @@ Replace the slot with a hold for each booking.
 - About 50 files change: 29 in Catalog and 19 in Bookings, plus the provider slot screens in the web app.
 - `INV-3`, `INV-4` and `CON-1` to `CON-6` change in the same pull request as this record.
 - Bookings gets the hold id, the package id and name, and the service start and end.
+- Release 2 gives each listing one default full-day package, so every hold has a package.
 - The date filter reads schedules, closures and holds.
 - Free start times are worked out at search time.
 - The system is not in production, so no data moves.

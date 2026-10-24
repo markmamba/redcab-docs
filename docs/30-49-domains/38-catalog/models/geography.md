@@ -75,7 +75,7 @@ Phase 1 has 9 regions, and Okinawa is its own region.
 The Project note of the DBML file holds the matching CHECK rules.
 
 ```text
-# red-cab-api/docs/db/catalog.dbml:88-91
+# red-cab-api/docs/db/catalog.dbml:89-92
     - catalog_geographies: CHECK ((parent_id IS NULL) = (level = 'region'))               -- C1, DP-2c (ships in: S1)
     - catalog_geographies: CHECK (NOT is_listable OR level IN ('municipality','ward'))    -- DP-2d (ships in: S1)
     - catalog_geographies: CHECK (NOT is_listable OR (latitude IS NOT NULL AND longitude IS NOT NULL))
