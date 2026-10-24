@@ -4,7 +4,7 @@ sidebar_label: Web · Components cleanup
 issue: "https://github.com/markmamba/red-cab-web/issues/160"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: PLATFORM
 related:
