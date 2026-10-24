@@ -5,7 +5,7 @@ issue: "https://github.com/markmamba/red-cab-web/issues/154"
 repos:
   - red-cab-api
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
