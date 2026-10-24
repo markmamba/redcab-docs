@@ -4,7 +4,7 @@ sidebar_label: Web · Listing scope pages
 issue: "https://github.com/markmamba/red-cab-web/issues/153"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -285,7 +285,7 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 
 - [ ] Set spec `status: implemented` after merge
 - [ ] Update `tourist-listings-ui.pen` (separate follow-up, decision 25)
-- [ ] Open the issue for the domain code that sits in `app/components/` (decision 35)
+- [x] Open the issue for the domain code that sits in `app/components/` (decision 35): [red-cab-web#160](https://github.com/markmamba/red-cab-web/issues/160), done in PR #162
 
 ## Acceptance criteria
 
