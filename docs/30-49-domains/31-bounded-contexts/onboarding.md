@@ -46,7 +46,7 @@ Document upload is a separate transaction.
 
 **Upstream:** Identity supplies the authenticated principal behind the Provider.
 
-**Downstream:** Catalog reads Provider Status to gate listing creation. Notifications reacts to events.
+**Downstream:** Catalog reads Provider Status to gate listing creation. Catalog also reads the provider type and the provider name for keyword search. It writes nothing in Onboarding. Notifications reacts to events.
 
 **Sync:** `provider_status(provider_id)` query for Catalog policy.
 
