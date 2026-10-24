@@ -24,7 +24,8 @@ related:
 - Ships three listing pages: `/listings`, `/regions/:region-slug/listings` and `/regions/:region-slug/:prefecture-slug/listings`. One page module serves the three routes.
 - Ships the listing detail page at `/listings/:listing-slug`. It replaces the resolver at `/listings/:uuid`.
 - Ships a keyword field with a short pause. The keyword, the filters and the sort stay in the URL.
-- Service type and language take many values (checkbox groups). The prefecture select offers only the prefectures of the current region.
+- Service type and language take many values (toggle pills in the Filters panel). The prefecture select offers only the prefectures of the current region.
+- Applied filters show as removable chips under the toolbar. The Filters button shows how many are on.
 - Ships 301 redirects from the old `/districts`, `/discover` and `/account/discover` URLs, and from `/listings/:uuid` to the slug URL.
 - Ships the empty, not found and error states.
 - Removes the old district and area pages, the geography nav, the price fields and the near-me code.
@@ -81,8 +82,8 @@ Rulings marked "Owner ruling" were given by the owner on 2026-10-24.
 | 7 | **A keyword with more than 100 characters or more than 5 words is not sent. The field shows "Use up to 5 words." The input has `maxLength` 100.** | Send it and show the API error | The API limits are 100 characters and 5 words (api-208). The tourist should know why nothing changed. **Added point, please review.** |
 | 8 | **The keyword field waits 400 ms after the last key, then sets `keyword` in the URL and sets `page` to 1. It replaces the history entry, so Back does not step through every letter. An empty field removes the param. A clear button (×) shows when the field has text.** | A search button. A pause of 300 or 500 ms. | The ruling asks for 300 to 500 ms. 400 ms is the middle. **Added point, please review.** |
 | 9 | **The field reads its value from the URL. A change of the URL by Back or Forward updates the field.** | Keep the field state apart from the URL | The URL is the source of truth for list state (`app/routes/AGENTS.md`). |
-| 10 | **Service type and language are checkbox groups in the Filters panel. The URL holds many values as a comma list, for example `service_type=charter_bus,tour_guide`.** | A multi-select with chips | Owner ruling. Service type has 4 options and language has 6, so all choices stay visible. The comma list is the format in the naming doc. |
-| 11 | **The Filters panel has: prefecture (on region and prefecture pages only), service type, language, service date and group size. It does not have price or vehicle type.** | Keep the price fields | Owner ruling. Price and vehicle type wait for release 3. |
+| 10 | **Service type and language are toggle pills in the Filters panel. Each pill is a real checkbox. The URL holds many values as a comma list, for example `service_type=charter_bus,tour_guide`.** | A checkbox list (first draft). A multi-select with chips. | Owner ruling on 2026-10-24, changed after a layout mock (Option A). Service type has 4 options and language has 6, and pills are quick to tap on a phone. The comma list is the format in the naming doc. |
+| 11 | **The Filters panel has these sections, in this order, each with a heading: Prefecture (on region and prefecture pages only), Service type, Language, and Trip details (service date and group size side by side). It does not have price or vehicle type.** | Keep the price fields. One long list of fields. | Owner ruling. Price and vehicle type wait for release 3. The headings and the grouping keep the panel easy to scan. |
 | 12 | **The prefecture select lists only the prefectures of the current region, with the choice "All of {region}". Applying it goes to the prefecture URL (or the region URL) and keeps the keyword, the filters and the sort. It sets `page` to 1. `/listings` has no scope control.** | A region select on `/listings`. Prefecture links above the results. | Owner ruling. The prefecture is part of the URL. |
 | 13 | **"Reset" in the panel and "Clear filters" on the page clear service type, language, date and group size. They keep the prefecture, the keyword and the sort.** | Also clear the prefecture, or the keyword | Owner ruling. The ruling says clearing keeps the scope. |
 | 14 | **The sort control has two options: "Recently added" (default) and "Top rated". The default removes `order_by` and `order_dir` from the URL. "Top rated" sets `order_by=rating_average` and `order_dir=desc`. A change of sort sets `page` to 1.** | Keep Top rated disabled | Owner ruling. The API supports it (api-207). The label follows the Catalog ruling. |
@@ -93,10 +94,20 @@ Rulings marked "Owner ruling" were given by the owner on 2026-10-24.
 | 19 | **Legacy redirects (301): `/districts` goes to `/listings`. `/districts/:districtSlug` goes to the prefecture page found by the slug in the regions list. `/districts/:d/areas/:a` and `/districts/:d/areas/:a/listings` go to the page of the district (the prefecture). `/districts/:d/areas/:a/listings/:uuid` goes to `/listings/{slug}`. `/discover` and `/discover/*` go to `/listings`. The `/account/discover` routes use the same mapping. Anything that has no match goes to `/listings`.** | Send all to `/listings`. Redirect only listing links. | Owner ruling. A district that is a designated city is not in the regions list, so it goes to `/listings`. **The fallback for a city district is an added point, please review.** |
 | 20 | **One module holds the legacy mapping functions. The marketplace routes and the `/account/discover` redirects both use it. A 404 from the API falls back to `/listings`. Other errors are not hidden.** | Copy the mapping in each redirect page | The two groups of redirects must not drift apart. **Added point, please review.** |
 | 21 | **The menu link "Districts" becomes "Services" and opens `/listings`.** | "Browse". Keep "Districts". | Owner ruling. The name "District" no longer exists in the product. |
-| 22 | **The near-me files are deleted: `catalog-near-me-areas-service.js`, `catalog-near-me-areas-section-view.jsx`, `catalog-near-me-ranked-area-list-view.jsx`, their specs, and `marketplace-catalog-areas-near-api.js` with its spec.** | Keep them unused | Owner ruling for the three domain files. They have no user after this change. Git keeps the history. **The API module with its spec is an added point, please review.** |
+| 22 | **The near-me files are deleted: `catalog-near-me-areas-service.js`, `catalog-near-me-areas-section-view.jsx`, `catalog-near-me-ranked-area-list-view.jsx`, their specs, and `marketplace-catalog-areas-near-api.js` with its spec.** | Keep them unused | Owner ruling for the three domain files. They have no user after this change. **Exception: `catalog-district-list-view.jsx` stays, because the home page "Featured districts" cards still use it until #152. Its link now uses the old `/districts/:slug` URL, which redirects with 301.** Git keeps the history. **The API module with its spec is an added point, please review.** |
 | 23 | **`MARKETPLACE_CATALOG_PATHS` gets `LISTINGS`, `region(regionSlug)`, `prefecture(regionSlug, prefectureSlug)` and `listing(listingSlug)`. The district and area builders are removed. `listingResolver(uuid)` stays for the booking pages, because `/listings/:uuid` still works through the redirect.** | Keep both sets | The old builders have no user after this change. |
 | 24 | **`PUBLIC_RETURN_PREFIXES` gets `/regions`. `/districts` stays, so a saved return link still works through the redirect.** | Remove `/districts` | A person may log in from an old link. |
-| 25 | **The wireframe `tourist-listings-ui.pen` is not changed in this item. The "Layout" section below describes the layout in words.** | Update the wireframe first | The Pencil app was not reachable when this spec was written. Owner ruling. Update the wireframe later. |
+| 25 | **The wireframe `tourist-listings-ui.pen` is not changed in this item. The "Layout" section below describes the layout in words. The layout was chosen from a static HTML mock with six options (Option A).** | Update the wireframe first | The Pencil app was not reachable. Owner ruling. Update the wireframe later. |
+| 26 | **Toolbar layout: on a wide screen, one row with the search field (it grows), the Filters button and the Sort select. On a phone, the search field is full width, and Filters and Sort sit side by side below it.** | Search, Filters and Sort apart (today) | Owner ruling (Option A). One row is easier to scan. |
+| 27 | **The result count sits on the right of the title. The always-visible helper text under the search field is removed. The placeholder says "Search by name, place or provider." The word-limit message still shows under the field.** | Keep the helper text | Owner ruling (Option A). The helper text used space on every visit. **The placeholder wording is an added point, please review.** |
+| 28 | **When a filter is applied, a row of chips shows under the toolbar. There is one chip for each applied service type, language, date and group size, then a "Clear filters" link. The prefecture and the keyword have no chip. A click on the x of a chip removes that value, sets `page` to 1 and keeps everything else. On a phone the chips stay in one line that scrolls sideways.** | A prefecture chip. No chips. | Owner ruling (Option A, without a prefecture chip). The title and the breadcrumb already show the prefecture, and "Clear filters" keeps it. |
+| 29 | **Chip labels: the service type name, the language name, the date as `1 Jun 2026`, and the group size as `4 people` (`1 person` for one). The date label is built from the parts of `YYYY-MM-DD`, with no time zone math.** | Show the raw value `2026-06-01` | Plain words are easier to read. The date is a calendar day, so it has no time zone. **Added point, please review.** |
+| 30 | **The Filters button shows a badge with the number of chips. The badge is hidden when the number is 0.** | Show a dot only | Owner ruling (Option A). The tourist sees how many filters are on. **The count rule is an added point, please review.** |
+| 31 | **The Apply button says "Apply". The footer with Reset (a link) and Apply stays in view while the panel scrolls.** | "Show {n} services" | Owner ruling. It needs no extra API call. |
+| 32 | **Each pill is a visually hidden checkbox with a label that looks like a pill. A checked pill uses the primary color. A group is a `fieldset` with a `legend`. The keyboard works as for any checkbox: Tab moves, Space toggles.** | Buttons with `aria-pressed` | A real checkbox gives correct screen reader and form behavior for free. **Added point, please review.** |
+| 33 | **The pill group is a generic field in `app/components/forms/pill-group-field.jsx`. It has no domain words. The filter form uses it, and no longer imports `ProvidersProfileCheckboxGroupField` from the providers-profile domain. The provider forms stay as they are.** | Keep the cross-domain import | Owner ruling: make the checkbox group generic. |
+| 34 | **The filter chips are domain code (they know the service type and language names). They live in `app/domains/catalog-listing/catalog-listing-discover-filter-chips.jsx`, not in `app/components/`.** | A generic chip row in `app/components/` | Owner convention: domain components stay in their domain. |
+| 35 | **Other domain code that already sits in `app/components/` (for example `components/tourist/tourist-empty-state.jsx`) is not moved in this item. This item only changes the copy and the link of that empty state. A separate issue lists those files.** | Move them now | Owner ruling. It keeps this item focused. |
 
 ## API contract
 
@@ -130,35 +141,53 @@ The route order matters: `listings` and `listings/:listingSlug` do not clash. Re
 
 ### Layout (text sketch)
 
-Scope page:
+Scope page, wide screen:
 
 ```
-Home > Kanto > Tokyo                         (breadcrumb)
-Tokyo                                        (h1)
-24 services                                  (result count)
-[ (search) Search services   x ]  [Filters]  [Sort: Recently added v]
-Clear filters                                (only when a filter is on)
+Home > Kanto > Tokyo                                  (breadcrumb)
+Tokyo                                      24 services
+[ (search) Search by name, place or provider   x ] [ Filters (3) ] [ Sort: Recently added v ]
+(English x) (Charter bus x) (Tour guide x)    Clear filters     (only when a filter is on)
 +----------+ +----------+ +----------+
-| card     | | card     | | card     |      (3 columns on desktop)
+| card     | | card     | | card     |                (3 columns on desktop)
 +----------+ +----------+ +----------+
-< 1 2 3 >                                    (pagination)
+< 1 2 3 >                                             (pagination)
 ```
 
-Filters panel (side panel from the right):
+Scope page, phone:
 
 ```
-Filters                                  [x]
-Prefecture      [ All of Kanto        v ]    (region and prefecture pages only)
-Service type    [ ] Private car transfer
-                [ ] Charter bus
-                [ ] Tour guide
-                [ ] Tour guide + driver
-Language        [ ] English  [ ] Japanese  [ ] Chinese
-                [ ] Korean   [ ] Spanish   [ ] Other
-Service date    [ yyyy-mm-dd ]
-Group size      [ 4 ]
-[ Apply ]  [ Reset ]
+Home > Kanto
+Kanto
+24 services
+[ (search) Search ...        x ]
+[ Filters (3) ]   [ Sort v ]
+(English x) (Charter bus x) ->                        (one line, scrolls sideways)
++--------------------+
+| card               |                                (1 column)
++--------------------+
 ```
+
+Filters panel (side panel from the right, full height on a phone):
+
+```
+Filters                                       [x]
+Prefecture                                          (region and prefecture pages only)
+[ All of Kanto                              v ]
+
+Service type
+(Private car transfer) (Charter bus) (Tour guide) (Tour guide + driver)
+
+Language
+(English) (Japanese) (Chinese) (Korean) (Spanish) (Other)
+
+Trip details
+Service date [ yyyy-mm-dd ]   Group size [ 4 ]
+----------------------------------------------------
+Reset                                    [  Apply  ]    (stays in view)
+```
+
+A pill that is on uses the primary color. A pill that is off has an outline.
 
 States:
 
@@ -190,11 +219,14 @@ Domain:
 
 - `app/domains/catalog-listing/catalog-listing-constant.js`: paths, the keyword pause, the sort labels, the query key whitelist, the copy. Remove the price keys.
 - `app/domains/catalog-listing/catalog-listing-service.js`: scope paths, search param builders and sanitizer, the sort mapping, canonical and robots helpers. Remove the district and area builders and the stale redirect helpers.
-- `app/domains/catalog-listing/catalog-listing-discover-toolbar.jsx`: the keyword field.
-- `app/domains/catalog-listing/catalog-listing-discover-filter-form.jsx` and `catalog-listing-discover-filter-schema.js`: checkbox groups, prefecture select, no price.
+- `app/domains/catalog-listing/catalog-listing-discover-toolbar.jsx`: the one-row toolbar with the keyword field, the Filters button with its badge, and the chips row (decisions 26 to 30).
+- `app/domains/catalog-listing/catalog-listing-discover-filter-chips.jsx` (new): the chips row (decisions 28, 29 and 34).
+- `app/domains/catalog-listing/catalog-listing-discover-filter-form.jsx` and `catalog-listing-discover-filter-schema.js`: the sections with headings, pill groups, prefecture select, the footer that stays in view, no price (decisions 11, 31 to 33).
+- `app/components/forms/pill-group-field.jsx` (new): the generic pill group (decision 33).
 - `app/domains/catalog-listing/catalog-listing-discover-sort-control.jsx`: two options.
 - `app/domains/catalog-listing/catalog-listing-list-view.jsx`: card links use the slug.
-- `app/domains/catalog-listing/catalog-geography-nav.jsx`, `catalog-area-list-view.jsx`, `catalog-district-list-view.jsx` and the three near-me files: delete.
+- `app/domains/catalog-listing/catalog-geography-nav.jsx`, `catalog-area-list-view.jsx` and the three near-me files: delete.
+- `app/domains/catalog-listing/catalog-district-list-view.jsx`: keep. Its link uses the old district URL until #152 (decision 22).
 - `app/domains/bookings-booking/bookings-booking-service.js`: keep `listingResolverPath`.
 
 Other links:
@@ -223,6 +255,8 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 - Slug history, and redirects from an old draft slug.
 - A page size choice.
 - The update of `tourist-listings-ui.pen`.
+- A result count on the Apply button.
+- A change to other domain code in `app/components/` (decision 35).
 - A change to the booking pages, except the links to `/listings`.
 
 ## Tasks
@@ -233,7 +267,10 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 - [ ] Add the path builders, the param sanitizer and the search param builders, with specs.
 - [ ] Build the scope page and register the three routes.
 - [ ] Build the keyword field with the pause, the clear button and the word limit message.
-- [ ] Rebuild the Filters panel: checkbox groups, prefecture select, no price. Update the schema.
+- [ ] Rebuild the Filters panel: sections with headings, pill groups, prefecture select, a footer that stays in view, no price. Update the schema.
+- [ ] Add the generic pill group field in `app/components/forms/`, with its spec.
+- [ ] Rebuild the toolbar as one row, with the Filters badge, and remove the helper text.
+- [ ] Add the filter chips row with its spec.
 - [ ] Update the sort control: two options, new label.
 - [ ] Add the breadcrumb, the title and the result count.
 - [ ] Add the empty, not found and error states, and the out of range page retry.
@@ -248,6 +285,7 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 
 - [ ] Set spec `status: implemented` after merge
 - [ ] Update `tourist-listings-ui.pen` (separate follow-up, decision 25)
+- [ ] Open the issue for the domain code that sits in `app/components/` (decision 35)
 
 ## Acceptance criteria
 
@@ -260,6 +298,16 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 - [ ] Two service types in the URL show the listings that match either type. Service type and language together narrow the result.
 - [ ] The prefecture select lists only the prefectures of the current region. Applying it goes to the prefecture URL and keeps the keyword, the filters and the sort.
 - [ ] "Reset" and "Clear filters" keep the prefecture, the keyword and the sort.
+- [ ] The toolbar is one row on a wide screen. On a phone, the search field is full width and Filters and Sort sit side by side.
+- [ ] The Filters button shows the number of applied filters, and no badge when there is none.
+- [ ] A chip shows for each applied service type, language, date and group size. The prefecture and the keyword have no chip.
+- [ ] The x on a chip removes that one value and keeps the rest. It sets the page to 1.
+- [ ] "Clear filters" is next to the chips and clears the four filters.
+- [ ] The panel has the sections Prefecture, Service type, Language and Trip details, each with a heading.
+- [ ] The service type and language pills work with the keyboard and a screen reader as checkboxes.
+- [ ] The Apply button says "Apply", and Reset and Apply stay in view when the panel scrolls.
+- [ ] The filter form does not import a component from the providers-profile domain.
+- [ ] This item adds no domain code to `app/components/`. The pill group has no domain words. The only change to `tourist-empty-state.jsx` is its copy and its link.
 - [ ] The sort control has "Recently added" and "Top rated". "Recently added" is the default and leaves the URL clean.
 - [ ] The web never sends `vehicle_type`, `min_price`, `max_price`, `price_min` or `price_max`.
 - [ ] A hand-edited URL with a bad value does not break the page.
@@ -293,3 +341,4 @@ npm run build
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
 | 2026-10-24 | principal developer | Approved in chat. The author confirmed the rulings in decisions 10 to 17, 18, 19, 21, 22 and 25, and the added points (one page module, regions call, 404 retry, URL sanitizer, keyword limits, shared redirect module, near-me API client). The wireframe was not checked. |
+| 2026-10-24 | principal developer | Change requested in chat after the owner reviewed the filter bar. Layout chosen from a static HTML mock: Option A (one toolbar row, filter chips, pill panel). Owner answers: the button says "Apply"; no prefecture chip; make the checkbox group generic; list the other `app/components` files in a separate issue. Decisions 10, 11, 22 and 25 changed, and 26 to 35 are new. Approved in chat on the same day. |
