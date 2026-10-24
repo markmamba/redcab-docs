@@ -4,7 +4,7 @@ sidebar_label: Web · Search helpers and keyword hook
 issue: "https://github.com/markmamba/red-cab-web/issues/164"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: PLATFORM
 related:
