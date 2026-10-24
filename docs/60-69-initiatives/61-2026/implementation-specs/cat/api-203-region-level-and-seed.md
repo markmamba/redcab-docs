@@ -4,7 +4,7 @@ sidebar_label: API · Region level
 issue: "https://github.com/markmamba/red-cab-api/issues/203"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
