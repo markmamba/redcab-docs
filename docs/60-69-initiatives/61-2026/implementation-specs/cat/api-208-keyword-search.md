@@ -4,7 +4,7 @@ sidebar_label: API · Keyword search
 issue: "https://github.com/markmamba/red-cab-api/issues/208"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
