@@ -4,7 +4,7 @@ sidebar_label: API · Keyword search
 issue: "https://github.com/markmamba/red-cab-api/issues/208"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -150,11 +150,32 @@ bin/brakeman --no-pager
 
 ## Performance record
 
-Fill this section during the code work.
+Setup: a scratch database with 10,000 discoverable listings, about 15,000 additional destinations and 200 providers. PostgreSQL 17.4 on a local machine. The query cache was off. The scratch database is dropped. The code is in red-cab-api#222.
+
+Each time is the whole request in the manager: validation, the count query, the page query (10 rows) and the card price quotes. The table shows the median of 15 runs and the slowest run.
 
 | Date | Listings | Query | Plan | Time | Result |
 | --- | --- | --- | --- | --- | --- |
-| | | | | | |
+| 2026-10-24 | 10,000 | No keyword (baseline) | Index scan on `recently_added`, page stops early | 9.2 ms median, 21.9 ms max | Reference |
+| 2026-10-24 | 10,000 | "tour" (1,017 matches) | Count: merge join with photos and pricing policies. Page: `recently_added` index, stops after 11 matches. | 28.9 ms median, 36.2 ms max | Pass |
+| 2026-10-24 | 10,000 | "kanagawa" (548 matches) | Same shape. The destination name is checked with `EXISTS`. | 27.3 ms median, 35.3 ms max | Pass |
+| 2026-10-24 | 10,000 | "sakura coach" (257 matches, provider) | Same shape. The provider name is checked with `EXISTS`. | 37.5 ms median, 41.7 ms max | Pass |
+| 2026-10-24 | 10,000 | "zzzzz" (0 matches, full scan) | Count reads every listing. The page query finds no row. | 40.6 ms median, 42.3 ms max | Pass |
+| 2026-10-24 | 10,000 | 5 common words (14 matches, worst case) | Count: sequential scan of `catalog_listings`, 50.9 ms execution. Page: `recently_added` index, 29.9 ms execution. | 60.9 ms median, 64.0 ms max | Pass |
+| 2026-10-24 | 10,000 | Region Kanto + "tour" (331 matches) | Same shape, with the scope condition | 21.8 ms median, 25.8 ms max | Pass |
+| 2026-10-24 | 10,000 | Page 50 + "tour" | Same shape, deeper offset | 39.1 ms median, 41.0 ms max | Pass |
+
+Decision:
+
+- The slowest case is 61 ms, below the limit of 100 ms in decision 9. `ILIKE` stays, and the slice adds no `pg_trgm` index.
+- `ILIKE '%word%'` cannot use a B-tree index. The count query reads every listing, so the time grows with the number of listings.
+- At about 15,000 listings, the 5-word case would pass 100 ms. At that size, add `pg_trgm` GIN indexes on the searched columns and measure again.
+- The count and the page both run the keyword condition. This is the cost of `meta.count`.
+
+How to read the numbers:
+
+- `EXPLAIN (ANALYZE, BUFFERS)` with timing on reported 20 to 38 ms for each query. Most of that was the timing overhead of each plan node. The plans were taken again with `TIMING OFF`, and the table above comes from the manager timings.
+- A first run showed about 2 ms for every case. It was wrong, because `rails runner` turns on the query cache. All numbers above were taken with the cache off.
 
 ## Review record
 
