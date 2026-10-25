@@ -4,7 +4,7 @@ sidebar_label: API · Asset holds
 issue: "https://github.com/markmamba/red-cab-api/issues/209"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -158,6 +158,14 @@ Existing endpoints that change:
 - Data step: the migration creates the default packages and seeded schedules.
 - It does not create holds.
 
+## Known limits
+
+- A closure and a new hold made at the same moment can both pass their checks.
+- A schedule edit and a new hold can race the same way.
+- Then a hold exists on a closed day, or outside the new schedule.
+- The owner decided on 2026-10-25 to fix this in red-cab-api#210, with a lock on the asset row.
+- The three pull requests are red-cab-api#226, #227 and #228.
+
 ## Out of scope
 
 - Many packages, timed packages, display prices and filters (release 3).
@@ -186,7 +194,7 @@ Existing endpoints that change:
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after the last pull request merges.
+- [x] Set spec `status: implemented` after the last pull request merges.
 
 ## Acceptance criteria
 
