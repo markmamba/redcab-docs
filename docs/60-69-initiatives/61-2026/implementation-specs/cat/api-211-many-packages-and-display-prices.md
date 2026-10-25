@@ -109,6 +109,7 @@ Each row says who made the decision.
 | 38 | **Added point, please review. In PR 2a the responses stop returning the removed fields.** | Return null for each field. | A field with no source must not stay in the contract. The final list is in "PR 2a changes". |
 | 39 | **Added point, please review. In PR 2a the group size filter of the unscoped marketplace index matches `max_passengers` of an available package.** | Leave it on `base_capacity` until PR 2b. | The scoped index already works this way (red-cab-api#212, decision 14). PR 2b drops `base_capacity`. |
 | 40 | **Added point, please review. PR 2b drops the columns, their index and the foreign key in one migration. It does not restore data.** | A reversible migration that copies the data back. | The data already lives in the packages. |
+| 41 | **Added point, please review. In PR 2a a publish needs at least one active package. The message is "Add at least one package before publishing your listing."** | Let a listing with no package publish and stay hidden. | A create makes no package (decision 37). Without this check, a provider can publish a listing that no tourist can see, with no message. |
 
 ## API contract
 
@@ -168,6 +169,7 @@ The package response:
 - The pricing policy in that response stops returning `base_price_jpy`, `duration_kind` and `duration_minutes`.
 - The marketplace listing detail stops returning `vehicle_category` and `base_capacity`.
 - The listing create and update calls no longer create or change a package.
+- The listing publish call returns 422 when the listing has no active package.
 - The pricing policy keeps `pricing_mode` and the cancellation fields only.
 
 ### PR 2b changes
@@ -201,6 +203,7 @@ PR 2a:
 
 - `db/migrate/…_make_old_listing_fields_nullable.rb`: `base_capacity` and `base_price_jpy` accept null.
 - `app/domains/catalog/listings/providers_{create,update}_{request,validator,manager}.rb`: remove the four fields and their checks.
+- `app/domains/catalog/listings/providers_publish_validator.rb`: check for an active package.
 - `app/domains/catalog/packages/default_package_sync_service.rb` and its callers: remove.
 - `app/domains/catalog/providers_listing_base_serializer.rb` and `providers_listing_pricing_policy_embedded_serializer.rb`: remove the fields.
 - `app/domains/catalog/marketplace_listing_detail_serializer.rb`: remove `vehicle_category` and `base_capacity`.
@@ -214,6 +217,8 @@ PR 2a:
 PR 2b:
 
 - `db/migrate/…_drop_old_listing_fields.rb`: the six columns, the index and the foreign key.
+- `app/domains/catalog/vehicle_categories/kinds_for_service_type_service.rb`: remove it, because no code calls it after PR 2a.
+- `test/domains/catalog/packages/default_packages_data_step_test.rb`: remove it with the old columns.
 - `docs/db/catalog.dbml`: remove the columns and the `removed in: S4` tags.
 - `db/schema.rb` and `docs/db/redcab.dbml`, from the migration.
 
@@ -260,6 +265,7 @@ PR 2b:
 - [ ] Make `base_capacity` and `base_price_jpy` nullable.
 - [ ] Ignore the four old fields in the listing create and update calls.
 - [ ] Remove `DefaultPackageSyncService` and its callers.
+- [ ] Make the publish check need an active package.
 - [ ] Remove the old fields from the provider and marketplace responses.
 - [ ] Make the unscoped marketplace index read the package limit for the group size.
 - [ ] Update the seeders, the test helpers and the Bruno files.
@@ -267,6 +273,7 @@ PR 2b:
 ### API, PR 2b
 
 - [ ] Drop the six columns, the index and the foreign key.
+- [ ] Remove `KindsForServiceTypeService` and the data step test.
 - [ ] Remove the `removed in: S4` tags from `docs/db/catalog.dbml`.
 
 ### Docs
@@ -293,6 +300,7 @@ PR 2b:
 - [ ] PR 2a: no code reads or writes a removed column.
 - [ ] PR 2a: a request with an old field succeeds and the API ignores the field.
 - [ ] PR 2a: a new listing has no package, and a listing save does not change a package.
+- [ ] PR 2a: a listing with no active package cannot publish, and the message says what to do.
 - [ ] PR 2a: the unscoped index group size filter reads the package limit.
 - [ ] PR 2b: the six columns, the index and the foreign key are gone.
 
