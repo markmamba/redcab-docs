@@ -69,13 +69,13 @@ Each row says who made the decision.
 
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
-| 1 | **Owner ruling, 2026-10-25. One spec covers issue #210. The work ships in three pull requests. PR 1: the Bookings migrations, checkout create, materialize, release on payment failure, the expiry job and the asset row lock. PR 2: the service times, the serializers and the payment hold check. PR 3: the availability read endpoint, the date filter, the quote and the listing detail flag.** | Two pull requests. | Smaller pull requests are easier to review. Each one leaves `main` runnable. |
+| 1 | **Owner ruling, 2026-10-25. Amended the same day. One spec covers issue #210. The work ships in two pull requests. PR 1: all of checkout and booking. This includes the Bookings migrations, checkout create, materialize, release, the expiry job, the asset row lock, the service times, the serializers and the payment hold check. PR 2: the read side. This includes the availability read endpoint, the date filter, the quote and the listing detail flag.** | Three pull requests. | New orders have no slot, so the readers and about 51 test files must change in the same pull request to keep `main` runnable. |
 | 2 | **Owner ruling, 2026-10-25. The slot tables, the slot endpoints, the `slot_id` columns and `bookings_seat_allocations` stay until red-cab-api#216. Checkout stops using them.** | Remove them in #210. | The web provider screens for slots still call the slot endpoints until web #155 ships. |
 | 3 | **Owner ruling, 2026-10-25. The slot price override ends with the slots. The quote reads only the package price.** | Keep a per-day price somewhere. | Per-day prices come back with seasonal overrides (red-cab-api#166). No production data exists. |
 | 4 | **Owner ruling, 2026-10-25. The new columns on sessions and orders are nullable. A check rule says a row has a hold or a slot. Red-cab-api#216 drops `slot_id` and sets NOT NULL.** | Delete the old rows, then NOT NULL. | Old rows stay valid. The change is not destructive. |
 | 5 | **Owner ruling, 2026-10-25. Hard cut-over. Checkout and quote accept `package_slug`, `service_date` and `start_time`. They reject `availability_slot_id`. Web #151 and #155 ship in the same release.** | Accept both a slot and a package for a while. | Two booking paths could disagree on availability. No production data exists. |
 | 6 | **Owner ruling, 2026-10-25. The listing detail response adds `is_bookable`. It is false when the listing has no active package with an active pool asset.** | A separate issue. | The Catalog ruling says a direct link shows "currently unavailable". |
-| 7 | **Owner ruling, 2026-10-25. The tourist availability read endpoint ships in #210 as PR 3.** | A separate issue. | It uses the same open-day and hold queries as the date filter. |
+| 7 | **Owner ruling, 2026-10-25. The tourist availability read endpoint ships in #210 as PR 2.** | A separate issue. | It uses the same open-day and hold queries as the date filter. |
 | 8 | **Owner ruling, 2026-10-25. The closure and schedule managers lock the asset row inside their transaction. `HoldAssetService` takes a shared lock on the same row. This fixes the known limit of api-209.** | Leave the race. | A closure and a new hold can no longer pass their checks at the same moment. |
 | 9 | **Added point, please review. The checkout request carries `listing_id`, `package_slug`, `service_date` (`YYYY-MM-DD`), `start_time` (`HH:MM`) and `seats_requested`, plus the fulfillment fields it has today. The package must belong to the listing and be active. `seats_requested` must not exceed `max_passengers`.** | A package id. | The DBML says the server resolves the slug to the package. |
 | 10 | **Added point, please review. The create manager quotes the price, then calls `HoldAssetService` inside the checkout transaction. The Service Timezone comes from the listing. `held_until` equals the session `expires_at`. When the service returns `nil`, the manager raises 422 "This time is no longer available. Please choose another date or time."** | Hold before the quote. | The price never depends on the hold. The guard runs before any write. |
@@ -158,14 +158,14 @@ The path names and the field names are added points, so please review them.
 - [ ] PR 1: add the expiry sweep manager, the job and the schedule.
 - [ ] PR 1: add the asset row lock to the hold service and to the closure and schedule managers.
 - [ ] PR 1: add a concurrency test for two checkouts that race for one asset.
-- [ ] PR 2: change the auto-complete sweep and the complete validator.
-- [ ] PR 2: change the payment hold check.
-- [ ] PR 2: change the serializers and the order managers.
-- [ ] PR 2: update the dev seeders and the completed order factory.
-- [ ] PR 3: add `FreeStartTimesService` and the open dates and start times endpoints.
-- [ ] PR 3: switch the date filter.
-- [ ] PR 3: change the quote to a package and drop the slot override.
-- [ ] PR 3: add `is_bookable` to the listing detail.
+- [ ] PR 1: change the auto-complete sweep and the complete validator.
+- [ ] PR 1: change the payment hold check.
+- [ ] PR 1: change the serializers and the order managers.
+- [ ] PR 1: update the dev seeders and the completed order factory.
+- [ ] PR 2: add `FreeStartTimesService` and the open dates and start times endpoints.
+- [ ] PR 2: switch the date filter.
+- [ ] PR 2: change the quote to a package and drop the slot override.
+- [ ] PR 2: add `is_bookable` to the listing detail.
 - [ ] Update the `ships in: S5` tags in `docs/db/bookings.dbml`.
 
 ### Docs
