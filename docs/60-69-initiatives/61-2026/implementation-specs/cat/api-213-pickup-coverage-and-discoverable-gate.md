@@ -64,7 +64,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | 8 | **Added point, please review. A row must be an `active` node with level `subdivision`, `municipality` or `ward`. A region is rejected.** | Allow any level. | The ruling and the DBML note say so. A city that is not listable is still valid coverage. |
 | 9 | **Added point, please review. The validator rejects a node when an ancestor of it is also in the request. The check reads `path`, not `parent_id`.** | Check only the direct parent. | Tokyo and a ward of Tokyo can have a municipality between them. |
 | 10 | **Added point, please review. The request has no size limit. Duplicates are rejected.** | A limit of 5 like destinations. | No document sets a limit. |
-| 11 | **Added point, please review. A node is covered when `L.path = C.path` or `L.path` starts with `C.path` plus `/`. The service escapes `LIKE` characters.** | Compare `parent_id` chains. | The DBML defines this rule (DP-6c). |
+| 11 | **Added point, please review. A node is covered when `L.path = C.path` or `L.path` starts with `C.path` plus `/`. The query uses `starts_with`, so it needs no escaping.** | Compare `parent_id` chains. | The DBML defines this rule (DP-6c). |
 | 12 | **Added point, please review. The service has two methods: `covered?(listing:, geography:)` and a scope `Catalog::Listing.covering(geography)`.** | Only the first method. | Issue #214 and later lists can use the scope. This issue ships both and uses neither in a booking check. |
 | 13 | **Added point, please review. The pre-fill and the backfill match a label to `name_en` of an active prefecture. The match ignores case and outer spaces.** | Match `name_ja` or a code. | The profile list holds English names such as "Tokyo". |
 | 14 | **Added point, please review. The pre-fill runs inside the create transaction. A repeated label makes one row.** | A job after the create. | The provider sees the rows in the create response. |
@@ -102,20 +102,21 @@ Error text:
 - `db/migrate/{timestamp}_create_catalog_listing_pickup_coverages.rb`
 - `db/migrate/{timestamp}_backfill_catalog_listing_pickup_coverages.rb`
 - `app/domains/catalog/listing_pickup_coverage.rb` (new model)
-- `app/domains/catalog/listing.rb` (association `pickup_coverages`, `discoverable` SQL, scope `covering`)
+- `app/domains/catalog/listing.rb` (association `pickup_coverages`, `discoverable` SQL, scope `covering`, transient `skipped_prefectures`)
 - `app/domains/catalog/listings/pickup_coverage_validation.rb` (new)
 - `app/domains/catalog/listings/pickup_coverage_replace_service.rb` (new)
 - `app/domains/catalog/listings/pickup_coverage_prefill_service.rb` (new)
 - `app/domains/catalog/listings/pickup_coverage_match_service.rb` (new, the `covered?` method)
-- `app/domains/catalog/listings/providers_pickup_coverages_{request,validator,manager}.rb` (new, index and replace)
+- `app/domains/catalog/listing_pickup_coverages/providers_{index,replace}_{request,validator,manager}.rb` (new)
 - `app/domains/catalog/listings/providers_create_manager.rb` (pre-fill)
-- `app/domains/catalog/providers_listing_pickup_coverage_serializer.rb` (new)
+- `app/domains/catalog/providers_listing_pickup_coverage_serializer.rb` and `providers_listing_create_serializer.rb` (new)
 - `app/controllers/providers/catalog/listing_pickup_coverages_controller.rb` (new)
 - `app/controllers/providers/catalog/listings_controller.rb` (create response)
 - `config/routes/providers_routes.rb`
 - `app/domains/catalog/geographies/pickup_coverage_merge_service.rb` (new)
 - `app/domains/catalog/geographies/team_archive_validator.rb`, `team_archive_manager.rb`
 - `test/support/catalog_geography_test_helper.rb` and the listing helpers
+- `lib/dev/catalog_marketplace_seeder.rb` (dev listings get coverage)
 - `docs/db/catalog.dbml`, `docs/db/redcab.dbml` (remove `ships in: S6` tags)
 - `db/schema.rb`, `sorbet/rbi/dsl/catalog/*.rbi`
 
