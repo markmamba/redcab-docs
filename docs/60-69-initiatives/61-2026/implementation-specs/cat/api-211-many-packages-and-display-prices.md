@@ -251,7 +251,7 @@ PR 2b:
 - [x] Add the pool fit validation.
 - [x] Add the slug service.
 - [x] Call the refresh service from the package, asset, listing create and listing update paths.
-- [ ] Add a test that every write path calls the refresh service.
+- [x] Add a test that every write path calls the refresh service.
 - [x] Make the listing update manager call `DefaultPackageSyncService` only for a listing with one package.
 - [x] Add `display_price_jpy` to the listing detail packages.
 - [x] Make both indexes read `starting_price_jpy`.
@@ -262,19 +262,19 @@ PR 2b:
 ### API, PR 2a
 
 - [x] Amend this spec with the final list of removed fields before code.
-- [ ] Make `base_capacity` and `base_price_jpy` nullable.
-- [ ] Ignore the four old fields in the listing create and update calls.
-- [ ] Remove `DefaultPackageSyncService` and its callers.
-- [ ] Make the publish check need an active package.
-- [ ] Remove the old fields from the provider and marketplace responses.
-- [ ] Make the unscoped marketplace index read the package limit for the group size.
-- [ ] Update the seeders, the test helpers and the Bruno files.
+- [x] Make `base_capacity` and `base_price_jpy` nullable.
+- [x] Ignore the four old fields in the listing create and update calls.
+- [x] Remove `DefaultPackageSyncService` and its callers.
+- [x] Make the publish check need an active package.
+- [x] Remove the old fields from the provider and marketplace responses.
+- [x] Make the unscoped marketplace index read the package limit for the group size.
+- [x] Update the seeders, the test helpers and the Bruno files.
 
 ### API, PR 2b
 
-- [ ] Drop the six columns, the index and the foreign key.
-- [ ] Remove `KindsForServiceTypeService` and the data step test.
-- [ ] Remove the `removed in: S4` tags from `docs/db/catalog.dbml`.
+- [x] Drop the six columns, the index and the foreign key.
+- [x] Remove `KindsForServiceTypeService` and the data step test.
+- [x] Remove the `removed in: S4` tags from `docs/db/catalog.dbml`.
 
 ### Docs
 
@@ -288,7 +288,7 @@ PR 2b:
 - [x] A package whose vehicle category differs from a pool asset is rejected.
 - [ ] A timed package saves with a buffer, and a full-day package ignores the buffer.
 - [ ] The display prices change in the same transaction as the package change.
-- [ ] A test shows that every package write path calls the refresh service.
+- [x] A test shows that every package write path calls the refresh service.
 - [x] The starting price is the lowest display price of an available package.
 - [x] A package with no active pool asset has an empty display price.
 - [x] Checkout takes `package_slug`, never a price, and it picks the right package on a listing with many.
@@ -297,12 +297,12 @@ PR 2b:
 - [ ] A change to a package does not change a live hold or a confirmed booking.
 - [x] Integration test: `test/controllers/providers/catalog/listing_packages_controller_test.rb`.
 - [x] No client-side price computation.
-- [ ] PR 2a: no code reads or writes a removed column.
-- [ ] PR 2a: a request with an old field succeeds and the API ignores the field.
-- [ ] PR 2a: a new listing has no package, and a listing save does not change a package.
-- [ ] PR 2a: a listing with no active package cannot publish, and the message says what to do.
-- [ ] PR 2a: the unscoped index group size filter reads the package limit.
-- [ ] PR 2b: the six columns, the index and the foreign key are gone.
+- [x] PR 2a: no code reads or writes a removed column.
+- [x] PR 2a: a request with an old field succeeds and the API ignores the field.
+- [x] PR 2a: a new listing has no package, and a listing save does not change a package.
+- [x] PR 2a: a listing with no active package cannot publish, and the message says what to do.
+- [x] PR 2a: the unscoped index group size filter reads the package limit.
+- [x] PR 2b: the six columns, the index and the foreign key are gone.
 
 ## Verification
 
