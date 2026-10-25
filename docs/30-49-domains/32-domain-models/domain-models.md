@@ -140,7 +140,7 @@ Contexts follow the locked 6 core + 2 supporting baseline. Source-of-truth conce
 ### Aggregates
 - **ProviderAsset** (root: `ProviderAsset` / `provider_assets`)
   - *Purpose:* a Provider-owned physical resource (vehicle or guide) that Slots consume; enforces per-asset overlap (`CON-4`).
-  - *Invariants:* belongs to exactly one Provider; carries `capacity` and `vehicle_category` (PRD taxonomy per Decision Log `AMB-023`); Slots on the same Asset MUST NOT overlap in time.
+  - *Invariants:* belongs to exactly one Provider; carries `capacity` and `vehicle_category` (a code from the reference table `catalog_vehicle_categories`; six categories per the Decision Log, which replace the `AMB-023` set); Slots on the same Asset MUST NOT overlap in time.
   - *Lifecycle:* active → retired (soft); historical Slots/Bookings preserved.
 - **Listing** (root: `Listing`)
   - *Purpose:* a bookable service with type-specific attributes, photos, location, and a reference to its pricing policy.

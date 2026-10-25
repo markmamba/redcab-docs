@@ -37,7 +37,7 @@ Entities and containment match [Domain models](/docs/30-49-domains/domain-models
 - A **Provider** relates to one or more **LicenseRecord** aggregates (number + valid-until) and, on approval, one **SupportTrial**. Approval, checklist outcome, and support-trial start are one transaction; document upload is independent.
 
 ### Catalog & Inventory
-- A **ProviderAsset** belongs to exactly one Provider and carries `license_plate_or_vin`, `capacity`, and `vehicle_category` (PRD taxonomy: Alphard, HiAce, Sedan, Limousine; bus bands 20/40/50).
+- A **ProviderAsset** belongs to exactly one Provider and carries `license_plate_or_vin`, `capacity`, and `vehicle_category` (a code from the reference table `catalog_vehicle_categories`: Sedan, Minivan, Passenger Van, Commuter Van, Microbus, Large Coach Bus).
 - A **Listing** references exactly one **PricingPolicy** and owns its **Photo** entities (the first being the representative thumbnail; ≥1 required to publish, `INV-10`). Publish requires the Provider's Merchant Account verified (`INV-12`).
 - A **PricingPolicy** owns its **PricingTier** (group-size band), **SeasonalOverride**, **ExtraCharge**, and **CancellationPolicyTier** entities (up to 4 cancellation tiers; up to 5 non-overlapping group tiers, `PRC-4`, `C-08`).
 - An **AvailabilitySlot** is bound to exactly one **Asset** (the specific vehicle or guide it consumes) and owns the `available_seats` counter; overlap constraints are **per-Asset** (`CON-4`).

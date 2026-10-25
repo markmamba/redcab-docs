@@ -7,7 +7,7 @@ doc_type: domain-overview
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-23
+last_reviewed: 2026-10-26
 supersedes:
   - The old Catalog overview page
   - The Catalog revamp design notes and schema plan (scratchpad, not published)
@@ -50,6 +50,7 @@ Status: current, approved by the principal developer on 2026-10-18 and 2026-10-2
 | listing | One bookable service of one provider, a row in `catalog_listings`. |
 | package | One sellable option of a listing, a row in `catalog_listing_packages`. It is not a Multi-Day Package (`E-04`). |
 | asset | A vehicle or a guide of one provider, a row in `catalog_provider_assets`. |
+| vehicle category | The type of a vehicle, for example `sedan`. A row in `catalog_vehicle_categories` defines it. |
 | asset hold | One row in `catalog_asset_holds`. It holds one asset for one time range for one booking attempt. |
 | starting price | The lowest price among the available packages of a listing, shown as "From ¥X". |
 | discoverable | A listing that may appear in browse and search. |
@@ -70,6 +71,8 @@ erDiagram
   catalog_listings ||--o{ catalog_listing_packages : "options"
   catalog_listing_packages ||--o{ catalog_package_assets : "pool"
   catalog_provider_assets ||--o{ catalog_package_assets : "in pools"
+  catalog_vehicle_categories ||--o{ catalog_provider_assets : "category"
+  catalog_vehicle_categories ||--o{ catalog_listing_packages : "category"
   catalog_provider_assets ||--o{ catalog_asset_schedules : "works"
   catalog_provider_assets ||--o{ catalog_asset_closures : "closed"
   catalog_provider_assets ||--o{ catalog_asset_holds : "held"
@@ -84,6 +87,7 @@ erDiagram
 | `catalog_listing_pickup_coverages` | Pickup coverage | [Listings and packages](/docs/30-49-domains/catalog/models/listings-and-packages) |
 | `catalog_listing_packages` | The sellable options | [Listings and packages](/docs/30-49-domains/catalog/models/listings-and-packages) |
 | `catalog_pricing_policies` | Pricing mode and cancellation for the listing | [Listings and packages](/docs/30-49-domains/catalog/models/listings-and-packages) |
+| `catalog_vehicle_categories` | The vehicle categories, with names and kind | [Listings and packages](/docs/30-49-domains/catalog/models/listings-and-packages#vehicle-categories) |
 | `catalog_provider_assets` | Vehicles and guides | [Asset availability](/docs/30-49-domains/catalog/models/asset-availability) |
 | `catalog_package_assets` | The asset pool of a package | [Asset availability](/docs/30-49-domains/catalog/models/asset-availability) |
 | `catalog_asset_schedules`, `catalog_asset_closures` | Working days of an asset | [Asset availability](/docs/30-49-domains/catalog/models/asset-availability) |
@@ -124,6 +128,7 @@ Each rule has one section in [Catalog decisions](/docs/30-49-domains/catalog/cat
 | Discoverability completeness | [discoverability-completeness](/docs/30-49-domains/catalog/catalog-decisions/#discoverability-completeness) |
 | Booking confirmation | [booking-confirmation](/docs/30-49-domains/catalog/catalog-decisions/#booking-confirmation) |
 | Packages and pricing policy | [packages-and-pricing-policy](/docs/30-49-domains/catalog/catalog-decisions/#packages-and-pricing-policy) |
+| Vehicle category reference data | [vehicle-category-reference-data](/docs/30-49-domains/catalog/catalog-decisions/#vehicle-category-reference-data) |
 | Asset holds | [asset-holds](/docs/30-49-domains/catalog/catalog-decisions/#asset-holds) |
 | Listing slug | [listing-slug](/docs/30-49-domains/catalog/catalog-decisions/#listing-slug) |
 | Popular destinations and images | [popular-destinations-and-images](/docs/30-49-domains/catalog/catalog-decisions/#popular-destinations-and-images) |
@@ -138,6 +143,7 @@ Each rule has one section in [Catalog decisions](/docs/30-49-domains/catalog/cat
 - Do not accept a price from the client, because pricing authority is singular (`PRC-1`).
 - Do not read the display price columns at checkout, because checkout always quotes again.
 - Do not treat a destination as pickup coverage.
+- Do not hardcode vehicle category codes in new code, because `catalog_vehicle_categories` defines them.
 - Do not add a column that no slice reads, or a derived column with two writers.
 - Do not change a confirmed booking when catalog data changes (`INV-1`).
 - Do not cite the scratchpad or `80-89-legacy` pages as rules.
