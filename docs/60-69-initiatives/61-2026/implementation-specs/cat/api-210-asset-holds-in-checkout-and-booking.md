@@ -4,7 +4,7 @@ sidebar_label: API · Holds in checkout
 issue: "https://github.com/markmamba/red-cab-api/issues/210"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -101,6 +101,7 @@ Each row says who made the decision.
 | 30 | **Added point, please review. The open dates response is `{ "open_dates": ["YYYY-MM-DD"] }`. The start times response is `{ "start_times": ["HH:MM"] }`. The listing id is a uuid or a slug, as on the listing detail.** | A paginated list. | Both lists are short. |
 | 31 | **Added point, please review. `HoldAssetService` and `FreeStartTimesService` share one rule for the blocked range. A hold that has expired but is not released yet still blocks a time, as the database rule does.** | Two copies of the rule. | The web must not offer a time that checkout rejects. |
 | 32 | **Added point, please review. The date filter lists a listing only for a date that is not before today in the Service Timezone of the listing.** | No date check. | The old filter also skipped past slots. |
+| 33 | **Owner ruling, 2026-10-25. The legacy area listings index uses the same date filter as the scoped index.** | Leave the slot-based filter for red-cab-api#216. | The legacy filter would no longer match checkout availability. |
 
 ## API contract
 
@@ -145,6 +146,15 @@ The path names and the field names are added points, so please review them.
 - Concurrency: the exclusion rule decides two checkouts for one asset.
 - The shared lock on the asset row also serializes them against closures and schedule edits.
 
+## Known limits
+
+- A hold that has expired but is not released yet still blocks a time, for at most one sweep cycle of one minute.
+- The concurrency tests share one database connection, so they do not prove true parallel behavior.
+- The row locks are checked by SQL assertions only.
+- The slot tables, the slot endpoints and `bookings_seat_allocations` stay until red-cab-api#216.
+- The rules in `AGENTS.md` about the seat counter are out of date, and red-cab-api#216 should update them.
+- The pull requests are red-cab-api#229 and #230.
+
 ## Out of scope
 
 - Removing the slot tables, the slot endpoints, `bookings_seat_allocations` and the `slot_id` columns (red-cab-api#216).
@@ -178,7 +188,7 @@ The path names and the field names are added points, so please review them.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after the last pull request merges.
+- [x] Set spec `status: implemented` after the last pull request merges.
 
 ## Acceptance criteria
 
