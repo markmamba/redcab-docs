@@ -81,9 +81,11 @@ Each row says who made the decision.
 | 11 | **Added point, please review. `HoldAssetService` takes `held_until` from the caller. Checkout will pass the session expiry, which is 15 minutes today.** | The service picks the time. | The DBML says the hold ends with the checkout session. |
 | 12 | **Added point, please review. The job that releases expired holds ships in red-cab-api#210, because it follows the checkout session expiry.** | Ship the job here. | This spec has no caller for the hold yet. |
 | 13 | **Added point, please review. A closure that hits a live hold, and a schedule change that leaves a live hold outside it, both return 422.** | 409 | Validation errors in this API return 422. |
-| 14 | **Added point, please review. Dates use the Service Timezone of the listing primary prefecture. In this spec all prefectures use `Asia/Tokyo`.** | A timezone column. | The Catalog model uses `Asia/Tokyo` today. |
+| 14 | **Amended on 2026-10-25. The caller passes `service_timezone` to `HoldAssetService`. It comes from the listing geography. Domain code never hardcodes a zone.** | A fixed `Asia/Tokyo` in the service. | The API rules forbid a hardcoded timezone. Each geography already stores its Service Timezone. The first version of this row said all prefectures use `Asia/Tokyo`. |
 | 15 | **Added point, please review. `HoldAssetService` tries each asset of the pool in id order. The exclusion rule rejects an overlap, and the service tries the next asset.** | Lock rows with `SELECT FOR UPDATE`. | The DBML says the rule decides, and no lock is needed. |
 | 16 | **Added point, please review. A listing may have one package that is not archived until slice S4. A validator enforces it.** | No limit. | The issue and the DBML note give this limit. |
+| 17 | **Amended on 2026-10-25. `HoldAssetService` returns `nil` when no pool asset is free. The caller raises "this time is no longer available".** | The service raises the error. | The API rules say a service never raises `Errors::*`. |
+| 18 | **Amended on 2026-10-25. A full-day hold uses only the asset buffer. A timed hold uses the larger value of the asset buffer and the package buffer.** | The larger value of both for every package. | The DBML says a package ignores its own buffer when it is full-day. |
 
 ## API contract
 
@@ -114,7 +116,7 @@ Existing endpoints that change:
 
 | Service | Input | Result |
 | --- | --- | --- |
-| `Catalog::Availability::HoldAssetService` | package, service date, start time, `held_until` | A `held` hold on the first free pool asset. Fails with "this time is no longer available". |
+| `Catalog::Availability::HoldAssetService` | package, service date, start time, `service_timezone`, `held_until` | A `held` hold on the first free pool asset, or `nil` when no pool asset is free. |
 | `Catalog::Availability::ConfirmHoldService` | hold uuid | The hold becomes `confirmed`. It never inserts a second hold. |
 | `Catalog::Availability::ReleaseHoldService` | hold uuid, reason | The hold becomes `released`. A second call changes nothing. |
 
