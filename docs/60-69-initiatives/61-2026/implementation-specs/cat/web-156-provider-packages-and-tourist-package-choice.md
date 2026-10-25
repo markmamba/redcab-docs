@@ -108,6 +108,8 @@ Each row says who made the decision.
 | 38 | **Added point, please review. PR D also removes the Vehicle Category and Base Capacity rows from `catalog-listing-detail-view.jsx`, and the same two lines from `copyText`.** | Keep the rows. | The API no longer returns the fields, so the rows would always show a dash. |
 | 39 | **Added point, please review. PR D removes the vehicle category fetch from the listing create page, because the form no longer uses the categories.** | Keep the fetch. | It saves one API call. |
 | 40 | **Added point, please review. The web has no Publish button, and the edit page is a stub. PR D does not add one. The 422 message "Add at least one package before publishing your listing." has no screen yet. Red-cab-web#176 tracks the button.** | Add a Publish button in PR D. | It is outside this spec. A later issue can cover it. |
+| 41 | **Owner ruling, 2026-10-26. The display currency stays one named constant in the catalog listing domain. The API sends no currency, and it always writes JPY. The box "No hard-coded currency" means no symbol or amount in the code.** | Read a currency from the API. | The API has no currency field yet. |
+| 42 | **Owner ruling, 2026-10-26. The provider listing API returns `service_timezone`, from the primary area. The provider list shows the Updated time in that timezone, not in `Asia/Tokyo`.** | Look up each area in the web. | One field saves one call per listing. |
 
 ## Web contract
 
