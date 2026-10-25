@@ -21,7 +21,7 @@ related:
 - Ships the tourist package choice on the listing page, with the new `package_slug` URL param.
 - Ships the vehicle type and price range filters, the sort Price: low to high, and the filter chips for them.
 - Loads the vehicle categories from the API, and drops the hard-coded codes (red-cab-web#141).
-- Removes the old price, capacity and vehicle fields from the listing form (red-cab-web#127), after red-cab-api#211 PR 2.
+- Removes the old price, capacity and vehicle fields from the listing form (red-cab-web#127), after red-cab-api#211 PR 2a.
 - Ships in four pull requests, A to D.
 - Does NOT add pickup coverage or the booking location (release 4).
 - Does NOT add a price slider, the Most booked sort or seasonal prices.
@@ -69,7 +69,7 @@ Each row says who made the decision.
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
 | 1 | **Owner ruling, 2026-10-26. One spec covers red-cab-web#156, #141 and #127. The work ships in four PRs: A provider screens, B tourist choice, C filters and sort, D listing form cleanup.** | Five PRs, or three PRs. | The parts share files and the API contract. |
-| 2 | **Owner ruling, 2026-10-26. The listing form keeps its old fields until red-cab-api#211 PR 2 lands. PR D removes them.** | Make the API fields optional first. Hide the fields now. | It avoids a circular wait between the API and the web. |
+| 2 | **Owner ruling, 2026-10-26. The listing form keeps its old fields until red-cab-api#211 PR 2a lands. PR D removes them.** | Make the API fields optional first. Hide the fields now. | It avoids a circular wait between the API and the web. |
 | 3 | **Owner ruling, 2026-10-26. A listing card link keeps `min_price`, `max_price` and `passenger_count`.** | Keep only the group size. | The listing page needs the range to mark the packages inside it. |
 | 4 | **Owner ruling, 2026-10-26. Packages live in a "Packages" tab on the provider listing, like the asset tabs.** | A card on the detail page. A separate page. | It follows a pattern that providers know, and release 4 adds a Coverage tab. |
 | 5 | **Owner ruling, 2026-10-26. The pool picker is a checkbox list of the provider's assets. An asset that does not fit is disabled and shows the reason.** | A searchable multi-select. | A provider has few assets, and the reason helps. |

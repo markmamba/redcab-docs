@@ -19,10 +19,13 @@ related:
 - Ships provider endpoints to list, create, change and archive packages, with up to 5 packages for each listing.
 - Ships timed packages with a buffer, and a check that every pool asset fits the package.
 - Ships the display price on each package and the starting price on each listing, with one writer service.
-- Ships in two PRs: PR 1 adds packages and display prices, and PR 2 removes the old columns.
+- Ships in three PRs.
+- PR 1 adds packages and display prices.
+- PR 2a stops using the old fields.
+- PR 2b drops the old columns.
 - Does NOT ship the price filter, the vehicle and group size filters or the price sort (red-cab-api#212).
 - Does NOT change checkout, because it already takes `package_slug`.
-- Breaking change: No in PR 1, and Yes in PR 2 for the old listing and policy fields.
+- Breaking change: No in PR 1 and PR 2b, and Yes in PR 2a for the old fields.
 
 ## Problem
 
@@ -67,7 +70,7 @@ Each row says who made the decision.
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
 | 1 | **Owner ruling. A listing has at most 5 packages that are not archived, and the sixth is rejected.** | No limit. | The Catalog decisions page sets the limit. |
-| 2 | **Owner ruling, 2026-10-25. The issue ships in two PRs. PR 1 adds packages, pools and display prices. PR 2 removes the old columns.** | One PR. Leave the columns to release 5. | Nothing breaks between the two PRs. |
+| 2 | **Owner ruling, 2026-10-25, amended 2026-10-25. The issue ships in three PRs. PR 1 adds packages, pools and display prices. PR 2a stops using the old fields. PR 2b drops the old columns.** | One PR 2 that does both. Leave the columns to release 5. | `db/AGENTS.md` asks for two deploys: stop using a column, then drop it. |
 | 3 | **Owner ruling, 2026-10-25. A provider writes packages through own endpoints under `/providers/catalog/listings/:listing_id/packages`.** | A `packages` list in the listing create and update calls. | Each package saves alone, and the listing form stays small. |
 | 4 | **Owner ruling, 2026-10-25. The request must send `provider_asset_ids`, and the system checks each asset.** | Add all fitting assets by default. | The provider stays in control of the pool. |
 | 5 | **Owner ruling, 2026-10-25. In PR 1 a listing save updates the package through the old fields only while the listing has exactly one package that is not archived.** | Create only. Update only the `default` slug. | The current web form works until red-cab-web#156 ships. |
@@ -95,11 +98,17 @@ Each row says who made the decision.
 | 27 | **Added point, please review. A rake task `catalog:refresh_display_prices` calls the service for every listing after the migration. The migration only adds the columns.** | Copy the quote rules into the migration. | The migration must not hold a second writer. |
 | 28 | **Added point, please review. The refresh service has two entry points: one for a listing, and one for a provider asset that finds all listings that use the asset.** | Each manager finds the listings. | One class stays the only writer. |
 | 29 | **Added point, please review. Managers lock the listing row before they count packages.** | No lock. | Two parallel saves must not pass the limit of 5. |
-| 30 | **Added point, please review. PR 2 starts only after red-cab-api#212 and red-cab-web#156 merge.** | Start PR 2 at once. | The group size filter and the provider form read the old columns until then. |
+| 30 | **Added point, please review, amended 2026-10-25. PR 2a starts after red-cab-api#212 and PR C of red-cab-web#156 merge. PR 2b starts only after red-cab-web#156 merges.** | PR 2 waits for all of red-cab-web#156. | The web spec makes PR D wait for the API, so PR 2 cannot wait for PR D. PR 2b is the only step that breaks a reader of a column. |
 | 31 | **Added point, please review. The package responses have no `data` wrapper. A list uses `paginate_and_render` and the key `catalog_listing_packages`.** | A `{ data: … }` wrapper. | The other provider endpoints render the serializer directly. |
 | 32 | **Added point, please review. The listing update manager owns the guard of decision 5. It calls `DefaultPackageSyncService` only when the listing has one package that is not archived.** | Put the guard inside the service. | A listing with no package gets no new default package on update. |
 | 33 | **Added point, please review. A listing in an index with an empty `starting_price_jpy` makes the index return 422 with the message "This service has no package."** | Skip the listing. | A silent skip would hide a missing backfill. |
 | 34 | **Added point, please review. The commission rate test of the old index is replaced, because the index no longer quotes.** | Keep the test. | The index does not read the commission rate any more. |
+| 35 | **Added point, please review. PR 2a makes `catalog_listings.base_capacity` and `catalog_pricing_policies.base_price_jpy` nullable.** | Drop them in PR 2a. | The code stops writing both columns, and both are NOT NULL today. |
+| 36 | **Added point, please review. In PR 2a a request that still sends a removed field is not an error. The API ignores the field.** | Return 422 for a removed field. | The old web form still sends the fields until PR D ships. |
+| 37 | **Added point, please review. In PR 2a a listing create or update never creates or changes a package. `DefaultPackageSyncService` is removed.** | Keep the sync for a listing with one package. | The listing has no price or capacity to sync. A new listing has no package until the provider adds one. |
+| 38 | **Added point, please review. In PR 2a the responses stop returning the removed fields.** | Return null for each field. | A field with no source must not stay in the contract. The final list is in "PR 2a changes". |
+| 39 | **Added point, please review. In PR 2a the group size filter of the unscoped marketplace index matches `max_passengers` of an available package.** | Leave it on `base_capacity` until PR 2b. | The scoped index already works this way (red-cab-api#212, decision 14). PR 2b drops `base_capacity`. |
+| 40 | **Added point, please review. PR 2b drops the columns, their index and the foreign key in one migration. It does not restore data.** | A reversible migration that copies the data back. | The data already lives in the packages. |
 
 ## API contract
 
@@ -152,11 +161,21 @@ The package response:
 - It takes `package_slug`, and the server finds an active package of the listing.
 - A test proves it picks the right package when the listing has many.
 
-### PR 2 changes
+### PR 2a changes
 
-- The listing create and update calls stop accepting `base_price_jpy`, `base_capacity`, `vehicle_category` and `primary_provider_asset_id`.
+- The listing create and update calls ignore `base_price_jpy`, `base_capacity`, `vehicle_category` and `primary_provider_asset_id`.
+- The provider listing response stops returning `base_capacity`, `vehicle_category` and `primary_provider_asset_uuid`.
+- The pricing policy in that response stops returning `base_price_jpy`, `duration_kind` and `duration_minutes`.
+- The marketplace listing detail stops returning `vehicle_category` and `base_capacity`.
+- The listing create and update calls no longer create or change a package.
 - The pricing policy keeps `pricing_mode` and the cancellation fields only.
-- The provider listing response stops returning the removed fields.
+
+### PR 2b changes
+
+- A migration drops the removed columns, their index and the foreign key.
+- The columns are `catalog_listings.base_capacity`, `vehicle_category` and `primary_provider_asset_id`.
+- The columns are also `catalog_pricing_policies.base_price_jpy`, `duration_kind` and `duration_minutes`.
+- No API contract changes, because PR 2a already removed every read.
 
 ### Files to create or modify (API)
 
@@ -178,13 +197,25 @@ PR 1:
 - `lib/tasks/catalog.rake`: the backfill task.
 - `docs/api/providers/…`: Bruno files for the three endpoints.
 
-PR 2:
+PR 2a:
 
-- A migration that drops the old columns and indexes.
+- `db/migrate/…_make_old_listing_fields_nullable.rb`: `base_capacity` and `base_price_jpy` accept null.
+- `app/domains/catalog/listings/providers_{create,update}_{request,validator,manager}.rb`: remove the four fields and their checks.
+- `app/domains/catalog/packages/default_package_sync_service.rb` and its callers: remove.
+- `app/domains/catalog/providers_listing_base_serializer.rb` and `providers_listing_pricing_policy_embedded_serializer.rb`: remove the fields.
+- `app/domains/catalog/marketplace_listing_detail_serializer.rb`: remove `vehicle_category` and `base_capacity`.
+- `app/domains/catalog/listings/marketplace_index_manager.rb`: read `max_passengers` of an available package.
+- `app/domains/catalog/listing.rb`, `provider_asset.rb` and `pricing_policy.rb`: remove the primary asset association and the duration enum.
+- The `includes(:primary_provider_asset)` calls in the provider listing managers.
+- `lib/dev/catalog_marketplace_seeder.rb`, `lib/dev/test_accounts_seeder.rb` and the test helpers.
+- `docs/api/providers/catalog/listings/…`: Bruno files without the removed fields.
+- `docs/db/catalog.dbml`: note that the code no longer uses the columns.
+
+PR 2b:
+
+- `db/migrate/…_drop_old_listing_fields.rb`: the six columns, the index and the foreign key.
 - `docs/db/catalog.dbml`: remove the columns and the `removed in: S4` tags.
-- `DefaultPackageSyncService` and its callers.
-- The listing and policy requests, validators, managers and serializers.
-- `lib/dev/catalog_marketplace_seeder.rb` and the test helpers.
+- `db/schema.rb` and `docs/db/redcab.dbml`, from the migration.
 
 ## Data / domain touchpoints
 
@@ -223,16 +254,24 @@ PR 2:
 - [x] Add the Bruno files.
 - [x] Remove the `ships in: S4` tags of the two columns from `docs/db/catalog.dbml`.
 
-### API, PR 2
+### API, PR 2a
 
-- [ ] Amend this spec with the final list of removed fields before code.
-- [ ] Drop the old columns and indexes, and remove the `removed in: S4` tags.
-- [ ] Remove `DefaultPackageSyncService` and the old fields from the listing requests.
-- [ ] Update the seeder, the test helpers and the Bruno files.
+- [x] Amend this spec with the final list of removed fields before code.
+- [ ] Make `base_capacity` and `base_price_jpy` nullable.
+- [ ] Ignore the four old fields in the listing create and update calls.
+- [ ] Remove `DefaultPackageSyncService` and its callers.
+- [ ] Remove the old fields from the provider and marketplace responses.
+- [ ] Make the unscoped marketplace index read the package limit for the group size.
+- [ ] Update the seeders, the test helpers and the Bruno files.
+
+### API, PR 2b
+
+- [ ] Drop the six columns, the index and the foreign key.
+- [ ] Remove the `removed in: S4` tags from `docs/db/catalog.dbml`.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after PR 2 merges.
+- [ ] Set spec `status: implemented` after PR 2b merges.
 
 ## Acceptance criteria
 
@@ -251,8 +290,11 @@ PR 2:
 - [ ] A change to a package does not change a live hold or a confirmed booking.
 - [x] Integration test: `test/controllers/providers/catalog/listing_packages_controller_test.rb`.
 - [x] No client-side price computation.
-- [ ] PR 2: no code reads a removed column.
-- [ ] PR 2: the old request fields follow the rule in the amended spec.
+- [ ] PR 2a: no code reads or writes a removed column.
+- [ ] PR 2a: a request with an old field succeeds and the API ignores the field.
+- [ ] PR 2a: a new listing has no package, and a listing save does not change a package.
+- [ ] PR 2a: the unscoped index group size filter reads the package limit.
+- [ ] PR 2b: the six columns, the index and the foreign key are gone.
 
 ## Verification
 
