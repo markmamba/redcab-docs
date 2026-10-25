@@ -7,7 +7,7 @@ doc_type: domain-decisions
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-24
+last_reviewed: 2026-10-26
 supersedes:
   - FR-CAT-003 (partial)
   - FR-CAT-004 (partial)
@@ -255,6 +255,28 @@ A package is one sellable option of a listing.
 - Replaces: one price for each listing in `PRC-2`.
 - Structure: [Listings and packages model](/docs/30-49-domains/catalog/models/listings-and-packages).
 - Record: [Packages sit under one shared pricing policy](/docs/30-49-domains/catalog/architecture-decisions/packages-and-pricing-policy).
+
+## Vehicle category reference data \{#vehicle-category-reference-data\}
+
+A vehicle category is reference data, and the table `catalog_vehicle_categories` defines it.
+
+- The six categories are `sedan`, `minivan`, `passenger_van`, `commuter_van`, `microbus` and `large_coach_bus`.
+- The product owner chose them on 2026-10-26, and they replace the seven PRD categories of `AMB-023`.
+- Each category has a unique `code`, a name in English and in Japanese, a kind and a status.
+- The kind is `private_car` or `charter_bus`.
+- An asset and a package keep the code, and a foreign key points to the table.
+- A guide asset and a guide-only package have no category.
+- Sedan, Minivan and Passenger Van have the kind `private_car`.
+- Commuter Van, Microbus and Large Coach Bus have the kind `charter_bus`.
+- A private car provider and a tour guide plus driver use the kind `private_car`.
+- A charter bus operator uses the kind `charter_bus`.
+- A category with the status `archived` stays valid on the rows that use it.
+- A list of categories hides an archived category, so no new row can pick it.
+- Developers seed and change the table, and the API only reads it.
+- Why: a new category or label must not need a deploy.
+- Replaces: the storage clause of `AMB-023`, which put the codes in application code.
+- Structure: [Listings and packages model](/docs/30-49-domains/catalog/models/listings-and-packages#vehicle-categories).
+- Record: [Vehicle categories are reference data](/docs/30-49-domains/catalog/architecture-decisions/vehicle-categories).
 
 ## Asset holds \{#asset-holds\}
 

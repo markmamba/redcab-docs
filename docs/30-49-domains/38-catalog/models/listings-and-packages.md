@@ -7,7 +7,7 @@ doc_type: model-spec
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-23
+last_reviewed: 2026-10-26
 supersedes:
   - FR-CAT-033 (partial)
   - PRC-2 (one policy for each listing)
@@ -42,6 +42,7 @@ This is the model page for listings, destinations, coverage and packages, and ru
 | package | One sellable option of a listing, a row in `catalog_listing_packages`. It is not a Multi-Day Package (`E-04`). |
 | pricing policy | The one row in `catalog_pricing_policies` for a listing. It holds pricing mode and cancellation. |
 | asset pool | The assets a package can use, as rows in `catalog_package_assets`. |
+| vehicle category | The type of a vehicle. A row in `catalog_vehicle_categories` defines it, and the `code` is the link. |
 | display price | A stored price for filter, sort and the card. It is never the charged price. |
 | pickup coverage | The places where a provider picks up tourists, as rows in `catalog_listing_pickup_coverages`. |
 | discoverable | A listing that may appear in browse and search. |
@@ -108,7 +109,7 @@ The table `catalog_listing_packages` has one row for each sellable option.
 | `start_interval_minutes` | The step between start times, for example 30. |
 | `buffer_minutes` | Free minutes after a timed job. Empty means 0. |
 | `max_passengers` | The passenger limit, driver excluded. It cannot exceed the capacity of any pool asset. |
-| `vehicle_category` | The vehicle category. Every vehicle in the pool has it. |
+| `vehicle_category` | The code of the vehicle category. Every vehicle in the pool has it. A foreign key points to `catalog_vehicle_categories.code`. |
 | `base_price_jpy` | The rate that the quote reads. It is never the displayed or charged price. |
 | `display_price_jpy` | The stored display price. |
 | `status` | `active`, `inactive` or `archived`. |
@@ -132,6 +133,41 @@ The DBML Project note holds the CHECK rules of the package.
     - catalog_listing_packages: CHECK (buffer_minutes IS NULL OR buffer_minutes >= 0)     -- B-7 (ships in: S5)
     - catalog_listing_packages: CHECK (max_passengers >= 1)                               -- DP-7c (ships in: S5)
 ```
+
+## Vehicle categories \{#vehicle-categories\}
+
+The table `catalog_vehicle_categories` has one row for each vehicle category.
+
+| Column | Meaning |
+| --- | --- |
+| `code` | The stable code, for example `commuter_van`. It is unique, and assets and packages point to it. |
+| `name_en`, `name_ja` | The names that the clients show. |
+| `kind` | `private_car` or `charter_bus`. It decides which provider type may use the category. |
+| `display_order` | The order in a list. |
+| `status` | `active` or `archived`. |
+
+| Rule | Applies to | Example |
+| --- | --- | --- |
+| A vehicle asset and a package keep the `code` of a category. | provider save | A van has `commuter_van`. |
+| A guide asset and a guide-only package have no category. | provider save | A guide named Kenji has an empty category. |
+| A private car provider and a tour guide plus driver use the kind `private_car`. | provider save | A Microbus is rejected for a private car provider. |
+| A charter bus operator uses the kind `charter_bus`. | provider save | A Sedan is rejected for a bus operator. |
+| An archived category stays valid on the rows that use it. | always | An old van keeps its category. |
+| A list of categories hides an archived category. | provider save | A new package cannot pick it. |
+| Developers seed the table, and the API only reads it. | always | A new category is a data change. |
+
+The six categories of the product owner are the seed.
+
+The Japanese names are proposed and need review.
+
+| Code | Kind | English name | Japanese name |
+| --- | --- | --- | --- |
+| `sedan` | `private_car` | Sedan | セダン |
+| `minivan` | `private_car` | Minivan | ミニバン |
+| `passenger_van` | `private_car` | Passenger Van | パッセンジャーバン |
+| `commuter_van` | `charter_bus` | Commuter Van | コミューターバン |
+| `microbus` | `charter_bus` | Microbus | マイクロバス |
+| `large_coach_bus` | `charter_bus` | Large Coach Bus | 大型観光バス |
 
 ## Price caches \{#price-caches\}
 
