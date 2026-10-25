@@ -148,7 +148,7 @@ The path names and the field names are added points, so please review them.
 
 ## Known limits
 
-- A hold that has expired but is not released yet still blocks a time, for at most one sweep cycle of one minute.
+- An expired hold that is not released yet still blocks a time for up to one minute.
 - The concurrency tests share one database connection, so they do not prove true parallel behavior.
 - The row locks are checked by SQL assertions only.
 - The slot tables, the slot endpoints and `bookings_seat_allocations` stay until red-cab-api#216.
