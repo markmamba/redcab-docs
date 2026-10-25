@@ -4,7 +4,7 @@ sidebar_label: API · Vehicle categories
 issue: "https://github.com/markmamba/red-cab-api/issues/196"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -164,45 +164,45 @@ Error text:
 
 ### API
 
-- [ ] Add the migration that creates the table with the unique `code`.
-- [ ] Add the seed migration with the six rows.
-- [ ] Add the remap migration for the three tables.
-- [ ] Add the foreign key migration for the asset and the package.
-- [ ] Give the foreign keys the restrict and cascade rules, and add one index for each column.
-- [ ] Add `Catalog::VehicleCategory` and the associations.
-- [ ] Add `SeedService` and the two kind services.
-- [ ] Add the two list endpoints with managers, a serializer and routes.
-- [ ] Move the asset, package and listing checks and the vehicle filter to the table.
-- [ ] Remove the three enums and the two repeated lists.
-- [ ] Seed the table in `test/test_helper.rb` and update the tests, helpers and dev seeders.
-- [ ] Add a test that compares the seed migration with the service.
-- [ ] Add a test of the remap map and of the failed foreign key.
-- [ ] Update the DBML files and the Bruno files.
+- [x] Add the migration that creates the table with the unique `code`.
+- [x] Add the seed migration with the six rows.
+- [x] Add the remap migration for the three tables.
+- [x] Add the foreign key migration for the asset and the package.
+- [x] Give the foreign keys the restrict and cascade rules, and add one index for each column.
+- [x] Add `Catalog::VehicleCategory` and the associations.
+- [x] Add `SeedService` and the two kind services.
+- [x] Add the two list endpoints with managers, a serializer and routes.
+- [x] Move the asset, package and listing checks and the vehicle filter to the table.
+- [x] Remove the three enums and the two repeated lists.
+- [x] Seed the table in `test/test_helper.rb` and update the tests, helpers and dev seeders.
+- [x] Add a test that compares the seed migration with the service.
+- [x] Add a test of the remap map and of the failed foreign key.
+- [x] Update the DBML files and the Bruno files.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] The table has the six categories with the kinds and names of the ruling.
-- [ ] The public list returns the active categories in order, with `code`, `name_en`, `name_ja` and `kind`.
-- [ ] The provider list returns only the kinds that the provider type may use.
-- [ ] A tour guide gets an empty provider list.
-- [ ] An asset or a package with an old code is rejected.
-- [ ] A vehicle asset with a category of the wrong kind is rejected.
-- [ ] A listing category of the wrong kind for the service type is rejected.
+- [x] The table has the six categories with the kinds and names of the ruling.
+- [x] The public list returns the active categories in order, with `code`, `name_en`, `name_ja` and `kind`.
+- [x] The provider list returns only the kinds that the provider type may use.
+- [x] A tour guide gets an empty provider list.
+- [x] An asset or a package with an old code is rejected.
+- [x] A vehicle asset with a category of the wrong kind is rejected.
+- [x] A listing category of the wrong kind for the service type is rejected.
 - [ ] A guide asset with a category is rejected.
-- [ ] A new asset or package cannot pick an archived category.
-- [ ] An update that keeps its archived category is valid.
-- [ ] The `vehicle_type` filter accepts every code in the table and rejects the old codes.
-- [ ] The remap keeps the kind of every existing row.
-- [ ] A row with an unmapped code makes the foreign key migration fail.
-- [ ] A category in use cannot be deleted, and a change of a code follows to the assets and packages.
-- [ ] No Rails enum of vehicle category remains.
+- [x] A new asset or package cannot pick an archived category.
+- [x] An update that keeps its archived category is valid.
+- [x] The `vehicle_type` filter accepts every code in the table and rejects the old codes.
+- [x] The remap keeps the kind of every existing row.
+- [x] A row with an unmapped code makes the foreign key migration fail.
+- [x] A category in use cannot be deleted, and a change of a code follows to the assets and packages.
+- [x] No Rails enum of vehicle category remains.
 - [ ] Confirmed bookings do not change.
-- [ ] Integration test: `test/integration/marketplace/catalog/vehicle_categories_integration_test.rb`.
-- [ ] No client-side price computation.
+- [x] Integration test: `test/integration/marketplace/catalog/vehicle_categories_integration_test.rb`.
+- [x] No client-side price computation.
 
 ## Verification
 
