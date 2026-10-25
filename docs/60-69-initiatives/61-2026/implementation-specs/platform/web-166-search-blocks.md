@@ -52,7 +52,7 @@ Evidence:
 | Web | `red-cab-web/app/domains/AGENTS.md` | A domain owns its forms and schemas. |
 | Spec | [web-160 · Components cleanup](./web-160-move-domain-code-out-of-components) | The ESLint rule: no `@/domains` or `@/layouts` import in `app/components/`. |
 | Spec | [web-164 · Search helpers and keyword hook](./web-164-search-helpers-keyword-hook) | The logic with no UI. This spec adds the UI. |
-| Spec | [web-153 · Listing scope pages](./web-153-listing-scope-pages) | Defines the search bar behavior that must not change. |
+| Spec | [web-153 · Listing scope pages](../cat/web-153-listing-scope-pages) | Defines the search bar behavior that must not change. |
 | Issue | [red-cab-web#166](https://github.com/markmamba/red-cab-web/issues/166) | Problem and direction. |
 
 ## Design decisions

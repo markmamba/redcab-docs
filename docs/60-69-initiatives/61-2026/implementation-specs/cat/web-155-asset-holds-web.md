@@ -205,7 +205,7 @@ The Japanese is a draft, and the owner reviews it before approval.
 | `picker.no_free_times` | No free times on this day. Try another day. | この日は予約可能な時間がありません。別の日をお選びください。 |
 | `picker.unavailable` | This service is currently unavailable. | このサービスは現在ご利用いただけません。 |
 | `picker.load_error` | We could not load the times. Please try again. | 予約可能な時間を読み込めませんでした。しばらくしてからもう一度お試しください。 |
-| `checkout.hold_notice` | Your time is held until {time}. | 選択した予約枠は{time}まで確保されています。 |
+| `checkout.hold_notice` | Your time is held until `{time}`. | 選択した予約枠は`{time}`まで確保されています。 |
 | `checkout.hold_unavailable` | This time is no longer available. Please choose another date or time. | 選択した時間は予約できなくなりました。別の日時をお選びください。 |
 | `checkout.hold_expired` | Your time is no longer held. Please book again. | 予約枠の確保期限が切れました。もう一度日時を選択してください。 |
 | `checkout.choose_another_time` | Choose another time | 別の時間を選ぶ |

@@ -48,7 +48,7 @@ Evidence:
 | --- | --- | --- |
 | Web | `red-cab-web/AGENTS.md` | Code style, JSDoc rule, naming of conditions. |
 | Web | `red-cab-web/app/routes/AGENTS.md` | Search, filter and pagination rules. URL params are the source of truth for list state. |
-| Spec | [web-153 · Listing scope pages](./web-153-listing-scope-pages) | Defines the keyword rules this spec moves, including the pause, `replace` and Back and Forward. |
+| Spec | [web-153 · Listing scope pages](../cat/web-153-listing-scope-pages) | Defines the keyword rules this spec moves, including the pause, `replace` and Back and Forward. |
 | Spec | [web-160 · Components cleanup](./web-160-move-domain-code-out-of-components) | The ESLint rule that keeps domain code out of `app/components/`. |
 | Issue | [red-cab-web#164](https://github.com/markmamba/red-cab-web/issues/164) | Problem and direction. |
 
