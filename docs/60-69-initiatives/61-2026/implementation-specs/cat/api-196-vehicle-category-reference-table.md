@@ -83,7 +83,7 @@ Each row says who made the decision.
 | 11 | **Added point, please review. The model is `Catalog::VehicleCategory`. The association on an asset and on a package is `vehicle_category_definition`, with `foreign_key: :vehicle_category` and `primary_key: :code`.** | `vehicle_category` as the association name. | The column already has that name. |
 | 12 | **Added point, please review. Four migrations run in this order: create the table, seed the six rows, remap the old codes on three tables, add two foreign keys.** | One migration. | Each data step has its own migration (`db/AGENTS.md`). |
 | 13 | **Added point, please review. A row that keeps an unmapped code makes the foreign key migration fail.** | Set unmapped codes to empty. | A guard must block, so no row loses its category in silence. |
-| 14 | **Added point, please review. The seed migration uses SQL and a throwaway class. `Catalog::VehicleCategories::SeedService` repeats the rows for tests and development. A test compares the two.** | Call the service from the migration. | It follows api-209 decision 26. A migration must not call app code that may change. |
+| 14 | **Added point, please review. The seed migration and the remap migration use plain SQL. `Catalog::VehicleCategories::SeedService` repeats the rows for tests and development. A test compares the two.** | A throwaway model class. Call the service from the migration. | It follows api-209 decision 26. SQL needs no model class, and a migration must not call app code that may change. |
 | 15 | **Added point, please review. `test/test_helper.rb` seeds the six rows once through the service, because the test database loads `schema.rb` and not the migrations.** | Create rows in each test. | Every catalog test needs the rows. |
 | 16 | **Added point, please review. The public list is `GET /marketplace/catalog/vehicle_categories` with the key `catalog_vehicle_categories`. It has no pagination, like the regions list.** | A paginated list. | There are only a few rows. |
 | 17 | **Added point, please review. An item has `code`, `name_en`, `name_ja` and `kind`. The list is ordered by `display_order`, then `id`, and holds active rows only.** | Include `uuid` and `status`. | The code is the contract. |
@@ -97,6 +97,8 @@ Each row says who made the decision.
 | 25 | **Added point, please review. The three Rails enums are removed, and code reads the table. The predicate methods such as `vehicle_category_sedan?` go away.** | Keep the enums. | They hold the old codes. |
 | 26 | **Added point, please review. The change ships in one PR.** | Two PRs. | The enums cannot go before the table exists. I will propose a split if the diff is too large. |
 | 27 | **Added point, please review. The tests, the dev seeders and the Bruno files that use an old code change to a new code.** | Leave them. | The old codes are invalid. |
+| 28 | **Added point, please review. The two foreign keys use `on_delete: :restrict` and `on_update: :cascade`.** | The Postgres defaults. | The DBML says restrict and cascade. A category in use cannot be deleted, and a rename of a code follows to the assets and packages. |
+| 29 | **Added point, please review. The asset column and the package column each get an index of their own on `vehicle_category`.** | Rely on the composite indexes. | A delete or a rename of a category row checks the child tables by this column alone. |
 
 ## API contract
 
@@ -134,7 +136,7 @@ Error text:
 
 - `db/migrate/{timestamp}_create_catalog_vehicle_categories.rb`, `…_seed_catalog_vehicle_categories.rb`, `…_remap_catalog_vehicle_categories.rb` and `…_add_vehicle_category_foreign_keys.rb`.
 - `app/domains/catalog/vehicle_category.rb`, new.
-- `app/domains/catalog/vehicle_categories/seed_service.rb`, `kinds_for_provider_type_service.rb` and `kind_for_service_type_service.rb`, new.
+- `app/domains/catalog/vehicle_categories/seed_service.rb`, `kinds_for_provider_type_service.rb`, `kinds_for_service_type_service.rb`, `choice_check_service.rb` and `choice_validation.rb`, new.
 - `app/domains/catalog/vehicle_categories/{marketplace,providers}_index_manager.rb`, and a serializer, new.
 - `app/controllers/{marketplace,providers}/catalog/vehicle_categories_controller.rb` and the two route files.
 - `app/domains/catalog/listing.rb`, `listing_package.rb`, `provider_asset.rb`: remove the enums.
@@ -166,6 +168,7 @@ Error text:
 - [ ] Add the seed migration with the six rows.
 - [ ] Add the remap migration for the three tables.
 - [ ] Add the foreign key migration for the asset and the package.
+- [ ] Give the foreign keys the restrict and cascade rules, and add one index for each column.
 - [ ] Add `Catalog::VehicleCategory` and the associations.
 - [ ] Add `SeedService` and the two kind services.
 - [ ] Add the two list endpoints with managers, a serializer and routes.
@@ -195,6 +198,7 @@ Error text:
 - [ ] The `vehicle_type` filter accepts every code in the table and rejects the old codes.
 - [ ] The remap keeps the kind of every existing row.
 - [ ] A row with an unmapped code makes the foreign key migration fail.
+- [ ] A category in use cannot be deleted, and a change of a code follows to the assets and packages.
 - [ ] No Rails enum of vehicle category remains.
 - [ ] Confirmed bookings do not change.
 - [ ] Integration test: `test/integration/marketplace/catalog/vehicle_categories_integration_test.rb`.
