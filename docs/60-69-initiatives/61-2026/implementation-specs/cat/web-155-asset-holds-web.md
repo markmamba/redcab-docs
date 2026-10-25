@@ -4,7 +4,7 @@ sidebar_label: Web · Asset holds
 issue: "https://github.com/markmamba/red-cab-web/issues/155"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -92,7 +92,7 @@ Each row says who made the decision.
 | 20 | **Added point, please review. The closed-day form has a date and an optional reason of up to 255 characters. Each closed day has a Reopen button that deletes it.** | A confirm step. | Reopening is safe and reversible. |
 | 21 | **Added point, please review. The forms send exactly what the provider picked. The server anchors the dates. The web does no timezone math on the write path.** | Convert in the browser. | The web conventions say so. |
 | 22 | **Added point, please review. API errors for a closure or a schedule edit that hits a live hold show under the form as the server message.** | A fixed message. | The server message is already plain English. |
-| 23 | **Added point, please review. The old slot components, the two slot API clients and the slot text on the asset pages are removed in PR 1.** | Keep them. | Nothing uses them. |
+| 23 | **Amended on 2026-10-25. PR 1 removes the slot domain, the provider slot API client and the slot text on the asset pages. PR 2 removes the marketplace slot API client, the slot picker view and the slot service.** | Keep them. | The tourist pages used the marketplace client until PR 2. |
 | 24 | **Added point, please review. The tourist pages show the service time in the timezone of the listing, from the API. No component hardcodes a timezone.** | The browser timezone. | The web rules forbid a hardcoded zone. |
 
 ## Amendments to earlier specs
@@ -100,7 +100,7 @@ Each row says who made the decision.
 | Spec | Rule that changes | New rule |
 | --- | --- | --- |
 | web-56 | Decision 5 and the data note: the handoff carries a listing UUID, a slot UUID and a passenger count | The handoff carries the listing UUID, `package_slug`, `service_date`, `start_time` and the passenger count |
-| web-62 | Decision 3 and "Listing slot selection": a slot picker sets `availability_slot_id` | A calendar and a start time grid set `service_date` and `start_time` |
+| web-62 | Decision 3 and "Listing slot selection": a slot picker sets `availability_slot_id` | A calendar and a start time dropdown set `service_date` and `start_time` |
 | web-62 | Scenario B: a stale slot shows a link to the slot picker | A failed hold shows a link back to the picker with the same day |
 | web-62 | Decision 8: the hold is a seat reservation on a slot | The hold is an asset hold for a package, a date and a start time |
 | web-62 | "Listing: disable Book until the quote matches the slot" | Book needs a day, a time, a loaded quote and a complete profile |
@@ -235,65 +235,65 @@ The provider pages stay in English, as they are today.
 
 ### Planning
 
-- [ ] Get the Japanese copy reviewed.
-- [ ] Set this spec to `status: approved`.
+- [x] Get the Japanese copy reviewed.
+- [x] Set this spec to `status: approved`.
 
 ### PR 1: provider screens
 
-- [ ] Add the schedule and closure API clients and their tests.
-- [ ] Add the schedule and closure domains: schemas, forms, list views and services.
-- [ ] Turn the asset edit page into a layout with three tabs and add the two child routes.
-- [ ] Remove the slot domain, the two slot API clients and the slot text on the asset pages.
-- [ ] Add tests for the schemas, the services and the clients.
+- [x] Add the schedule and closure API clients and their tests.
+- [x] Add the schedule and closure domains: schemas, forms, list views and services.
+- [x] Turn the asset edit page into a layout with three tabs and add the two child routes.
+- [x] Remove the slot domain, the provider slot API client and the slot text on the asset pages.
+- [x] Add tests for the schemas, the services and the clients.
 
 ### PR 2: picker and checkout contract
 
-- [ ] Add the packages API client.
-- [ ] Add the calendar view, the start time view and the picker service.
-- [ ] Change the listing detail page: picker, URL params, Book rules, unavailable state, null price.
-- [ ] Change the checkout loader, the session payload and the error checks.
-- [ ] Show the hold error and the expired hold message.
-- [ ] Change the order summary and the booking pages.
-- [ ] Add the English and Japanese copy.
-- [ ] Add tests.
+- [x] Add the packages API client.
+- [x] Add the calendar view, the start time view and the picker service.
+- [x] Change the listing detail page: picker, URL params, Book rules, unavailable state, null price.
+- [x] Change the checkout loader, the session payload and the error checks.
+- [x] Show the hold error and the expired hold message.
+- [x] Change the order summary and the booking pages.
+- [x] Add the English and Japanese copy.
+- [x] Add tests.
 
 ### PR 3: checkout layout
 
-- [ ] Restyle the stepper, the summary, the cards and the mobile summary.
-- [ ] Add the hold notice.
-- [ ] Polish the return page states.
-- [ ] Add tests for the key states.
+- [x] Restyle the stepper, the summary, the cards and the mobile summary.
+- [x] Add the hold notice.
+- [x] Polish the return page states.
+- [x] Add tests for the key states.
 
 ### Docs
 
-- [ ] Amend web-56 and web-62 and set this spec to `status: implemented` after the last pull request merges.
+- [x] Amend web-56 and web-62 and set this spec to `status: implemented` after the last pull request merges.
 
 ## Acceptance criteria
 
 ### PR 1
 
-- [ ] A provider can add a schedule with days, hours and dates.
-- [ ] A provider can edit a schedule, and the list shows the schedules by first day.
-- [ ] A provider can close a day with a reason, and reopen it.
-- [ ] A closure or an edit that hits a live hold shows the server message under the form.
-- [ ] No code imports the slot domain or the slot API clients.
+- [x] A provider can add a schedule with days, hours and dates.
+- [x] A provider can edit a schedule, and the list shows the schedules by first day.
+- [x] A provider can close a day with a reason, and reopen it.
+- [x] A closure or an edit that hits a live hold shows the server message under the form.
+- [x] No code imports the slot domain or the slot API clients.
 
 ### PR 2
 
-- [ ] The calendar lists only open days, and the dropdown lists only free start times.
-- [ ] A day with no free time shows the message and no dropdown.
-- [ ] A tourist can finish a booking with the new contract.
-- [ ] The URL, the quote and the session calls carry no `availability_slot_id`.
-- [ ] A failed hold shows the message and a link back to the same day.
-- [ ] A listing that is not bookable shows "currently unavailable", no price and no Book button.
-- [ ] The order summary and the booking pages show the package name and the service time.
-- [ ] The web computes no price (`PRC-1`).
+- [x] The calendar lists only open days, and the dropdown lists only free start times.
+- [x] A day with no free time shows the message and no dropdown.
+- [ ] A tourist can finish a booking with the new contract. Tests use a mocked API, and no end-to-end run was done.
+- [x] The URL, the quote and the session calls carry no `availability_slot_id`.
+- [x] A failed hold shows the message and a link back to the same day.
+- [x] A listing that is not bookable shows "currently unavailable", no price and no Book button.
+- [x] The order summary and the booking pages show the package name and the service time.
+- [x] The web computes no price (`PRC-1`).
 
 ### PR 3
 
-- [ ] The checkout matches the layout above on desktop and mobile.
-- [ ] The hold notice shows the end time of the hold from the session.
-- [ ] The return page keeps redirect-only success per web-12.
+- [ ] The checkout matches the layout above on desktop and mobile. Not checked in a browser.
+- [x] The hold notice shows the end time of the hold from the session.
+- [x] The return page keeps redirect-only success per web-12.
 
 ## Verification
 
@@ -311,4 +311,4 @@ npm run build
 
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
-| | | |
+| 2026-10-25 | Owner | Merged red-cab-web#169, #170 and #171. Redcab-docs#105 changed the start time chips to a dropdown. |

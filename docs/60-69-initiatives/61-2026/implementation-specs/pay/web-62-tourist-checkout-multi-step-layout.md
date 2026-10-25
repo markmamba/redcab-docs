@@ -44,12 +44,12 @@ Evidence: `tourist-checkout-page.jsx`, `bookings-checkout-session-fulfillment-fo
 | --- | --- | --- | --- |
 | 1 | **Three interactive steps** (Q1=A) | 2 steps + 3-label stepper only | Policy is its own screen |
 | 2 | **Conditional session create** on policy Continue | Always POST on Continue | Skip POST when fulfillment unchanged vs active session (avoids double hold) |
-| 3 | **Listing slot picker** (Q2=B) | Verify params only | E2E Milestone B |
+| 3 | **Amended by web-155 on 2026-10-25. The listing has a month calendar and a start time dropdown.** They set `service_date` and `start_time`. | Verify params only | E2E Milestone B |
 | 4 | **No payment rehydrate on refresh** (Q3=B) | Persist session id + GET show | MVP; document start-over |
 | 5 | **Edit trip details** (Q4=A, revised) | No back; always new create | Rehydrate; skip create if unchanged; recovery matrix on 422 |
 | 6 | Return **redirect-only** success (Q5=A) | Success card | web-12 DD6 |
 | 7 | **Terminal poll error** on `completed` ∧ ¬`booking_id` (Q6=A) | Poll until timeout | FIN-13 |
-| 8 | **Slot hold at create** | Hold at payment | API `TouristsCreateManager` + `ReserveSeatsService`; TTL `expires_at` |
+| 8 | **Amended by web-155 on 2026-10-25. The hold is an asset hold for a package, a date and a start time, made at session create.** | Hold at payment | API `TouristsCreateManager` and `HoldAssetService`; TTL `expires_at` |
 | 9 | **Browser Back/Forward between steps** | URL `?step=` | **Out of scope #62** — in-app stepper only |
 | 10 | **Tourist session cancel API** | Instant hold release on Edit | **Deferred** — recovery UX only until expiry |
 
@@ -76,17 +76,21 @@ Evidence: `tourist-checkout-page.jsx`, `bookings-checkout-session-fulfillment-fo
 | Policy Continue, changed | `POST` new session; on 422 hold conflict, show recovery matrix; retain prior session in memory for **Resume previous checkout** |
 | Pay | Only allowed on payment step with current `checkoutSession` |
 
-### Scenario B — Stale slot on resume
+### Scenario B — Hold no longer available on resume
+
+Amended by web-155 on 2026-10-25.
 
 | Event | Behavior |
 | --- | --- |
 | Return failure → resume URL | Quote params from `sessionStorage`; fulfillment step; no client session |
-| Checkout loader 422 | Stale slot copy + link to listing slot picker |
-| Listing | Disable Book until loader done and `price_breakdown.availability_slot_id` matches URL param |
+| Failed hold | A message and a link back to the listing on the same day |
+| Listing | Book needs a day, a time, a loaded quote and a complete profile |
 
-### Listing slot selection
+### Listing day and time selection
 
-- Slot picker on listing detail → `availability_slot_id` search param → refetch quote.
+Amended by web-155 on 2026-10-25.
+
+- The calendar and the dropdown on listing detail set the `service_date` and `start_time` search params.
 - Slot list API query includes date/window param aligned with FR-CAT-120 where applicable.
 - Book uses `CatalogListingService.resolveBookCtaPath` (unchanged).
 
