@@ -94,6 +94,13 @@ Each row says who made the decision.
 | 23 | **Added point, please review. The quote request carries `listing_id`, `passenger_count` and an optional `package_slug`. Without a slug, the quote uses the only active package.** | A required slug. | The listing page quotes before the tourist picks anything. |
 | 24 | **Added point, please review. The migration adds the columns, the foreign keys and the check rules. The foreign key from `asset_hold_id` to `catalog_asset_holds` has a unique index, partial on rows where the column is not null.** | A full unique index. | Old rows have a null hold. |
 | 25 | **Added point, please review. The dev seeders and the completed order factory create holds, not slots.** | Leave them. | Seeded data must match the new checkout. |
+| 26 | **Owner ruling, 2026-10-25. The open dates endpoint accepts a month from the current month to 12 months ahead. Any other month returns 422. It never lists a past day.** | Any month. | The limit caps the work for one request. |
+| 27 | **Owner ruling, 2026-10-25. The open dates and start times endpoints return 404 when the listing is unknown or not bookable, or when the package slug is wrong.** | 200 with an empty list. | The web must tell a bad link from a full month. |
+| 28 | **Owner ruling, 2026-10-25. The listing detail of a listing with no active package returns 200 with `is_bookable: false`, `price_breakdown: null` and `unavailable_reason: "no_active_package"`.** | Keep 422. | The page still opens and shows "currently unavailable". |
+| 29 | **Owner ruling, 2026-10-25. The price breakdown replaces `availability_slot_id` with `package_id`, the package uuid. Old stored snapshots keep their old field.** | Remove the field. | The quote says which package it priced. |
+| 30 | **Added point, please review. The open dates response is `{ "open_dates": ["YYYY-MM-DD"] }`. The start times response is `{ "start_times": ["HH:MM"] }`. The listing id is a uuid or a slug, as on the listing detail.** | A paginated list. | Both lists are short. |
+| 31 | **Added point, please review. `HoldAssetService` and `FreeStartTimesService` share one rule for the blocked range. A hold that has expired but is not released yet still blocks a time, as the database rule does.** | Two copies of the rule. | The web must not offer a time that checkout rejects. |
+| 32 | **Added point, please review. The date filter lists a listing only for a date that is not before today in the Service Timezone of the listing.** | No date check. | The old filter also skipped past slots. |
 
 ## API contract
 
@@ -162,7 +169,8 @@ The path names and the field names are added points, so please review them.
 - [ ] PR 1: change the payment hold check.
 - [ ] PR 1: change the serializers and the order managers.
 - [ ] PR 1: update the dev seeders and the completed order factory.
-- [ ] PR 2: add `FreeStartTimesService` and the open dates and start times endpoints.
+- [ ] PR 2: add `HoldRangeService` and `FreeStartTimesService`.
+- [ ] PR 2: add the open dates and start times endpoints.
 - [ ] PR 2: switch the date filter.
 - [ ] PR 2: change the quote to a package and drop the slot override.
 - [ ] PR 2: add `is_bookable` to the listing detail.
