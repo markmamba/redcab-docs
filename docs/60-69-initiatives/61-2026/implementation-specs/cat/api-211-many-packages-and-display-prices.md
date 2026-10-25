@@ -96,6 +96,10 @@ Each row says who made the decision.
 | 28 | **Added point, please review. The refresh service has two entry points: one for a listing, and one for a provider asset that finds all listings that use the asset.** | Each manager finds the listings. | One class stays the only writer. |
 | 29 | **Added point, please review. Managers lock the listing row before they count packages.** | No lock. | Two parallel saves must not pass the limit of 5. |
 | 30 | **Added point, please review. PR 2 starts only after red-cab-api#212 and red-cab-web#156 merge.** | Start PR 2 at once. | The group size filter and the provider form read the old columns until then. |
+| 31 | **Added point, please review. The package responses have no `data` wrapper. A list uses `paginate_and_render` and the key `catalog_listing_packages`.** | A `{ data: … }` wrapper. | The other provider endpoints render the serializer directly. |
+| 32 | **Added point, please review. The listing update manager owns the guard of decision 5. It calls `DefaultPackageSyncService` only when the listing has one package that is not archived.** | Put the guard inside the service. | A listing with no package gets no new default package on update. |
+| 33 | **Added point, please review. A listing in an index with an empty `starting_price_jpy` makes the index return 422 with the message "This service has no package."** | Skip the listing. | A silent skip would hide a missing backfill. |
+| 34 | **Added point, please review. The commission rate test of the old index is replaced, because the index no longer quotes.** | Keep the test. | The index does not read the commission rate any more. |
 
 ## API contract
 
@@ -103,9 +107,9 @@ Each row says who made the decision.
 
 | Method | Path | Auth | Request | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
-| GET | `/providers/catalog/listings/:listing_id/packages` | JWT provider | none | `{ data: [package] }` | Packages that are not archived |
-| POST | `/providers/catalog/listings/:listing_id/packages` | JWT provider | The fields below, and `provider_asset_ids` | `{ data: package }` | 422 when the limit or a pool check fails |
-| PATCH | `/providers/catalog/listings/:listing_id/packages/:package_id` | JWT provider | Any field below, and `status` | `{ data: package }` | `slug` cannot change |
+| GET | `/providers/catalog/listings/:listing_id/packages` | JWT provider | none | `{ catalog_listing_packages: [package], meta }` | Packages that are not archived |
+| POST | `/providers/catalog/listings/:listing_id/packages` | JWT provider | The fields below, and `provider_asset_ids` | The package | 422 when the limit or a pool check fails |
+| PATCH | `/providers/catalog/listings/:listing_id/packages/:package_id` | JWT provider | Any field below, and `status` | The package | `slug` cannot change |
 
 Request fields: `name_en`, `name_ja`, `description_en`, `description_ja`, `schedule_kind`, `duration_minutes`, `earliest_start_time`, `latest_start_time`, `start_interval_minutes`, `buffer_minutes`, `max_passengers`, `vehicle_category`, `base_price_jpy`, `display_order`, `provider_asset_ids`.
 
@@ -163,11 +167,11 @@ PR 1:
 - `app/domains/catalog/pricing/refresh_display_prices_service.rb`, new.
 - `app/domains/catalog/listing_packages/providers_{index,create,update}_{request,validator,manager}.rb`, new.
 - `app/domains/catalog/listing_packages/pool_fit_validation.rb`, new.
-- `app/domains/catalog/listing_packages/slug_generate_service.rb`, new.
+- `app/domains/catalog/listing_packages/slug_generate_service.rb` and `pool_replace_service.rb`, new.
 - `app/domains/catalog/providers_listing_package_base_serializer.rb`, new.
 - `app/controllers/providers/catalog/listing_packages_controller.rb` and `config/routes/providers_routes.rb`.
 - `app/domains/catalog/listings/providers_create_manager.rb` and `providers_update_manager.rb`: call the refresh service.
-- `app/domains/catalog/packages/default_package_sync_service.rb`: run only while one package exists (decision 5).
+- `app/domains/catalog/listings/providers_update_manager.rb`: call the sync service only while one package exists (decision 5).
 - `app/domains/catalog/provider_assets/providers_update_manager.rb` and its validator: the fit check and the refresh.
 - `app/domains/catalog/marketplace_listing_package_embedded_serializer.rb`: add `display_price_jpy`.
 - `app/domains/catalog/listings/marketplace_index_manager.rb` and `marketplace_scoped_index_manager.rb`: read the starting price.
@@ -212,7 +216,7 @@ PR 2:
 - [ ] Add the slug service.
 - [ ] Call the refresh service from the package, asset, listing create and listing update paths.
 - [ ] Add a test that every write path calls the refresh service.
-- [ ] Limit `DefaultPackageSyncService` to a listing with one package.
+- [ ] Make the listing update manager call `DefaultPackageSyncService` only for a listing with one package.
 - [ ] Add `display_price_jpy` to the listing detail packages.
 - [ ] Make both indexes read `starting_price_jpy`.
 - [ ] Add the backfill rake task.
