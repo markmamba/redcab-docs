@@ -104,6 +104,10 @@ Each row says who made the decision.
 | 34 | **Added point, please review. PR D sends the provider to the Packages tab after a listing is created.** | Stay on the listing page. | After the old fields go, a new listing has no package. |
 | 35 | **Added point, please review. Red-cab-web#127 closes with PR D, because the price moves to the packages and the policy fields stay in the listing form. The issues close only on the owner's say-so.** | Close it now. | No separate pricing screen exists today. |
 | 36 | **Added point, please review. The new API modules have unit specs, and the pages have render specs. No browser check runs for the layouts.** | A browser check. | The known limit is kept and reported. |
+| 37 | **Added point, please review. The tourist highlight "Group size" shows "Up to N passengers", where N is the largest package passenger limit. The API no longer returns `base_capacity`.** | Hide the highlight. | The number is a plain maximum, not a price. |
+| 38 | **Added point, please review. PR D also removes the Vehicle Category and Base Capacity rows from `catalog-listing-detail-view.jsx`, and the same two lines from `copyText`.** | Keep the rows. | The API no longer returns the fields, so the rows would always show a dash. |
+| 39 | **Added point, please review. PR D removes the vehicle category fetch from the listing create page, because the form no longer uses the categories.** | Keep the fetch. | It saves one API call. |
+| 40 | **Added point, please review. The web has no Publish button, and the edit page is a stub. PR D does not add one. The 422 message "Add at least one package before publishing your listing." has no screen yet. Red-cab-web#176 tracks the button.** | Add a Publish button in PR D. | It is outside this spec. A later issue can cover it. |
 
 ## Web contract
 
@@ -166,6 +170,9 @@ PR D, listing form cleanup:
 
 - `catalog-listing-form.jsx`, `catalog-listing-schema.js`, `catalog-listing-service.js`, `app/api/providers-catalog-listings-api.js` and the create page.
 - Remove `base_price_jpy`, `base_capacity`, `vehicle_category` and `primary_provider_asset` from the form and the payload.
+- `catalog-listing-highlights-view.jsx` and `catalog-listing-service.js`: Group size from the largest package limit (decision 37).
+- `catalog-listing-detail-view.jsx`: remove the two rows and the two `copyText` lines (decision 38).
+- Create page: remove the vehicle category fetch (decision 39).
 
 ## Data / domain touchpoints
 
@@ -181,6 +188,7 @@ PR D, listing form cleanup:
 - The Most booked sort (red-cab-api#215).
 - Seasonal prices and price tiers.
 - The provider onboarding `vehicle_types` list.
+- The Publish button (red-cab-web#176).
 - A browser check of the layouts.
 
 ## Tasks
@@ -214,6 +222,8 @@ PR D, listing form cleanup:
 
 - [ ] Remove the old fields from the listing form, the schema, the service and the payload.
 - [ ] Send the provider to the Packages tab after create.
+- [ ] Show "Up to N passengers" from the largest package limit.
+- [ ] Remove the old rows from the detail view and the vehicle category fetch from the create page.
 
 ### Docs
 
