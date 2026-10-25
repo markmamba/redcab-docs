@@ -19,7 +19,7 @@ related:
 ## TL;DR
 
 - Providers get two new tabs on the asset edit page: working hours (schedules) and closed days.
-- Tourists pick a day on a month calendar and a start time on a chip grid.
+- Tourists pick a day on a month calendar and a start time in a dropdown list.
 - Checkout, the quote and the booking pages move from a slot to a package, a date and a start time.
 - The checkout pages get a new layout with a stepper, a sticky order summary and a hold notice.
 - The work ships in three pull requests: provider screens, then the picker with the checkout contract, then the checkout layout.
@@ -71,7 +71,7 @@ Each row says who made the decision.
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
 | 1 | **Owner ruling, 2026-10-25. One issue, one spec and three pull requests. Red-cab-web#151 merged into #155. PR 1: provider screens. PR 2: the picker and the checkout contract. PR 3: the checkout layout.** | Separate issues. | The checkout files change once. The contract fix does not wait for the layout. |
-| 2 | **Owner ruling, 2026-10-25. The picker is a month calendar and a start time chip grid (mock option A).** | A date field with a dropdown. A two-step picker. | Closed days show on the calendar. |
+| 2 | **Owner ruling, 2026-10-25, changed 2026-10-25 after PR 2 review. The picker is a month calendar and a start time dropdown (mock options A and C).** | A chip grid for start times. A two-step picker. | Closed days show on the calendar. The dropdown keeps the panel short. |
 | 3 | **Owner ruling, 2026-10-25. The checkout has two columns, a stepper on top and a sticky order summary. On mobile the summary is a collapsed card above the form (mock option A).** | A slim progress bar. A single column with a bottom bar. | It stays close to today's layout. |
 | 4 | **Owner ruling, 2026-10-25. The provider screens are tabs on the asset edit page: Details, Working hours and Closed days (mock option A).** | A separate page. A modal. | No new menu item. |
 | 5 | **Owner ruling, 2026-10-25. The closed-day form closes one day at a time.** | A date range helper. | It matches the API. |
@@ -129,7 +129,7 @@ The docs PR that sets this spec to `implemented` also edits those two specs.
 | `POST` and `DELETE .../closures` | Close a day, reopen a day | 422 shows the server message |
 | `GET /marketplace/catalog/listings/:id` | The listing detail | Reads `packages`, `is_bookable` and a nullable `price_breakdown` |
 | `GET .../packages/:slug/open_dates?month=` | The calendar | Month from this month to 12 months ahead |
-| `GET .../packages/:slug/start_times?service_date=` | The time chips | Free times of one day |
+| `GET .../packages/:slug/start_times?service_date=` | The time dropdown | Free times of one day |
 | `POST /tourists/bookings/checkout_sessions` | Create the session | Sends `package_slug`, `service_date` and `start_time` |
 
 ### Files to create or modify (web)
@@ -159,14 +159,14 @@ Book this service
 M  T  W  T  F  S  S      open day = green, closed or full day = grey
 .. .. .. [6] 7  8  9     the picked day is filled
 Start time
-[08:00] [08:30] [09:00*] [09:30]
+[ 09:00           v ]
 2 passengers            ¥10,000
 [ Book now ]
 ```
 
 - It sits in the right column on desktop and in a card above the mobile book bar.
-- The chips scroll when the window is long.
-- With no free time on a day, the panel says that no time is free and offers no chip.
+- The dropdown lists the free start times, with "Choose a start time" first.
+- With no free time on a day, the panel says that no time is free and shows no dropdown.
 - With `is_bookable` false, the panel says "This service is currently unavailable." and shows no price.
 
 ### Checkout (PR 3)
@@ -280,8 +280,8 @@ The provider pages stay in English, as they are today.
 
 ### PR 2
 
-- [ ] The calendar lists only open days, and the chips list only free start times.
-- [ ] A day with no free time shows the message and offers no chip.
+- [ ] The calendar lists only open days, and the dropdown lists only free start times.
+- [ ] A day with no free time shows the message and no dropdown.
 - [ ] A tourist can finish a booking with the new contract.
 - [ ] The URL, the quote and the session calls carry no `availability_slot_id`.
 - [ ] A failed hold shows the message and a link back to the same day.
