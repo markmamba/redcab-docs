@@ -86,6 +86,12 @@ Each row says who made the decision.
 | 16 | **Added point, please review. A listing may have one package that is not archived until slice S4. A validator enforces it.** | No limit. | The issue and the DBML note give this limit. |
 | 17 | **Amended on 2026-10-25. `HoldAssetService` returns `nil` when no pool asset is free. The caller raises "this time is no longer available".** | The service raises the error. | The API rules say a service never raises `Errors::*`. |
 | 18 | **Amended on 2026-10-25. A full-day hold uses only the asset buffer. A timed hold uses the larger value of the asset buffer and the package buffer.** | The larger value of both for every package. | The DBML says a package ignores its own buffer when it is full-day. |
+| 19 | **Owner ruling, 2026-10-25. The listing create manager makes the default package and its pool in the same transaction. A listing never exists without one package that is not archived.** | A quote that falls back to the policy price. | One price source for the quote. |
+| 20 | **Owner ruling, 2026-10-25. The listing update manager copies four values to the default package: the title as the name, `base_capacity` as `max_passengers`, `vehicle_category` and the policy `base_price_jpy`. It also resets the pool. This extends decision 8.** | Copy the price only. | The default package has one writer. Slice S4 removes the listing columns. |
+| 21 | **Owner ruling, 2026-10-25. When a quote finds no active package, the calling manager raises 422. It does not use the policy price.** | Fall back to the policy price. | A guard must block. A fallback hides a data problem. |
+| 22 | **Added point, please review. One service, `Catalog::Packages::DefaultPackageSyncService`, creates and updates the default package and its pool. The data step, the create manager and the update manager all call it.** | Three copies of the same code. | One writer for the default package. |
+| 23 | **Added point, please review. The default package has the slug `default` and `display_order` 0. It is the only package that is not archived, so the quote finds it without a package choice.** | Ask the tourist to choose. | Release 2 shows no change to tourists. |
+| 24 | **Added point, please review. `CalculateQuoteService` takes a `listing_package:` argument and reads `base_price_jpy` from it. A slot price override still wins until red-cab-api#210.** | Remove the override now. | Checkout still uses slots until #210. |
 
 ## API contract
 
@@ -162,7 +168,9 @@ Existing endpoints that change:
 - [ ] PR 1: add the migrations for the five tables and `buffer_minutes`, with the DBML rules.
 - [ ] PR 1: add the models and the three hold services.
 - [ ] PR 1: add concurrency tests for the overlap rule.
+- [ ] PR 2: add `DefaultPackageSyncService`.
 - [ ] PR 2: add the data step for default packages, pools and seeded schedules.
+- [ ] PR 2: make the listing create manager and the listing update manager call the sync service.
 - [ ] PR 2: make the policy price edit update the default package.
 - [ ] PR 2: make the quote read the base price from the package.
 - [ ] PR 3: add the schedule and closure endpoints with their validators.
@@ -188,6 +196,10 @@ Existing endpoints that change:
 - [ ] A provider cannot shorten a schedule so that a live hold falls outside it.
 - [ ] The quote reads the base price from the package, and the amount for existing listings does not change.
 - [ ] A policy price edit changes the default package price.
+- [ ] A new listing has one default package and a pool.
+- [ ] A listing update copies the title, passenger limit, vehicle category and price to the default package.
+- [ ] A listing update resets the pool to the primary asset, or to all active assets of the provider.
+- [ ] A quote for a listing with no active package makes the caller raise 422.
 - [ ] Checkout, the date filter and the slot code behave as before.
 - [ ] No client-side price computation.
 
