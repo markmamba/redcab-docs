@@ -4,7 +4,7 @@ sidebar_label: API · Package filters and price sort
 issue: "https://github.com/markmamba/red-cab-api/issues/212"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -169,41 +169,41 @@ Error text:
 
 ### API
 
-- [ ] Accept `vehicle_type`, `min_price` and `max_price`, and keep 422 for `price_min` and `price_max`.
-- [ ] Validate the vehicle types, the price bounds and the sort direction for each key.
-- [ ] Build `PackageFilterService` with one `EXISTS` subquery.
-- [ ] Switch the group size filter from `base_capacity` to packages.
-- [ ] Add the sort `starting_price_jpy` with the tie-break.
-- [ ] Add `meta.is_price_filter_ignored`.
-- [ ] Turn on `starting_price_jpy IS NOT NULL` in the discoverable scope.
-- [ ] Remove the 422 branch for an empty starting price from the scoped index.
-- [ ] Add `min_price`, `max_price` and `is_in_price_range` to the listing detail.
-- [ ] Add the migration for the two indexes, and remove the `ships in: S4` tags.
-- [ ] Add integration tests for the worked examples below.
-- [ ] Update the Bruno files.
+- [x] Accept `vehicle_type`, `min_price` and `max_price`, and keep 422 for `price_min` and `price_max`.
+- [x] Validate the vehicle types, the price bounds and the sort direction for each key.
+- [x] Build `PackageFilterService` with one `EXISTS` subquery.
+- [x] Switch the group size filter from `base_capacity` to packages.
+- [x] Add the sort `starting_price_jpy` with the tie-break.
+- [x] Add `meta.is_price_filter_ignored`.
+- [x] Turn on `starting_price_jpy IS NOT NULL` in the discoverable scope.
+- [x] Remove the 422 branch for an empty starting price from the scoped index.
+- [x] Add `min_price`, `max_price` and `is_in_price_range` to the listing detail.
+- [x] Add the migration for the two indexes, and remove the `ships in: S4` tags.
+- [x] Add integration tests for the worked examples below.
+- [x] Update the Bruno files.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] A listing with packages at ¥8,000, ¥15,000 and ¥25,000 matches the range ¥12,000 to ¥18,000.
-- [ ] The card shows "From ¥8,000" under that range.
-- [ ] Price: low to high ranks a starting price of ¥8,000 above ¥12,000 under that range.
+- [x] A listing with packages at ¥8,000, ¥15,000 and ¥25,000 matches the range ¥12,000 to ¥18,000.
+- [x] The card shows "From ¥8,000" under that range.
+- [x] Price: low to high ranks a starting price of ¥8,000 above ¥12,000 under that range.
 - [ ] A package that is not active never counts for the price, the vehicle or the group size filter.
-- [ ] A package whose pool has no active asset never counts.
-- [ ] A package for 4 at ¥8,000 and a package for 10 at ¥25,000 match a group of 8 alone.
-- [ ] The same listing does not match a group of 8 with a maximum of ¥10,000.
-- [ ] A minimum above the maximum returns 200 with the price filter off and `is_price_filter_ignored: true`.
-- [ ] `price_min` and `price_max` return 422 with the message that names `min_price` and `max_price`.
-- [ ] The vehicle filter takes many values and uses OR.
-- [ ] A listing shows once, even when two packages match.
-- [ ] `order_dir=asc` is valid only for `starting_price_jpy`.
-- [ ] The listing detail marks the packages inside the range, and returns null with no range.
-- [ ] A listing with no starting price is not discoverable.
-- [ ] Integration test: `test/integration/marketplace/catalog/listings_scoped_index_integration_test.rb`.
-- [ ] No client-side price computation.
+- [x] A package whose pool has no active asset never counts.
+- [x] A package for 4 at ¥8,000 and a package for 10 at ¥25,000 match a group of 8 alone.
+- [x] The same listing does not match a group of 8 with a maximum of ¥10,000.
+- [x] A minimum above the maximum returns 200 with the price filter off and `is_price_filter_ignored: true`.
+- [x] `price_min` and `price_max` return 422 with the message that names `min_price` and `max_price`.
+- [x] The vehicle filter takes many values and uses OR.
+- [x] A listing shows once, even when two packages match.
+- [x] `order_dir=asc` is valid only for `starting_price_jpy`.
+- [x] The listing detail marks the packages inside the range, and returns null with no range.
+- [x] A listing with no starting price is not discoverable.
+- [x] Integration test: `test/integration/marketplace/catalog/listings_scoped_index_integration_test.rb`.
+- [x] No client-side price computation.
 
 ## Verification
 
