@@ -208,20 +208,20 @@ PR 2:
 
 ### API, PR 1
 
-- [ ] Add the migration for the two display price columns.
-- [ ] Write `RefreshDisplayPricesService` with the listing entry point and the provider asset entry point.
-- [ ] Add the package list, create and update endpoints with requests, validators and managers.
-- [ ] Add the limit check with the listing row lock.
-- [ ] Add the pool fit validation.
-- [ ] Add the slug service.
-- [ ] Call the refresh service from the package, asset, listing create and listing update paths.
+- [x] Add the migration for the two display price columns.
+- [x] Write `RefreshDisplayPricesService` with the listing entry point and the provider asset entry point.
+- [x] Add the package list, create and update endpoints with requests, validators and managers.
+- [x] Add the limit check with the listing row lock.
+- [x] Add the pool fit validation.
+- [x] Add the slug service.
+- [x] Call the refresh service from the package, asset, listing create and listing update paths.
 - [ ] Add a test that every write path calls the refresh service.
-- [ ] Make the listing update manager call `DefaultPackageSyncService` only for a listing with one package.
-- [ ] Add `display_price_jpy` to the listing detail packages.
-- [ ] Make both indexes read `starting_price_jpy`.
-- [ ] Add the backfill rake task.
-- [ ] Add the Bruno files.
-- [ ] Remove the `ships in: S4` tags of the two columns from `docs/db/catalog.dbml`.
+- [x] Make the listing update manager call `DefaultPackageSyncService` only for a listing with one package.
+- [x] Add `display_price_jpy` to the listing detail packages.
+- [x] Make both indexes read `starting_price_jpy`.
+- [x] Add the backfill rake task.
+- [x] Add the Bruno files.
+- [x] Remove the `ships in: S4` tags of the two columns from `docs/db/catalog.dbml`.
 
 ### API, PR 2
 
@@ -236,21 +236,21 @@ PR 2:
 
 ## Acceptance criteria
 
-- [ ] A listing can have up to 5 packages, and the sixth is rejected with a clear message.
-- [ ] An archived package does not count toward the limit.
-- [ ] A package whose passenger limit exceeds the capacity of a pool asset is rejected.
-- [ ] A package whose vehicle category differs from a pool asset is rejected.
+- [x] A listing can have up to 5 packages, and the sixth is rejected with a clear message.
+- [x] An archived package does not count toward the limit.
+- [x] A package whose passenger limit exceeds the capacity of a pool asset is rejected.
+- [x] A package whose vehicle category differs from a pool asset is rejected.
 - [ ] A timed package saves with a buffer, and a full-day package ignores the buffer.
 - [ ] The display prices change in the same transaction as the package change.
 - [ ] A test shows that every package write path calls the refresh service.
-- [ ] The starting price is the lowest display price of an available package.
-- [ ] A package with no active pool asset has an empty display price.
-- [ ] Checkout takes `package_slug`, never a price, and it picks the right package on a listing with many.
+- [x] The starting price is the lowest display price of an available package.
+- [x] A package with no active pool asset has an empty display price.
+- [x] Checkout takes `package_slug`, never a price, and it picks the right package on a listing with many.
 - [ ] Two parallel creates cannot pass the limit of 5.
-- [ ] A listing save updates the package through the old fields only while the listing has one package.
+- [x] A listing save updates the package through the old fields only while the listing has one package.
 - [ ] A change to a package does not change a live hold or a confirmed booking.
-- [ ] Integration test: `test/integration/providers/catalog/listing_packages_integration_test.rb`.
-- [ ] No client-side price computation.
+- [x] Integration test: `test/controllers/providers/catalog/listing_packages_controller_test.rb`.
+- [x] No client-side price computation.
 - [ ] PR 2: no code reads a removed column.
 - [ ] PR 2: the old request fields follow the rule in the amended spec.
 
