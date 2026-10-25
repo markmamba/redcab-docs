@@ -92,6 +92,8 @@ Each row says who made the decision.
 | 22 | **Added point, please review. One service, `Catalog::Packages::DefaultPackageSyncService`, creates and updates the default package and its pool. The data step, the create manager and the update manager all call it.** | Three copies of the same code. | One writer for the default package. |
 | 23 | **Added point, please review. The default package has the slug `default` and `display_order` 0. It is the only package that is not archived, so the quote finds it without a package choice.** | Ask the tourist to choose. | Release 2 shows no change to tourists. |
 | 24 | **Added point, please review. `CalculateQuoteService` takes a `listing_package:` argument and reads `base_price_jpy` from it. A slot price override still wins until red-cab-api#210.** | Remove the override now. | Checkout still uses slots until #210. |
+| 25 | **Owner ruling, 2026-10-25. `Catalog::Listing.discoverable` gets the package test. A listing needs one active package with at least one active asset in its pool. The marketplace lists hide a listing that fails it.** | Fail the whole list with 422. Skip the row in list code. | The ruling [Discoverability completeness](/docs/30-49-domains/catalog/catalog-decisions/#discoverability-completeness) says so, and a list never meets a listing without a package. |
+| 26 | **Added point, please review. The data step is a migration with throwaway model classes, because the database rules forbid real models in a data migration. It repeats the rules of `DefaultPackageSyncService`. A test runs the migration and compares the result with the service.** | The migration calls the service. | `db/AGENTS.md` says a data migration never uses the real domain models. This changes the end of decision 22. |
 
 ## API contract
 
@@ -200,6 +202,7 @@ Existing endpoints that change:
 - [ ] A listing update copies the title, passenger limit, vehicle category and price to the default package.
 - [ ] A listing update resets the pool to the primary asset, or to all active assets of the provider.
 - [ ] A quote for a listing with no active package makes the caller raise 422.
+- [ ] A listing with no active package, or with no active asset in the pool, is not discoverable.
 - [ ] Checkout, the date filter and the slot code behave as before.
 - [ ] No client-side price computation.
 
