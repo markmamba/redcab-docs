@@ -4,7 +4,7 @@ sidebar_label: Web · Packages and filters
 issue: "https://github.com/markmamba/red-cab-web/issues/156"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -195,55 +195,55 @@ PR D, listing form cleanup:
 
 ### Web, PR A
 
-- [ ] Add the three API modules with specs.
-- [ ] Add the listing layout route with the Details and Packages tabs.
-- [ ] Add the package list page, with the limit note and the Add package button.
-- [ ] Add the package form, the schema and the pool field.
-- [ ] Add the edit page and the archive step.
-- [ ] Load the categories from the API in the asset form and the listing form.
-- [ ] Remove the hard-coded category codes and labels.
+- [x] Add the three API modules with specs.
+- [x] Add the listing layout route with the Details and Packages tabs.
+- [x] Add the package list page, with the limit note and the Add package button.
+- [x] Add the package form, the schema and the pool field.
+- [x] Add the edit page and the archive step.
+- [x] Load the categories from the API in the asset form and the listing form.
+- [x] Remove the hard-coded category codes and labels.
 
 ### Web, PR B
 
-- [ ] Add the package choice view.
-- [ ] Put `package_slug` in the URL, and clear the day and time on a change.
-- [ ] Use the chosen package for the passenger limit, the picker, the Book link and the checkout link.
-- [ ] Mark the packages inside the price range.
-- [ ] Keep the filter params in the card links.
+- [x] Add the package choice view.
+- [x] Put `package_slug` in the URL, and clear the day and time on a change.
+- [x] Use the chosen package for the passenger limit, the picker, the Book link and the checkout link.
+- [x] Mark the packages inside the price range.
+- [x] Keep the filter params in the card links.
 
 ### Web, PR C
 
-- [ ] Add the Vehicle type and Price sections to the filter form and the schema.
-- [ ] Add the sort Price: low to high.
-- [ ] Add the chips for the vehicle types and the price range.
-- [ ] Show the message when the API ignores the range.
+- [x] Add the Vehicle type and Price sections to the filter form and the schema.
+- [x] Add the sort Price: low to high.
+- [x] Add the chips for the vehicle types and the price range.
+- [x] Show the message when the API ignores the range.
 
 ### Web, PR D
 
-- [ ] Remove the old fields from the listing form, the schema, the service and the payload.
-- [ ] Send the provider to the Packages tab after create.
-- [ ] Show "Up to N passengers" from the largest package limit.
-- [ ] Remove the old rows from the detail view and the vehicle category fetch from the create page.
+- [x] Remove the old fields from the listing form, the schema, the service and the payload.
+- [x] Send the provider to the Packages tab after create.
+- [x] Show "Up to N passengers" from the largest package limit.
+- [x] Remove the old rows from the detail view and the vehicle category fetch from the create page.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after PR D merges.
+- [x] Set spec `status: implemented` after PR D merges.
 
 ## Acceptance criteria
 
-- [ ] A provider can create, change and archive packages, within the limit of 5.
-- [ ] The Add package button is off at 5 packages.
-- [ ] A package form lists only the categories that the provider type may use, from the API.
-- [ ] The pool picker disables an asset that does not fit, and shows why.
-- [ ] A tourist can choose a package, and sees its vehicle, limit, length and price.
-- [ ] A change of package clears the day and time, and the open days load for the new package.
-- [ ] The Book link and the checkout link carry the chosen package slug.
-- [ ] The packages inside the price range are marked on the listing page.
+- [x] A provider can create, change and archive packages, within the limit of 5.
+- [x] The Add package button is off at 5 packages.
+- [x] A package form lists only the categories that the provider type may use, from the API.
+- [x] The pool picker disables an asset that does not fit, and shows why.
+- [x] A tourist can choose a package, and sees its vehicle, limit, length and price.
+- [x] A change of package clears the day and time, and the open days load for the new package.
+- [x] The Book link and the checkout link carry the chosen package slug.
+- [x] The packages inside the price range are marked on the listing page.
 - [ ] The vehicle type, price and group size filters change the results.
-- [ ] The sort Price: low to high works, and the card keeps "From ¥X".
-- [ ] A reversed range shows the message and does not filter.
+- [x] The sort Price: low to high works, and the card keeps "From ¥X".
+- [x] A reversed range shows the message and does not filter.
 - [ ] No hard-coded vehicle category code or label remains in the web.
-- [ ] After PR D, the listing form has no price, capacity, vehicle category or primary asset field.
+- [x] After PR D, the listing form has no price, capacity, vehicle category or primary asset field.
 - [ ] No client-side price computation.
 - [ ] No hard-coded currency or timezone.
 
