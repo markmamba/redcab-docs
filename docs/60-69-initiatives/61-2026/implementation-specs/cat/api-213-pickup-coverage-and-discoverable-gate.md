@@ -4,7 +4,7 @@ sidebar_label: API · Pickup coverage
 issue: "https://github.com/markmamba/red-cab-api/issues/213"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -139,47 +139,47 @@ Error text:
 
 ### API
 
-- [ ] Add the table migration, the model and the associations.
-- [ ] Add `PickupCoverageValidation` and the replace service.
-- [ ] Add the match service and the scope `covering`.
-- [ ] Add the provider endpoints, the serializer and the routes.
-- [ ] Pre-fill coverage in listing create and return `skipped_prefectures`.
-- [ ] Add the backfill migration.
-- [ ] Add the archive merge service, the validator rule and the manager step.
-- [ ] Add the coverage test to `Catalog::Listing.discoverable`.
-- [ ] Update the test helpers and add the tests.
-- [ ] Run `bin/rails db:migrate`, then `bundle exec tapioca dsl`.
-- [ ] Remove the `S6` tags from the two DBML files.
+- [x] Add the table migration, the model and the associations.
+- [x] Add `PickupCoverageValidation` and the replace service.
+- [x] Add the match service and the scope `covering`.
+- [x] Add the provider endpoints, the serializer and the routes.
+- [x] Pre-fill coverage in listing create and return `skipped_prefectures`.
+- [x] Add the backfill migration.
+- [x] Add the archive merge service, the validator rule and the manager step.
+- [x] Add the coverage test to `Catalog::Listing.discoverable`.
+- [x] Update the test helpers and add the tests.
+- [x] Run `bin/rails db:migrate`, then `bundle exec tapioca dsl`.
+- [x] Remove the `S6` tags from the two DBML files.
 
 ### Web
 
-- [ ] None in this issue, because web issue #157 covers the form.
+- [x] None in this issue, because web issue #157 covers the form.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] Coverage `kanto/tokyo` covers Shinjuku and does not cover Naka-ku of Yokohama.
-- [ ] Coverage `kanto/tokyo` also covers Tokyo itself.
-- [ ] A path that shares only a prefix of letters is not covered, such as `kanto/tokyo-west` under `kanto/tokyo`.
-- [ ] Tokyo and Shinjuku together are rejected.
-- [ ] A region, an inactive node, an unknown node and a duplicate are rejected.
-- [ ] A draft may have no coverage rows.
-- [ ] A listing with no coverage row is hidden from browse and search.
-- [ ] `PUT` with an empty list clears the rows.
-- [ ] Another provider cannot read or change the coverage of a listing.
-- [ ] Listing create fills one row for each profile label that maps to an active prefecture.
-- [ ] Listing create returns an unmatched label in `skipped_prefectures`.
-- [ ] A destination never creates a coverage row.
-- [ ] The backfill fills rows for listings of every status and is safe to run twice.
-- [ ] An archive with a successor moves the rows and follows the clash rules.
-- [ ] An archive is rejected when rows exist and the successor is not a valid coverage node.
+- [x] Coverage `kanto/tokyo` covers Shinjuku and does not cover Naka-ku of Yokohama.
+- [x] Coverage `kanto/tokyo` also covers Tokyo itself.
+- [x] A path that shares only a prefix of letters is not covered, such as `kanto/tokyo-west` under `kanto/tokyo`.
+- [x] Tokyo and Shinjuku together are rejected.
+- [x] A region, an inactive node, an unknown node and a duplicate are rejected.
+- [x] A draft may have no coverage rows.
+- [x] A listing with no coverage row is hidden from browse and search.
+- [x] `PUT` with an empty list clears the rows.
+- [x] Another provider cannot read or change the coverage of a listing.
+- [x] Listing create fills one row for each profile label that maps to an active prefecture.
+- [x] Listing create returns an unmatched label in `skipped_prefectures`.
+- [x] A destination never creates a coverage row.
+- [x] The backfill fills rows for listings of every status and is safe to run twice.
+- [x] An archive with a successor moves the rows and follows the clash rules.
+- [x] An archive is rejected when rows exist and the successor is not a valid coverage node.
 - [ ] A coverage change does not change a confirmed booking or a live hold.
-- [ ] `catalog.dbml` has no `ships in: S6` tag.
-- [ ] No client-side price computation.
-- [ ] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
+- [x] `catalog.dbml` has no `ships in: S6` tag.
+- [x] No client-side price computation.
+- [x] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
 
 ## Verification
 
