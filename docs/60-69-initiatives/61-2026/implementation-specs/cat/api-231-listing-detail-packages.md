@@ -4,7 +4,7 @@ sidebar_label: API · Detail packages
 issue: "https://github.com/markmamba/red-cab-api/issues/231"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -126,7 +126,7 @@ An example of the new field:
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
