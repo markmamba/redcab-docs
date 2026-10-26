@@ -121,7 +121,7 @@ New API item (must merge first):
 | Method | Path | Auth | Change | Notes |
 | --- | --- | --- | --- | --- |
 | GET | `/tourists/bookings/checkout_sessions/:id` | JWT tourist | Adds `fulfillment_detail.booking_location`: `{ uuid, name_en, name_ja, parent, prefecture }` | `parent` and `prefecture` have `uuid`, `name_en`, `name_ja`. |
-| GET | `/tourists/bookings/bookings/:id` and the provider booking show | JWT tourist or provider | Same field | Read from the order copy. |
+| GET | `/tourists/bookings/orders/:id` and `/providers/bookings/orders/:id` | JWT tourist or provider | Same field | Read from the order copy. |
 | POST | `/tourists/bookings/checkout_sessions` | JWT tourist | Response carries the same field | |
 
 Existing endpoints that the web uses (no change):
@@ -223,7 +223,8 @@ A provider covers Tokyo, and a tourist books a trip with a pickup at a hotel in 
 
 ### API (separate item, must merge first)
 
-- [ ] Create the API issue for `booking_location` in the checkout session and booking payloads, and get its spec approved.
+- [x] Create the API issue for `booking_location` in the payloads: markmamba/red-cab-api#247.
+- [ ] Get the spec of that API issue approved.
 - [ ] Merge the API change.
 
 ### Web
