@@ -16,7 +16,7 @@ related:
 
 ## TL;DR
 
-- Ships `GET /marketplace/catalog/booking_locations?q=`, which returns up to 10 places for the booking location.
+- Ships `GET /marketplace/catalog/booking_locations?search_text=`, which returns up to 10 places for the booking location.
 - A place is an active, listable municipality or ward whose parent city and prefecture are also active.
 - The search matches the English, Japanese and kana names, and it ignores kana width and hiragana.
 - Each result carries its parent city and its prefecture, so the tourist can tell two wards named "Nishi" apart.
@@ -58,9 +58,9 @@ Read these before design, and do not invent behavior that contradicts them.
 | 1 | **Owner ruling, 2026-10-26. The search matches the names as they are. A separate issue fixes the English names in the seed. Until then, an English search for a wrongly named place finds nothing.** | Add search aliases here, or fix the seed first. | This slice stays small. The fix needs a data review that this slice should not wait for. |
 | 2 | **Owner ruling, 2026-10-26. The search ignores kana width and the difference between hiragana and katakana. Each result carries its parent city and its prefecture.** | No parents, or no kana. | A tourist can type kana in any form. A repeated ward name needs its parent to be useful. |
 | 3 | **Owner ruling, 2026-10-26. The search shows all listable places, not only the places that a listing covers. It is public. It returns at most 10 results, best match first. Each typed word matches as a prefix with `ILIKE`.** | Only covered places. Login. Substring match. | The checkout check gives the clear message for an uncovered place. The other marketplace geography routes are public. |
-| 4 | **Owner ruling, 2026-10-26. The route is `GET /marketplace/catalog/booking_locations?q=`. After trimming, the text needs at least 2 and at most 50 characters. Else the API answers 422 with a message.** | `/geographies/search`. | The name says what the route is for. |
+| 4 | **Owner ruling, 2026-10-26. The route is `GET /marketplace/catalog/booking_locations?search_text=`. After trimming, the text needs at least 2 and at most 50 characters. Else the API answers 422 with a message.** | `/geographies/search`. | The name says what the route is for. |
 | 5 | **Added point, please review. A place qualifies when it is `active`, `is_listable`, and has level `municipality` or `ward`. Its parent and its prefecture must also be `active`.** | Check only the place. | Deactivating a prefecture does not change the status of the places below it. The level rule is the one in `BookingLocationValidationService`, and the query reuses its constant. |
-| 6 | **Added point, please review. The API trims the text, applies Unicode compatibility folding (NFKC), and splits it on spaces of any width. It uses at most the first 5 words. Every word must match.** | One phrase match. | "Yokohama Nishi" should find the ward in Yokohama. |
+| 6 | **Added point, please review. The API trims the text, applies Unicode compatibility folding (NFKC), and turns control characters, such as a null byte, into spaces, and splits it on spaces of any width. It uses at most the first 5 words. Every word must match.** | One phrase match. | "Yokohama Nishi" should find the ward in Yokohama. |
 | 7 | **Added point, please review. A word matches a place when it is a prefix of `name_en`, `name_ja` or the kana of the place, or of the same fields of its parent city or its prefecture. A kana prefix may start at the beginning of the value or after a space.** | Match only the name of the place. | A ward kana value starts with its city. A prefix after a space finds the ward part. The parent match makes "yokohama nishi" work. |
 | 8 | **Added point, please review. The kana comparison folds both sides. The database side is `translate(normalize(name_kana, NFKC), hiragana, katakana)`. The typed side is NFKC and a hiragana to katakana map.** | Add a column with the folded kana. | The candidate set is under 2,000 rows, so a computed value is cheap. No migration is needed. |
 | 9 | **Added point, please review. The order is: places whose `name_ja` or `name_en` equals the typed text first, then the shorter `name_ja`, then `path`.** | Order by `display_order`. | An exact name beats a longer name that starts with the same letters. `path` makes the order stable. |
@@ -74,7 +74,7 @@ Read these before design, and do not invent behavior that contradicts them.
 
 | Method | Path | Auth | Request | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
-| GET | `/marketplace/catalog/booking_locations` | none | `q` (text, 2 to 50 characters after trimming) | `booking_locations`: up to 10 items | 422 when `q` is missing, too short or too long. |
+| GET | `/marketplace/catalog/booking_locations` | none | `search_text` (text, 2 to 50 characters after trimming) | `booking_locations`: up to 10 items | 422 when `search_text` is missing, too short or too long. |
 
 Item example:
 
@@ -148,8 +148,8 @@ Error text:
 - [ ] A region, a prefecture and a place that is not listable never appear.
 - [ ] An inactive place, and a place with an inactive parent or prefecture, never appear.
 - [ ] The response has at most 10 results, and an exact name comes first.
-- [ ] A missing, short or long `q` gives 422 with a clear message.
-- [ ] The characters `%` and `_` in `q` match only themselves.
+- [ ] A missing, short or long `search_text` gives 422 with a clear message.
+- [ ] The characters `%` and `_` in `search_text` match only themselves.
 - [ ] The 10 results use no query for each item.
 - [ ] No client-side price computation.
 - [ ] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
