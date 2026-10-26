@@ -5,7 +5,7 @@ sidebar_label: API · Booking location check
 issue: "https://github.com/markmamba/red-cab-api/issues/214"
 repos:
   - red-cab-api
-status: implemented
+status: approved
 phase: 2
 context: CAT
 related:
