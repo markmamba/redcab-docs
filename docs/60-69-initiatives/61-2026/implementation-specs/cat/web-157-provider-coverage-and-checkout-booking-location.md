@@ -25,7 +25,7 @@ related:
 - Ships one booking location search in tourist checkout, in place of the two address fields.
 - Ships a "Pickup details" text field, because the API still needs `pickup_address`.
 - Ships clear messages for a location that the listing does not cover, before and after payment.
-- Needs ONE new API item first: the payloads return the booking location name (decision 4).
+- Needs ONE API item for the booking pages and the order summary: the payloads return the place name (decision 4).
 - Does NOT ship the Terms of Use checkbox, corporate checkout, map-drawn coverage or the Publish button.
 - Breaking change: No. The web already fails on checkout create, because the API needs `booking_location_id`.
 
@@ -90,7 +90,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | 1 | **Owner ruling, 2026-10-26. The Terms of Use checkbox is not in this spec. A separate issue covers it. Checkout stays blocked until that issue ships.** | Add the checkbox here. | This spec stays on the location. The terms text and version need their own decision. |
 | 2 | **Owner ruling, 2026-10-26. The checkout form has one required booking location search and one required text field "Pickup details". It has no drop-off field. The web sends `pickup_address` and leaves out `dropoff_address`, and the API copies the pickup text.** | Location search only. | The driver needs the street detail. Another drop-off is agreed outside RedCab. |
 | 3 | **Owner ruling, 2026-10-26. The coverage picker takes prefectures from `GET /providers/catalog/regions` and cities and wards from `GET /marketplace/catalog/booking_locations`. No new endpoint is needed for the picker.** | A new provider search endpoint. | The web can ship at once. A city that is not listable cannot be picked, so the provider picks its wards. |
-| 4 | **Owner ruling, 2026-10-26. A small API item adds `booking_location` to the checkout session and booking payloads. It holds `uuid`, `name_en`, `name_ja`, `parent` and `prefecture`. The web code that shows the name waits for it.** | The web keeps the pick in state. | The edit step, the review step and the booking page need a name. The payloads return only `booking_location_id` today. |
+| 4 | **Owner ruling, 2026-10-26. A small API item adds `booking_location` to the checkout session and booking payloads. It holds `uuid`, `name_en`, `name_ja`, `parent` and `prefecture`. The web code that shows the name waits for it (red-cab-api#247).** | The web keeps the pick in state. | The booking pages and the order summary need a name. The edit step keeps the pick in page memory, so it does not wait. |
 | 5 | **Added point, please review. Coverage has its own tab "Pickup coverage" on the listing layout, at the route `coverage` under `catalog/listings/:listingId`.** | A section in the create form. | The API has its own endpoint for coverage (api-213 decision 1). A listing exists before the provider can edit its coverage. |
 | 6 | **Added point, please review. The tab loader calls `GET /providers/catalog/listings/:listing_id/pickup_coverages` and `GET /providers/catalog/regions`. The picker gets both as props.** | Fetch inside the field. | The loader is the preferred place for API calls. |
 | 7 | **Added point, please review. The picker is a searchable multi-select with chips. It follows the keys, the ARIA roles and the live announcements of web-154 decisions 14 to 18. It has two groups: "Prefectures" from the loaded list, and "Cities and wards" from the search.** | One list for all levels. | The levels have two data sources. Groups keep the list clear. |
@@ -120,9 +120,9 @@ New API item (must merge first):
 
 | Method | Path | Auth | Change | Notes |
 | --- | --- | --- | --- | --- |
-| GET | `/tourists/bookings/checkout_sessions/:id` | JWT tourist | Adds `fulfillment_detail.booking_location`: `{ uuid, name_en, name_ja, parent, prefecture }` | `parent` and `prefecture` have `uuid`, `name_en`, `name_ja`. |
+| POST | `/tourists/bookings/checkout_sessions` | JWT tourist | The response adds `fulfillment_detail.booking_location`: `{ uuid, name_en, name_ja, parent, prefecture }` | `parent` and `prefecture` have `uuid`, `name_en`, `name_ja`. |
 | GET | `/tourists/bookings/orders/:id` and `/providers/bookings/orders/:id` | JWT tourist or provider | Same field | Read from the order copy. |
-| POST | `/tourists/bookings/checkout_sessions` | JWT tourist | Response carries the same field | |
+| GET | `/tourists/bookings/checkout_sessions/:id` | JWT tourist | No change | It returns a lean status object with no `fulfillment_detail`. |
 
 Existing endpoints that the web uses (no change):
 
@@ -284,4 +284,5 @@ npm run build
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
 | 2026-10-26 | owner | Approved in chat. Owner ruled on decisions 1 to 4 and approved the added points 5 to 24. `review-implementation-spec` was not run. |
+| 2026-10-26 | owner | Corrected after the spec of red-cab-api#247. The status route has no fulfillment detail, so it does not change. The edit step does not wait for the API item, because the web keeps the session in page memory. |
 | 2026-10-26 | owner | Implemented in red-cab-web#179. The boxes for the API item, the form, page and tab, the order summary and the booking views stay open. The boxes for the page-level 422 cases, the empty-list warning and the edit step stay open too. The two checks for hardcoded values and Tier A text stay open because no test covers them. |
