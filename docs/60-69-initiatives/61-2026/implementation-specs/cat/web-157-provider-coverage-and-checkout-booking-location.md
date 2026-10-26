@@ -5,7 +5,7 @@ issue: "https://github.com/markmamba/red-cab-web/issues/157"
 repos:
   - red-cab-web
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -228,44 +228,44 @@ A provider covers Tokyo, and a tourist books a trip with a pickup at a hotel in 
 
 ### Web
 
-- [ ] Add the two API clients and their specs.
-- [ ] Add the coverage service and its spec: nested rule, prefecture `path`, option lists and payload.
-- [ ] Add the coverage picker and its `jsdom` interaction tests.
+- [x] Add the two API clients and their specs.
+- [x] Add the coverage service and its spec: nested rule, prefecture `path`, option lists and payload.
+- [x] Add the coverage picker and its `jsdom` interaction tests.
 - [ ] Add the coverage form, the schema and the page, and add the tab and the route.
-- [ ] Show `skipped_prefectures` in the create toast.
-- [ ] Add the booking location select field and its tests.
+- [x] Show `skipped_prefectures` in the create toast.
+- [x] Add the booking location select field and its tests.
 - [ ] Update the checkout schema, the form, the service and the order summary, and their specs.
 - [ ] Update the checkout page for the 422 cases of decisions 18 and 19.
-- [ ] Update the return page, the payment service and the copy file.
+- [x] Update the return page, the payment service and the copy file.
 - [ ] Update the two booking detail views.
-- [ ] Run `review-react-style`, `npm run lint`, `npm run test` and `npm run build`.
+- [x] Run `review-react-style`, `npm run lint`, `npm run test` and `npm run build`.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
 - [ ] A provider can save coverage with a prefecture and a ward.
-- [ ] The picker offers every active prefecture and the cities and wards that the search finds.
-- [ ] The picker blocks a place inside a selected place, and picking a containing place removes the inner chips.
-- [ ] An empty list is sent as `[]` and clears the rows.
-- [ ] The API error text shows under the picker.
+- [x] The picker offers every active prefecture and the cities and wards that the search finds.
+- [x] The picker blocks a place inside a selected place, and picking a containing place removes the inner chips.
+- [x] An empty list is sent as `[]` and clears the rows.
+- [x] The API error text shows under the picker.
 - [ ] The tab warns when the saved list is empty.
-- [ ] The create toast names each skipped prefecture.
-- [ ] The picker works with the keyboard only, and it has the roles of web-154 decision 14.
-- [ ] The search starts after 2 characters and ignores an old response.
-- [ ] The checkout form has no drop-off field and sends `booking_location_id` and `pickup_address`.
+- [x] The create toast names each skipped prefecture.
+- [x] The picker works with the keyboard only, and it has the roles of web-154 decision 14.
+- [x] The search starts after 2 characters and ignores an old response.
+- [x] The checkout form has no drop-off field and sends `booking_location_id` and `pickup_address`.
 - [ ] A location outside coverage shows the API message on the field and returns the tourist to the trip details step.
 - [ ] A location error never shows the text "This time is no longer available".
 - [ ] A coverage failure at the payment attempt shows the message and the "Edit trip details" button.
-- [ ] After a reversal, the return page shows the text of decision 20.
+- [x] After a reversal, the return page shows the text of decision 20.
 - [ ] The booking pages show the booking location and the pickup details.
 - [ ] The edit step in checkout shows the picked location again.
-- [ ] Test: both API clients, the coverage service and the picker.
-- [ ] Test: the booking location field, the checkout schema, service and payload.
-- [ ] Test: the return page text.
-- [ ] No client-side price computation.
+- [x] Test: both API clients, the coverage service and the picker.
+- [x] Test: the booking location field, the checkout schema, service and payload.
+- [x] Test: the return page text.
+- [x] No client-side price computation.
 - [ ] No hardcoded currency, locale or timezone.
 - [ ] Text follows ASD-STE100 Tier A.
 
@@ -283,3 +283,4 @@ npm run build
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
 | 2026-10-26 | owner | Approved in chat. Owner ruled on decisions 1 to 4 and approved the added points 5 to 24. `review-implementation-spec` was not run. |
+| 2026-10-26 | owner | Implemented in red-cab-web#179. The boxes for the API item, the form, page and tab, the order summary and the booking views stay open. The boxes for the page-level 422 cases, the empty-list warning and the edit step stay open too. The two checks for hardcoded values and Tier A text stay open because no test covers them. |
