@@ -4,7 +4,7 @@ sidebar_label: API · Booking location search
 issue: "https://github.com/markmamba/red-cab-api/issues/240"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -124,35 +124,35 @@ Error text:
 
 ### API
 
-- [ ] Add the route, controller and serializer.
-- [ ] Add the request, validator and manager.
-- [ ] Add the text folding service.
-- [ ] Add the tests.
-- [ ] Put an EXPLAIN in the PR body.
+- [x] Add the route, controller and serializer.
+- [x] Add the request, validator and manager.
+- [x] Add the text folding service.
+- [x] Add the tests.
+- [x] Put an EXPLAIN in the PR body.
 
 ### Web
 
-- [ ] None in this issue, because web issue #157 covers the form.
+- [x] None in this issue, because web issue #157 covers the form.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] A Japanese name finds the place, such as 新宿 for 新宿区.
-- [ ] A name in hiragana, full-width katakana or half-width katakana finds the same place.
-- [ ] An English name finds the place when the seed name is right, such as "Hakone" for Hakonemachi.
-- [ ] Two wards named "Nishi" both appear, each with its own parent city.
-- [ ] "Yokohama Nishi" finds the ward in Yokohama first.
-- [ ] A region, a prefecture and a place that is not listable never appear.
-- [ ] An inactive place, and a place with an inactive parent or prefecture, never appear.
-- [ ] The response has at most 10 results, and an exact name comes first.
-- [ ] A missing, short or long `search_text` gives 422 with a clear message.
-- [ ] The characters `%` and `_` in `search_text` match only themselves.
-- [ ] The 10 results use no query for each item.
-- [ ] No client-side price computation.
-- [ ] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
+- [x] A Japanese name finds the place, such as 新宿 for 新宿区.
+- [x] A name in hiragana, full-width katakana or half-width katakana finds the same place.
+- [x] An English name finds the place when the seed name is right, such as "Hakone" for Hakonemachi.
+- [x] Two wards named "Nishi" both appear, each with its own parent city.
+- [x] "Yokohama Nishi" finds the ward in Yokohama first.
+- [x] A region, a prefecture and a place that is not listable never appear.
+- [x] An inactive place, and a place with an inactive parent or prefecture, never appear.
+- [x] The response has at most 10 results, and an exact name comes first.
+- [x] A missing, short or long `search_text` gives 422 with a clear message.
+- [x] The characters `%` and `_` in `search_text` match only themselves.
+- [x] The 10 results use no query for each item.
+- [x] No client-side price computation.
+- [x] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
 
 ## Verification
 
