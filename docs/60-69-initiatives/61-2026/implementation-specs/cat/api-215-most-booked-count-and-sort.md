@@ -20,7 +20,7 @@ related:
 - Ships the columns `bookings_count_90d` and `bookings_count_refreshed_at` on `catalog_listings`.
 - Ships a Bookings read manager that counts the qualifying bookings of each listing.
 - Ships `Catalog::Listings::RefreshBookingCountsService`, the only writer of the two columns.
-- Ships a nightly job that runs the service.
+- Ships a nightly sweep job that starts one refresh job for each listing.
 - Ships the sort `order_by=bookings_count_90d` on `GET /marketplace/catalog/listings`.
 - Does NOT change the web. The sort option is a web follow-up.
 - Does NOT show the count in any payload.
@@ -66,10 +66,10 @@ Each row says who made the decision.
 | 5 | **Added point, please review. The window test is `confirmed_at >= reference_time - 90 days`. An order with no `confirmed_at` does not count.** | Round to calendar days. | The ruling says "inside the last 90 days". A booking confirmed 91 days ago must not count. |
 | 6 | **Added point, please review. One order row is one booking. The count is the number of qualifying rows, so a booking counts once after it becomes Completed.** | Count distinct booking numbers. | `bookings_orders` has one row for each checkout session (unique index). |
 | 7 | **Added point, please review. The Bookings read manager is `Bookings::Orders::ListingBookingCountsManager`. It takes `listing_ids` and `reference_time` and returns a hash of `listing_id` to count. A listing with no qualifying booking is not in the hash.** | Return one count at a time. | One grouped query replaces many. The service writes 0 for a missing listing. |
-| 8 | **Added point, please review. The service refreshes every listing, in batches of 500 ids. It sets 0 for a listing with no qualifying booking, and it sets `bookings_count_refreshed_at` on every listing it visits.** | Refresh only published listings. Refresh only listings whose count changed. | A paused listing can publish again, and its count must be right. The stale-count monitor needs a fresh time on every row. |
-| 9 | **Added point, please review. The service writes with `update_all`, so `updated_at` does not change.** | Use `update`. | The columns are a display cache. A cache refresh is not an edit by the provider. |
+| 8 | **Added point, please review. The service refreshes one listing. It sets 0 when the listing has no qualifying booking, and it sets `bookings_count_refreshed_at` every time.** The nightly sweep job visits every listing and starts one refresh job for each. | Refresh only published listings. Refresh only listings whose count changed. Refresh batches of 500 listings in one job. | A paused listing can publish again, and its count must be right. The stale-count monitor needs a fresh time on every row. |
+| 9 | **Added point, please review. The service writes with `update_columns`, so `updated_at` does not change.** | Use `update`. | The columns are a display cache. A cache refresh is not an edit by the provider. |
 | 10 | **Added point, please review. Only the nightly job refreshes the count. A new booking does not change it until the next run.** | Also refresh on a booking event, as the DBML note says. | Issue #215 asks for the nightly job only. The window moves without events, so the job is needed anyway. The DBML note is corrected in this change. |
-| 11 | **Added point, please review. The job runs at 18:00 UTC (03:00 JST) every day, in the queue `catalog`.** | Run every hour. | The count is a ranking signal. Daily is enough, and the load is low at night. |
+| 11 | **Added point, please review. The sweep job runs at 18:00 UTC (03:00 JST) every day, in the queue `catalog`. Each refresh job runs in the same queue.** | Run every hour. | The count is a ranking signal. Daily is enough, and the load is low at night. |
 | 12 | **Added point, please review. The sort key is `order_by=bookings_count_90d` with `order_dir=desc`. A request for `asc` gets "Please use descending order for this sort."** | A named key such as `most_booked`. | The naming page uses whitelisted columns, and api-212 decision 15 uses the same style. |
 | 13 | **Owner ruling (issue #215). Equal counts rank by the newer `published_at`, then the newer `created_at`.** | Rank by title. | The issue sets this. `id DESC` is the last key, as in the other sorts. |
 | 14 | **Added point, please review. The partial index is on `bookings_count_90d`, where `status = 'published'`, as the DBML already says. There is no new index on `bookings_orders`.** | Add an index on `confirmed_at`. | The DBML sets the Catalog index. The nightly query is small at today's volume. Add a Bookings index if the job is slow. |
@@ -104,9 +104,10 @@ Each row says who made the decision.
 
 - `db/migrate/{timestamp}_add_bookings_count_to_catalog_listings.rb`.
 - `app/domains/bookings/orders/listing_booking_counts_manager.rb`, with a test.
-- `app/domains/catalog/listings/refresh_booking_counts_service.rb`, with a test.
-- `app/jobs/catalog/listings/refresh_booking_counts_job.rb`, with a test.
-- `config/sidekiq_scheduler.yml`: add `catalog_listings_refresh_booking_counts` with `cron: '0 18 * * *'`, `queue: catalog` and `enabled: true`.
+- `app/domains/catalog/listings/refresh_booking_counts_service.rb`, with a test. It takes one `listing:`.
+- `app/jobs/catalog/listings/refresh_booking_counts_sweep_job.rb`, with a test. It starts one refresh job for each listing.
+- `app/jobs/catalog/listings/refresh_booking_counts_job.rb`, with a test. It takes one `listing_id`.
+- `config/sidekiq_scheduler.yml`: add `catalog_listings_refresh_booking_counts` for the sweep job, with `cron: '0 18 * * *'`, `queue: catalog` and `enabled: true`.
 - `app/domains/catalog/listings/marketplace_scoped_index_validator.rb`: add the key to `VALID_ORDER_COLUMNS` and `ORDER_DIR_BY_COLUMN`.
 - `app/domains/catalog/listings/marketplace_scoped_index_manager.rb`: add the `order_relation` branch.
 - `docs/db/catalog.dbml`, `redcab.dbml` and the `.dbdiagram` files: change the writer note (nightly job only).
@@ -115,7 +116,7 @@ Each row says who made the decision.
 ## Data / domain touchpoints
 
 - Bounded contexts: CAT writes the cache. BKG owns the booking data and answers the count query.
-- Transaction boundaries: each batch of 500 listing ids is one transaction. A failed batch does not undo earlier batches.
+- Transaction boundaries: each refresh job writes one listing with one statement. A failed job does not change the other listings, and Sidekiq retries it alone.
 - Snapshots: none. The count is a cache. A confirmed booking never changes (`INV-1`).
 
 ## Known limits
@@ -188,3 +189,4 @@ grep -rn "bookings_count_90d" app lib config
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
 | 2026-10-27 | Owner | Approved, with decisions 4 (count `payout_queued`), 8 and 10 (nightly refresh only). |
+| 2026-10-27 | Owner | Change after code review: one refresh job for each listing, started by a nightly sweep job (decisions 8, 9 and 11). The ruling page now names Payout queued (decision 4). |
