@@ -4,7 +4,7 @@ sidebar_label: API · Booking location in payloads
 issue: "https://github.com/markmamba/red-cab-api/issues/247"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: BKG
 related:
@@ -131,11 +131,11 @@ Item example:
 
 ### API
 
-- [ ] Add `BookingLocationSummaryService` and its test.
-- [ ] Make `MarketplaceBookingLocationSerializer` call the service.
-- [ ] Add `booking_location` to `fulfillment_detail_for`.
-- [ ] Add the parent chain to the `includes` of the three managers.
-- [ ] Add the test helper and the payload tests.
+- [x] Add `BookingLocationSummaryService` and its test.
+- [x] Make `MarketplaceBookingLocationSerializer` call the service.
+- [x] Add `booking_location` to `fulfillment_detail_for`.
+- [x] Add the parent chain to the `includes` of the three managers.
+- [x] Add the test helper and the payload tests.
 
 ### Web
 
@@ -143,23 +143,23 @@ Item example:
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] The create response returns `fulfillment_detail.booking_location` for a ward.
-- [ ] The tourist order show returns the same object.
-- [ ] The provider order show returns the same object.
-- [ ] A ward returns its city as `parent` and its prefecture as `prefecture`.
-- [ ] A municipality returns its prefecture as both `parent` and `prefecture`.
-- [ ] A row with no location returns `booking_location` as `nil`.
-- [ ] A place with no parent returns `nil` for `parent` and `prefecture` and does not raise.
-- [ ] A place that is not `active` still appears.
-- [ ] `booking_location_id` stays in the payloads.
-- [ ] The search route returns the same JSON as before.
-- [ ] The status route `GET /tourists/bookings/checkout_sessions/:id` is unchanged.
-- [ ] The number of queries does not grow with the number of items.
-- [ ] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
+- [x] The create response returns `fulfillment_detail.booking_location` for a ward.
+- [x] The tourist order show returns the same object.
+- [x] The provider order show returns the same object.
+- [x] A ward returns its city as `parent` and its prefecture as `prefecture`.
+- [x] A municipality returns its prefecture as both `parent` and `prefecture`.
+- [x] A row with no location returns `booking_location` as `nil`.
+- [x] A place with no parent returns `nil` for `parent` and `prefecture` and does not raise.
+- [x] A place that is not `active` still appears.
+- [x] `booking_location_id` stays in the payloads.
+- [x] The search route returns the same JSON as before.
+- [x] The status route `GET /tourists/bookings/checkout_sessions/:id` is unchanged.
+- [x] The number of queries does not grow with the number of items.
+- [x] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
 
 ## Verification
 

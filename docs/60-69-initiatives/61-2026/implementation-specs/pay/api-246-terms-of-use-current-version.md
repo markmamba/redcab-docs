@@ -4,7 +4,7 @@ sidebar_label: API · Terms of Use version
 issue: "https://github.com/markmamba/red-cab-api/issues/246"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: PAY
 related:
@@ -119,9 +119,9 @@ Error text:
 
 ### API
 
-- [ ] Add the route, the controller and the serializer.
-- [ ] Add the DTO, the manager and the page URL service.
-- [ ] Add the tests.
+- [x] Add the route, the controller and the serializer.
+- [x] Add the DTO, the manager and the page URL service.
+- [x] Add the tests.
 
 ### Web
 
@@ -129,20 +129,20 @@ Error text:
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] A guest without a login gets the version and the link.
-- [ ] The version equals the value of `CurrentVersionFetchService`.
-- [ ] Checkout create accepts the version that the route returned.
-- [ ] The link is the web base URL plus `/terms`, with one slash between them.
-- [ ] A web base URL with a trailing slash gives the same link.
-- [ ] A blank version gives 500 with the error text above.
-- [ ] A blank web base URL gives 500 with the error text above.
+- [x] A guest without a login gets the version and the link.
+- [x] The version equals the value of `CurrentVersionFetchService`.
+- [x] Checkout create accepts the version that the route returned.
+- [x] The link is the web base URL plus `/terms`, with one slash between them.
+- [x] A web base URL with a trailing slash gives the same link.
+- [x] A blank version gives 500 with the error text above.
+- [x] A blank web base URL gives 500 with the error text above.
 - [ ] The response holds no setting name and no stack detail.
-- [ ] The route runs no database query.
-- [ ] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
+- [x] The route runs no database query.
+- [x] `bundle exec srb tc` shows no new errors, and `bundle exec rubocop` and the full test suite pass.
 
 ## Verification
 
