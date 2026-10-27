@@ -73,7 +73,7 @@ Each row is either an owner ruling or an added point for review.
 | 6 | **Added point, please review. The migration needs a check first. It stops with a clear error if any order or checkout session has `slot_id` set and `asset_hold_id` empty.** | Drop without a check. | Owner ruling 2 says no such row exists. A failed check protects a wrong guess. |
 | 7 | **Added point, please review. The check constraints `asset_hold_id IS NOT NULL OR slot_id IS NOT NULL` become `asset_hold_id NOT NULL` on both tables.** | Keep the column nullable. | Every row has a hold after owner ruling 2. |
 | 8 | **Added point, please review. Slug rules after the roles go. Region and prefecture slugs stay unique for each level. A pickable node keeps a slug that is unique among the children of its parent.** | A global slug for every node. | The old unique indexes read `discovery_root_id`. A parent is the closest rule that stays. |
-| 9 | **Added point, please review. The slug resolution service keeps only what regions, prefectures and archived-slug redirects need. The district and area branches go.** | Delete the service. | The region pages still resolve slugs. |
+| 9 | **Owner ruling, 2026-10-27. `SlugResolutionService` and its result class are deleted.** | Keep a small version for regions and prefectures. | `ScopeResolutionService` already resolves regions and prefectures for the region pages. After the district, area and old listings index code goes, nothing calls the old service. Archived-slug redirects pointed to district and area paths, which no longer exist. |
 | 10 | **Added point, please review. The endpoint `GET /marketplace/catalog/areas/near` is removed with the other area endpoints.** | Keep it. | The web does not call it. It reads the area role. |
 | 11 | **Added point, please review. `Bookings::SeatAllocations::ReleaseForPaymentFailedManager` moves to `Bookings::CheckoutSessions::ReleaseForPaymentFailedManager` and keeps only the hold release.** | Keep the old namespace. | The seat allocation model is gone. |
 | 12 | **Added point, please review. The team geography endpoints stop accepting and returning `is_discovery_root`. They accept and return `is_pickable`.** | Keep the old field. | The field has no meaning after the cleanup. |
@@ -101,7 +101,7 @@ Each row is either an owner ruling or an added point for review.
 
 | Method | Path | Change |
 | --- | --- | --- |
-| GET, POST | `/team/catalog/geographies` | The `is_discovery_root` field goes. The `is_listable` field becomes `is_pickable`. |
+| GET, POST | `/team/catalog/geographies` | The `is_discovery_root` field and its filter go. The `is_listable` field becomes `is_pickable`. A duplicate slug under one parent, or for one region or prefecture, returns a 422 with a plain message (decision 8). |
 | PATCH | `/providers/catalog/assets/:asset_id` | Retiring an asset checks live holds, not slots |
 
 ### Database
@@ -125,6 +125,9 @@ Each row is either an owner ruling or an added point for review.
 - `app/domains/catalog/availability/reserve_seats_service.rb`, `reserve_seats_dto.rb` and `restore_seats_service.rb`.
 - `app/domains/bookings/seat_allocation.rb`.
 - `app/domains/catalog/districts/` and `app/domains/catalog/areas/`.
+- `app/domains/catalog/geographies/slug_resolution_service.rb` and `slug_resolution_result.rb` (decision 9).
+- `app/domains/catalog/geographies/near_me_manager.rb`, `near_me_request.rb` and `near_me_validator.rb` (decision 10).
+- `app/domains/catalog/listings/marketplace_index_manager.rb`, `marketplace_index_request.rb` and `marketplace_index_validator.rb`, and the `index` action of `listings_controller.rb` (the scoped index replaces them).
 - `app/controllers/marketplace/catalog/districts_controller.rb` and `areas_controller.rb`.
 - `docs/api/providers/catalog/listings/availability_slots/` and the slot requests in `docs/api/marketplace/catalog/listings/`.
 
@@ -140,6 +143,7 @@ Each row is either an owner ruling or an added point for review.
 - `app/domains/catalog/provider_assets/providers_update_validator.rb`: check live holds on retirement.
 - `app/domains/catalog/geography.rb` and the `geographies/` folder: remove the district and area roles and rename `is_listable`.
 - `app/domains/catalog/listings/marketplace_show_manager.rb`: stop loading `discovery_root`.
+- `app/domains/catalog/marketplace_area_detail_embedded_serializer.rb`: drop the `district` field under `area` (the web does not read it).
 - `app/domains/catalog/team_geography_serializer.rb`: return `is_pickable` and no `is_discovery_root`.
 - `lib/dev/catalog_marketplace_seeder.rb` and `team_reviews_moderation_seeder.rb`: seed holds and prefectures, not slots and districts.
 - `docs/db/catalog.dbml`, `bookings.dbml`, `redcab.dbml` and the `.dbdiagram` files.
@@ -257,3 +261,4 @@ npm run build
 | --- | --- | --- |
 | 2026-10-25 | Owner | Approved. Code waits for releases 3 and 4. |
 | 2026-10-27 | Owner | Wording fix to decision 14 and the Tasks. The web change ships in red-cab-web#183 before PR 2. No design change. |
+| 2026-10-27 | Owner | Decision 9 changed from "keep a trimmed slug service" to "delete it". The file lists now name the slug, near-me and old listings index files that go. Found while building PR 2 (red-cab-api#252). |
