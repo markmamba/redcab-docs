@@ -4,7 +4,7 @@ sidebar_label: Web · Publish button
 issue: "https://github.com/markmamba/red-cab-web/issues/176"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -121,7 +121,7 @@ The handler lives in the page file and is exported for tests, like `handleProvid
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
