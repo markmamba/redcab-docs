@@ -140,6 +140,7 @@ The sort control has four options.
 Most booked ranks listings by recent demand.
 
 - A booking counts when payment succeeded and its status is Confirmed or Completed.
+- A Completed booking whose payout is queued (status Payout queued) still counts as Completed.
 - Its confirmation time must be inside the last 90 days.
 - Cancelled, Failed and fully refunded bookings do not count.
 - Each booking counts once.
