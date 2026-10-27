@@ -78,7 +78,7 @@ Each row is either an owner ruling or an added point for review.
 | 11 | **Added point, please review. `Bookings::SeatAllocations::ReleaseForPaymentFailedManager` moves to `Bookings::CheckoutSessions::ReleaseForPaymentFailedManager` and keeps only the hold release.** | Keep the old namespace. | The seat allocation model is gone. |
 | 12 | **Added point, please review. The team geography endpoints stop accepting and returning `is_discovery_root`. They accept and return `is_pickable`.** | Keep the old field. | The field has no meaning after the cleanup. |
 | 13 | **Added point, please review. The AGENTS.md rules 1, 4 and 16, the examples that name a slot, and `app/domains/AGENTS.md` change in the same pull request.** | A later docs pull request. | The rules still tell agents to use the seat counter. |
-| 14 | **Added point, please review. The work ships in two pull requests. PR 1: slot code and tables. PR 2: geography roles and the web change.** | One pull request. | Each pull request stays small to review. They share one spec. |
+| 14 | **Added point, please review. The API work ships in two pull requests. PR 1: slot code and tables. PR 2: geography roles. The web change ships on its own in red-cab-web#183, before PR 2.** | One pull request. The web change inside an API pull request. | Each pull request stays small to review. They share one spec. The web change lives in the web repo. PR 1 does not touch the district endpoints, so it does not wait for the web. |
 
 ## API contract
 
@@ -161,7 +161,7 @@ Each row is either an owner ruling or an added point for review.
 - `app/routes/tourist/tourist-account-discover-redirect-utils.js`: remove the district API call.
 - The matching spec files.
 
-The web change ships before the API removes the district endpoints.
+The web change ships in [red-cab-web#183](https://github.com/markmamba/red-cab-web/issues/183), before PR 2 removes the district endpoints.
 
 ## Data / domain touchpoints
 
@@ -188,9 +188,9 @@ The web change ships before the API removes the district endpoints.
 
 - [x] Get this spec to `status: approved`.
 - [ ] Wait until releases 3 and 4 are merged.
-- [ ] Create the web issue for the redirect change and link it here.
+- [x] Create the web issue for the redirect change and link it here: red-cab-web#183.
 
-### Web
+### Web (red-cab-web#183)
 
 - [ ] Redirect old district and area URLs without an API call.
 - [ ] Remove the districts API client and its tests.
@@ -206,6 +206,8 @@ The web change ships before the API removes the district endpoints.
 - [ ] Update the tests, the seeders, the DBML and the Bruno requests.
 
 ### API: PR 2 (geography roles)
+
+Starts after PR 1 and red-cab-web#183 are merged.
 
 - [ ] Remove the district and area routes, controllers and managers.
 - [ ] Remove the role scopes, associations and slug branches.
@@ -254,3 +256,4 @@ npm run build
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
 | 2026-10-25 | Owner | Approved. Code waits for releases 3 and 4. |
+| 2026-10-27 | Owner | Wording fix to decision 14 and the Tasks. The web change ships in red-cab-web#183 before PR 2. No design change. |
