@@ -82,7 +82,7 @@ The owner must confirm or change each row before approval.
 | 15 | **Added point, please review. `PUT` locks the pricing policy row in its transaction.** | No lock. | Two `PUT` requests at once would hit the unique index on hours and return 500. |
 | 16 | **Added point, please review. `PUT` works on a listing of any status, if it belongs to the provider.** | Draft and published only. | The owner ruled "any time". An archived listing gains nothing from a block. |
 | 17 | **Added point, please review. A new listing starts with `flexible`. Create and update no longer permit the source, so Rails drops it with no error.** | Refuse the key with 422. | The current web form keeps working while the web issue ships. The PR body states that the value is ignored. |
-| 18 | **Added point, please review. Checkout create takes `agreed_cancellation_policy`: the source and the tiers, as the marketplace preview gave them. The check compares the source and each tier's hours and refund.** | A version number column. A hash. | The preview already carries these values, and no new column is needed. |
+| 18 | **Added point, please review. Checkout create takes `agreed_cancellation_policy`: the `cancellation_policy_type` and the `cancellation_tiers` list, with the same keys as the marketplace preview. The check compares the type and the hours and refund of each tier, and ignores other keys.** | A version number column. A hash. | The preview already carries these values, and no new column is needed. |
 | 19 | **Added point, please review. In PR 1, the check runs only when `agreed_cancellation_policy` is sent. PR 2 makes it required.** | Required in PR 1. | The current web checkout does not send it. The web must ship between the two pull requests. |
 | 20 | **Added point, please review. The bookings enums `cancellation_policy_type` accept `flexible`, `moderate`, `strict` and `custom`. They keep `platform_default` for old rows. No migration rewrites a booking.** | Rewrite old bookings to Moderate. | `INV-1` says a booking snapshot cannot change. |
 | 21 | **Added point, please review. The snapshot header formulas stay: the free cutoff is the most hours with 100%, and the fee is 100 minus the refund of the tier with the fewest hours.** | New formulas. | Every valid policy ends with a 0-hour tier, so the fee is 100 minus the refund of that tier. |
@@ -97,7 +97,7 @@ The owner must confirm or change each row before approval.
 | PUT | `/providers/catalog/listings/:listing_id/cancellation_policy` | JWT provider | `cancellation_policy_source` (required). `tiers`: list of `{ hours_before_service, refund_percentage }`, only for `custom`. | Same as GET | Error 422 for the cases below. |
 | POST | `/providers/catalog/listings` | JWT provider | `cancellation_policy_source` is no longer permitted | Unchanged | The policy starts as `flexible`. |
 | PATCH | `/providers/catalog/listings/:listing_id` | JWT provider | `cancellation_policy_source` is no longer permitted | Unchanged | The update does not change the policy. |
-| POST | `/tourists/bookings/checkout_sessions` | JWT tourist | Adds `agreed_cancellation_policy`: `{ cancellation_policy_type, tiers }` | Unchanged | Optional in PR 1. Required in PR 2. |
+| POST | `/tourists/bookings/checkout_sessions` | JWT tourist | Adds `agreed_cancellation_policy`: `{ cancellation_policy_type, cancellation_tiers }`, where each tier has `hours_before_service` and `refund_percentage` | Unchanged | Optional in PR 1. Required in PR 2. |
 | GET | `/providers/catalog/listings/:listing_id` | JWT provider | | Unchanged shape | `pricing_policy.cancellation_policy_source` carries the new values. |
 | GET | `/marketplace/catalog/listings/:slug` | none | | Unchanged shape | `cancellation_policy_preview.cancellation_policy_type` carries the new values. |
 
@@ -245,3 +245,4 @@ bundle exec rubocop
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
 | 2026-10-29 | Owner | Approved, including decisions 10 to 23. |
+| 2026-10-29 | Owner | Changed the agreed policy key from `tiers` to `cancellation_tiers`, to match the marketplace preview (decision 18 and the API contract). |
