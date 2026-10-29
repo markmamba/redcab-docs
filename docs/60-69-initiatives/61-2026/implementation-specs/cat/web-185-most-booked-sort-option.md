@@ -4,7 +4,7 @@ sidebar_label: Web · Most booked sort
 issue: "https://github.com/markmamba/red-cab-web/issues/185"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -153,31 +153,31 @@ Choosing Most booked:
 
 ### Web
 
-- [ ] Add the preset, its label, the order key and the note copy to the constants.
-- [ ] Map the preset to and from the URL params in the service.
-- [ ] Show the preset last in the sort control.
-- [ ] Show the note in the toolbar.
-- [ ] Update the JSDoc in `marketplace-catalog-listings-api.js`.
-- [ ] Update and add the spec cases.
+- [x] Add the preset, its label, the order key and the note copy to the constants.
+- [x] Map the preset to and from the URL params in the service.
+- [x] Show the preset last in the sort control.
+- [x] Show the note in the toolbar.
+- [x] Update the JSDoc in `marketplace-catalog-listings-api.js`.
+- [x] Update and add the spec cases.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
-- [ ] Update redcab-docs#67: check the Release 5 task and step 7.
+- [x] Set spec `status: implemented` after merge.
+- [x] Update redcab-docs#67: check the Release 5 task and step 7.
 - [ ] After deploy, run `Catalog::Listings::RefreshBookingCountsSweepJob` once.
 
 ## Acceptance criteria
 
-- [ ] The select shows Recently added, Price: low to high, Top rated and Most booked, in this order.
-- [ ] Choosing Most booked sets `order_by=bookings_count_90d` and `order_dir=desc`, and sets `page` to 1.
-- [ ] Choosing Most booked keeps the scope, the keyword and the filters.
-- [ ] The URL with `order_by=bookings_count_90d`, with or without `order_dir=desc`, selects Most booked.
-- [ ] The URL with `order_dir=asc` does not select Most booked, and the web does not send `asc` to the API.
-- [ ] The list page forwards `order_by=bookings_count_90d` to the API.
-- [ ] The note shows only while Most booked is selected.
-- [ ] A URL with this sort is still noindex.
-- [ ] `npm run lint`, `npm test` and `npm run build` pass.
-- [ ] No client-side sort and no client-side tie break.
+- [x] The select shows Recently added, Price: low to high, Top rated and Most booked, in this order.
+- [x] Choosing Most booked sets `order_by=bookings_count_90d` and `order_dir=desc`, and sets `page` to 1.
+- [x] Choosing Most booked keeps the scope, the keyword and the filters.
+- [x] The URL with `order_by=bookings_count_90d`, with or without `order_dir=desc`, selects Most booked.
+- [x] The URL with `order_dir=asc` does not select Most booked, and the web does not send `asc` to the API.
+- [x] The list page forwards `order_by=bookings_count_90d` to the API.
+- [x] The note shows only while Most booked is selected.
+- [x] A URL with this sort is still noindex.
+- [x] `npm run lint`, `npm test` and `npm run build` pass.
+- [x] No client-side sort and no client-side tie break.
 
 ## Verification
 
