@@ -107,7 +107,7 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Duration Pricing** — rates per duration option: 2-Hour / Half-Day / Full-Day / Custom (`C-05`).
 - **Seasonal Override** — a date-range price override or multiplier with a label (e.g. "New Year Rate") (`C-06`).
 - **Extra Charge** — a named line item (mandatory/optional) with a trigger (Always / Late-Night / Holiday / Per Item), e.g. tolls, child seat (`C-07`).
-- **Cancellation Policy** — up to 4 tiers of `(hours before service, refund %)`; Platform Default applies if none set; immutable for confirmed bookings (`C-08`).
+- **Cancellation Policy** — up to 4 tiers of `(hours before service, refund %)`; Platform Default applies if none set; immutable for confirmed bookings (`C-08`). Superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy).
 - **Pricing (module)** — the single authority that computes a **Price Breakdown** via `calculate_quote(listing, params, at:)`. No other context computes price.
 - **Price Breakdown / Quote** — computed result: base price, tier/duration/seasonal adjustments, extra charges, total (tax-inclusive for B2C). Distinct from a corporate **Quotation**.
 - **Availability Slot (Slot)** — **(Legacy)** a bookable window bound to a Provider Asset (`C-09`). Replaced by **Asset Hold**; slice S5 of the [Catalog domain](/docs/30-49-domains/catalog/) removes it.

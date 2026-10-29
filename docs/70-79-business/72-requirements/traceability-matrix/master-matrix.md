@@ -77,7 +77,7 @@ Four-way mapping table for all requirements.
 | FR-CAT-015 | C-05 | PRC-2; CAT | Duration-based rates are allowed where type-applicable. |
 | FR-CAT-016 | C-06 | PRC-5; CAT | Labeled date-range overrides/multipliers apply to in-range dates. |
 | FR-CAT-017 | C-07 | PRC-6; CAT | Mandatory extras are in the displayed total; optional extras are Tourist-selectable. |
-| FR-CAT-018 | C-08 | PRC-7; CAT | Up to four cancellation tiers per listing; Platform Default applies when none set. |
+| FR-CAT-018 | C-08 | PRC-7; CAT | Up to four cancellation tiers per listing; Platform Default applies when none set. Superseded by [Cancellation policy](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy). |
 | FR-CAT-019 | C-09 | CAT (Availability) | Slots take date/start/end/capacity; non-positive durations and past slots are rejected. |
 | FR-CAT-020 | C-10 | CON-4; CAT | No two slots overlap on one Asset; boundary-touching is allowed; cross-Asset overlap is allowed. |
 | FR-CAT-021 | E-11, B-03 | INV-3, CON-3; CAT | Remaining capacity is shown; a zero-seat slot presents as fully booked. |
