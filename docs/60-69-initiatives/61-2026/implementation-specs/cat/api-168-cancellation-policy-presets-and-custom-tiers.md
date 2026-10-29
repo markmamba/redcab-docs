@@ -4,7 +4,7 @@ sidebar_label: API · Cancellation policy
 issue: "https://github.com/markmamba/red-cab-api/issues/168"
 repos:
   - red-cab-api
-status: draft
+status: approved
 phase: 2
 context: CAT
 related:
@@ -179,7 +179,7 @@ Error text:
 
 ### Planning
 
-- [ ] Get this spec to `status: approved`.
+- [x] Get this spec to `status: approved`.
 - [ ] Create the web issue.
   - The provider policy page on the new endpoint.
   - The tourist display with the preset names, and a label for old `platform_default` bookings.
@@ -244,4 +244,4 @@ bundle exec rubocop
 
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
-| | | |
+| 2026-10-29 | Owner | Approved, including decisions 10 to 23. |
