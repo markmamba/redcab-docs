@@ -1,6 +1,5 @@
 ---
-
-## title: "Check the booking location and reverse the charge when a check fails after payment"
+title: "Check the booking location and reverse the charge when a check fails after payment"
 sidebar_label: API · Booking location check
 issue: "https://github.com/markmamba/red-cab-api/issues/214"
 repos:
@@ -13,6 +12,7 @@ related:
   - "docs/30-49-domains/38-catalog/catalog-decisions.md#booking-confirmation"
   - "docs/30-49-domains/38-catalog/requirements/tourist-booking.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-213-pickup-coverage-and-discoverable-gate.md"
+---
 
 ## TL;DR
 

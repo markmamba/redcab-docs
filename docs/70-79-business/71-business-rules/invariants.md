@@ -88,7 +88,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **PRC-4** Group Size Tiers MUST be non-overlapping; the tier matching the selected pax determines price. (`C-04`)
 - **PRC-5** When a Tourist's selected date falls within a Seasonal Override range, the override price/multiplier applies to the Price Breakdown with its label. (`C-06`)
 - **PRC-6** Mandatory Extra Charges MUST be included in the Gross Amount and shown as separate line items; Optional Extra Charges apply only when selected. (`C-07`)
-- **PRC-7** If a Listing has no Cancellation Policy, the Platform Default Cancellation Policy applies. (`C-08`)
+- **PRC-7** If a Listing has no Cancellation Policy, the Platform Default Cancellation Policy applies. (`C-08`) Superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy).
 - **PRC-8** The price presented at checkout initiation becomes the **Price Snapshot** on the **CheckoutSession**; see INV-1. (`C-06`, `E-02`, `BKG-9`)
 
 ## 4. Payment Rules

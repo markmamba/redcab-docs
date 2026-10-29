@@ -109,6 +109,9 @@ The system **shall** allow a Provider to define mandatory and optional extra cha
 - Source: C-07. Governs: PRC-6. Status: Approved.
 
 ### FR-CAT-018 — Cancellation policy configuration
+
+This section is superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
+
 The system **shall** allow up to four cancellation tiers per Listing and **shall** apply the Platform Default when none is set.
 - Source: C-08. Governs: PRC-7. Status: Approved.
 
