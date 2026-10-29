@@ -83,7 +83,15 @@ A booking keeps the policy that the tourist saw at checkout.
 
 ### Presets
 
-Each preset has a fixed set of tiers.
+Each preset has a fixed set of tiers and one name in each language.
+
+| English name | Japanese name |
+| --- | --- |
+| Flexible (default) | 柔軟 |
+| Moderate | 中程度 |
+| Strict | 厳格 |
+
+The tourist and the provider see the name in the language of the page.
 
 | Preset | Notice | Refund |
 | --- | --- | --- |
