@@ -77,6 +77,8 @@ A listing has one cancellation policy, which is a preset or a custom policy.
 | 6 | The refund percent applies to the total that the tourist paid. | always | 50 percent of ¥20,000 is ¥10,000. |
 | 7 | A provider may change the policy at any time, also on a published listing. | always | The change applies from the next checkout. |
 | 8 | Before payment, the tourist sees the policy name and each tier in plain words. | always | "Moderate. Full refund if you cancel 72 hours or more before the start." |
+| 9 | The booking copies the same policy that the tourist agreed to. | always | The provider changes the policy while the tourist reads it. Checkout stops and shows the new policy for agreement. |
+| 10 | A tourist may book inside a 0 percent window, after a clear statement at checkout. | always | A Flexible booking 10 hours before the start says "No refund if you cancel." |
 
 A booking keeps the policy that the tourist saw at checkout.
 - A later change by the provider does not change the refund of that booking.
@@ -113,9 +115,13 @@ A custom policy must pass every check below, or the provider cannot save it.
 | 1 | It has 1 to 4 tiers, and the 0-hour tier counts toward the 4. | Five tiers. |
 | 2 | One tier has 0 hours, so every cancellation matches a tier. | Tiers at 48 hours and 24 hours only. |
 | 3 | No two tiers have the same hours. | Two tiers at 24 hours. |
-| 4 | Each refund percent is a whole number from 0 to 100. | A tier with 12.5 percent. |
-| 5 | The refund percent never rises as the hours fall. | 50 percent at 72 hours and 100 percent at 24 hours. |
-| 6 | At least one tier refunds more than 0 percent. | 0 percent in every tier. |
+| 4 | Each tier has a whole number of hours from 0 to 8,760 (365 days). | A tier at 72,000 hours. |
+| 5 | Each refund percent is a whole number from 0 to 100. | A tier with 12.5 percent. |
+| 6 | The refund percent never rises as the hours fall. | 50 percent at 72 hours and 100 percent at 24 hours. |
+| 7 | At least one tier refunds more than 0 percent. | 0 percent in every tier. |
+
+Two neighbor tiers may have the same refund percent.
+- For example, 50 percent at 72 hours and 50 percent at 24 hours is allowed.
 
 The 0-hour tier may refund more than 0 percent.
 - For example, a provider may give 20 percent at 0 hours.
