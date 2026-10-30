@@ -5,7 +5,7 @@ issue: "https://github.com/markmamba/red-cab-api/issues/216"
 repos:
   - red-cab-api
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: CAT
 related:
@@ -191,51 +191,51 @@ The web change ships in [red-cab-web#183](https://github.com/markmamba/red-cab-w
 ### Planning
 
 - [x] Get this spec to `status: approved`.
-- [ ] Wait until releases 3 and 4 are merged.
+- [x] Wait until releases 3 and 4 are merged.
 - [x] Create the web issue for the redirect change and link it here: red-cab-web#183.
 
 ### Web (red-cab-web#183)
 
-- [ ] Redirect old district and area URLs without an API call.
-- [ ] Remove the districts API client and its tests.
+- [x] Redirect old district and area URLs without an API call.
+- [x] Remove the districts API client and its tests.
 
 ### API: PR 1 (slot code)
 
-- [ ] Add the migration check from decision 6.
-- [ ] Remove the slot routes, controllers, managers and serializers.
-- [ ] Remove the seat services and the seat allocation model.
-- [ ] Change the checkout, order, payment and serializer code to use holds only.
-- [ ] Check live holds when an asset retires.
-- [ ] Add the migration that drops the slot tables and columns.
-- [ ] Update the tests, the seeders, the DBML and the Bruno requests.
+- [x] Add the migration check from decision 6.
+- [x] Remove the slot routes, controllers, managers and serializers.
+- [x] Remove the seat services and the seat allocation model.
+- [x] Change the checkout, order, payment and serializer code to use holds only.
+- [x] Check live holds when an asset retires.
+- [x] Add the migration that drops the slot tables and columns.
+- [x] Update the tests, the seeders, the DBML and the Bruno requests.
 
 ### API: PR 2 (geography roles)
 
 Starts after PR 1 and red-cab-web#183 are merged.
 
-- [ ] Remove the district and area routes, controllers and managers.
-- [ ] Remove the role scopes, associations and slug branches.
-- [ ] Rename `is_listable` to `is_pickable` everywhere.
-- [ ] Add the migration for the columns, the indexes and the new unique index.
-- [ ] Update the tests, the seeders and the DBML.
-- [ ] Update `AGENTS.md` and `app/domains/AGENTS.md`.
+- [x] Remove the district and area routes, controllers and managers.
+- [x] Remove the role scopes, associations and slug branches.
+- [x] Rename `is_listable` to `is_pickable` everywhere.
+- [x] Add the migration for the columns, the indexes and the new unique index.
+- [x] Update the tests, the seeders and the DBML.
+- [x] Update `AGENTS.md` and `app/domains/AGENTS.md`.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] No code reads `catalog_availability_slots`, `bookings_seat_allocations`, `slot_id`, `is_discovery_root`, `discovery_root_id` or `is_listable`.
-- [ ] The removed routes return 404.
-- [ ] The web sends an old district URL to all services with a 301.
-- [ ] The web sends an old listing URL to the listing page.
-- [ ] A tourist can still book, pay and see the booking with holds.
-- [ ] An asset with a live future hold cannot retire.
-- [ ] A confirmed booking keeps its service times (`INV-1`).
-- [ ] The migration stops with an error when a row has a slot and no hold.
-- [ ] `bin/rails test`, `bundle exec srb tc` and `bundle exec rubocop` pass at their current baseline.
-- [ ] No client-side price computation.
+- [x] No code reads `catalog_availability_slots`, `bookings_seat_allocations`, `slot_id`, `is_discovery_root`, `discovery_root_id` or `is_listable`.
+- [x] The removed routes return 404.
+- [x] The web sends an old district URL to all services with a 301.
+- [x] The web sends an old listing URL to the listing page.
+- [x] A tourist can still book, pay and see the booking with holds.
+- [x] An asset with a live future hold cannot retire.
+- [x] A confirmed booking keeps its service times (`INV-1`).
+- [x] The migration stops with an error when a row has a slot and no hold.
+- [x] `bin/rails test`, `bundle exec srb tc` and `bundle exec rubocop` pass at their current baseline.
+- [x] No client-side price computation.
 
 ## Verification
 
@@ -262,3 +262,4 @@ npm run build
 | 2026-10-25 | Owner | Approved. Code waits for releases 3 and 4. |
 | 2026-10-27 | Owner | Wording fix to decision 14 and the Tasks. The web change ships in red-cab-web#183 before PR 2. No design change. |
 | 2026-10-27 | Owner | Decision 9 changed from "keep a trimmed slug service" to "delete it". The file lists now name the slug, near-me and old listings index files that go. Found while building PR 2 (red-cab-api#252). |
+| 2026-10-27 | Owner | Both API pull requests are merged: red-cab-api#251 (slot code) and red-cab-api#253 (geography roles). The web change is merged in red-cab-web#184. Status set to `implemented`. |
