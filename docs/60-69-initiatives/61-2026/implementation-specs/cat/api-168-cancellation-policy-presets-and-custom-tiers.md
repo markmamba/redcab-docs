@@ -90,6 +90,10 @@ The owner must confirm or change each row before approval.
 | 23 | **Added point, please review. The marketplace preview `cancellation_policy_preview` keeps its shape. `cancellation_policy_type` carries the new values.** | Add the preset name in two languages. | The web owns the labels of other presets and maps the key to the name. |
 | 24 | **Added point, please review. Added in PR 1 (markmamba/red-cab-api#254). `GET` and `PUT` return `flexible` for a listing with the old source `platform_default`.** | Return the stored value. | The provider endpoints never show a value that the provider cannot send. |
 | 25 | **Added point, please review. Added in PR 1. Checkout reads the tiers once. The agreed-policy check, the snapshot header and the copied rows use that one list.** | Read the tiers for each use. | A change between two reads cannot make the booking copy tiers that the tourist did not agree to (`BKG-1`). |
+| 26 | **Added point, please review. PR 2 ships two migrations: the data migration first, then a schema migration.** The schema migration sets the default of `catalog_pricing_policies.cancellation_policy_source` to `flexible` and removes `platform_default` from the column comment. | One data-only migration. | The column default is `platform_default`. After the enum drops that value, a row with no source would hold a value the model cannot read. Rule D27 keeps data and schema steps apart. |
+| 27 | **Added point, please review. PR 2 removes `Catalog::PricingPolicy#current_cancellation_preset` and `LEGACY_PLATFORM_DEFAULT_PRESET`.** The endpoints, the snapshot and the header read the stored source. | Keep the helper. | After the data migration, no Catalog row holds `platform_default`. Decision 24 has no work left to do. |
+| 28 | **Added point, please review. A checkout without `agreed_cancellation_policy` returns 422 under the key `agreed_cancellation_policy` with the text "Please agree to the cancellation policy."** | Use `base`. | The web already reads that key, and it shows the policy again. |
+| 29 | **Added point, please review. The data migration prints the count and the UUIDs of the listings it moves, for each rule. It has no `down`.** | A reversible migration. | The migration cannot know which `flexible` rows were `platform_default` before. The output serves the task "tell the owner which listings the migration moved". |
 
 ## API contract
 
@@ -143,6 +147,7 @@ Error text:
 - `app/domains/bookings/checkout_sessions/tourists_create_request.rb`, `tourists_create_validator.rb`
 - `app/domains/bookings/checkout_session.rb`, `app/domains/bookings/order.rb` (enum values)
 - `db/migrate/{timestamp}_move_cancellation_policies_to_presets.rb` (PR 2, data only)
+- `db/migrate/{timestamp}_set_flexible_as_the_cancellation_policy_source_default.rb` (PR 2, schema: the column default and comment)
 - `lib/dev/catalog_marketplace_seeder.rb`
 - `docs/api/providers/catalog/listings/*.bru` and the checkout session request
 - `docs/db/catalog.dbml`, `docs/db/bookings.dbml`, `docs/db/redcab.dbml` (enum values, remove the JST wording from the tier notes)
@@ -205,7 +210,9 @@ PR 1 is merged: markmamba/red-cab-api#254.
 
 ### API (PR 2, after the web issue)
 
-- [ ] Add the data migration of decisions 2 and 4.
+- [ ] Add the data migration of decisions 2, 4 and 29.
+- [ ] Add the schema migration of decision 26.
+- [ ] Remove the helper of decision 27.
 - [ ] Remove `platform_default` from the Catalog enum.
 - [ ] Make `agreed_cancellation_policy` required.
 
@@ -255,3 +262,4 @@ bundle exec rubocop
 | 2026-10-29 | Owner | Approved, including decisions 10 to 23. |
 | 2026-10-29 | Owner | Changed the agreed policy key from `tiers` to `cancellation_tiers`, to match the marketplace preview (decision 18 and the API contract). |
 | 2026-10-29 | Author | Aligned the spec with PR 1 (markmamba/red-cab-api#254): decisions 24 and 25, the file list, the PR 1 tasks and the Known limits. The owner must review decisions 24 and 25. |
+| 2026-10-30 | Author | Added decisions 26 to 29 for PR 2. The owner must review them. |
