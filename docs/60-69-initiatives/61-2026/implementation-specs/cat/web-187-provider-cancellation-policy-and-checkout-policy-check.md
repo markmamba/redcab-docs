@@ -149,13 +149,13 @@ Three letters stand for values in the sentences.
 
 | Tier | English | Japanese |
 | --- | --- | --- |
-| Hours above 0, refund 100 | Full refund if you cancel {H} or more before the start. | サービス開始の{H}前までにキャンセルすると、全額が返金されます。 |
-| Hours above 0, refund R (1 to 99) | {R}% refund if you cancel {H} or more before the start. | サービス開始の{H}前までにキャンセルすると、{R}%が返金されます。 |
-| Hours 0, refund 0 | No refund if you cancel less than {P} before the start. | サービス開始の{P}前を過ぎてからのキャンセルは、返金されません。 |
-| Hours 0, refund R (1 to 100) | {R}% refund if you cancel less than {P} before the start. | サービス開始の{P}前を過ぎてからのキャンセルは、{R}%が返金されます。 |
-| Hours 0, no higher tier (one-tier policy) | {R}% refund if you cancel at any time. | いつキャンセルしても、{R}%が返金されます。 |
+| Hours above 0, refund 100 | Full refund if you cancel \{H\} or more before the start. | サービス開始の\{H\}前までにキャンセルすると、全額が返金されます。 |
+| Hours above 0, refund R (1 to 99) | \{R\}% refund if you cancel \{H\} or more before the start. | サービス開始の\{H\}前までにキャンセルすると、\{R\}%が返金されます。 |
+| Hours 0, refund 0 | No refund if you cancel less than \{P\} before the start. | サービス開始の\{P\}前を過ぎてからのキャンセルは、返金されません。 |
+| Hours 0, refund R (1 to 100) | \{R\}% refund if you cancel less than \{P\} before the start. | サービス開始の\{P\}前を過ぎてからのキャンセルは、\{R\}%が返金されます。 |
+| Hours 0, no higher tier (one-tier policy) | \{R\}% refund if you cancel at any time. | いつキャンセルしても、\{R\}%が返金されます。 |
 
-The Japanese text "{H}前まで" includes the exact hour, like the English "{H} or more".
+The Japanese text "\{H\}前まで" includes the exact hour, like the English "\{H\} or more".
 - This matches rule 4 of the decision page.
   - A cancellation exactly 24 hours before the start gets the 24-hour tier.
 
@@ -169,7 +169,7 @@ Example: Moderate in Japanese.
 
 | English | Japanese |
 | --- | --- |
-| No refund if you cancel. Your service starts in less than {P} from now. | キャンセルしても返金されません。サービス開始まで{P}を切っています。 |
+| No refund if you cancel. Your service starts in less than \{P\} from now. | キャンセルしても返金されません。サービス開始まで\{P\}を切っています。 |
 
 `P` is the hours text of the matching tier boundary.
 
