@@ -4,7 +4,7 @@ sidebar_label: API · Server-side sessions
 issue: "https://github.com/markmamba/red-cab-api/issues/147"
 repos:
   - red-cab-api
-status: draft
+status: approved
 phase: 2
 context: IAM
 related:
