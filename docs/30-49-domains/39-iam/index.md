@@ -19,7 +19,7 @@ last_reviewed: 2026-10-31
 - A person switches between the tourist portal and the provider portal without a new sign-in.
 - Each sign-in is one database record, and nothing refreshes.
 - The URL decides the portal, and the session holds one access word for the provider portal.
-- The global [Invariants](/docs/70-79-business/business-rules/invariants) rank above every page of this domain.
+- These pages are the source of truth for this domain, and an old invariant applies only where they cite it.
 
 ## About this document
 

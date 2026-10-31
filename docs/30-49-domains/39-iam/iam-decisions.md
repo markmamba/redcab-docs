@@ -17,6 +17,7 @@ supersedes:
   - FR-IAM-012 (partial)
   - FR-IAM-013
   - FR-PRV-002
+  - INV-7
   - INV-9
 legacy_ids:
   - FR-IAM-009
@@ -29,7 +30,7 @@ legacy_ids:
 - This page holds every current IAM ruling, each with one section and one stable link.
 - Behavior that users see is in [requirements](/docs/30-49-domains/iam/requirements/).
 - The reasons and the options we did not choose are in [Accounts and provider companies](/docs/30-49-domains/iam/architecture-decisions/accounts-and-provider-companies).
-- A ruling here cannot override a global invariant in [Invariants](/docs/70-79-business/business-rules/invariants).
+- This page is the source of truth, and an old invariant applies only where this page cites it.
 - Open items are only in [Open questions](#open-forks).
 
 ## About this document
@@ -112,7 +113,7 @@ A company holds permits, and a permit unlocks a vehicle kind.
 - This replaces the listing `service_type` values, and the Catalog pages must follow.
 - Why: Japanese law gives a separate permit for each kind of transport.
 - An expired permit must hide only the listings that need it.
-- Replaces: `provider_type`, its detail tables, `INV-9` and `FR-PRV-002`.
+- Replaces: `provider_type`, its detail tables, `INV-7`, `INV-9` and `FR-PRV-002`.
 
 ## Company roles \{#company-roles\}
 
