@@ -7,7 +7,7 @@ doc_type: requirement
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-23
+last_reviewed: 2026-10-31
 supersedes:
   - FR-CAT-006 (partial)
   - FR-CAT-021 (partial)
@@ -41,7 +41,7 @@ This page describes what the tourist does and sees at booking, without screens, 
 | booking location | The one point the tourist gives. It is the pickup and the default drop-off. |
 | pickup coverage | The places where the provider picks up tourists. |
 | start window | The first and last start time a package allows. |
-| asset | The vehicle or guide that the booking uses. |
+| asset | The vehicle that the booking uses. |
 
 ## User stories \{#user-stories\}
 

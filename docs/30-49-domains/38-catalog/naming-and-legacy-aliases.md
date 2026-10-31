@@ -6,7 +6,7 @@ description: Catalog revamp vocabulary — product terms, API params, and legacy
 doc_type: domain-overview
 normative: true
 context: catalog
-last_reviewed: 2026-10-23
+last_reviewed: 2026-10-31
 ---
 
 ## TL;DR \{#naming-tldr\}
@@ -112,12 +112,12 @@ Successor index: **`GET /marketplace/catalog/listings`** with query params below
 | Service date | `date` | ISO date (label: **Service date**) |
 | Group size | `passenger_count` | Integer (label: **Group size**) |
 | Price min / max | `min_price`, `max_price` | Inclusive JPY (legacy: `price_min`, `price_max`) |
-| Service type | `service_type` | Comma-separated (OR within category) |
+| Service type | `service_type` | Comma-separated (OR within category). Values: `tour`, `airport_transfer`, `private_charter`, `port_transfer` |
 | Language | `language` | Comma-separated |
 | Vehicle type | `vehicle_type` | Comma-separated (listing field: `vehicle_category`) |
 | Sort | `order_by`, `order_dir` | Whitelisted columns |
 
-**Multi-select example:** `service_type=charter_bus%2Ctour_guide` (comma-separated, URL-encoded).
+**Multi-select example:** `service_type=private_charter%2Ctour` (comma-separated, URL-encoded).
 
 ---
 
@@ -135,7 +135,7 @@ Successor index: **`GET /marketplace/catalog/listings`** with query params below
 
 | Concept | Product | Storage | Legacy (crosswalk only) |
 | --- | --- | --- | --- |
-| Asset hold | One booking holds one vehicle or guide for one time range | `catalog_asset_holds` | **Slot**, `catalog_availability_slots` |
+| Asset hold | One booking holds one vehicle for one time range | `catalog_asset_holds` | **Slot**, `catalog_availability_slots` |
 | Schedule | Weekly working days and hours of an asset | `catalog_asset_schedules` | Slots made by hand |
 | Closure | One day an asset does not work | `catalog_asset_closures` | Closed slot |
 | Asset pool | The assets a package can use | `catalog_package_assets` | `primary_provider_asset_id` |
@@ -158,3 +158,4 @@ Provider leg of keyword search matches **legal business name** (registered compa
 | --- | --- |
 | 2026-10-17 | Initial page from vocabulary quiz passes 1–3 (40 decisions). |
 | 2026-10-23 | Package and policy rows match the ruled model. Added availability words. Removed scratchpad IDs and the follow-up note. |
+| 2026-10-31 | Service type values and the guide and vehicle wording follow the IAM rulings. |

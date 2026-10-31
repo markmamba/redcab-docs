@@ -7,7 +7,7 @@ doc_type: requirement
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-23
+last_reviewed: 2026-10-31
 supersedes:
   - FR-CAT-033 (partial)
 ---
@@ -40,7 +40,7 @@ This page describes what the provider does and sees, without screens, APIs or al
 | draft | A saved listing that tourists cannot see. |
 | publish | The act that makes a complete listing eligible for tourists. |
 | complete | A listing has a primary destination, a photo, pickup coverage and an available package. |
-| asset pool | The vehicles or guides a package can use. |
+| asset pool | The vehicles a package can use. |
 | live hold | A held or confirmed booking on an asset. |
 
 ## User stories \{#user-stories\}
@@ -63,13 +63,16 @@ This page describes what the provider does and sees, without screens, APIs or al
 | Extra destinations are other prefectures. One listing serves all of them. | US-2 | The same tour adds Kanagawa and needs no second listing. |
 | Pickup coverage is a prefecture, a municipality or a ward. | US-3 | The provider picks Tokyo and Nishi-ku. |
 | A coverage node inside another selected coverage node is rejected. | US-3 | Tokyo and Shinjuku together show a message. |
-| A new listing pre-fills coverage from the prefectures in the provider profile. The provider can change it. | US-3 | A profile with Tokyo pre-fills Tokyo. |
+| A new listing pre-fills coverage from the prefectures in the provider company details. The provider can change it. | US-3 | A company with Tokyo pre-fills Tokyo. |
 | A coverage change applies to bookings that are not yet confirmed. | US-3 | A confirmed booking is not affected. |
 | A package has a name, a vehicle category, a passenger limit, a duration, a start window, a step and a price. | US-4 | A 5-seat car for 4 passengers, 6 hours, from 07:00 to 13:00 every 30 minutes. |
 | A package may have a buffer when it is timed. | US-4 | A transfer package has a buffer of 30 minutes. |
 | The passenger limit cannot exceed the capacity of any asset in the pool. | US-4 | A 5-seat car cannot serve a package for 10 passengers. |
 | Every vehicle in the pool has the vehicle category of the package. | US-4 | A van cannot join a sedan package. |
-| A package is available when it is active and its pool has an active asset. | US-4 | A package with only a retired vehicle is not available. |
+| A package is available when it is active, its pool has an active asset and a valid permit unlocks its vehicle kind. | US-4 | A package with only a retired vehicle is not available. |
+| An expired permit makes the packages with that vehicle kind unavailable. Listings that use another permit stay live. | US-4 | A company with a passenger car permit and an expired chartered permit loses its Microbus package, and its Sedan listing stays live. |
+| A renewed permit, recorded by the team, makes those packages available again. | US-4 | The team records the chartered renewal, and the Microbus package returns. |
+| A listing has exactly one service type: `tour`, `airport_transfer`, `private_charter` or `port_transfer`. | US-1 | A Tokyo day trip has `tour`. |
 | A listing has at most 5 packages that are not archived. | US-4 | The sixth package shows a message. |
 | Each asset has one schedule at a time, with a date range, weekdays and opening hours. | US-5 | Monday to Saturday, 07:00 to 22:00. |
 | The provider can close a single day of an asset. | US-5 | The provider closes 31 October for an inspection. |

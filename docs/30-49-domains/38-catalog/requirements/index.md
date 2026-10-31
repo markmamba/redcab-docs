@@ -13,7 +13,7 @@ last_reviewed: 2026-10-23
 
 - Each requirements page describes what a user sees and does, with a rule table and a worked example.
 - The pages do not describe screens, APIs or algorithms.
-- A rule here cannot override an invariant in [Invariants](/docs/70-79-business/business-rules/invariants).
+- These pages are the source of truth, and an old invariant applies only where they cite it.
 - The rulings behind the rules are in [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions/#catalog-decisions-tldr).
 
 ## About this document

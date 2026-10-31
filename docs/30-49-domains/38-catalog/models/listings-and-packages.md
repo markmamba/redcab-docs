@@ -7,7 +7,7 @@ doc_type: model-spec
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-26
+last_reviewed: 2026-10-31
 supersedes:
   - FR-CAT-033 (partial)
   - PRC-2 (one policy for each listing)
@@ -38,7 +38,7 @@ This is the model page for listings, destinations, coverage and packages, and ru
 
 | Word | Meaning |
 | --- | --- |
-| the table `catalog_listings` | One row for each bookable service of one provider. |
+| the table `catalog_listings` | One row for each bookable service of one provider company. |
 | package | One sellable option of a listing, a row in `catalog_listing_packages`. It is not a Multi-Day Package (`E-04`). |
 | pricing policy | The one row in `catalog_pricing_policies` for a listing. It holds pricing mode and cancellation. |
 | asset pool | The assets a package can use, as rows in `catalog_package_assets`. |
@@ -117,7 +117,8 @@ The table `catalog_listing_packages` has one row for each sellable option.
 | Rule | Applies to | Example |
 | --- | --- | --- |
 | A listing has at most 5 packages that are not archived. | provider save | The sixth package is rejected. |
-| A package is available when it is `active` and has an active pool asset. | discovery | A package with only a retired vehicle is not available. |
+| A package is available when it is `active`, has an active pool asset and has a valid permit for its vehicle kind. | discovery | A package with only a retired vehicle is not available. |
+| A listing has exactly one service type: `tour`, `airport_transfer`, `private_charter` or `port_transfer`. | provider save | A Tokyo day trip has `tour`. |
 | The pricing policy sets pricing mode and cancellation for all packages. | pricing | Both packages of a tour are priced per vehicle. |
 | A package with bookings is archived and never deleted. | provider save | An old package stays for booking history. |
 | Until slice S4 ships, a listing may have one package, which the system creates by default. | provider save | Release 2 creates one default full-day package for each listing. |
@@ -142,16 +143,16 @@ The table `catalog_vehicle_categories` has one row for each vehicle category.
 | --- | --- |
 | `code` | The stable code, for example `commuter_van`. It is unique, and assets and packages point to it. |
 | `name_en`, `name_ja` | The names that the clients show. |
-| `kind` | `private_car` or `charter_bus`. It decides which provider type may use the category. |
+| `kind` | `private_car` or `charter_bus`. A permit of the provider company unlocks each kind. |
 | `display_order` | The order in a list. |
 | `status` | `active` or `archived`. |
 
 | Rule | Applies to | Example |
 | --- | --- | --- |
 | A vehicle asset and a package keep the `code` of a category. | provider save | A van has `commuter_van`. |
-| A guide asset and a guide-only package have no category. | provider save | A guide named Kenji has an empty category. |
-| A private car provider and a tour guide plus driver use the kind `private_car`. | provider save | A Microbus is rejected for a private car provider. |
-| A charter bus operator uses the kind `charter_bus`. | provider save | A Sedan is rejected for a bus operator. |
+| Guide assets and guide-only packages are for a later phase. | always | Every asset now is a vehicle with a category. |
+| The passenger car permit unlocks vehicles of the kind `private_car`. See [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses). | provider save | A company with only the chartered permit cannot save a Sedan. |
+| The chartered permit unlocks vehicles of the kind `charter_bus`. | provider save | A company with only the passenger car permit cannot save a Microbus. |
 | An archived category stays valid on the rows that use it. | always | An old van keeps its category. |
 | A list of categories hides an archived category. | provider save | A new package cannot pick it. |
 | Developers seed the table, and the API only reads it. | always | A new category is a data change. |

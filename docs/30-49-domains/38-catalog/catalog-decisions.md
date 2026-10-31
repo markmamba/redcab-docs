@@ -7,7 +7,7 @@ doc_type: domain-decisions
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-26
+last_reviewed: 2026-10-31
 supersedes:
   - FR-CAT-003 (partial)
   - FR-CAT-004 (partial)
@@ -29,7 +29,7 @@ legacy_ids:
 - This page holds every current Catalog ruling, each with one section and one stable link.
 - Behavior that users see is in [requirements](/docs/30-49-domains/catalog/requirements/).
 - Structure is in [models](/docs/30-49-domains/catalog/models/geography).
-- A ruling here cannot override a global invariant in [Invariants](/docs/70-79-business/business-rules/invariants).
+- This page is the source of truth, and an old invariant applies only where this page cites it.
 - Open items are only in [Open questions](#open-forks).
 
 ## About this document
@@ -207,9 +207,10 @@ A provider saves drafts and publishes on purpose.
 - There is no administrator approval for each listing.
 - A provider can edit a published listing in place.
 - RedCab checks completeness on every save and hides a failing listing at once.
-- Publish gates stay: one photo, approved provider, valid license, verified payout.
+- Publish gates: one photo, an approved provider company, verified payout and at least one available package.
+- An expired permit blocks only the listings that depend on it, because their packages are not available.
 - Why: preparing a listing and publishing it are two different acts.
-- Replaces: the draft-only edit rule in the provider update path.
+- Replaces: the draft-only edit rule in the provider update path, and `INV-7`.
 
 ## Discoverability completeness \{#discoverability-completeness\}
 
@@ -235,7 +236,6 @@ Payment confirms a booking when all checks pass.
 - RedCab checks coverage and the hold again just before payment starts.
 - If a check fails after payment succeeds, RedCab reverses the charge and makes no booking.
 - The provider does not accept the booking.
-- Corporate checkout is out of scope.
 - Why: B2C instant booking already works this way.
 - Replaces: the checkout order before the `BKG-11` amendment.
 
@@ -247,7 +247,7 @@ A package is one sellable option of a listing.
 - A listing has at most 5 packages that are not archived.
 - Until slice S4 ships, a listing may have one package, which the system creates by default.
 - The pricing policy stays one for each listing and sets pricing mode and cancellation for all packages.
-- A package is available when its status is `active`.
+- A package is available when its status is `active` and a valid permit unlocks its vehicle kind.
 - One service writes two stored display prices for discovery, and checkout never reads them.
 - Checkout takes `package_slug`, and the server finds the package.
 - The client never sends a price.
@@ -264,26 +264,53 @@ A vehicle category is reference data, and the table `catalog_vehicle_categories`
 - The six categories are `sedan`, `minivan`, `passenger_van`, `commuter_van`, `microbus` and `large_coach_bus`.
 - The product owner chose them on 2026-10-26, and they replace the seven PRD categories of `AMB-023`.
 - Each category has a unique `code`, a name in English and in Japanese, a kind and a status.
-- The kind is `private_car` or `charter_bus`.
+- The kind is `private_car` or `charter_bus`, and a permit of the provider company unlocks each kind.
 - An asset and a package keep the code, and a foreign key points to the table.
-- A guide asset and a guide-only package have no category.
+- Guide assets and guide-only packages are for a later phase, so every asset now is a vehicle with a category.
 - Sedan, Minivan and Passenger Van have the kind `private_car`.
 - Commuter Van, Microbus and Large Coach Bus have the kind `charter_bus`.
-- A private car provider and a tour guide plus driver use the kind `private_car`.
-- A charter bus operator uses the kind `charter_bus`.
+- The passenger car permit unlocks vehicles of the kind `private_car`.
+- The chartered permit unlocks vehicles of the kind `charter_bus`.
+- The ruling is [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses).
 - A category with the status `archived` stays valid on the rows that use it.
 - A list of categories hides an archived category, so no new row can pick it.
 - Developers seed and change the table, and the API only reads it.
 - Why: a new category or label must not need a deploy.
 - Replaces: the storage clause of `AMB-023`, which put the codes in application code.
+- Replaces: the kind rules for each provider type, because a provider type no longer exists.
 - Structure: [Listings and packages model](/docs/30-49-domains/catalog/models/listings-and-packages#vehicle-categories).
 - Record: [Vehicle categories are reference data](/docs/30-49-domains/catalog/architecture-decisions/vehicle-categories).
+
+## Listing service type \{#listing-service-type\}
+
+A listing has exactly one service type.
+
+- The values are `tour`, `airport_transfer`, `private_charter` and `port_transfer`.
+- The service type filter uses the same values.
+- There is no provider type, so the service type does not depend on one.
+- Guide services are for a later phase and come back as a new license.
+- Why: the type of service is a property of the listing and not of the provider.
+- Replaces: the values `private_car_transfer`, `charter_bus`, `tour_guide` and `tour_guide_plus_driver`.
+- Ruling: [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses).
+
+## Permits and package availability \{#permits-and-package-availability\}
+
+A valid permit keeps a package available, and an expired permit does not.
+
+- A package needs a valid permit for the vehicle kind of its category.
+- An expired permit makes the packages with that vehicle kind unavailable.
+- A listing with no available package is hidden by the [discoverable rule](#discoverability-completeness).
+- Listings that use another permit stay live.
+- A renewal that the team records brings the packages and listings back.
+- Why: Japanese law gives a separate permit for each kind of transport.
+- Replaces: the rule that the provider type decides the vehicle kind of a package.
+- Ruling: [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses).
 
 ## Asset holds \{#asset-holds\}
 
 Every booking holds one asset for one time range.
 
-- An asset is a vehicle or a guide of one provider.
+- An asset is a vehicle of one provider company, and guide assets are for a later phase.
 - One database rule stops two live holds on one asset from overlapping.
 - A full-day package holds the whole service day of its start date.
 - A timed package holds the start time to the end time, plus a buffer.
@@ -366,7 +393,7 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | --- | --- | --- |
 | Which region holds each border prefecture, for example Mie? | Set in the seed spec | Region seed spec |
 | What is the most additional destinations a listing can have? | Set in the provider listing spec | Provider listing spec |
-| Which provider field does keyword search use? | Legal business name; `business_name` for operators and `display_name` for guides until IAM stores it | Keyword spec |
+| Which provider field does keyword search use? | Legal business name of the provider company, until the IAM company spec names the column | Keyword spec |
 | How does a label in `service_prefectures` map to a prefecture? | A label that does not map is skipped and the provider is told | Provider listing spec |
 | Which discoverable tests apply before their table ships? | A test turns on in the release that ships its table | Release 1 spec |
 | Do shared seats sell single seats to strangers? | Not in MVP | A later ruling |
