@@ -6,8 +6,9 @@ description: Layers, precedence, doc types, and migration rules for redcab-docs.
 
 ## TL;DR \{#documentation-system\}
 
-- Docs use [Johnny Decimal](https://johnnydecimal.com/) areas; **normative** product truth for Catalog lives under [Catalog](/docs/30-49-domains/catalog/).
-- **Precedence:** global business rules → platform rulings → domain rulings → engineering → **approved** implementation specs → code.
+- Docs use [Johnny Decimal](https://johnnydecimal.com/) areas; **normative** product truth lives in the domain folders, [Catalog](/docs/30-49-domains/catalog/) and [IAM](/docs/30-49-domains/iam/).
+- **Precedence:** domain pages → engineering → **approved** implementation specs → code.
+- **Old planning** (invariants, requirements, ADRs) is background, and an old rule applies only where a domain page cites it.
 - **Programs** (revamp plans, audits) are **not** in the precedence chain.
 - Superseded pages get banners in place first; long-term home is [Legacy](/docs/80-89-legacy/).
 - Normative Catalog pages use explicit heading IDs (`\{#slug\}` in MDX); Docusaurus treats broken anchors as build errors.
@@ -33,10 +34,10 @@ This page locks how the documentation repository is organized. Agents and humans
 | Meta | `00-09-meta/` | Partial | Conventions, start-here, this page |
 | Backend / frontend engineering | `20-29-backend/`, `50-59-frontend/` | Conventions only | How to implement; not product rulings |
 | Domains | `30-49-domains/` | Mixed | Bounded contexts, data model, **domain folders** (e.g. `38-catalog/`) |
-| Platform rulings | `30-49-domains/34-architecture-decisions/` | Yes (cross-context) | ADRs that span bounded contexts |
+| Old ADRs | `30-49-domains/34-architecture-decisions/` | **No** (background) | Removed later. No new `adr-*` pages |
 | Initiatives — specs | `60-69-initiatives/61-2026/implementation-specs/` | Yes when `status: approved` | Per-issue API/web shipping design |
 | Initiatives — programs | `60-69-initiatives/61-2026/{program}/` | **No** | Plans, audits, supersession maps |
-| Business | `70-79-business/` | Yes (global) | Glossary, invariants, legacy FR index, roadmap |
+| Business | `70-79-business/` | Glossary only | Glossary. Invariants, the legacy FR index and the roadmap are background |
 | Engineering meta | `90-99-engineering-meta/` | Conventions / series | Authentication roadmap, cross-cutting |
 | Legacy | `80-89-legacy/` | **No** | Superseded material; alias table |
 
@@ -48,14 +49,14 @@ Schema truth for tables remains `red-cab-api/docs/db/*.dbml`.
 
 When documents disagree, higher layers win:
 
-1. Global business rules and glossary (`70-79-business/71-business-rules/`)
-2. Platform rulings (`30-49-domains/34-architecture-decisions/` and other accepted cross-context ADRs)
-3. Domain rulings and requirements (`30-49-domains/38-catalog/` and future `{nn}-{domain}/`)
-4. Engineering conventions (`20-29-backend/`, `50-59-frontend/`, `90-99-engineering-meta/`)
-5. Approved implementation specs (`60-69-initiatives/61-2026/implementation-specs/`, `status: approved`)
-6. Application code (`red-cab-api/`, `red-cab-web/`)
+1. Domain rulings and requirements (`30-49-domains/38-catalog/`, `30-49-domains/39-iam/` and future `{nn}-{domain}/`)
+2. Engineering conventions (`20-29-backend/`, `50-59-frontend/`, `90-99-engineering-meta/`)
+3. Approved implementation specs (`60-69-initiatives/61-2026/implementation-specs/`, `status: approved`)
+4. Application code (`red-cab-api/`, `red-cab-web/`)
 
 **Out of chain:** program and audit pages under `61-2026/` (for example [Catalog revamp 2026](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/)). They link to normative pages; they do not define product behavior.
+
+**Background only:** old invariants, requirements and ADRs (`71-business-rules/invariants.md`, `72-requirements/`, `34-architecture-decisions/`). They are not a source of truth. An old rule applies only where a domain page cites it. The glossary stays a shared word list.
 
 A lower layer must not contradict a higher layer. To change a higher layer, amend that document first.
 
@@ -113,3 +114,4 @@ New Catalog work uses **sentence titles** in navigation, not `FR-CAT-*` or `ADR-
 | 2026-10-17 | Catalog revamp PR 4: pilot [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions/) (`doc_type: domain-decisions`) and supersession map updates. |
 | 2026-10-17 | Catalog revamp PR 5: global invariant amendments (`INV-8`, `LC-10`, `PRC-2`, `BKG-11`) align `70-79` with domain decisions; domain pages link upward, not downward. |
 | 2026-10-23 | Catalog source of truth: a front door, requirements, models and architecture-decisions pages under `38-catalog/`. Invariants `INV-3`, `INV-4`, `INV-8`, `PRC-2`, `PRC-3`, `PAY-5`, `BKG-9`, `CON-1` to `CON-6` and `OPR-12` amended. Scratchpad design notes retired. |
+| 2026-10-31 | Domain pages are the source of truth. Old invariants, requirements and ADRs are background, and an old rule applies only where a domain page cites it. New domain folder `39-iam/`. No new `adr-*` pages. |

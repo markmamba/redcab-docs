@@ -32,14 +32,14 @@ Legacy URLs under `/docs/product/`, `/docs/architecture/`, and `/docs/engineerin
 
 ## Document precedence
 
-See `docs/00-09-meta/conventions/documentation-system.md` (global rules → platform ADRs → domain rulings → engineering → **approved** specs → code). Program pages under `61-2026/` are not normative.
+See `docs/00-09-meta/conventions/documentation-system.md` (domain pages → engineering → **approved** specs → code). Old invariants, requirements and ADRs are background, and an old rule applies only where a domain page cites it. Program pages under `61-2026/` are not normative. We do not add new `adr-*` pages, and each domain keeps its decisions in its own folder.
 
 ## Spec-first workflow
 
 Before implementation code is written in api/web repos:
 
 1. Create `docs/60-69-initiatives/61-2026/implementation-specs/{context}/{repo}-{issue}-{slug}.md` from `docs/60-69-initiatives/61-2026/implementation-specs/_template.md`.
-2. Review the spec against governing docs and invariants; set `status: approved` in frontmatter when ready.
+2. Review the spec against the domain pages; set `status: approved` in frontmatter when ready.
 3. Implement using codegen skills in `red-cab-api` or `red-cab-web` `.claude/skills/` (approved spec path required).
 5. Link spec in PR description.
 
@@ -68,14 +68,17 @@ Per-issue shipping design lives in `implementation-specs/` (not `write-doc`). Cr
 
 ## Read first (new feature work)
 
-- `docs/70-79-business/71-business-rules/glossary.md`
-- `docs/70-79-business/71-business-rules/invariants.md`
-- `docs/70-79-business/73-planning/open-questions.md`
-- `docs/70-79-business/73-planning/web-platform-program-strategy.md`
-- Relevant `docs/70-79-business/72-requirements/functional-requirements/{ctx}.md`
-- Relevant `docs/30-49-domains/31-bounded-contexts/{context}.md`
 - Catalog work: `docs/30-49-domains/38-catalog/index.md` (front door with the current Catalog rules)
+- IAM work: `docs/30-49-domains/39-iam/index.md` (front door with the current account, company and session rules)
+- `docs/70-79-business/71-business-rules/glossary.md`
 - `docs/20-29-backend/21-conventions/domain-to-code-mapping.md`
+
+Background only, and never a rule source unless a domain page cites it:
+
+- `docs/70-79-business/71-business-rules/invariants.md`
+- `docs/70-79-business/73-planning/`
+- `docs/70-79-business/72-requirements/functional-requirements/{ctx}.md`
+- `docs/30-49-domains/31-bounded-contexts/{context}.md`
 
 ## Multi-PR audit series
 
@@ -83,6 +86,6 @@ Programs (for example `61-2026/catalog-revamp-2026/`) are non-normative. Multi-P
 
 ## Before generating code (auth or routes)
 
-- [Authentication series](docs/90-99-engineering-meta/93-authentication/) — normative target design (ADR-018/019 Accepted; phased applicability)
-- [Authentication implementation roadmap](docs/90-99-engineering-meta/93-authentication/implementation-roadmap.md) — Phase 0–5 gates and open questions
+- [IAM domain](docs/30-49-domains/39-iam/index.md) — the current rules for accounts, companies, sessions and portals
+- [Authentication series](docs/90-99-engineering-meta/93-authentication/) — describes the code as it runs until the new sessions ship (ADR-018 and ADR-019 are superseded)
 - [Web platform program strategy](docs/70-79-business/73-planning/web-platform-program-strategy.md) — tourist UI vs auth redesign coordination
