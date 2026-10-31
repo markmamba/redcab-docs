@@ -88,6 +88,17 @@ A provider company owns the business of a provider.
 - The company owns the support trial and the payout account.
 - The company owns the listings, the assets, the bookings and the reviews.
 - Provider sign-up creates the person, a company with the status pending, and an owner membership.
+- An owner sends a pending company to the team with one Submit for review action.
+- Submit needs the legal business name, a contact phone and four documents.
+  - The documents are `business_registration`, `transport_license`, `insurance` and `id`.
+- Submit also needs a permit record, an insurance record and a company registration record.
+- A correction request from the team returns the company to the owner, and the owner submits again.
+- A rejected company can correct its application and submit again, and it then returns to pending.
+- An approved company can add license records, upload documents and change the contact phone.
+- Only the team changes the legal business name of an approved company.
+- The team can suspend an approved company with a reason, and the team can reinstate it.
+- A suspended company has no discoverable listing and takes no new booking.
+- A suspension changes no confirmed booking.
 - A signed-in tourist can create a company with the same account.
 - The approval status of the company applies to every member.
 - Tourists see the company name, not the member.
@@ -107,17 +118,24 @@ A company holds permits, and a permit unlocks a vehicle kind.
 - A company has one record for each kind.
 - Insurance and company registration unlock no vehicle kind.
 - The owner enters the license number of each record.
+- The owner can edit a record until the team checks it.
+- A checked record is locked, and a change to it goes through the team.
+- A document can point to the license record that it proves.
 - The team checks each record and enters its expiry date.
+- The team can withdraw a check, for example when a permit is revoked.
 - Adding a permit later is checked by the team.
 - Only the team records a license expiry date.
 - A record is valid when the team has checked it and its expiry date has not passed.
 - A permit stays valid until the end of its last valid day in Japan time.
 - A company has no time zone, so the system uses the time zone of Japan.
-- The approval needs a checked permit with a matching vehicle, a checked insurance record and a checked company registration record.
+- The approval needs a valid permit with a matching vehicle.
+- The approval also needs a checked insurance record and a checked company registration record.
 - The approval reads these records and the vehicles, and no stored checklist exists.
 - A pending company can save a vehicle after it adds a permit record of the matching kind.
 - Insurance has no expiry rule for now, and [Open questions](#open-forks) lists it.
 - An expired permit makes the packages with that vehicle kind unavailable.
+- A package sells a service date only up to the last valid day of its permit.
+- An ended permit changes no confirmed booking, and the team follows up by hand.
 - A listing with no available package is hidden, by the existing discoverable rule.
 - Listings that use another permit stay live.
 - A renewed permit recorded by the team brings the listings back.
@@ -246,7 +264,8 @@ The current-session answer holds the person and one access word for the provider
   - A removed member and an invited person who has not accepted are both `missing`.
 - `pending` opens the provider portal for onboarding only.
 - `active` opens the full provider portal.
-- `rejected` and `suspended` open a holding page that explains the state.
+- `rejected` opens the provider portal for onboarding only, and it explains the state.
+- `suspended` opens a holding page that explains the state.
 - The answer holds only who the person is, or the access word.
 - The answer holds no company data, no role data and no ids of other records.
 - A page that needs more reads its own endpoint in its own loader.
@@ -364,4 +383,8 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | What is the exact seat limit between the two permits? | Sources disagree. Confirm with MLIT or a 行政書士. | Provider company spec |
 | Does Red Cab need registration under the Travel Agency Act? | Unclear for a marketplace. Ask a Japanese lawyer or a 行政書士. | Launch |
 | What does expired insurance do? | Nothing for now. The team checks insurance by hand. The owner decides. | Acceptance |
+| Does the owner accept a second application after a rejection? | Yes for now. The principal developer decided this, and the owner may change it. | Acceptance |
+| Do confirmed bookings stay after a permit ends? | Yes for now. Operating without a permit may be a legal risk, so an expert must confirm it. | Launch |
+| May a package sell a date after its permit ends? | No for now. The principal developer decided this, and the owner may change it. | Acceptance |
+| Which emails do the team and the owner get? | The owner on approval, rejection and correction. The team on submit. Reminders 30 and 7 days before a permit ends. Not needed for launch. | None |
 | Has the Product Owner signed off these rulings? | Not recorded. | Acceptance |

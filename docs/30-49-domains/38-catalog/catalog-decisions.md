@@ -219,6 +219,7 @@ A tourist sees only listings that are published and complete.
 - A listing is discoverable when it is published.
 - It also needs a primary destination, one photo and one coverage row.
 - It also needs one available package.
+- It also needs a provider company with the status `approved`, so a suspended company is hidden at once.
 - The query decides this each time, and no stored flag exists in MVP.
 - The test does not read the stored starting price, because that price can lag.
 - A listing that fails the test is hidden even if its status is `published`.
@@ -307,6 +308,8 @@ A valid permit keeps a package available, and an expired permit does not.
 - Listings that use another permit stay live.
 - A renewal that the team records brings the packages and listings back.
 - The query decides availability each time, so a package stops selling when its permit ends.
+- A package sells a service date only up to the last valid day of its permit.
+- An ended permit changes no confirmed booking.
 - The stored display prices can lag behind a permit expiry.
 - A daily job and the renewal refresh the stored display prices.
 - Checkout always quotes again, so a late display price never sets the charge.
