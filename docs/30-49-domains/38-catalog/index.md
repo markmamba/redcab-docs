@@ -19,7 +19,7 @@ supersedes:
 - A tourist browses by region first, and only discoverable listings appear in results.
 - A package is what a tourist buys: vehicle, passenger limit, duration, start window and price.
 - Every booking holds one asset for one time range, and one database rule stops overlap.
-- The global [Invariants](/docs/70-79-business/business-rules/invariants) rank above every page of this domain.
+- These pages are the source of truth for this domain, and an old invariant applies only where they cite it.
 
 ## About this document
 

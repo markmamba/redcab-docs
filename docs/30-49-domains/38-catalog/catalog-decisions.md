@@ -29,7 +29,7 @@ legacy_ids:
 - This page holds every current Catalog ruling, each with one section and one stable link.
 - Behavior that users see is in [requirements](/docs/30-49-domains/catalog/requirements/).
 - Structure is in [models](/docs/30-49-domains/catalog/models/geography).
-- A ruling here cannot override a global invariant in [Invariants](/docs/70-79-business/business-rules/invariants).
+- This page is the source of truth, and an old invariant applies only where this page cites it.
 - Open items are only in [Open questions](#open-forks).
 
 ## About this document
@@ -207,9 +207,10 @@ A provider saves drafts and publishes on purpose.
 - There is no administrator approval for each listing.
 - A provider can edit a published listing in place.
 - RedCab checks completeness on every save and hides a failing listing at once.
-- Publish gates stay: one photo, approved provider, valid license, verified payout.
+- Publish gates: one photo, an approved provider company, verified payout and at least one available package.
+- An expired permit blocks only the listings that depend on it, because their packages are not available.
 - Why: preparing a listing and publishing it are two different acts.
-- Replaces: the draft-only edit rule in the provider update path.
+- Replaces: the draft-only edit rule in the provider update path, and `INV-7`.
 
 ## Discoverability completeness \{#discoverability-completeness\}
 
