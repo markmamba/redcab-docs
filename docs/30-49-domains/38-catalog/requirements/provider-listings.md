@@ -63,7 +63,7 @@ This page describes what the provider does and sees, without screens, APIs or al
 | Extra destinations are other prefectures. One listing serves all of them. | US-2 | The same tour adds Kanagawa and needs no second listing. |
 | Pickup coverage is a prefecture, a municipality or a ward. | US-3 | The provider picks Tokyo and Nishi-ku. |
 | A coverage node inside another selected coverage node is rejected. | US-3 | Tokyo and Shinjuku together show a message. |
-| A new listing pre-fills coverage from the prefectures in the provider company details. The provider can change it. | US-3 | A company with Tokyo pre-fills Tokyo. |
+| The provider adds the coverage of each listing. Nothing fills it from the company. | US-3 | A new listing starts with no coverage, and the provider picks Tokyo. |
 | A coverage change applies to bookings that are not yet confirmed. | US-3 | A confirmed booking is not affected. |
 | A package has a name, a vehicle category, a passenger limit, a duration, a start window, a step and a price. | US-4 | A 5-seat car for 4 passengers, 6 hours, from 07:00 to 13:00 every 30 minutes. |
 | A package may have a buffer when it is timed. | US-4 | A transfer package has a buffer of 30 minutes. |
@@ -78,7 +78,7 @@ This page describes what the provider does and sees, without screens, APIs or al
 | The provider can close a single day of an asset. | US-5 | The provider closes 31 October for an inspection. |
 | The provider cannot close a day, or shorten a schedule, while a live hold is on it. | US-5 | Closing 29 October fails when a booking holds the asset. |
 | The provider sets a buffer for each asset and for each timed package. | US-5 | The asset buffer is 15 minutes and the package buffer is 30 minutes. |
-| Publishing needs a photo, an approved provider, a valid license, a verified payout and a verified provider. | US-6 | Publishing without a photo shows what to add. |
+| Publishing needs a photo, an approved provider company, a verified payout and at least one available package. | US-6 | Publishing without a photo shows what to add. |
 | A draft or an unpublished listing never appears to tourists. | US-6 | A paused listing is hidden. |
 | A published listing that is not complete is hidden until it is complete again. | US-6 | The provider removes all coverage rows, so the listing is hidden. |
 | A listing that becomes complete again and is still published appears again without a new publish. | US-6 | The provider adds coverage again, and the listing returns. |

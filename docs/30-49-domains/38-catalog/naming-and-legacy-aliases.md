@@ -19,7 +19,7 @@ last_reviewed: 2026-10-31
 
 ## About this document
 
-Tier A prose. Implementation specs must use param and field names from this page unless a spec documents a temporary exception (for example IAM company name before the IAM revamp).
+Tier A prose. Implementation specs must use param and field names from this page unless a spec documents a temporary exception.
 
 | Topic | Document |
 | --- | --- |
@@ -148,7 +148,7 @@ Successor index: **`GET /marketplace/catalog/listings`** with query params below
 
 Provider leg of keyword search matches **legal business name** (registered company name), not marketing display name.
 
-**Gap:** IAM does not yet store company name. Catalog keyword spec must define interim behavior until the IAM revamp. This ruling **supersedes** [keyword search scope — provider display name](/docs/30-49-domains/catalog/catalog-decisions#keyword-search-scope) until decisions and IAM align.
+The column is `providers_companies.business_name`.
 
 ---
 
@@ -159,3 +159,4 @@ Provider leg of keyword search matches **legal business name** (registered compa
 | 2026-10-17 | Initial page from vocabulary quiz passes 1–3 (40 decisions). |
 | 2026-10-23 | Package and policy rows match the ruled model. Added availability words. Removed scratchpad IDs and the follow-up note. |
 | 2026-10-31 | Service type values and the guide and vehicle wording follow the IAM rulings. |
+| 2026-10-31 | Keyword search reads `providers_companies.business_name`, and the company name gap is closed. |

@@ -48,10 +48,11 @@ The team admin login (`identities_admins`) is not part of this domain page yet, 
 | tourist profile | The data that a person has as a tourist. A person has zero or one. |
 | provider company | The business of a provider. It holds the approval status, the details, the documents and the licenses. |
 | membership | The staff account of one person inside one provider company. It holds the company role. |
+| permit | A license that the law requires for one kind of transport. A valid permit unlocks one vehicle kind. |
 | Owner | A company role. An owner can do everything in the company. |
 | Staff | A company role. Staff manage the catalog, the bookings and the reviews. |
 | portal | One web app: the tourist portal or the provider portal. |
-| session | One database record for each sign-in. The cookie holds its signed id. |
+| session | One database record for each sign-in. The cookie holds its signed uuid. |
 | access word | One word that says what a person may do in the provider portal, for example `active`. |
 
 ## The model on one page \{#model\}

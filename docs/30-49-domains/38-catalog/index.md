@@ -49,6 +49,7 @@ Status: current, approved by the principal developer on 2026-10-18 and 2026-10-2
 | pickup coverage | The places where the provider picks up tourists. It is separate from destinations. |
 | listing | One bookable service of one provider company, a row in `catalog_listings`. |
 | package | One sellable option of a listing, a row in `catalog_listing_packages`. It is not a Multi-Day Package (`E-04`). |
+| available package | A package that is `active`, has an active asset in its pool and has a valid permit for its vehicle kind. |
 | asset | A vehicle of one provider company, a row in `catalog_provider_assets`. |
 | vehicle category | The type of a vehicle, for example `sedan`. A row in `catalog_vehicle_categories` defines it. |
 | asset hold | One row in `catalog_asset_holds`. It holds one asset for one time range for one booking attempt. |

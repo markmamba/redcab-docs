@@ -41,7 +41,7 @@ This page describes what the tourist sees, without screens, APIs or algorithms.
 | --- | --- |
 | scope | The set of listings of the page: all, one region, or one prefecture in a region. |
 | discoverable | A listing that may appear in results. See [Discoverability completeness](/docs/30-49-domains/catalog/catalog-decisions/#discoverability-completeness). |
-| starting price | The lowest price among the active packages of a listing. |
+| starting price | The lowest price among the available packages of a listing. |
 | package | One sellable option of a listing, for example a 5-seat car for 6 hours. |
 
 ## User stories \{#user-stories\}
@@ -72,11 +72,11 @@ This page describes what the tourist sees, without screens, APIs or algorithms.
 | Service type, language and vehicle type take many values. Values in one category use OR. Categories use AND. | US-4 | English or Japanese, and Sedan, shows a listing with Japanese and Sedan. |
 | While a filter is on, a listing without that attribute is excluded. | US-4 | A listing with no languages is hidden while the language filter is on. |
 | Clearing one filter keeps the other filters, the keyword and the scope. | US-4 | The tourist clears Sedan, and the language filter stays on. |
-| The price filter includes a listing when any active package price is inside the range. Both bounds are inclusive. | US-4 | Packages at ¥8,000, ¥15,000 and ¥25,000 match the range ¥12,000 to ¥18,000. |
+| The price filter includes a listing when any available package price is inside the range. Both bounds are inclusive. | US-4 | Packages at ¥8,000, ¥15,000 and ¥25,000 match the range ¥12,000 to ¥18,000. |
 | A minimum above the maximum is not applied, and the page shows a message. | US-4 | A minimum of ¥20,000 and a maximum of ¥10,000 shows the message. |
 | When a price filter is on, the listing page shows which packages are inside the range. | US-4 | The ¥15,000 package is marked as inside the range. |
 | The service date filter shows listings that have an asset open on that date. | US-4 | A listing whose assets are all closed or held on that date is hidden. |
-| The group size filter shows listings with an active package whose passenger limit fits. | US-4 | A group of 8 shows packages for 10 passengers, not for 4. |
+| The group size filter shows listings with an available package whose passenger limit fits. | US-4 | A group of 8 shows packages for 10 passengers, not for 4. |
 | The default sort is Recently added, by `published_at`, newest first. | US-5 | The listing published on 15 October ranks above the one published on 10 October. |
 | A re-publish moves a listing up. An edit does not. | US-5 | A listing re-published on 1 November ranks by 1 November. |
 | Price: low to high sorts by the starting price, even when a price filter is on. | US-5 | Starting price ¥8,000 ranks above ¥12,000 under the range ¥12,000 to ¥18,000. |
@@ -84,8 +84,8 @@ This page describes what the tourist sees, without screens, APIs or algorithms.
 | Top rated sorts by average rating. Unrated listings come last. | US-5 | 4.9 with 40 ratings ranks above 4.9 with 12 ratings. |
 | Equal sort keys use the newer `published_at`, then the newer `created_at`. | US-5 | Two listings with the same rating rank by publish time. |
 | A change of sort keeps the keyword, the filters and the scope. | US-5 | Sorting by price keeps the region. |
-| A card shows the lowest active package price as "From ¥X". Filters do not change it. | US-6 | The card shows "From ¥8,000" while the range is ¥12,000 to ¥18,000. |
-| A package that is not active does not count for price, filter or card. | US-6 | A package set to `inactive` is ignored. |
+| A card shows the lowest available package price as "From ¥X". Filters do not change it. | US-6 | The card shows "From ¥8,000" while the range is ¥12,000 to ¥18,000. |
+| A package that is not available does not count for price, filter or card. | US-6 | A package set to `inactive` is ignored. |
 
 ## Worked example \{#worked-example\}
 

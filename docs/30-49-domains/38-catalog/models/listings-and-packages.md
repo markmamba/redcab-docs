@@ -153,6 +153,7 @@ The table `catalog_vehicle_categories` has one row for each vehicle category.
 | Guide assets and guide-only packages are for a later phase. | always | Every asset now is a vehicle with a category. |
 | The passenger car permit unlocks vehicles of the kind `private_car`. See [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses). | provider save | A company with only the chartered permit cannot save a Sedan. |
 | The chartered permit unlocks vehicles of the kind `charter_bus`. | provider save | A company with only the passenger car permit cannot save a Microbus. |
+| A provider can save a vehicle when the company has a permit record for its kind, even before the team checks it. | provider save | A new company adds the chartered permit and then saves a Microbus. |
 | An archived category stays valid on the rows that use it. | always | An old van keeps its category. |
 | A list of categories hides an archived category. | provider save | A new package cannot pick it. |
 | Developers seed the table, and the API only reads it. | always | A new category is a data change. |
@@ -187,10 +188,10 @@ Two columns hold display prices, and one service writes both.
 The scope `Catalog::Listing.discoverable` is a query and stores nothing.
 
 ```text
-# red-cab-api/docs/db/catalog.dbml:476-480
+# red-cab-api/docs/db/catalog.dbml:511-515
     DISCOVERABLE = Catalog::Listing.discoverable (one scope, calculated at query time, DP-11):
     - status = :published
-    - starting_price_jpy IS NOT NULL (>= 1 :active package with >= 1 :active pool asset, C2)
+    - EXISTS an available package (live check, see the catalog_listing_packages note, C2)
     - EXISTS a catalog_listing_photos row (INV-10)
     - EXISTS a catalog_listing_pickup_coverages row (DP-6)
 ```
@@ -205,7 +206,7 @@ Each filter reads these data.
 | Service date | A pool asset that is open on the date and has no live full-day hold |
 | Price range | `catalog_listing_packages.display_price_jpy` of available packages |
 | Service type and language | `catalog_listings.service_type` and `catalog_listings.languages_supported` |
-| Keyword | Titles, descriptions, destination names and the provider name |
+| Keyword | Titles, descriptions, destination names and `providers_companies.business_name` |
 
 For a timed package, the date filter means "may have free times", and the time picker gives the exact answer.
 
