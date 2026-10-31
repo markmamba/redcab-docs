@@ -2,12 +2,12 @@
 title: Asset availability model
 sidebar_label: Asset availability
 sidebar_position: 3
-description: How Catalog holds a vehicle or guide for each booking, with schedules, closures, buffers and one overlap rule.
+description: How Catalog holds a vehicle for each booking, with schedules, closures, buffers and one overlap rule.
 doc_type: model-spec
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-23
+last_reviewed: 2026-10-31
 supersedes:
   - INV-3, INV-4, CON-1 to CON-6 (slot seat counter)
   - FR-CAT-006, FR-CAT-019, FR-CAT-020, FR-CAT-021, FR-CAT-029, FR-CAT-031
@@ -38,7 +38,7 @@ This is the model page for asset availability, and the ruling is [Asset holds](/
 
 | Word | Meaning |
 | --- | --- |
-| asset | A vehicle or a guide of one provider, as a row in `catalog_provider_assets`. |
+| asset | A vehicle of one provider company, as a row in `catalog_provider_assets`. |
 | the table `catalog_asset_holds` | One row for each booking attempt. |
 | live hold | A hold with `status: "held"` or `status: "confirmed"`. |
 | schedule | A row in `catalog_asset_schedules`: the weekly work pattern of one asset for a date range. |

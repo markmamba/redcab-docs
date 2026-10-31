@@ -6,7 +6,7 @@ description: Why Catalog keeps the vehicle categories in a table and not in code
 normative: true
 status: accepted
 context: catalog
-last_reviewed: 2026-10-26
+last_reviewed: 2026-10-31
 supersedes:
   - AMB-023 (storage clause: the codes live in application code)
 ---
@@ -15,7 +15,7 @@ supersedes:
 
 - A new table `catalog_vehicle_categories` holds the definition of each vehicle category.
 - An asset and a package keep the category code, and a foreign key points to the table.
-- The table says which kind of provider may use each category.
+- The table says which permit unlocks each category, through its kind.
 - Developers seed the table, and the API only reads it.
 
 ## About this document
@@ -57,7 +57,7 @@ Keep the definitions in a table, and keep the code on the rows that use it.
 - The table `catalog_vehicle_categories` has a unique `code`, two names, a `kind`, a display order and a status.
 - `catalog_provider_assets.vehicle_category` and `catalog_listing_packages.vehicle_category` keep the code as a string.
 - Each of the two columns has a foreign key to `catalog_vehicle_categories.code`.
-- The `kind` is `private_car` or `charter_bus`, and it drives the rule for each provider type.
+- The `kind` is `private_car` or `charter_bus`, and a permit unlocks each kind (see [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses)).
 - The names come in English and in Japanese.
 - Developers seed the six categories of the product owner, and the API has read endpoints only.
 - The migration remaps the old codes on existing rows to the new codes.
@@ -80,5 +80,5 @@ Keep the definitions in a table, and keep the code on the rows that use it.
 | --- | --- |
 | Keep the enums | Every change needs a deploy in two repos, and the codes stay in five places. |
 | An id column on the asset and the package | The filter and the indexes need a join or an id lookup, and the JSON and the clients change for no gain. |
-| Rules for each provider type stay in the validators | A new category still needs a deploy, and the two lists stay. |
+| Rules for each permit stay in the validators | A new category still needs a deploy, and the two lists stay. |
 | Team editing now | It needs endpoints, a screen and tests, and no product need exists before launch. |
