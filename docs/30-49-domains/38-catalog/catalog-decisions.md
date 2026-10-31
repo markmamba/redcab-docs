@@ -90,7 +90,7 @@ Keyword search finds listings by what they are, where they go and who runs them.
 - Clearing the keyword keeps the scope, the filters and the sort.
 - Why: a tourist can search Yokohama and find a Tokyo tour that also goes there.
 - Replaces: the "no keyword" limit in specs `api-161` and `web-124`.
-- The provider name field is open, and [Open questions](#open-forks) lists it.
+- The provider name is the column `providers_companies.business_name`.
 
 ## Marketplace filter combination \{#marketplace-filter-combination\}
 
@@ -99,7 +99,7 @@ Filters in one category use OR, and filters in different categories use AND.
 - Service type, language and vehicle type take many values.
 - A listing matches a category when it has any selected value.
 - A listing must match every category that has a selection.
-- A vehicle type matches a listing when any active package has that vehicle category.
+- A vehicle type matches a listing when any available package has that vehicle category.
 - Service date and group size filters stay.
 - Group size matches the passenger limit of a package.
 - A listing without the attribute of an active filter is excluded.
@@ -109,9 +109,9 @@ Filters in one category use OR, and filters in different categories use AND.
 
 ## Starting price and price filter \{#starting-price-and-price-filter\}
 
-The starting price of a listing is the lowest price among its active packages.
+The starting price of a listing is the lowest price among its available packages.
 
-- The price filter includes a listing when any active package price is inside the bounds.
+- The price filter includes a listing when any available package price is inside the bounds.
 - Both bounds are inclusive, and one bound alone is valid.
 - A minimum above the maximum is invalid and is not applied.
 - The card shows the starting price as "From ¥X", and it need not be inside the filter range.
@@ -218,10 +218,11 @@ A tourist sees only listings that are published and complete.
 
 - A listing is discoverable when it is published.
 - It also needs a primary destination, one photo and one coverage row.
-- It also needs one active package with at least one active asset in its pool.
+- It also needs one available package.
 - The query decides this each time, and no stored flag exists in MVP.
+- The test does not read the stored starting price, because that price can lag.
 - A listing that fails the test is hidden even if its status is `published`.
-- A direct link to a listing with no active package shows "currently unavailable".
+- A direct link to a listing with no available package shows "currently unavailable".
 - Checkout is blocked for that listing.
 - A missing optional attribute does not hide a listing.
 - Why: tourists must not find a listing they cannot book.
@@ -247,7 +248,10 @@ A package is one sellable option of a listing.
 - A listing has at most 5 packages that are not archived.
 - Until slice S4 ships, a listing may have one package, which the system creates by default.
 - The pricing policy stays one for each listing and sets pricing mode and cancellation for all packages.
-- A package is available when its status is `active` and a valid permit unlocks its vehicle kind.
+- A package is available when all of these are true.
+  - Its status is `active`.
+  - Its pool has an active asset.
+  - A valid permit unlocks its vehicle kind.
 - One service writes two stored display prices for discovery, and checkout never reads them.
 - Checkout takes `package_slug`, and the server finds the package.
 - The client never sends a price.
@@ -302,6 +306,12 @@ A valid permit keeps a package available, and an expired permit does not.
 - A listing with no available package is hidden by the [discoverable rule](#discoverability-completeness).
 - Listings that use another permit stay live.
 - A renewal that the team records brings the packages and listings back.
+- The query decides availability each time, so a package stops selling when its permit ends.
+- The stored display prices can lag behind a permit expiry.
+- A daily job and the renewal refresh the stored display prices.
+- Checkout always quotes again, so a late display price never sets the charge.
+- A provider can save a vehicle when the company has a permit record for its kind.
+- The team need not check that record first.
 - Why: Japanese law gives a separate permit for each kind of transport.
 - Replaces: the rule that the provider type decides the vehicle kind of a package.
 - Ruling: [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses).
@@ -393,8 +403,6 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | --- | --- | --- |
 | Which region holds each border prefecture, for example Mie? | Set in the seed spec | Region seed spec |
 | What is the most additional destinations a listing can have? | Set in the provider listing spec | Provider listing spec |
-| Which provider field does keyword search use? | Legal business name of the provider company, until the IAM company spec names the column | Keyword spec |
-| How does a label in `service_prefectures` map to a prefecture? | A label that does not map is skipped and the provider is told | Provider listing spec |
 | Which discoverable tests apply before their table ships? | A test turns on in the release that ships its table | Release 1 spec |
 | Do shared seats sell single seats to strangers? | Not in MVP | A later ruling |
 | How does a Multi-Day Package (`E-04`) hold assets over many days? | Not designed; `BKG-4` still names slots | A later ruling |

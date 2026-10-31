@@ -74,7 +74,7 @@ This page describes what the tourist does and sees at booking, without screens, 
 | The provider does not accept the booking. | US-4 | No acceptance step exists for a tourist booking. |
 | An abandoned or expired checkout, or a failed payment, makes no booking and releases the hold. | US-4 | The session expires, and the asset is free again. |
 | A confirmed booking stays valid when the provider changes coverage, packages, the pool or the schedule. | US-4 | The provider removes Nishi-ku later, and the booking stays. |
-| A direct link to a listing with no active package shows "currently unavailable" and blocks checkout. | US-5 | A shared link opens the page, and the book button is off. |
+| A direct link to a listing with no available package shows "currently unavailable" and blocks checkout. | US-5 | A shared link opens the page, and the book button is off. |
 
 ## Worked example \{#worked-example\}
 

@@ -39,7 +39,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Actor** — a person/system interacting with the platform: Visitor, Tourist, Corporate Client, Provider (Pending/Approved), Platform Admin.
 - **Tourist (Consumer)** — an authenticated individual traveler who browses, books, pays, and reviews. Demand side.
 - **Corporate / Group Client** — a school/company/group coordinator account (`account_type = Corporate`) that can request quotations, pay by bank transfer, and submit manifests. Demand side, COR.
-- **Provider (Supplier / Client)** — a verified operator (Private Car, Charter Bus, Tour Guide, Tour Guide + Driver) that lists services and receives bookings. Supply side. (Note: the raw notes call this a "Client"; in code/docs we use **Provider** to avoid collision with "Corporate Client".)
+- **Provider (Supplier / Client)** — a verified vehicle travel company that holds at least one permit, lists services and receives bookings. Supply side. (Note: the raw notes call this a "Client"; in code/docs we use **Provider** to avoid collision with "Corporate Client".)
 - **Platform Admin** — internal Red Cab staff with full override access. Authenticates via a **separate Admin principal** (`Identities::Admin` / `admin_users`); Admin is **not** a value on marketplace `Account.role`.
 - **Platform** — Red Cab itself, the technology intermediary that earns commission.
 - **Money / JPY minor units** — all monetary values are integers in Japanese Yen (JPY has no decimal subunit in practice; stored as whole yen). No floats for money. Commission rounding uses `FLOOR(gross × rate)`; `net = gross − commission` (`PAY-11`).
@@ -48,7 +48,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Domain Event** — a past-tense, in-process notification (e.g. `ProviderApproved`, `BookingCompleted`) that decouples contexts; consumed by Notifications and cross-context cascades.
 - **Bounded Context** — a logical module boundary with its own ubiquitous language; in this project a namespaced module inside one modular-monolith Rails app.
 - **Aggregate** — a cluster of domain objects treated as a single transactional/consistency unit, addressed by its root entity.
-- **Provider Type** — one of: `Private Car / Luxury Transfer`, `Charter Bus Operator`, `Tour Guide`, `Tour Guide + Driver`. Set at registration; immutable without Admin action (`A-03`).
+- **Permit** — a license for one kind of transport that unlocks one vehicle kind, `private_car` or `charter_bus`.
 - **Language Preference** — `EN` or `JA`; drives UI rendering and notification language. Tourist app defaults to EN; Client Portal defaults to JA (`G-03`, `G-04`).
 
 ---
@@ -58,10 +58,10 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Onboarding** — the lifecycle from provider registration to Approved/Active.
 - **Pending Provider** — registered but not yet approved; read-only Pending screen, invisible to tourists (`1.4`).
 - **Approved Provider** — verified operator with full Client Portal access (`1.5`).
-- **Verification Checklist** — Admin's structured approval list: business registration, license validity, insurance, profile photo (`A-05`).
-- **License Document** — uploaded proof (MLIT Transport License, Guide License, Company Registration, Insurance, ID). Type-dependent required set (`A-04`).
-- **License Expiry / Expiry Date** — Admin-entered date after which an operator is unlicensed; drives auto-warning and auto-pause (`A-06`).
-- **Listing Auto-Pause** — on license expiry, all of a provider's listings are set to Paused automatically (`A-06`).
+- **Approval Check** — the one-time team check before approval: a checked permit, a matching vehicle, insurance and company registration.
+- **License Document** — uploaded proof (permit, Company Registration, Insurance, ID).
+- **License Expiry / Expiry Date** — team-entered last valid day of a license record, valid until the end of that day in Japan time.
+- **Package Availability** — a package is unavailable when its vehicle kind has no valid permit, and no listing is paused.
 - **Support Trial (3-Month Free Support)** — free support window starting at Admin approval date; after expiry support is gated (`A-07`).
 - **Provider Status** — `Pending | Approved | Rejected | Suspended`. Exposed to other contexts for access gating.
 - **Provider Merchant Account** — Provider's sub-merchant account with the configured payment provider, used to receive net settlement. Must be active and verified before any Listing may be Published (`LC-12`, `INV-12`). Sub-merchant KYC is performed by the payment provider as the licensed party. **Owned by Payments**; PRV onboarding is the flow, PAY is the data owner. Catalog reads `payout_capability(provider_id)` as a conformist sync contract — never PAY's tables directly. *(Formerly "Stripe Connected Account"; renamed with `ADR-015` as the provider is not yet selected — `AMB-040`.)*
@@ -96,7 +96,7 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Successor geography** — when a node is archived by merger (`INV-11`), the surviving node referenced by `successor_geography_id` — drives redirects and Listing re-placement (`FR-CAT-034`).
 - **External code** — official administrative code (2-digit prefecture or 5-digit 全国地方公共団体コード, JIS X 0402); stable seed upsert key with `code_system`.
 - **Tourism tag** — *(future)* curated discovery label (Ginza, Fuji Five Lakes) attached to Listings, not an Area.
-- **Listing (Service Listing)** — a bookable service published by a Provider, typed by Provider Type, with photos, pricing, location, and availability (`C-01`).
+- **Listing (Service Listing)** — a bookable service published by a Provider, with one service type, photos, pricing, location, and availability (`C-01`).
 - **Listing Status** — `Draft | Published | Paused/Unpublished | Unlisted`. `Published` is required for marketplace discovery but is not sufficient alone (`LC-10`). Unlisted = hidden by Admin/geography action; historical bookings always preserved (`C-11`, `B-05`).
 - **Provider Asset (`provider_assets`)** — a first-class, Provider-owned physical resource: a specific vehicle or guide instance (`id`, `provider_id`, `license_plate_or_vin`, `capacity`, `vehicle_category`). Slots reference `asset_id`; overlap constraints are **per-asset** (`CON-4`). Vehicle categories are Sedan, Minivan, Passenger Van (private car); Commuter Van, Microbus, Large Coach Bus (charter bus). The definitions live in the reference table (see **Vehicle Category**).
 - **Vehicle Category** — the type of a vehicle, for example `minivan`, defined by a row in `catalog_vehicle_categories` (see [Vehicle category reference data](/docs/30-49-domains/catalog/catalog-decisions#vehicle-category-reference-data)).
@@ -170,9 +170,9 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 
 ## 7. Identity & Access (supporting)
 
-- **Account** — an authenticated marketplace identity with credentials and a coarse **Role** claim (`Tourist | Corporate | Provider`). Does **not** include Admin.
+- **Account** — one person with credentials, a name and a language, with no role and not an Admin.
 - **Admin (principal)** — separate authenticatable identity (`Identities::Admin` / `admin_users`) for Platform Admin; gates the Admin Panel (`/team`). Not stored as `Account.role`.
-- **Role** — `Tourist | Corporate | Provider`; gates Tourist App, Corporate Client Portal, and Provider Portal surfaces. Admin authorization uses the Admin principal, not Role.
+- **Company Role** — `Owner` or `Staff`, the role of a member in a provider company, while Admin authorization uses the Admin principal.
 - **Authentication** — email/password (min 8 chars, 1 number) and/or Google OAuth (`A-01`, `A-02`).
 - **Account Lockout** — 15-minute lock after 5 consecutive failed logins (`A-02`).
 - **Session / Token** — SPA auth credential issued on login.

@@ -84,6 +84,7 @@ A provider company owns the business of a provider.
 - Child tables of the profile point to the company with `providers_company_id`.
 - Other domains keep the column name `provider_id`, and it points to the company.
 - The company owns the approval status, the details, the documents and the licenses.
+- An owner enters the legal business name and a contact phone before the company goes to the team for review.
 - The company owns the support trial and the payout account.
 - The company owns the listings, the assets, the bookings and the reviews.
 - Provider sign-up creates the person, a company with the status pending, and an owner membership.
@@ -102,18 +103,30 @@ A company holds permits, and a permit unlocks a vehicle kind.
 - The chartered permit (一般貸切旅客自動車運送事業) unlocks vehicles of the kind `charter_bus`.
 - The team approves a company once, and the company must hold at least one permit with a matching vehicle.
 - Every company must provide insurance.
+- A company holds license records of four kinds: `passenger_car_permit`, `chartered_permit`, `insurance` and `company_registration`.
+- A company has one record for each kind.
+- Insurance and company registration unlock no vehicle kind.
+- The owner enters the license number of each record.
+- The team checks each record and enters its expiry date.
 - Adding a permit later is checked by the team.
-- Only the team records a license expiry date for the demo.
+- Only the team records a license expiry date.
+- A record is valid when the team has checked it and its expiry date has not passed.
+- A permit stays valid until the end of its last valid day in Japan time.
+- A company has no time zone, so the system uses the time zone of Japan.
+- The approval needs a checked permit with a matching vehicle, a checked insurance record and a checked company registration record.
+- The approval reads these records and the vehicles, and no stored checklist exists.
+- A pending company can save a vehicle after it adds a permit record of the matching kind.
+- Insurance has no expiry rule for now, and [Open questions](#open-forks) lists it.
 - An expired permit makes the packages with that vehicle kind unavailable.
 - A listing with no available package is hidden, by the existing discoverable rule.
 - Listings that use another permit stay live.
 - A renewed permit recorded by the team brings the listings back.
+- A renewal updates the same license record.
 - Guide services are not in scope now, and they come back later as a new license.
 - A listing has one service type: `tour`, `airport_transfer`, `private_charter` or `port_transfer`.
 - This replaces the listing `service_type` values, and the Catalog pages must follow.
 - Why: Japanese law gives a separate permit for each kind of transport.
-- An expired permit must hide only the listings that need it.
-- Replaces: `provider_type`, its detail tables, `INV-7`, `INV-9` and `FR-PRV-002`.
+- Replaces: `provider_type`, its detail tables, the verification checklist, the guide `display_name`, the list of served prefectures, `INV-7`, `INV-9` and `FR-PRV-002`.
 
 ## Company roles \{#company-roles\}
 
@@ -137,11 +150,13 @@ A membership has one company role, Owner or Staff.
 An owner adds staff by invitation.
 
 - An owner invites a person by email with a company role.
-- The table `providers_invitations` holds the email, the company role, the token digest and the expiry.
+- The table `providers_invitations` holds the email, the company role, the token digest, the expiry and the owner who sent it.
 - An invitation has the status `pending`, `accepted` or `cancelled`.
 - Accepting an invitation creates the membership.
 - An invitation is valid for 7 days, and the owner can send it again.
+- A new send replaces the old link, and the old link stops working.
 - A person who already has a membership cannot accept.
+- The email of the signed-in person must match the invited email.
 - A person without an account signs up first, and then accepts.
 - A change of role or a removal applies at once.
 - A removed member loses access to the provider portal on the next action.
@@ -170,7 +185,7 @@ A session is one database record for each sign-in.
 
 - Persons use `identities_account_sessions`, and team admins use `identities_admin_sessions`.
 - The two systems share no table, no cookie and no code.
-- The cookie holds only the signed id of the record, and it never changes after sign-in.
+- The cookie holds only the signed uuid of the record, and it never changes after sign-in.
 - The cookie is `HttpOnly`, `Secure` outside development and test, and `SameSite=Lax`.
 - The cookie domain comes from configuration, and never from the request.
 - Nothing refreshes, and no endpoint renews a cookie.
@@ -280,8 +295,12 @@ Some records keep the member who did the action.
 - A booking marked delivered keeps the member who marked it.
 - A review answer keeps the member who wrote it.
 - A review report keeps the member who sent it.
+- An invitation keeps the owner who sent it.
 - Other records, such as packages, assets, schedules, closures and documents, keep the company only.
 - The record keeps the member who did the latest action, and it is not a full history of changes.
+- A change that the system makes names no member.
+- One example is a listing that the system unlists when a place is deactivated.
+- Another example is a booking that the system completes on its own.
 - Tourists see the company name, not the member.
 - Why: the owner must be able to ask who did an action on money, public text or the listing status.
 - Replaces: nothing, because the system has no members today.
@@ -344,4 +363,5 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | --- | --- | --- |
 | What is the exact seat limit between the two permits? | Sources disagree. Confirm with MLIT or a 行政書士. | Provider company spec |
 | Does Red Cab need registration under the Travel Agency Act? | Unclear for a marketplace. Ask a Japanese lawyer or a 行政書士. | Launch |
+| What does expired insurance do? | Nothing for now. The team checks insurance by hand. The owner decides. | Acceptance |
 | Has the Product Owner signed off these rulings? | Not recorded. | Acceptance |

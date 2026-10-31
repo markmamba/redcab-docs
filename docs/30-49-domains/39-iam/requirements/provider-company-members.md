@@ -51,13 +51,17 @@ This page describes what the owner and the staff do and see, without screens, AP
 | --- | --- | --- |
 | An owner invites a person by email with a company role. | US-1 | Kenji invites mika@example.com as Staff. |
 | An invitation is valid for 7 days, and the owner can send it again. | US-1 | Mika opens the link on day 8 and sees that it expired. |
+| A new send replaces the old link. | US-1 | Kenji sends the invitation again, and the first link stops working. |
 | A person with an account signs in to accept. A person without an account signs up first. | US-1 | Mika has a tourist account, so she signs in and accepts. |
 | A person who already has a membership cannot accept. | US-1 | Mika cannot join a second company. |
+| The email of the signed-in person must match the invited email. | US-1 | A person who signs in with another email cannot accept the invitation for mika@example.com. |
 | A tourist who accepts keeps the tourist profile. | US-1 | Mika can still book tours. |
 | Staff create and edit listings, packages, assets, schedules and closures. | US-2 | Mika adds a package to a Tokyo tour. |
 | Staff view bookings, mark a booking delivered and answer reviews. | US-2 | Mika marks a booking delivered. |
 | Tourists see the company name, not the member. | US-2 | Mika's review answer shows "Kanto Charter". |
 | A listing status change, a delivered booking, a review answer and a review report keep the member who did the action. | US-2 | The owner sees that Mika marked a booking delivered. |
+| An invitation keeps the owner who sent it. | US-1 | The invitation for mika@example.com shows that Kenji sent it. |
+| A change that the system makes names no member. | US-2 | The system completes a booking on its own, and no member is named. |
 | Only an owner changes the company details, the documents, the payout account and the members. | US-3 | Mika cannot open the payout settings. |
 | Staff see the price and the payout amount of each booking, and they do not see the payout account. | US-2, US-3 | Mika sees "¥20,000, payout ¥18,000" on a booking and no bank details. |
 | The approval status of the company applies to every member. | US-3 | No member of a suspended company can publish. |

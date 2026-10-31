@@ -14,7 +14,7 @@ supersedes:
 
 ## TL;DR
 
-- Each sign-in is one database record, and the cookie holds only the signed id of that record.
+- Each sign-in is one database record, and the cookie holds only the signed uuid of that record.
 - Nothing refreshes, and `401` means that the session is gone.
 - The URL decides the portal, and the current-session answer holds the person and one access word for the provider portal.
 - ADR-019 chose to keep `jwt_sessions` and deferred this option.
