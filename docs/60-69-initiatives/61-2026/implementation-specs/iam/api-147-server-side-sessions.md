@@ -18,7 +18,7 @@ related:
 - Each sign-in becomes one row in `identities_account_sessions` or `identities_admin_sessions`.
 - Rails reads that row on every request, and nothing refreshes.
 - The gem `jwt_sessions` and its Redis token store go away.
-- A person can sign out everywhere.
+- A person and a team admin can each sign out everywhere.
 - Login endpoints get a rate limit for one IP address.
 - The current-session answer keeps its fields, because `provider_access` needs the memberships of I2.
 - Breaking change: Yes.
@@ -32,7 +32,7 @@ The session code does not follow the IAM rulings.
 - A `401` also means that an access token expired, so a `401` does not mean that the session is gone.
 - A missing or wrong CSRF token answers `401`.
   - Five tests in `test/integration/auth_contract/` pin this answer.
-- No endpoint signs a person out everywhere.
+- No endpoint signs a person or a team admin out everywhere.
 - Persons and team admins share the concerns `SessionCookieManager` and `SessionPrincipal`.
 - Session cookies have no expiry date, so a closed browser loses the session.
 - Login endpoints have no rate limit for one IP address.
@@ -54,7 +54,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | Record | [Sessions are database records, and nothing refreshes](/docs/30-49-domains/iam/architecture-decisions/server-side-sessions) | Reasons and rejected options |
 | Column truth | [identities.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/identities.dbml) | `identities_account_sessions`, `identities_admin_sessions` and `identities_oauth_identities` |
 | Code today | [Authentication](/docs/90-99-engineering-meta/authentication/) | The contract that this spec replaces |
-| Paired spec | The web spec for [red-cab-web#190](https://github.com/markmamba/red-cab-web/issues/190) | Must deploy with this spec |
+| Paired spec | [Web server-side sessions](web-190-server-side-sessions-and-account-menu.md) | Must deploy with this spec |
 
 This spec depends on [red-cab-api#259](https://github.com/markmamba/red-cab-api/pull/259), which adds the Google link index to the DBML files.
 
@@ -73,7 +73,7 @@ The rulings fix the behavior, and these decisions fix the parts that the rulings
 | 7 | Rails updates `last_used_at` after the CSRF check. | Update before the check. | A refused write must not extend a session. |
 | 8 | Rails compares the header `X-CSRF-Token` with the `csrf_token` column of the record. | Compare the header with the cookie. | The ruling puts the token on the record. |
 | 9 | An account that is not `active` answers `401`, and its session rows stay. | Delete the rows when an account locks. | This is the answer of the code today, and a lock can end by itself. |
-| 10 | The team has no sign out everywhere endpoint. | Add one now. | The ruling names persons, and the team admin login audit comes later. |
+| 10 | The team gets its own sign out everywhere endpoint. | Leave it to the team admin login audit. | A team admin who loses a device needs the same answer as a person. |
 | 11 | The rate limit covers `POST identities/sessions` and `POST team/identities/admins/sessions`. | Also cover the Google callback. | These two endpoints check a password, and Google checks its own. |
 | 12 | The rate limit counts in Redis, on the Redis database that the Google state store uses. | Use `Rails.cache`. | The test environment uses `:null_store`, and production sets no shared cache store. |
 | 13 | The session cookie has the `__Secure-` prefix in production only. | Use one name in all environments. | A browser refuses a `__Secure-` cookie without `Secure`, and development has no HTTPS. |
@@ -93,6 +93,7 @@ Each row shows the contract after this spec ships.
 | GET | `identities/accounts/current` | Session | None | `200` Account JSON | Fields do not change |
 | POST | `team/identities/admins/sessions` | None | `email`, `password` | `201` Admin JSON and team cookies | `422` for a wrong password, and `429` at the rate limit |
 | DELETE | `team/identities/admins/sessions/current` | Team session and CSRF | None | `200 { message }` | Deletes one row and clears the team cookies |
+| DELETE | `team/identities/admins/sessions` | Team session and CSRF | None | `200 { message }` | New. Deletes all rows of the admin and clears the team cookies |
 | GET | `team/identities/admins/current` | Team session | None | `200` Admin JSON | Fields do not change |
 
 These two endpoints go away.
@@ -186,6 +187,7 @@ Models and services:
 - `app/domains/identities/account_sessions/destroy_all_service.rb` (create)
 - `app/domains/identities/admin_sessions/create_service.rb` (create)
 - `app/domains/identities/admin_sessions/find_active_service.rb` (create)
+- `app/domains/identities/admin_sessions/destroy_all_service.rb` (create)
 - `app/domains/identities/password_resets/confirm_manager.rb` (call `DestroyAllService` inside the transaction)
 - `app/domains/identities/oauth/google/callback_manager.rb` (see below)
 - `app/domains/identities/oauth/state_store.rb` (use the renamed Redis key)
@@ -295,6 +297,7 @@ New tests cover these behaviors.
 - A cookie with a wrong signature answers `401`.
 - A person cookie opens no `team/**` route, and a team cookie opens no person route.
 - `DELETE identities/sessions` deletes all rows of the person and leaves other persons alone.
+- `DELETE team/identities/admins/sessions` deletes all rows of the admin and leaves other admins alone.
 - A wrong CSRF token answers `403`, and the session stays.
 - Both cleanup jobs delete expired rows and keep live rows.
 
@@ -341,7 +344,7 @@ Aiko signs in on her laptop, leaves for 8 days, and comes back.
 - [ ] Add the configuration file, the services and the two concerns.
 - [ ] Move all controllers to the new concerns.
 - [ ] Add the CSRF codes and the `429` error.
-- [ ] Add `DELETE identities/sessions`.
+- [ ] Add `DELETE identities/sessions` and `DELETE team/identities/admins/sessions`.
 - [ ] Add the login rate limit.
 - [ ] Add both cleanup jobs.
 - [ ] Rescue the unique index race in `CallbackManager`.
@@ -366,6 +369,7 @@ Aiko signs in on her laptop, leaves for 8 days, and comes back.
 - [ ] `403` never ends a session.
 - [ ] Logout ends one session.
 - [ ] Sign out everywhere and a password reset end all sessions of the person.
+- [ ] Team sign out everywhere ends all sessions of the team admin.
 - [ ] The eleventh login attempt in 3 minutes from one IP address answers `429`.
 - [ ] Five failed logins still lock the account.
 - [ ] No refresh endpoint exists.
