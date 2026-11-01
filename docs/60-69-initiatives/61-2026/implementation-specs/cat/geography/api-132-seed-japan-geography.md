@@ -32,10 +32,10 @@ Evidence: `redcab-docs/docs/60-69-initiatives/61-2026/implementation-specs/cat/g
 | Parent spec | [docs-13-geography-administrative-tree.md](./docs-13-geography-administrative-tree.md) | Seed contract, derivation rules, row counts |
 | Prerequisite | [131-migrate-geography-schema.md](./api-131-migrate-geography-schema.md) | Schema must exist; JP country row seeded |
 | FR-CAT-001 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Official-code idempotent upsert |
-| ADR-013 | [30-49-domains/34-architecture-decisions/adr-013-geography-reference-data.md](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data) | Vendored offline sources |
-| ADR-014 | [30-49-domains/34-architecture-decisions/adr-014-service-timezone-model.md](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) | `timezone` on every node |
-| ADR-016 | [30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) | C1 discovery roots, tree levels |
-| geography.md | [architecture/geography.md](/docs/30-49-domains/patterns/geography) | Seed pipeline procedure, slug rules |
+| ADR-013 | 30-49-domains/34-architecture-decisions/adr-013-geography-reference-data.md (removed) | Vendored offline sources |
+| ADR-014 | 30-49-domains/34-architecture-decisions/adr-014-service-timezone-model.md (removed) | `timezone` on every node |
+| ADR-016 | 30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md (removed) | C1 discovery roots, tree levels |
+| geography.md | architecture/geography.md (removed) | Seed pipeline procedure, slug rules |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | `catalog/geography/` module placement |
 
 ## Design decisions

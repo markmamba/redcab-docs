@@ -18,8 +18,8 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 | --- | --- |
 | Invariants (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`) | [Business Rules](/docs/70-79-business/business-rules/invariants) |
 | Observable behavior | [Requirements](/docs/70-79-business/requirements) |
-| Aggregates & ownership | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
+| Aggregates & ownership | Domain Models |
+| Context map | Bounded Contexts |
 | Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
 
 ---
@@ -43,7 +43,7 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 - **Platform Admin** — internal Red Cab staff with full override access. Authenticates via a **separate Admin principal** (`Identities::Admin` / `admin_users`); Admin is **not** a value on marketplace `Account.role`.
 - **Platform** — Red Cab itself, the technology intermediary that earns commission.
 - **Money / JPY minor units** — all monetary values are integers in Japanese Yen (JPY has no decimal subunit in practice; stored as whole yen). No floats for money. Commission rounding uses `FLOOR(gross × rate)`; `net = gross − commission` (`PAY-11`).
-- **Service Timezone** — the IANA timezone of the **primary destination** prefecture of a Listing (`catalog_geographies.timezone`, e.g. `Asia/Tokyo`; seeded from `catalog_countries.default_timezone`). Service windows, cancellation-tier cutoffs, and completion timers are evaluated in this zone; **CheckoutSession / Booking** snapshoot `service_timezone` at session creation so historical orders are immune to later geography edits ([ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)). Persisted instants use `TIMESTAMPTZ` (UTC storage). Phase 1 Japan seeds all nodes as `Asia/Tokyo`.
+- **Service Timezone** — the IANA timezone of the **primary destination** prefecture of a Listing (`catalog_geographies.timezone`, e.g. `Asia/Tokyo`; seeded from `catalog_countries.default_timezone`). Service windows, cancellation-tier cutoffs, and completion timers are evaluated in this zone; **CheckoutSession / Booking** snapshoot `service_timezone` at session creation so historical orders are immune to later geography edits (ADR-014, ADR-016). Persisted instants use `TIMESTAMPTZ` (UTC storage). Phase 1 Japan seeds all nodes as `Asia/Tokyo`.
 - **Snapshot** — an immutable copy of a value (price, commission rate, cancellation policy, fulfillment payload) frozen at a defined instant (CheckoutSession creation) so later changes never alter an in-flight or historical record. See [Business Rules](/docs/70-79-business/business-rules/invariants).
 - **Domain Event** — a past-tense, in-process notification (e.g. `ProviderApproved`, `BookingCompleted`) that decouples contexts; consumed by Notifications and cross-context cascades.
 - **Bounded Context** — a logical module boundary with its own ubiquitous language; in this project a namespaced module inside one modular-monolith Rails app.
@@ -86,7 +86,7 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Package (listing)** — sellable option on one listing with its own vehicle category, passenger limit, duration, start window and price (for example Standard 6-hour, Premium 8-hour). Not **Multi-Day Package** (`E-04`).
 - **Verified provider** — provider account meets platform gates required to publish listings (replaces legacy “operable provider”). Distinct from **Provider Merchant Account** verification alone.
 
-- **District** — **(Legacy IA)** a geography node **presented as a top-level navigation unit** — a node with `is_discovery_root = true` ([ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)). Phase 1 Japan (C1): 47 prefectures + 20 designated cities. Carries EN + JA labels and slug. Shown only if its subtree has ≥1 published listing (`B-01`, `B-05`, `INV-8`). In URLs and JSON payloads, maps to `{districtSlug}` / `district_id`.
+- **District** — **(Legacy IA)** a geography node **presented as a top-level navigation unit** — a node with `is_discovery_root = true` (ADR-016). Phase 1 Japan (C1): 47 prefectures + 20 designated cities. Carries EN + JA labels and slug. Shown only if its subtree has ≥1 published listing (`B-01`, `B-05`, `INV-8`). In URLs and JSON payloads, maps to `{districtSlug}` / `district_id`.
 - **Area** — **(Legacy IA)** a **listable geography node** (`is_listable = true`) within a District's discovery namespace. Each Listing attaches to exactly one Area (`FR-CAT-033`). Carries a **Service Timezone** (IANA string). Shown only if its subtree has ≥1 published listing (`B-02`, `INV-8`). In URLs and JSON payloads, maps to `{areaSlug}` / `area_id`.
 - **Subdivision** — administrative `level` for a prefecture (都道府県). Storage term; may also be a discovery root.
 - **Municipality** — administrative `level` for a city, town, village, or Tokyo 特別区. May be a discovery root (designated city), a listable leaf, or an intermediate node.
@@ -107,7 +107,7 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Duration Pricing** — rates per duration option: 2-Hour / Half-Day / Full-Day / Custom (`C-05`).
 - **Seasonal Override** — a date-range price override or multiplier with a label (e.g. "New Year Rate") (`C-06`).
 - **Extra Charge** — a named line item (mandatory/optional) with a trigger (Always / Late-Night / Holiday / Per Item), e.g. tolls, child seat (`C-07`).
-- **Cancellation Policy** — up to 4 tiers of `(hours before service, refund %)`; Platform Default applies if none set; immutable for confirmed bookings (`C-08`). Superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy).
+- **Cancellation Policy** — up to 4 tiers of `(hours before service, refund %)`; Platform Default applies if none set; immutable for confirmed bookings (`C-08`). Superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/catalog-decisions/#cancellation-policy).
 - **Pricing (module)** — the single authority that computes a **Price Breakdown** via `calculate_quote(listing, params, at:)`. No other context computes price.
 - **Price Breakdown / Quote** — computed result: base price, tier/duration/seasonal adjustments, extra charges, total (tax-inclusive for B2C). Distinct from a corporate **Quotation**.
 - **Availability Slot (Slot)** — **(Legacy)** a bookable window bound to a Provider Asset (`C-09`). Replaced by **Asset Hold**; slice S5 of the [Catalog domain](/docs/30-49-domains/catalog/) removes it.
@@ -139,7 +139,7 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Commission Snapshot** — `{ gross_amount, commission_rate_snapshot, commission_amount, net_payout_amount }` frozen on CheckoutSession and copied to Booking; computed per `PAY-11`. Refunds use these, never the live rate (`E-10`, `E-12`).
 - **Gross Amount** — total amount the buyer pays (including mandatory extra charges); B2C prices are tax-inclusive (`PAY-12`).
 - **Net Payout Amount** — `gross_amount − commission_amount` (whole JPY).
-- **Payment Provider** — the licensed third party that receives, holds, splits, and releases funds, and performs sub-merchant KYC. It is the legal recipient of Tourist funds; Red Cab is not (`INV-13`, `PAY-13`). Not yet selected (`AMB-040`); engaged only through a capability-declaring adapter so the domain never encodes one provider's topology ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation)).
+- **Payment Provider** — the licensed third party that receives, holds, splits, and releases funds, and performs sub-merchant KYC. It is the legal recipient of Tourist funds; Red Cab is not (`INV-13`, `PAY-13`). Not yet selected (`AMB-040`); engaged only through a capability-declaring adapter so the domain never encodes one provider's topology (ADR-015).
 - **Custody** — legal receipt and holding of customer funds. Sits with the Payment Provider at all times and never with Red Cab (`INV-13`).
 - **Control (transaction completion)** — Red Cab's authority to determine when a transaction completes and settlement releases (`PAY-15`, `PAY-16`). A condition of the transaction-platform exemption, not an operational preference.
 - **Platform Fee** — the mechanism by which Red Cab receives its commission: an amount routed by the Payment Provider equal to the snapshotted `commission_amount`, as consideration for booking orchestration, itinerary management, supplier matching, and customer service. Never a residual of funds Red Cab held (`FIN-12`, `PAY-13`).
@@ -162,7 +162,7 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 ## 6. Reviews & Ratings (core)
 
 - **Review** — a verified-booking-only star rating (1–5) + optional text + photos, tied to a Completed booking (`F-01`).
-- **Pending Moderation** — legacy `moderation_status` enum value; new tourist submits **publish** immediately ([ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation), `OPR-6`).
+- **Pending Moderation** — legacy `moderation_status` enum value; new tourist submits **publish** immediately (ADR-020, `OPR-6`).
 - **Provider report** — Provider flags a published review for Team Admin; the review stays public until Admin removes it (`F-03`, `FR-REV-005`).
 - **Provider Response** — public reply by the Provider to a review (`F-02`).
 - **Rating Score** — listing average and review count from **published** reviews only (`approved`, not `removed`) (`F-04`, `OPR-6`).

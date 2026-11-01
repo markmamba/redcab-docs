@@ -35,8 +35,8 @@ Evidence: `app/domains/catalog/district.rb`, `area.rb`, `listing.rb` (`belongs_t
 | Prerequisite | [132-seed-japan-geography.md](./api-132-seed-japan-geography.md) | Seed task exists; anonymous AR stubs deferred here |
 | FR-CAT-033 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Listable-leaf listing attach |
 | INV-8 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Subtree discoverability |
-| ADR-014 | [30-49-domains/34-architecture-decisions/adr-014-service-timezone-model.md](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) | `timezone` on every geography node |
-| ADR-016 | [30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) | Tree shape, path, discovery roles |
+| ADR-014 | 30-49-domains/34-architecture-decisions/adr-014-service-timezone-model.md (removed) | `timezone` on every geography node |
+| ADR-016 | 30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md (removed) | Tree shape, path, discovery roles |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | `geography.rb` replaces flat models; `districts/` / `areas/` API surface unchanged |
 | Backend conventions | [Backend conventions](/docs/20-29-backend/conventions/backend) | No model validations; ActiveModel validators |
 

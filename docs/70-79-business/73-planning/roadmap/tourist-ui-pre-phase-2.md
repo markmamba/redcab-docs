@@ -164,7 +164,7 @@ One tourist chrome across public and account surfaces.
 - [x] Footer (legal links, language hint, support contact placeholder) — `#58`
 - [x] Shared empty, error, and loading patterns for catalog and bookings domains — `#58` (`TouristEmptyState`, `TouristErrorState`, `TouristShellPending` on public loaders via `#60`)
 - [ ] Minimal design tokens documented (Bootstrap-first; overrides in `_variables.scss` per [frontend conventions](/docs/50-59-frontend/conventions/frontend)) — Milestone E / `#69`
-- [x] Tourist marketplace IAM in-shell chrome (`TouristAuthContent`) — `#64` / [web-64](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment)
+- [x] Tourist marketplace IAM in-shell chrome (`TouristAuthContent`) — `#64` / web-64 (removed)
 
 ---
 
@@ -246,12 +246,12 @@ Scaffold **named slots** on existing pages. Do not implement Phase 2 API clients
 
 Not required to start Milestone B, but recommended before high-traffic pages go to production.
 
-Implementation spec: [web-69-tourist-brand-visual-polish](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-69-tourist-brand-visual-polish) ([#69](https://github.com/markmamba/red-cab-web/issues/69)).
+Implementation spec: web-69-tourist-brand-visual-polish (removed) ([#69](https://github.com/markmamba/red-cab-web/issues/69)).
 
-Wireframes (canonical on GitHub Pages): [web-69 spec — Wireframes](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-69-tourist-brand-visual-polish#wireframes).
+Wireframes (canonical on GitHub Pages): web-69 spec — Wireframes (removed).
 
 - [ ] Brand tokens in `app/styles/_variables.scss`
-- [x] Wireframes for Home, listing detail, checkout — [web-69 exports](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-69-tourist-brand-visual-polish#wireframes)
+- [x] Wireframes for Home, listing detail, checkout — web-69 exports (removed)
 - [ ] EN/JA copy patterns for discovery and checkout
 - [ ] Card/list patterns aligned across discover and bookings
 
@@ -269,9 +269,9 @@ Audit baseline aligned with `red-cab-web@c4ce884` (2026-09-26). Program sequenci
 | Checkout + return | `[x]` | `/account/checkout` + return (`#62`) |
 | Bookings list + detail | `[x]` | Tourist shell alignment (`#63`) |
 | Homepage in funnel | `[x]` | Discover entry (`#59`) |
-| Public discover (`AMB-022`) | `[x]` | Verified 2026-10-01 — [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82); [Review record (Phase 2)](/docs/90-99-engineering-meta/authentication/implementation-roadmap#review-record-phase-2) |
+| Public discover (`AMB-022`) | `[x]` | Verified 2026-10-01 — [red-cab-web#82](https://github.com/markmamba/red-cab-web/issues/82); Review record (Phase 2) |
 | Listing detail public URL | `[x]` | Per web-56 / `#60` |
-| Unified tourist shell | `[~]` | `#58` + `#64`; manual QA matrix open in [web-64](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-64-tourist-account-auth-shell-alignment) |
+| Unified tourist shell | `[~]` | `#58` + `#64`; manual QA matrix open in web-64 (removed) |
 | Near-me / maps | `[ ]` | `#65`–`#66` |
 | Phase 2 placeholder slots | `[ ]` | `#68` |
 
@@ -326,4 +326,4 @@ When picking up tourist UI work:
 - [FR-CAT-004 — Primary discovery navigation](/docs/70-79-business/requirements/functional-requirements/cat)
 - [FR-IAM-012 — Guest browsing](/docs/70-79-business/requirements/functional-requirements/iam)
 - [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) — parallel tourist vs auth tracks, gates, issue map
-- [Authentication series](/docs/90-99-engineering-meta/authentication) — how the web enforces access. `/account/**` uses `tourist-required-policy` ([roadmap Phase 3](/docs/90-99-engineering-meta/authentication/implementation-roadmap#phase-3--auth-core-team-account-login-pages), shipped [#86](https://github.com/markmamba/red-cab-web/issues/86)); new Phase 2 authenticated tourist pages nest under that policy
+- Authentication series — how the web enforces access. `/account/**` uses `tourist-required-policy` (roadmap Phase 3, shipped [#86](https://github.com/markmamba/red-cab-web/issues/86)); new Phase 2 authenticated tourist pages nest under that policy

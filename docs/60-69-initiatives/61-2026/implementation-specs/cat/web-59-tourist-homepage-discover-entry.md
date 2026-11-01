@@ -11,7 +11,6 @@ phase: 1
 context: CAT
 depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract.md"
-  - "docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell.md"
   - "red-cab-web#56"
   - "red-cab-web#58"
   - "red-cab-web#60"
@@ -43,9 +42,9 @@ Evidence: `home-page.jsx` placeholder copy; roadmap [`tourist-ui-pre-phase-2.md`
 | ID | Document | Why |
 | --- | --- | --- |
 | web-56 | [/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) | Home path `/`, robots, featured API requirement, canonical deferral |
-| web-58 | [/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell) | Shell ownership; homepage content deferred here |
+| web-58 | /docs/80-89-legacy/implementation-specs/platform/web-58-tourist-unified-layout-shell (removed) | Shell ownership; homepage content deferred here |
 | web-57 | [/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links](/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links) | Homepage featured districts in #59 scope |
-| ADR-017 | [/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | Distinct landing; CTA → `/districts`; district hub links for SEO |
+| ADR-017 | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Distinct landing; CTA → `/districts`; district hub links for SEO |
 | FR-CAT-004 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | District → Area hierarchy in IA |
 | FR-IAM-012 | [/docs/70-79-business/requirements/functional-requirements/iam.md](/docs/70-79-business/requirements/functional-requirements/iam) | Guest browse |
 | PRC-1 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | No client-side price computation |

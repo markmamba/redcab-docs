@@ -35,7 +35,7 @@ Evidence: no `latitude` / `longitude` usage under `red-cab-web/app` except near-
 | --- | --- | --- |
 | Milestone C | [/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Map pins deliverable |
 | frontend.md | [/docs/50-59-frontend/conventions/frontend](/docs/50-59-frontend/conventions/frontend) | Geography and maps — API-sourced pins |
-| geography.md | [/docs/30-49-domains/patterns/geography](/docs/30-49-domains/patterns/geography) | Centroid semantics |
+| geography.md | /docs/30-49-domains/patterns/geography (removed) | Centroid semantics |
 | web-56 | [/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) | Public catalog URLs |
 | red-cab-web#60 / #61 | GitHub issues | Public area listings + listing detail routes (no separate web specs) |
 | web-65 | [web-65-near-me-area-discovery-section.md](./web-65-near-me-area-discovery-section.md) | Sibling Milestone C; **excludes** map pins |
@@ -57,7 +57,7 @@ Evidence: no `latitude` / `longitude` usage under `red-cab-web/app` except near-
 
 ## API contract (read-only — no API repo changes)
 
-Centroids are **municipal office** points on listable geography nodes — not computed on the client. See [Geography](/docs/30-49-domains/patterns/geography).
+Centroids are **municipal office** points on listable geography nodes — not computed on the client. See Geography (removed).
 
 | Consumer surface | Loader / call | JSON path | Fields | Type | When null |
 | --- | --- | --- | --- | --- | --- |

@@ -205,7 +205,7 @@ The system **shall** default the Tourist app to English and the Client Portal to
 
 ### NFR-I18N-003 — Bilingual geography labels
 The system **shall** carry English and Japanese labels for every District and Area. Japanese labels **shall** use official administrative forms with type suffix (e.g. 新宿区). English labels **shall** use bare romanized names without suffix (e.g. Shinjuku). Areas **shall** also store source kana for sort order and romanization audit.
-- Source: B-05, [ADR-013](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data). Governs: FR-CAT-001. Status: Approved.
+- Source: B-05, ADR-013. Governs: FR-CAT-001. Status: Approved.
 
 ### NFR-I18N-004 — Supported filter languages
 The system **shall** allow filtering Listings by supported service language across the published supported-language set.
@@ -245,11 +245,11 @@ The system **shall** produce Corporate Quotation and Invoice documents acceptabl
 
 ### NFR-COMP-004 — Merchant/seller-of-record posture
 The system **shall** reflect the **Provider merchant-of-record** posture in its charge, settlement, and document flows, and **shall not** represent Red Cab as the recipient or holder of customer funds.
-- Source: payments-architecture, [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation). Governs: relates FR-PAY-001, FR-PAY-013, FR-COR-003; INV-13, PAY-13, FIN-12. Status: Provisional (AMB-032 reversed 2026-08-30; pending counsel).
+- Source: payments-architecture, ADR-015. Governs: relates FR-PAY-001, FR-PAY-013, FR-COR-003; INV-13, PAY-13, FIN-12. Status: Provisional (AMB-032 reversed 2026-08-30; pending counsel).
 
 ### NFR-COMP-005 — No-custody posture is machine-enforced
 The system **shall** refuse to start when the configured payment provider adapter declares platform fund custody or platform merchant-of-record, or cannot support deferred platform-triggered settlement release.
-- Source: [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) C6. Governs: INV-13, PAY-13, PAY-15. Status: Provisional.
+- Source: ADR-015 C6. Governs: INV-13, PAY-13, PAY-15. Status: Provisional.
 
 ---
 

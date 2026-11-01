@@ -9,11 +9,11 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#legacy-geography-roles"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#release-order"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#asset-holds"
-  - "docs/30-49-domains/38-catalog/models/geography.md"
-  - "docs/30-49-domains/38-catalog/models/asset-availability.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#legacy-geography-roles"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#release-order"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#asset-holds"
+  - "docs/30-49-domains/31-catalog/models/geography.md"
+  - "docs/30-49-domains/31-catalog/models/asset-availability.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-210-asset-holds-in-checkout-and-booking.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-155-asset-holds-web.md"
 ---

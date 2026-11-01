@@ -19,7 +19,7 @@ Phase 3 scope, DBML expansion, deliverables, open `AMB-###` items, and exit crit
 | --- | --- |
 | Roadmap overview | [Phasing Roadmap](/docs/70-79-business/planning/roadmap) |
 | Prior phase | [Phase 2](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) |
-| Corporate context | [Corporate Quotation](/docs/30-49-domains/bounded-contexts/corporate) |
+| Corporate context | Corporate Quotation |
 | Open decisions | [Open Questions](/docs/70-79-business/planning/open-questions) |
 
 ---

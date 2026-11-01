@@ -8,9 +8,9 @@ status: approved
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#most-booked-sort"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#marketplace-sort-options"
-  - "docs/30-49-domains/38-catalog/models/listings-and-packages.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#most-booked-sort"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#marketplace-sort-options"
+  - "docs/30-49-domains/31-catalog/models/listings-and-packages.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-207-scoped-listings-index.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-212-package-aware-filters-and-price-sort.md"
 ---

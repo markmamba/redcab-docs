@@ -37,7 +37,7 @@ Evidence: no `order_by` usage under `red-cab-web/app` for marketplace catalog li
 | --- | --- | --- |
 | FR-CAT-027 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Sort behavior (partial this issue) |
 | web-56 | [/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) | Reserved `order_by`, `order_dir`; canonical without sort query |
-| ADR-017 | [/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | Query-param sort on listings-in-area |
+| ADR-017 | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Query-param sort on listings-in-area |
 | frontend.md | [/docs/50-59-frontend/conventions/frontend.md](/docs/50-59-frontend/conventions/frontend) | URL-driven filters; no client authoritative ranking |
 | web-66 | [web-66-map-pin-regions-listing-area-views.md](./web-66-map-pin-regions-listing-area-views.md) | Page regions: title → map → list (sort placement Q4) |
 | red-cab-web#60 | GitHub issue | Public area listings route |

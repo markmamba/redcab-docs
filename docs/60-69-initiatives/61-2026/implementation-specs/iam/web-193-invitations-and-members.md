@@ -13,13 +13,13 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-191-permits-registration-and-team-approval.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-192-portal-access-and-switch.md"
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#company-roles"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#staff-invitations"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#portal-access"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#current-session-answer"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#web-session-rules"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#policy-routes"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#access-codes"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#company-roles"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#staff-invitations"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#portal-access"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#current-session-answer"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#web-session-rules"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#policy-routes"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#access-codes"
 ---
 
 ## TL;DR
@@ -450,7 +450,6 @@ Kenji runs Kanto Charter and adds Mika as staff.
 
 ### Docs
 
-- [ ] Update `docs/90-99-engineering-meta/93-authentication/` with the accept route.
 - [ ] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria

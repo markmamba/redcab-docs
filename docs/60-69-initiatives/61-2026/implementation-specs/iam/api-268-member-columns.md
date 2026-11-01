@@ -12,11 +12,11 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-263-portal-access.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-264-invitations-and-members.md"
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#member-on-records"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#company-roles"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-company"
-  - "docs/30-49-domains/39-iam/requirements/provider-company-members.md"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#schema-ground-rules"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#member-on-records"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#company-roles"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-company"
+  - "docs/30-49-domains/32-iam/requirements/provider-company-members.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#schema-ground-rules"
 ---
 
 ## TL;DR
@@ -300,8 +300,8 @@ After the migrations, the same PR updates the DBML.
 
 | Page | Change |
 | --- | --- |
-| `docs/30-49-domains/39-iam/iam-decisions.md`, section Member on records | Adds that only an owner reads the member |
-| `docs/30-49-domains/39-iam/requirements/provider-company-members.md` | Adds the rule, and a Staff example |
+| `docs/30-49-domains/32-iam/iam-decisions.md`, section Member on records | Adds that only an owner reads the member |
+| `docs/30-49-domains/32-iam/requirements/provider-company-members.md` | Adds the rule, and a Staff example |
 
 ### Files to create or modify (API)
 

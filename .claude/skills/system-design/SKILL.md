@@ -8,7 +8,7 @@ argument-hint: "[topic]"
 
 Help the user decide **before** they write an implementation spec in `redcab-docs` (`implementation-specs/`).
 
-Output: `scratchpad/design-{slug}.md`. Not a committed doc unless the user promotes it to an ADR or explainer via `write-doc`.
+Output: `scratchpad/design-{slug}.md`. Not a committed doc unless the user promotes it to a decision entry or an explainer via `write-doc`.
 
 Load `write-plain-english` before writing the plan body. Use Tier A for the plan (`write-tier-a-prose` for tier summary).
 
@@ -31,11 +31,7 @@ Load `write-plain-english` before writing the plan body. Use Tier A for the plan
 | Invariants | `docs/70-79-business/71-business-rules/invariants.md` |
 | Glossary | `docs/70-79-business/71-business-rules/glossary.md` |
 | Open questions | `docs/70-79-business/73-planning/open-questions.md` |
-| Bounded context | `docs/30-49-domains/31-bounded-contexts/` |
-| Money and payments | `adr-005`, `adr-011`, `adr-015` under `34-architecture-decisions/` |
-| Snapshots | `adr-006` |
-| Integration | `adr-004`, `adr-007` |
-| Auth surfaces | `docs/90-99-engineering-meta/93-authentication/` |
+| Domain rulings | `docs/30-49-domains/{nn}-{domain}/{domain}-decisions.md` |
 | Code mapping | `docs/20-29-backend/21-conventions/domain-to-code-mapping.md` |
 
 See `references/red-cab-design-notes.md` for Red Cab reminders.
@@ -43,7 +39,7 @@ See `references/red-cab-design-notes.md` for Red Cab reminders.
 ## Operating principles
 
 1. **Start from invariants**, not columns. Tables follow rules that must always hold.
-2. **Pricing authority is singular** — never accept price from a client; cite `INV-*` and payment ADRs when money is involved.
+2. **Pricing authority is singular** — never accept price from a client; link the pricing decision entry when money is involved. If none exists yet, ask the owner.
 3. **Booking snapshots are immutable** after create.
 4. **Seat availability** changes only through the catalog availability service (see invariants and catalog context docs).
 5. **Respect context boundaries** — no direct Corporate model imports from Booking; use ACL patterns from domain docs.
@@ -66,7 +62,7 @@ Copy into the reply at the start of a design task. Tick as you complete.
 - [ ] Pick one; state why rejected options fail
 - [ ] Sketch schema (rough DBML in scratchpad, no migration code)
 - [ ] List risks and open questions
-- [ ] Hand off: issue, ADR, explainer, or implementation spec
+- [ ] Hand off: issue, decision entry, explainer, or implementation spec
 ```
 
 ## Design plan shape
@@ -110,4 +106,4 @@ Use Tier A sentences in the plan body.
 
 ## Hand-off
 
-State whether the next artifact is an issue, an ADR, an explainer, or an implementation spec. Do not merge this plan into code without an approved spec when api or web changes.
+State whether the next artifact is an issue, a decision entry, an explainer, or an implementation spec. Do not merge this plan into code without an approved spec when api or web changes.

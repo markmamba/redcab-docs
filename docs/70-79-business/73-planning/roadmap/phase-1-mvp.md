@@ -74,13 +74,13 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 **red-cab-api**
 
-- [x] `docs/db/catalog.dbml` designed and reviewed against [Data model](/docs/30-49-domains/data-model) §5.3 / §6.3
+- [x] `docs/db/catalog.dbml` designed and reviewed against Data model §5.3 / §6.3
 - [x] `docs/db/bookings.dbml` designed (`checkout_sessions`, Booking + snapshots + fulfillment payload; buyer = tourist profile)
 - [x] `docs/db/payments.dbml` designed (commission rate, provider merchant account, charge, payout queue, refund stub)
 - [x] `docs/db/redcab.dbml` updated to include Phase 1 tables
 - [x] Migrations applied for the above (DBML → migration → model stubs)
 
-> **Schema lag (`red-cab-api`):** applied `payments.dbml` migrations still model the withdrawn Platform-account Separate Charges & Transfers topology. Documentation here reflects [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation); schema sync is tracked on the separate `red-cab-api` provider-neutral persistence migration issue.
+> **Schema lag (`red-cab-api`):** applied `payments.dbml` migrations still model the withdrawn Platform-account Separate Charges & Transfers topology. Documentation here reflects ADR-015; schema sync is tracked on the separate `red-cab-api` provider-neutral persistence migration issue.
 
 #### Provider Onboarding & Verification (`PRV`)
 
@@ -101,7 +101,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 **red-cab-api**
 
-- [ ] Geography module: `catalog_countries` + `catalog_geographies` administrative tree; discovery roles (67 C1 roots); listable-leaf rule; EN/JA/kana labels; city-hall centroids on listable nodes; **`timezone` on every node** (`Asia/Tokyo` for Japan seed); admin curate/deactivate/archive with successor ([ADR-013](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data), [ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree), `AMB-036`)
+- [ ] Geography module: `catalog_countries` + `catalog_geographies` administrative tree; discovery roles (67 C1 roots); listable-leaf rule; EN/JA/kana labels; city-hall centroids on listable nodes; **`timezone` on every node** (`Asia/Tokyo` for Japan seed); admin curate/deactivate/archive with successor (ADR-013, ADR-014, ADR-016, `AMB-036`)
 - [ ] Geography seed task: idempotent upsert from 総務省 code CSV + government-office coordinates (~1,900 listable nodes); derive `path`, `discovery_root_id`, `is_listable`
 - [ ] Listings module: create, configure, publish (≥1 photo, `INV-10`; publish blocked without a verified Provider Merchant Account — `INV-12`)
 - [ ] Provider Asset module: register vehicles/guides (`provider_assets`); slots bound to `asset_id` (`CON-4`)
@@ -127,7 +127,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 - [ ] On payment success: materialize Booking from CheckoutSession snapshot → **`CONFIRMED`** (B2C happy path skips `PENDING` — `BKG-10`)
 - [ ] Booking references `tourist_id` → `tourists_profiles`, `provider_id` → `providers_profiles`, plus listing/slot ids
 - [ ] Core state machine: **`CONFIRMED → COMPLETED → PAYOUT_QUEUED`** (B2C happy path; full cancellation/refund paths in Phase 2)
-- [ ] Provider **Mark Delivered** action; system auto-completes 24h after service end if unconfirmed (`LC-5`, `OPR-11`, `OPR-12`; snapshotted **Service Timezone**, [ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model))
+- [ ] Provider **Mark Delivered** action; system auto-completes 24h after service end if unconfirmed (`LC-5`, `OPR-11`, `OPR-12`; snapshotted **Service Timezone**, ADR-014)
 - [ ] Immutable Price, Commission, and Cancellation Policy snapshots copied from CheckoutSession (`INV-1`)
 - [ ] Tourist booking list and detail API
 
@@ -139,7 +139,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 #### Payments & Payouts (`PAY`) — provider-agnostic B2C
 
-> Provider not selected (`AMB-040`). Build against the ports and a `FakeProvider` adapter first — a green end-to-end lifecycle on the fake is what proves the abstraction holds ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation)).
+> Provider not selected (`AMB-040`). Build against the ports and a `FakeProvider` adapter first — a green end-to-end lifecycle on the fake is what proves the abstraction holds (ADR-015).
 
 **red-cab-api**
 
@@ -193,7 +193,7 @@ Do **not** start Managers/routes/UI for a context until that context’s Phase 1
 
 ### Resolved decisions applied in Phase 1
 
-Phase 1 implementation follows the Decision Log in [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions). **Payment custody and topology** (`AMB-001` custody element, `AMB-002`, `AMB-032`) are superseded by [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) (provisional, pending counsel): sub-merchant settlement with deferred platform-triggered release; funds held by the licensed payment provider; Provider merchant-of-record. **Still applied:** platform-controlled payout queue after completion (`AMB-003`–`005`); snapshots at CheckoutSession creation (`AMB-007`); B2C enters `CONFIRMED` on payment success (`AMB-011`); District → Area discovery (`AMB-020`); public guest browse with auth at checkout only (`AMB-022`); PRD vehicle taxonomy on `provider_assets` (`AMB-023`). **Reopened:** capture timing (`AMB-039`).
+Phase 1 implementation follows the Decision Log in [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions). **Payment custody and topology** (`AMB-001` custody element, `AMB-002`, `AMB-032`) are superseded by ADR-015 (provisional, pending counsel): sub-merchant settlement with deferred platform-triggered release; funds held by the licensed payment provider; Provider merchant-of-record. **Still applied:** platform-controlled payout queue after completion (`AMB-003`–`005`); snapshots at CheckoutSession creation (`AMB-007`); B2C enters `CONFIRMED` on payment success (`AMB-011`); District → Area discovery (`AMB-020`); public guest browse with auth at checkout only (`AMB-022`); PRD vehicle taxonomy on `provider_assets` (`AMB-023`). **Reopened:** capture timing (`AMB-039`).
 
 ### Open decisions for Phase 1
 

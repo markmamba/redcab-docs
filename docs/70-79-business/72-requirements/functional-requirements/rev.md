@@ -17,7 +17,7 @@ Functional requirements for **REV — Reviews & Ratings**.
 | Topic | Document |
 | --- | --- |
 | All FR contexts | [Functional Requirements](/docs/70-79-business/requirements/functional-requirements) |
-| Reviews context | [Reviews & Ratings](/docs/30-49-domains/bounded-contexts/reviews) |
+| Reviews context | Reviews & Ratings |
 | Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) (`INV-5`, `OPR-6`, `OPR-7`) |
 
 ---
@@ -38,11 +38,11 @@ The system **shall** accept a required star rating and optional text and photos 
 
 ### FR-REV-004 — Publication on submit
 The system **shall** publish a valid tourist-submitted review on the Listing immediately and **shall** include it in public review read paths without a prior Admin approve step.
-- Source: F-01, F-03. Governs: OPR-6. Status: Approved. See [ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation).
+- Source: F-01, F-03. Governs: OPR-6. Status: Approved. See ADR-020.
 
 ### FR-REV-005 — Post-publication moderation actions
 The system **shall** allow a Provider to report a published review, **shall** allow Admin to dismiss a report or remove a review with a reason (notifying the Tourist on removal), and **shall** prioritize provider-flagged reviews in the Team queue.
-- Source: F-03. Status: Approved. See [ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation).
+- Source: F-03. Status: Approved. See ADR-020.
 
 ### FR-REV-006 — Provider response
 The system **shall** allow a Provider to publicly respond once to a published review and **shall** require Admin permission for further edits.

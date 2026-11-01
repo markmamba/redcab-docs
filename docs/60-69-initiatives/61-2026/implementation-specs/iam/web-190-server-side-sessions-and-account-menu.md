@@ -8,9 +8,9 @@ status: approved
 phase: 2
 context: IAM
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#web-session-rules"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#policy-routes"
-  - "docs/30-49-domains/39-iam/architecture-decisions/server-side-sessions.md"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#web-session-rules"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#policy-routes"
+  - "docs/30-49-domains/32-iam/iam-decisions.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-147-server-side-sessions.md"
 ---
 
@@ -70,9 +70,8 @@ Read these before design. Do not invent behavior that contradicts them.
 | Rule | [Production hosts](/docs/30-49-domains/iam/iam-decisions/#production-hosts) | Hosts and cookie names |
 | Rule | [Access codes](/docs/30-49-domains/iam/iam-decisions/#access-codes) | A `403` never signs anyone out |
 | Requirement | [Sign-up, sign-in and portals](/docs/30-49-domains/iam/requirements/sign-up-sign-in-and-portals) | US-6 and US-7 of that page |
-| Record | [Sessions are database records, and nothing refreshes](/docs/30-49-domains/iam/architecture-decisions/server-side-sessions) | The web deletes the refresh code and the two bridges |
+| Record | [Sessions are database records, and nothing refreshes](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions) | The web deletes the refresh code and the two bridges |
 | Paired spec | [API server-side sessions](api-147-server-side-sessions.md) | The API contract, and it must deploy with this spec |
-| Code today | [Authentication](/docs/90-99-engineering-meta/authentication/) | The behavior that this spec replaces |
 
 ## Design decisions
 
@@ -234,8 +233,8 @@ The function `getCookie` returns `undefined` when the cookie is missing.
 
 | Spec | Part replaced |
 | --- | --- |
-| [web-107](auth-platform/web-107-loader-401-revalidate.md) | The revalidation bridge and the loader helper recovery |
-| [web-108](auth-platform/web-108-root-should-revalidate-auth-failures.md) | The order of checks in the shared guard. The rule for action `401` and `403` stays |
+| [web-107](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-107-loader-401-revalidate.md) | The revalidation bridge and the loader helper recovery |
+| [web-108](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-108-root-should-revalidate-auth-failures.md) | The order of checks in the shared guard. The rule for action `401` and `403` stays |
 
 This spec changes no Catalog code, so it replaces no part of these specs.
 
@@ -323,7 +322,6 @@ Aiko's session ends while her browser stays open.
 ### Docs
 
 - [ ] Update `docs/50-59-frontend/51-conventions/frontend.md`.
-- [ ] Update the pages in `docs/90-99-engineering-meta/93-authentication/`, including `reading-the-session.md` and `policy-middleware.md`.
 - [ ] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria

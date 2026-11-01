@@ -22,7 +22,7 @@ Implementation specs live in this repo (`implementation-specs/`). Codegen and re
 | `write-plain-english` | Sentence, bullet, naming, words, doc contents; check scripts; `references/examples.md` |
 | `write-tier-a-prose` | STE Tier A/B/C summary; load after `write-plain-english` |
 | `write-issue` | GitHub issue: Context → Problem → Direction; templates A–E; `gh` workflow |
-| `write-doc` | Docusaurus pages (explainer, ADR, bounded context, convention) |
+| `write-doc` | Docusaurus pages (domain decision entry, domain page, explainer, convention) |
 | `system-design` | Design plan before an implementation spec |
 | `mermaid-diagram` | Mermaid layout, colors, MDX-safe blocks; flows and state machines |
 

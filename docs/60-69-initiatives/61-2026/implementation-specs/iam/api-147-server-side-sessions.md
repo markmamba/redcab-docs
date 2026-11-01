@@ -8,9 +8,9 @@ status: approved
 phase: 2
 context: IAM
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#server-side-sessions"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#production-hosts"
-  - "docs/30-49-domains/39-iam/architecture-decisions/server-side-sessions.md"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#server-side-sessions"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#production-hosts"
+  - "docs/30-49-domains/32-iam/iam-decisions.md"
 ---
 
 ## TL;DR
@@ -51,9 +51,8 @@ Read these before design. Do not invent behavior that contradicts them.
 | Rule | [Access codes](/docs/30-49-domains/iam/iam-decisions/#access-codes) | `csrf_token_missing` and `csrf_token_invalid` |
 | Rule | [Web session rules](/docs/30-49-domains/iam/iam-decisions/#web-session-rules) | What the web expects from Rails |
 | Requirement | [Sign-up, sign-in and portals](/docs/30-49-domains/iam/requirements/sign-up-sign-in-and-portals) | US-6 and US-7 |
-| Record | [Sessions are database records, and nothing refreshes](/docs/30-49-domains/iam/architecture-decisions/server-side-sessions) | Reasons and rejected options |
+| Record | [Sessions are database records, and nothing refreshes](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions) | Reasons and rejected options |
 | Column truth | [identities.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/identities.dbml) | `identities_account_sessions`, `identities_admin_sessions` and `identities_oauth_identities` |
-| Code today | [Authentication](/docs/90-99-engineering-meta/authentication/) | The contract that this spec replaces |
 | Paired spec | [Web server-side sessions](web-190-server-side-sessions-and-account-menu.md) | Must deploy with this spec |
 
 This spec depends on [red-cab-api#259](https://github.com/markmamba/red-cab-api/pull/259), which adds the Google link index to the DBML files.
@@ -357,7 +356,6 @@ Aiko signs in on her laptop, leaves for 8 days, and comes back.
 
 ### Docs
 
-- [ ] Update the pages in `docs/90-99-engineering-meta/93-authentication/`, because they describe the code as it runs.
 - [ ] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria

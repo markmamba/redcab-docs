@@ -33,10 +33,12 @@ Per-issue design for `red-cab-api` / `red-cab-web` belongs in an **implementatio
 
 | Step | Skill / location |
 | --- | --- |
+| Decision (when the domain has no ruling) | `write-doc`, type *Decision entry*, in `{domain}-decisions.md` |
 | GitHub issue body | `write-issue` (this repo) |
 | Implementation spec | `docs/60-69-initiatives/61-2026/implementation-specs/_template.md` in this repo |
 | Spec review | The owner reviews the spec in the docs PR and sets `status: approved` |
 | Codegen | `new-endpoint`, `new-model`, `creating-route-pages`, etc. with `spec_path` |
+| After merge | Set the spec to `implemented`. Move its lasting rules to the model page or use-case page of the domain |
 
 Do not use `write-doc` for implementation specs. Point the user at the api/web spec skills instead.
 
@@ -45,7 +47,7 @@ Do not use `write-doc` for implementation specs. Point the user at the api/web s
 | Need | Skill | Output location |
 | --- | --- | --- |
 | Issue for engineers | `write-issue` | GitHub (`red-cab-api`, `red-cab-web`, `redcab-docs`) |
-| Explainer, ADR, context page, convention page | `write-doc` | See skill |
+| Domain decision entry, domain page, explainer, convention page | `write-doc` | See skill |
 | Early design before a spec | `system-design` | `scratchpad/design-*.md` |
 | Mermaid in a page | `mermaid-diagram` | Block inside target `index.md` |
 
@@ -74,7 +76,8 @@ Fix broken links before hand-off.
 Every normative sentence must trace to a source: governing doc ID, file path, test name, or explicit user statement.
 
 - Unverified facts stay out of normative sections; list them under **Open questions** or in the hand-off.
-- Do not invent `FR-*`, `INV-*`, or `ADR-*` citations. Read the files or leave the cell empty and ask.
+- Do not invent citations. Link a decision entry (`D<number>`) that you have read, or leave the cell empty and ask.
+- Do not copy a rule from an old spec, invariant, requirement or ADR.
 
 ## Commands
 

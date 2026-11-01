@@ -10,7 +10,7 @@ context: PAY
 related:
   - "docs/70-79-business/71-business-rules/invariants.md#pay-17"
   - "docs/70-79-business/72-requirements/functional-requirements/pay.md"
-  - "docs/60-69-initiatives/61-2026/implementation-specs/pay/api-71-payment-attempt-checkout.md"
+  - "docs/80-89-legacy/implementation-specs/pay/api-71-payment-attempt-checkout.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-157-provider-coverage-and-checkout-booking-location.md"
 ---
 
@@ -51,7 +51,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | --- | --- | --- |
 | PAY-17 | [Invariants](/docs/70-79-business/business-rules/invariants) | A checkout session records the accepted terms version before payment. |
 | FR-PAY-012 | [Pay requirements](/docs/70-79-business/requirements/functional-requirements/pay) | Payment cannot proceed without acceptance. |
-| Spec api-71 | [Payment attempt at checkout](./api-71-payment-attempt-checkout.md) | The terms gate at payment initiation. |
+| Spec api-71 | [Payment attempt at checkout](../../../../80-89-legacy/implementation-specs/pay/api-71-payment-attempt-checkout.md) | The terms gate at payment initiation. |
 | Spec web-157 | [Coverage and booking location](../cat/web-157-provider-coverage-and-checkout-booking-location.md) | Decision 1 left the terms checkbox to red-cab-web#180. |
 | Issue | [red-cab-web#180](https://github.com/markmamba/red-cab-web/issues/180) | The owner decided on 2026-10-26 that the web reads the version from an API endpoint. |
 

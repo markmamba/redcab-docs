@@ -8,10 +8,10 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#asset-holds"
-  - "docs/30-49-domains/38-catalog/models/asset-availability.md"
-  - "docs/30-49-domains/38-catalog/models/listings-and-packages.md"
-  - "docs/30-49-domains/38-catalog/architecture-decisions/asset-holds.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#asset-holds"
+  - "docs/30-49-domains/31-catalog/models/asset-availability.md"
+  - "docs/30-49-domains/31-catalog/models/listings-and-packages.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md"
 ---
 
 ## TL;DR
@@ -54,7 +54,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | Model | [Asset availability](/docs/30-49-domains/catalog/models/asset-availability) | Hold rules, schedules and closures |
 | Model | [Listings and packages](/docs/30-49-domains/catalog/models/listings-and-packages) | Package columns and the asset pool |
 | Schema | [catalog.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/catalog.dbml) | Column truth. Tags `ships in: S5` mark this slice. |
-| ADR-005 | [Single pricing authority](/docs/30-49-domains/architecture-decisions/adr-005-single-pricing-authority) | Only the quote service computes a price |
+| ADR-005 | Single pricing authority (removed) | Only the quote service computes a price |
 | INV-1 | [Invariants](/docs/70-79-business/business-rules/invariants) | A confirmed booking never changes |
 | PRC-1 | [Invariants](/docs/70-79-business/business-rules/invariants) | The client never sends a price |
 

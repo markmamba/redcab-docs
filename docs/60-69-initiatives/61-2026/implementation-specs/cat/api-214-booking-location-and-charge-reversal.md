@@ -8,9 +8,9 @@ status: approved
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#pickup-coverage-validation-timing"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#booking-confirmation"
-  - "docs/30-49-domains/38-catalog/requirements/tourist-booking.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#pickup-coverage-validation-timing"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#booking-confirmation"
+  - "docs/30-49-domains/31-catalog/requirements/tourist-booking.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-213-pickup-coverage-and-discoverable-gate.md"
 ---
 

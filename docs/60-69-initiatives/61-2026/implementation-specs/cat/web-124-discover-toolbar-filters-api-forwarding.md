@@ -11,7 +11,6 @@ context: CAT
 depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-161-marketplace-listing-index-discover-filters.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-67-listing-sort-control-url-params.md"
-  - "docs/60-69-initiatives/61-2026/implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots.md"
 epic: "https://github.com/markmamba/red-cab-web/issues/55"
 ---
 
@@ -31,7 +30,7 @@ Tourist discover must filter area listings by date, service type, language, grou
 Evidence:
 
 - `LISTING_FILTER_SEARCH_PARAMS` reserves filter keys but omits `language`, `price_min`, and `price_max`, and still lists `availability_slot_id` ([`catalog-listing-constant.js`](https://github.com/markmamba/red-cab-web/blob/main/app/domains/catalog-listing/catalog-listing-constant.js)).
-- `CatalogListingDiscoverToolbar` keeps the Filters control disabled ([web-68](../platform/web-68-tourist-phase-2-placeholder-slots.md) placeholder).
+- `CatalogListingDiscoverToolbar` keeps the Filters control disabled (web-68 (removed) placeholder).
 - `hasActiveDiscoverFilterParams` / **Clear filters** on the list page can show `LISTING_FILTERS` empty state while the loader ignores filter keys (refresh loses effective filtering until this issue).
 
 ## Governing docs
@@ -46,9 +45,9 @@ Evidence:
 | AMB-024 | [open-questions](/docs/70-79-business/planning/open-questions) | Provisional language whitelist |
 | api-161 | [api-161-marketplace-listing-index-discover-filters.md](./api-161-marketplace-listing-index-discover-filters.md) | Public query param names and validation |
 | web-67 | [web-67-listing-sort-control-url-params.md](./web-67-listing-sort-control-url-params.md) | Loader whitelist pattern; sort + filters compose |
-| web-68 | [web-68-tourist-phase-2-placeholder-slots.md](../platform/web-68-tourist-phase-2-placeholder-slots.md) | Toolbar slot; search stays deferred |
+| web-68 | web-68-tourist-phase-2-placeholder-slots.md (removed) | Toolbar slot; search stays deferred |
 | web-56 | [web-56-tourist-access-and-route-contract.md](../iam/web-56-tourist-access-and-route-contract.md) | Reserved listing index query params; canonical without filters |
-| ADR-017 | [adr-017-tourist-ui-public-url-architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | URL-driven discover state |
+| ADR-017 | adr-017-tourist-ui-public-url-architecture (removed) | URL-driven discover state |
 | frontend.md | [frontend conventions](/docs/50-59-frontend/conventions/frontend) | `{model}-filter-form.jsx`; `useSearchParams`; reset `page` on filter apply |
 
 ## Design decisions

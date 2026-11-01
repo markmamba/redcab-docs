@@ -33,7 +33,7 @@ Roadmap overview — scope, dependency order, phase index, context matrix, and a
 - **Exit criteria are observable outcomes** — the condition that means a phase is done. They map to functional requirements where possible; see [Traceability matrix](/docs/70-79-business/requirements/traceability-matrix).
 - **Provisional requirements** (README §8) may ship under a phase's temporary assumption from the ambiguity register. Confirm or resolve the cited `AMB-###` before marking the phase complete.
 - **Agent sessions** should pick one context slice per phase step, read that context's requirements + business rules, and implement against [Backend conventions](/docs/20-29-backend/conventions/backend) and [Frontend conventions](/docs/50-59-frontend/conventions/frontend).
-- **DBML-first for Phase 1–3.** Design (or extend) the context's `docs/db/*.dbml` and land migrations **before** Managers/routes/UI for that slice. Conceptual ownership stays in [Data model](/docs/30-49-domains/data-model); storage shape is owned by DBML in `red-cab-api/docs/db/`.
+- **DBML-first for Phase 1–3.** Design (or extend) the context's `docs/db/*.dbml` and land migrations **before** Managers/routes/UI for that slice. Conceptual ownership stays in Data model; storage shape is owned by DBML in `red-cab-api/docs/db/`.
 
 ### Identity & profile model (locked after Phase 0)
 
@@ -174,9 +174,9 @@ Which contexts receive **new capability** in each phase (✓ = primary build, �
 When picking up work in a given phase:
 
 1. Read this document for phase scope, **How to proceed (DBML-first)**, and exit criteria.
-2. Read the target context in [Bounded contexts](/docs/30-49-domains/bounded-contexts) and [Domain models](/docs/30-49-domains/domain-models/domain-models).
+2. Read the target context in Bounded contexts and Domain models.
 3. Confirm profile ownership (Account vs Tourist / Corporate / Provider / Admin) in this document’s **Identity & profile model**.
-4. **Schema first:** open or create the context’s `red-cab-api/docs/db/*.dbml`, align with [Data model](/docs/30-49-domains/data-model), then add migrations + model stubs before Managers/routes/UI.
+4. **Schema first:** open or create the context’s `red-cab-api/docs/db/*.dbml`, align with Data model, then add migrations + model stubs before Managers/routes/UI.
 5. Filter requirements in [Traceability matrix](/docs/70-79-business/requirements/traceability-matrix) by context and phase.
 6. Check [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions) for Provisional requirements — use temp assumption or resolve first.
 7. Implement using [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) and backend/frontend conventions.
@@ -189,8 +189,8 @@ When picking up work in a given phase:
 ## Related documents
 
 - [Documentation index](/docs) — site root
-- [Bounded contexts](/docs/30-49-domains/bounded-contexts) — context map and integration contracts
-- [Data model](/docs/30-49-domains/data-model) — conceptual entities and ownership (semantics)
+- Bounded contexts — context map and integration contracts
+- Data model — conceptual entities and ownership (semantics)
 - [Traceability matrix](/docs/70-79-business/requirements/traceability-matrix) — PRD → requirements → contexts
 - [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions) — open decisions and temp assumptions
 - [/docs/90-99-engineering-meta](/docs/90-99-engineering-meta) — implementation conventions

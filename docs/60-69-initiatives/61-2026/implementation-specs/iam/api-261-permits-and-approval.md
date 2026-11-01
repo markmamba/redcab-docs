@@ -10,9 +10,9 @@ context: IAM
 depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-260-provider-company-and-memberships.md"
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-company"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-licenses"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#permits-and-package-availability"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-company"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-licenses"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#permits-and-package-availability"
 ---
 
 ## TL;DR

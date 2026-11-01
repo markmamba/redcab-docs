@@ -18,13 +18,12 @@ Domain-to-code mapping for Red Cab API and web repos.
 | Engineering overview | [Engineering](/docs/90-99-engineering-meta) |
 | Backend patterns | [Backend Conventions](/docs/20-29-backend/conventions/backend) |
 | Frontend patterns | [Frontend Conventions](/docs/50-59-frontend/conventions/frontend) |
-| Bounded contexts | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
 
 ---
 
 ## Actor → API controller namespace
 
-Red Cab has four external roles ([../architecture/api-design.md](/docs/30-49-domains/system-design/api-design)). Map them to explicit route files and controller namespaces — one file per actor, explicit verb + path (never `resources`).
+Red Cab has four external roles. Map them to explicit route files and controller namespaces — one file per actor, explicit verb + path (never `resources`).
 
 | Red Cab Role | Glossary term | Controller namespace | Route file | Auth base |
 | --- | --- | --- | --- | --- |
@@ -82,7 +81,7 @@ app/domains/catalog/
   search/             # query-only managers
 ```
 
-`catalog.dbml` is authoritative for geography storage shape: `catalog_countries` + `catalog_geographies` tree (`level`, `code_system`, `external_code`, `path`, `is_discovery_root`, `is_listable`, `discovery_root_id`, `successor_geography_id`, `name_kana`, `latitude`, `longitude`, `timezone` on every node). See [Geography](/docs/30-49-domains/patterns/geography), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree), and [ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model). **Target model** — shipped schema catches up in epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
+`catalog.dbml` is authoritative for geography storage shape: `catalog_countries` + `catalog_geographies` tree (`level`, `code_system`, `external_code`, `path`, `is_discovery_root`, `is_listable`, `discovery_root_id`, `successor_geography_id`, `name_kana`, `latitude`, `longitude`, `timezone` on every node). **Target model** — shipped schema catches up in epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
 
 Shared datetime utilities: `app/shared/date_time_utils.rb` — see [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones).
 
@@ -125,7 +124,7 @@ Map Red Cab consumer surfaces to React Router route files — one `*.routes.js` 
 
 Public catalog pages use server `loader` and `index, follow` robots per [spec #56](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract). Checkout and account routes remain in `tourist.routes.js` with `withTouristAuth`.
 
-The **Auth HOC** column is transitional. Per [ADR-018](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model), each private surface moves to a policy route (`tourist-required`, `corporate-required`, `provider-required`, `admin-required`) one surface at a time. See [Policy routes and surfaces](/docs/90-99-engineering-meta/authentication/policy-routes-and-surfaces) and the [roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap).
+The **Auth HOC** column is transitional. Each private surface moves to a policy route (`tourist-required`, `corporate-required`, `provider-required`, `admin-required`) one surface at a time. See Policy routes and surfaces (removed) and the roadmap (removed).
 
 ### API client naming
 
@@ -182,7 +181,7 @@ Conventions (see [Backend Conventions](/docs/20-29-backend/conventions/backend))
 - `rails_enum(...)` in DBML notes → `t.string` + model `enum`
 - Soft delete via `status :active | :archived` where applicable (not `is_deleted`) — see [Backend Conventions — Soft delete](/docs/20-29-backend/conventions/backend#soft-delete-pattern)
 
-The conceptual model in [../architecture/data-model.md](/docs/30-49-domains/data-model) remains authoritative for **semantics**; DBML is authoritative for **storage shape**.
+DBML is authoritative for **storage shape**.
 
 ---
 
@@ -204,6 +203,4 @@ These architectural rules must appear as code constraints, not comments:
 
 - [Backend Conventions](/docs/20-29-backend/conventions/backend)
 - [Frontend Conventions](/docs/50-59-frontend/conventions/frontend)
-- [../architecture/contexts](/docs/30-49-domains/bounded-contexts)
-- [../architecture/api-design.md](/docs/30-49-domains/system-design/api-design)
 

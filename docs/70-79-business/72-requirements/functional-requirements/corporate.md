@@ -17,7 +17,7 @@ Functional requirements for **Corporate — Quotation & Invoicing**.
 | Topic | Document |
 | --- | --- |
 | All FR contexts | [Functional Requirements](/docs/70-79-business/requirements/functional-requirements) |
-| Corporate context | [Corporate Quotation](/docs/30-49-domains/bounded-contexts/corporate) |
+| Corporate context | Corporate Quotation |
 | Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) (`PAY-9`, `PAY-10`) |
 
 ---

@@ -8,8 +8,8 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#destination-structure"
-  - "docs/30-49-domains/38-catalog/models/listings-and-packages.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#destination-structure"
+  - "docs/30-49-domains/31-catalog/models/listings-and-packages.md"
 ---
 
 ## TL;DR
@@ -39,7 +39,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | Ruling | [Destination structure](/docs/30-49-domains/catalog/catalog-decisions/#destination-structure) | The primary destination is required and is a prefecture |
 | Model | [Listings and packages model](/docs/30-49-domains/catalog/models/listings-and-packages) | `primary_geography_id` rule and writers |
 | Schema | [catalog.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/catalog.dbml) | Column and index truth. Tags `ships in: S2` mark this slice |
-| ADR-014 | [Service timezone model](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) | The booking Service Timezone comes from the listing node |
+| ADR-014 | Service timezone model (removed) | The booking Service Timezone comes from the listing node |
 | Slice S1 | [Spec api-203](./api-203-region-level-and-seed.md) | Every prefecture has a region parent. Merged in red-cab-api#217 |
 
 ## Design decisions

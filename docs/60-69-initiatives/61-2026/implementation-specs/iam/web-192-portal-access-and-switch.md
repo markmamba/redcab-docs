@@ -12,15 +12,15 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-190-server-side-sessions-and-account-menu.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-191-permits-registration-and-team-approval.md"
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#person-account"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#tourist-profile"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-company"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#portal-access"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#current-session-answer"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#web-session-rules"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#policy-routes"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#access-codes"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#no-corporate-accounts"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#person-account"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#tourist-profile"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-company"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#portal-access"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#current-session-answer"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#web-session-rules"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#policy-routes"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#access-codes"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#no-corporate-accounts"
 ---
 
 ## TL;DR
@@ -474,10 +474,10 @@ This code goes away from other files.
 | Spec | Part replaced |
 | --- | --- |
 | [web-56](web-56-tourist-access-and-route-contract.md) | In decision 5, "logged-in tourist" becomes any signed-in person with a name |
-| [web-80](auth-platform/web-80-safe-redirect-helper.md) | `postAuthPath(identitiesAccount, redirectTo)`, `ROLE_PATH_PREFIXES` and decision 4 |
-| [web-84](auth-platform/web-84-auth-core-modules.md) | The role reading in `auth-safe-redirect.js` and the entry rules |
-| [web-86](auth-platform/web-86-tourist-account-policy-routes.md) | Decisions 15, 19 and 21, and the Corporate rows |
-| [web-87](auth-platform/web-87-corporate-provider-policy-routes.md) | The Corporate policy, the wrong-role redirect, and decisions 7 and 9 |
+| [web-80](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-80-safe-redirect-helper.md) | `postAuthPath(identitiesAccount, redirectTo)`, `ROLE_PATH_PREFIXES` and decision 4 |
+| [web-84](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-84-auth-core-modules.md) | The role reading in `auth-safe-redirect.js` and the entry rules |
+| [web-86](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-86-tourist-account-policy-routes.md) | Decisions 15, 19 and 21, and the Corporate rows |
+| [web-87](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-87-corporate-provider-policy-routes.md) | The Corporate policy, the wrong-role redirect, and decisions 7 and 9 |
 | [web-190](web-190-server-side-sessions-and-account-menu.md) | The `corporate-layout.jsx` note on `PortalChrome` |
 | [web-191](web-191-permits-registration-and-team-approval.md) | The `suspended` row of "What each status shows", and the create page loader |
 
@@ -594,7 +594,6 @@ Aiko is a tourist who starts a business.
 ### Docs
 
 - [ ] Update `docs/50-59-frontend/51-conventions/frontend.md`.
-- [ ] Update the pages in `docs/90-99-engineering-meta/93-authentication/`.
 - [ ] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria

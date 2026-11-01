@@ -26,12 +26,12 @@ _Write Tier A STE: short bullets, one idea each. See [Prose and ASD-STE100](/doc
 
 Read these before design. Do not invent behavior that contradicts them.
 
-| ID | Document | Why |
+| Kind | Document | Why |
 | --- | --- | --- |
-| FR-???-??? | [requirements/functional-requirements/](../requirements/functional-requirements/) | Observable behavior |
-| ADR-??? | [30-49-domains/34-architecture-decisions/](/docs/30-49-domains/architecture-decisions/) | Architecture constraint |
-| INV-? | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Invariant |
-| AMB-??? | [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions) | Open decision (if any) |
+| Decision | Link to the entry in `{domain}-decisions.md`, for example `D19` | The ruling that this spec implements |
+| Model | Link to the model page of the domain | The structure that this spec changes |
+| Schema | The DBML file in `red-cab-api/docs/db/` | Column truth |
+| Convention | The backend or frontend convention page | How to code it |
 
 ## Design decisions
 
@@ -93,7 +93,7 @@ _Applies when `red-cab-web` is in `repos`. Delete section if not._
 
 ## Acceptance criteria
 
-- [ ] {Maps to FR-* or issue checklist}
+- [ ] {Maps to a decision entry or an issue checklist}
 - [ ] Integration test: `test/integration/...`
 - [ ] No client-side price computation
 - [ ] {Context-specific checks}

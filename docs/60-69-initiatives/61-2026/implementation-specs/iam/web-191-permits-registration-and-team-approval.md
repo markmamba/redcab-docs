@@ -10,8 +10,8 @@ context: IAM
 depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-261-permits-and-approval.md"
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-company"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-licenses"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-company"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-licenses"
   - "docs/60-69-initiatives/61-2026/implementation-specs/platform/web-144-platform-upload-client.md"
 ---
 
@@ -71,7 +71,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | Rule | [Permits and package availability](/docs/30-49-domains/catalog/catalog-decisions/#permits-and-package-availability) | The vehicle save rule |
 | Requirement | [Provider company members](/docs/30-49-domains/iam/requirements/provider-company-members) | What an owner sees |
 | Paired spec | [API permits and approval](api-261-permits-and-approval.md) | The contract and the error answers |
-| Dependency | [Platform upload client](../platform/web-144-platform-upload-client.md) | Document upload |
+| Dependency | [Platform upload client](../../../../60-69-initiatives/61-2026/implementation-specs/platform/web-144-platform-upload-client.md) | Document upload |
 | Web rules | `red-cab-web/AGENTS.md` | Domain folders, API modules and forms |
 
 ## Design decisions

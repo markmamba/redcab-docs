@@ -8,8 +8,8 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#listing-slug"
-  - "docs/30-49-domains/38-catalog/models/listings-and-packages.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#listing-slug"
+  - "docs/30-49-domains/31-catalog/models/listings-and-packages.md"
 ---
 
 ## TL;DR

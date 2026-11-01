@@ -33,8 +33,8 @@ Evidence: `config/routes/marketplace_routes.rb` (`:district_id`/`:area_id`), `Ca
 | Prerequisite | [133-refactor-geography-domain-layer.md](./api-133-refactor-geography-domain-layer.md) | `Catalog::Geography`, `discoverable`, UUID-only interim managers |
 | FR-CAT-003 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Discovery projection; empty listings signal |
 | INV-8, INV-11 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Subtree discoverability; archive successor |
-| ADR-016 | [30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) | `path`, `discovery_root_id`, successor pointer |
-| Session A | [/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | Frozen URL family; slug params |
+| ADR-016 | 30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md (removed) | `path`, `discovery_root_id`, successor pointer |
+| Session A | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Frozen URL family; slug params |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | `districts/` / `areas/` manager surface names |
 | Backend conventions | [Backend conventions](/docs/20-29-backend/conventions/backend) | No DB queries in serializers; explicit routes |
 

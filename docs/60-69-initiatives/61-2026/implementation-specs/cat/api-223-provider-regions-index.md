@@ -8,7 +8,7 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#destination-structure"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#destination-structure"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-154-provider-listing-destinations.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-207-scoped-listings-index.md"
 ---

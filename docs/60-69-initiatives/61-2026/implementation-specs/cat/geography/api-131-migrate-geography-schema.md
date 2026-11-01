@@ -29,8 +29,8 @@ Evidence: `red-cab-api/docs/db/catalog.dbml` (flat tables), `db/migrate/20260802
 | ID | Document | Why |
 | --- | --- | --- |
 | Parent spec | [docs-13-geography-administrative-tree.md](./docs-13-geography-administrative-tree.md) | Authoritative §3.4 columns, indexes, CHECK constraints, migration steps 2–7 |
-| ADR-016 | [30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) | Tree shape, C1 discovery roots |
-| ADR-014 | [30-49-domains/34-architecture-decisions/adr-014-service-timezone-model.md](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) | `timezone` on every geography node |
+| ADR-016 | 30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md (removed) | Tree shape, C1 discovery roots |
+| ADR-014 | 30-49-domains/34-architecture-decisions/adr-014-service-timezone-model.md (removed) | `timezone` on every geography node |
 | Geography review | [/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model) | §4 backfill mapping when legacy rows exist |
 | INV-8, INV-11 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Listing location; archive never delete |
 | Backend conventions | [Backend conventions](/docs/20-29-backend/conventions/backend) | `timestamptz`, string enums, explicit FKs |

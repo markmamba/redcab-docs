@@ -33,9 +33,9 @@ Evidence: `config/routes/marketplace_routes.rb` (no `areas/near` route), no `Nea
 | Prerequisite | [134-marketplace-geography-slug-and-ancestors.md](./api-134-marketplace-geography-slug-and-ancestors.md) | Slug routes landed; marketplace read stack stable |
 | FR-CAT-032 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Near-me discovery requirement |
 | INV-8 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Subtree discoverability filter |
-| ADR-013 | [30-49-domains/34-architecture-decisions/adr-013-geography-reference-data.md](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data) | Haversine over centroids; no PostGIS |
-| ADR-016 | [30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) | Listable nodes, partial coord index |
-| geography.md | [architecture/geography.md](/docs/30-49-domains/patterns/geography) | Near-me algorithm summary |
+| ADR-013 | 30-49-domains/34-architecture-decisions/adr-013-geography-reference-data.md (removed) | Haversine over centroids; no PostGIS |
+| ADR-016 | 30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md (removed) | Listable nodes, partial coord index |
+| geography.md | architecture/geography.md (removed) | Near-me algorithm summary |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | `geographies/` query services |
 | Backend conventions | [Backend conventions](/docs/20-29-backend/conventions/backend) | Request → Manager → Validator; no serializer DB queries |
 

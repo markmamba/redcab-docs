@@ -8,8 +8,8 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/architecture-decisions/vehicle-categories.md"
-  - "docs/30-49-domains/38-catalog/models/listings-and-packages.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md"
+  - "docs/30-49-domains/31-catalog/models/listings-and-packages.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-211-many-packages-and-display-prices.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-212-package-aware-filters-and-price-sort.md"
 ---
@@ -52,7 +52,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | ID | Document | Why |
 | --- | --- | --- |
 | Ruling | [Vehicle category reference data](/docs/30-49-domains/catalog/catalog-decisions/#vehicle-category-reference-data) | The six categories, the kinds and the retire rule |
-| ADR | [Vehicle categories are reference data](/docs/30-49-domains/catalog/architecture-decisions/vehicle-categories) | The reasons and the alternatives |
+| ADR | [Vehicle categories are reference data](/docs/30-49-domains/catalog/catalog-decisions/#vehicle-category-reference-data) | The reasons and the alternatives |
 | Model | [Vehicle categories](/docs/30-49-domains/catalog/models/listings-and-packages#vehicle-categories) | The columns and the seed |
 | Decision Log | `AMB-023` in [Open questions](/docs/70-79-business/planning/open-questions) | The row that replaces the PRD set |
 | Ruling | [Schema ground rules](/docs/30-49-domains/catalog/catalog-decisions/#schema-ground-rules) | One reader for each new column |

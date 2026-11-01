@@ -101,7 +101,7 @@ Principles:
 - The detailed mapping lives in the traceability matrix (a separate document in this set); this README defines the philosophy, not the matrix itself.
 
 ## 6. Grouping by bounded context
-Functional requirements are grouped by the owning bounded context from [Bounded contexts](/docs/30-49-domains/bounded-contexts). Context codes:
+Functional requirements are grouped by the owning bounded context from Bounded contexts. Context codes:
 
 - `IAM` — Identity & Access (supporting)
 - `PRV` — Provider Onboarding & Verification
@@ -113,7 +113,7 @@ Functional requirements are grouped by the owning bounded context from [Bounded 
 - `NOT` — Notifications (supporting)
 
 Grouping rules:
-- A requirement is owned by the context whose **observable behavior** it describes, consistent with that context's source-of-truth concepts in [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models).
+- A requirement is owned by the context whose **observable behavior** it describes, consistent with that context's source-of-truth concepts in /docs/30-49-domains/domain-models/domain-models.
 - Behavior that spans contexts (e.g. checkout touching Catalog availability and Payments) is owned by the context that the Actor observably interacts with, with lateral trace links to the others.
 - Non-functional requirements are grouped by category (§3.1) and may apply to one or many contexts; their scope is stated explicitly.
 
@@ -121,10 +121,10 @@ Grouping rules:
 Requirements are downstream of, and bounded by, these documents. Where they overlap, the document below governs and the requirement conforms.
 
 - **[Invariants](/docs/70-79-business/business-rules/invariants)** — invariants and operational rules (`INV-`, `LC-`, `PRC-`, `PAY-`, `BKG-`, `CON-`, `OPR-`). Requirements express observable behavior consistent with these; they never weaken or contradict them. Terminology follows [Glossary](/docs/70-79-business/business-rules/glossary).
-- **[Booking state machine](/docs/30-49-domains/patterns/booking-state-machine)** — the authoritative Booking lifecycle. Requirements about booking behavior reference states/transitions but do not redefine them.
-- **[Payments architecture](/docs/30-49-domains/patterns/payments-architecture)** — money-facts vs money-movement, financial invariants (`FIN-`). Requirements about payment behavior conform to these and to the snapshot rules.
-- **[Bounded contexts](/docs/30-49-domains/bounded-contexts)** — defines the owning contexts and their boundaries used for grouping (§6).
-- **[Domain models](/docs/30-49-domains/domain-models/domain-models)** — defines the concepts, aggregates, and source-of-truth ownership that requirements describe behavior over. Requirements use these concept names exactly.
+- **Booking state machine** — the authoritative Booking lifecycle. Requirements about booking behavior reference states/transitions but do not redefine them.
+- **Payments architecture** — money-facts vs money-movement, financial invariants (`FIN-`). Requirements about payment behavior conform to these and to the snapshot rules.
+- **Bounded contexts** — defines the owning contexts and their boundaries used for grouping (§6).
+- **Domain models** — defines the concepts, aggregates, and source-of-truth ownership that requirements describe behavior over. Requirements use these concept names exactly.
 - **[Open questions](/docs/70-79-business/planning/open-questions)** — the open-decision register (§8).
 
 This diagram is illustrative: requirements sit downstream of governing docs and cite open decisions without resolving them.

@@ -8,10 +8,10 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#marketplace-filter-combination"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#marketplace-sort-options"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#discoverability-completeness"
-  - "docs/30-49-domains/38-catalog/requirements/tourist-browse-and-search.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#marketplace-filter-combination"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#marketplace-sort-options"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#discoverability-completeness"
+  - "docs/30-49-domains/31-catalog/requirements/tourist-browse-and-search.md"
 ---
 
 ## TL;DR

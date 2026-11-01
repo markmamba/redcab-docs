@@ -1,44 +1,41 @@
 ---
-title: Architecture
+title: Domains
 sidebar_position: 1
-description: System structure, integration patterns, and architectural decisions for Red Cab Marketplace.
+description: One folder for each domain. Each folder has a front door and a decisions page.
 ---
 
 ## TL;DR
 
-- This area holds **domain structure**: bounded contexts, domain models, conceptual data model, patterns, system design, and ADRs.
-- Start with [Overview](/docs/30-49-domains/system-design/overview), then [Bounded Contexts](/docs/30-49-domains/bounded-contexts).
-- Business rules and requirements live under `70-79-business`; these pages record **architecture and ownership**, not observable product requirements.
+- This area holds one folder for each domain.
+- Each folder has a **front door** (`index.md`) and a **decisions page** (`{domain}-decisions.md`).
+- The decisions page holds every ruling of the domain, as a numbered and dated entry.
+- Catalog and IAM have rulings.
+- Bookings, Payments and Reviews are drafts, and they have only questions.
 
 ## About this document
 
-Hub for the `30-49-domains` Johnny Decimal area.
+This page is the hub of the `30-49-domains` area.
+
+The [Documentation system](../00-09-meta/conventions/documentation-system.md#precedence) page gives the precedence of documents.
 
 | Topic | Document |
 | --- | --- |
-| Glossary | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Invariants | [Invariants](/docs/70-79-business/business-rules/invariants) |
-| Requirements | [Requirements](/docs/70-79-business/requirements) |
+| Glossary | [Glossary](../70-79-business/71-business-rules/glossary.md) |
 
 ---
 
-## Documents
+## Domains
 
-| Document | Purpose |
-| --- | --- |
-| [Overview](/docs/30-49-domains/system-design/overview) | Top-level architectural guide |
-| [Bounded Contexts](/docs/30-49-domains/bounded-contexts) | Strategic DDD context map |
-| [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) | Booking lifecycle and transitions |
-| [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) | Custody, control, commission, settlement, refunds |
-| [API Design](/docs/30-49-domains/system-design/api-design) | REST conventions and contracts |
-| [Data Model](/docs/30-49-domains/data-model) | Storage model and relationships |
-| [Tech Stack](/docs/30-49-domains/system-design/tech-stack) | Technology choices and rationale |
-| [Decisions (ADRs)](/docs/30-49-domains/architecture-decisions) | Architecture decision records |
+| Domain | Front door | Decisions | Status |
+| --- | --- | --- | --- |
+| Catalog | [Catalog domain](./31-catalog/index.md) | [Catalog decisions](./31-catalog/catalog-decisions.md) | Current |
+| IAM | [IAM domain](./32-iam/index.md) | [IAM decisions](./32-iam/iam-decisions.md) | Current |
+| Bookings | [Bookings domain](./33-bookings/index.md) | [Bookings decisions](./33-bookings/bookings-decisions.md) | Draft |
+| Payments | [Payments domain](./34-payments/index.md) | [Payments decisions](./34-payments/payments-decisions.md) | Draft |
+| Reviews | [Reviews domain](./35-reviews/index.md) | [Reviews decisions](./35-reviews/reviews-decisions.md) | Draft |
 
-## Reading order
+## Adding a domain
 
-1. [Overview](/docs/30-49-domains/system-design/overview) — context, containers, principles
-2. [Bounded Contexts](/docs/30-49-domains/bounded-contexts) — ownership boundaries
-3. [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) and [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture)
-4. [API Design](/docs/30-49-domains/system-design/api-design) and [Data Model](/docs/30-49-domains/data-model)
-5. [Tech Stack](/docs/30-49-domains/system-design/tech-stack) and [ADRs](/docs/30-49-domains/architecture-decisions)
+- Create the folder `{nn}-{domain}/` with the next free number.
+- Add the front door and the decisions page.
+- Mark both pages `status: draft` until the principal developer approves a ruling.

@@ -18,9 +18,9 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 | Topic | Document |
 | --- | --- |
 | Terminology | [Glossary](/docs/70-79-business/business-rules/glossary) |
-| Financial rules (`FIN-`) | [Payments Architecture](/docs/30-49-domains/patterns/payments-architecture) |
-| Payment custody / control | [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) |
-| Booking lifecycle | [Booking State Machine](/docs/30-49-domains/patterns/booking-state-machine) |
+| Financial rules (`FIN-`) | Payments Architecture |
+| Payment custody / control | ADR-015 |
+| Booking lifecycle | Booking State Machine |
 | Observable behavior | [Requirements](/docs/70-79-business/requirements) |
 | Resolved decisions | [Open Questions](/docs/70-79-business/planning/open-questions) (Decision Log) |
 
@@ -44,12 +44,12 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **INV-5** [Reviews] A Review MUST exist only for a Booking that reached `COMPLETED`, and at most one Review per Booking. (`F-01`)
 - **INV-6** [Onboarding] A Provider whose **Provider Status** is not `Approved` MUST have zero tourist-visible Listings. (`1.4`, `C-01`)
 - **INV-7** [Onboarding] A Listing belonging to a Provider with an expired License MUST NOT be in `Published` status. (`A-06`)
-- **INV-8** [Catalog] A **geography node** (region, prefecture, municipality or ward) that the marketplace presents for tourist browse or navigation MUST NOT be shown when no **discoverable** Listing has a destination (primary or additional) in its subtree. The predicate is **discoverable**, not `Published` alone — see [Discoverable (listing)](/docs/70-79-business/business-rules/glossary#discoverable-listing) and [Catalog decisions — discoverability completeness](/docs/30-49-domains/catalog/catalog-decisions#discoverability-completeness). Counts are derived at query time and MUST NOT be stored. Geography levels are `region`, `subdivision`, `municipality`, and `ward` per [Catalog decisions — region level](/docs/30-49-domains/catalog/catalog-decisions#region-level); that ruling supersedes the three-level tree of [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree). (`B-01`, `B-02`)
+- **INV-8** [Catalog] A **geography node** (region, prefecture, municipality or ward) that the marketplace presents for tourist browse or navigation MUST NOT be shown when no **discoverable** Listing has a destination (primary or additional) in its subtree. The predicate is **discoverable**, not `Published` alone — see [Discoverable (listing)](/docs/70-79-business/business-rules/glossary#discoverable-listing) and [Catalog decisions — discoverability completeness](/docs/30-49-domains/catalog/catalog-decisions#discoverability-completeness). Counts are derived at query time and MUST NOT be stored. Geography levels are `region`, `subdivision`, `municipality`, and `ward` per [Catalog decisions — region level](/docs/30-49-domains/catalog/catalog-decisions#region-level); that ruling supersedes the three-level tree of ADR-016. (`B-01`, `B-02`)
 - **INV-9** [Identity] **Provider Type** MUST be immutable after registration except by explicit Admin action. (`A-03`)
 - **INV-10** [Catalog] A Listing MUST NOT be `Published` with zero Photos. (`C-02`)
-- **INV-11** [Booking] Historical Booking data MUST be preserved when a Listing is Paused, Unlisted, or its geography node archived/deactivated — never deleted. Archived geography MUST record `successor_geography_id` when retired by merger. (`C-11`, `B-05`, `FR-CAT-034`, [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree))
+- **INV-11** [Booking] Historical Booking data MUST be preserved when a Listing is Paused, Unlisted, or its geography node archived/deactivated — never deleted. Archived geography MUST record `successor_geography_id` when retired by merger. (`C-11`, `B-05`, `FR-CAT-034`, ADR-016)
 - **INV-12** [Onboarding/Payments] A Listing MUST NOT be `Published` unless its Provider has an active, verified **Provider Merchant Account** with the configured payment provider. (`LC-12`)
-- **INV-13** [Payments/Legal] Red Cab MUST NOT be the legal recipient or holder of Tourist or Corporate Client funds for the service portion of a transaction, at any point, on any payment rail. (`PAY-13`, `PAY-9`, [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) C1)
+- **INV-13** [Payments/Legal] Red Cab MUST NOT be the legal recipient or holder of Tourist or Corporate Client funds for the service portion of a transaction, at any point, on any payment rail. (`PAY-13`, `PAY-9`, ADR-015 C1)
 
 ## 2. Lifecycle Constraints
 *Allowed states and transitions for entities with a lifecycle.*
@@ -62,7 +62,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
   - `COMPLETED → PAYOUT_QUEUED`, `COMPLETED → REFUNDED`
 - **LC-3** `CANCELLED` and `REFUNDED` are terminal: no transition out of them is permitted.
 - **LC-4** A Booking MUST NOT move backward (e.g. `COMPLETED → PENDING`/`CONFIRMED` is forbidden).
-- **LC-5** `CONFIRMED → COMPLETED` requires that the service end time has passed in the Booking's snapshotted **Service Timezone** AND either the Provider explicitly marks the service delivered OR 24 hours have elapsed since service end time without cancellation (`OPR-12`, [ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model)). The transition MUST record a completion determination per `PAY-16`.
+- **LC-5** `CONFIRMED → COMPLETED` requires that the service end time has passed in the Booking's snapshotted **Service Timezone** AND either the Provider explicitly marks the service delivered OR 24 hours have elapsed since service end time without cancellation (`OPR-12`, ADR-014). The transition MUST record a completion determination per `PAY-16`.
 - **LC-6** `COMPLETED → PAYOUT_QUEUED` creates a **Payout Queue Entry** carrying the pre-frozen **Net Payout Amount**; provider settlement is deferred until queue processing (`PAY-14`, `PAY-15`).
 
 ### Provider Status (`A-05`, `A-06`)
@@ -88,7 +88,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **PRC-4** Group Size Tiers MUST be non-overlapping; the tier matching the selected pax determines price. (`C-04`)
 - **PRC-5** When a Tourist's selected date falls within a Seasonal Override range, the override price/multiplier applies to the Price Breakdown with its label. (`C-06`)
 - **PRC-6** Mandatory Extra Charges MUST be included in the Gross Amount and shown as separate line items; Optional Extra Charges apply only when selected. (`C-07`)
-- **PRC-7** If a Listing has no Cancellation Policy, the Platform Default Cancellation Policy applies. (`C-08`) Superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy).
+- **PRC-7** If a Listing has no Cancellation Policy, the Platform Default Cancellation Policy applies. (`C-08`) Superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/catalog-decisions/#cancellation-policy).
 - **PRC-8** The price presented at checkout initiation becomes the **Price Snapshot** on the **CheckoutSession**; see INV-1. (`C-06`, `E-02`, `BKG-9`)
 
 ## 4. Payment Rules
@@ -106,11 +106,11 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **PAY-10** [Corporate] A Quotation/Invoice MUST itemize line items and the 10% Consumption Tax. (`E-06`)
 - **PAY-11** [Payments] Commission arithmetic MUST use whole JPY: `commission_amount = FLOOR(gross_amount × commission_rate_snapshot)` and `net_payout_amount = gross_amount − commission_amount`, guaranteeing `INV-2` identically.
 - **PAY-12** [Payments/Catalog] B2C prices displayed and charged are **tax-inclusive**; corporate formal documents itemize 10% consumption tax separately (`PAY-10`).
-- **PAY-13** [Payments/Legal] **Custody.** Tourist payments MUST be received and held by the licensed payment provider, not by Red Cab (`INV-13`). The **Provider** is merchant-of-record for the underlying service. Red Cab's commission MUST reach the platform only as a provider-routed **platform fee** equal to the snapshotted `commission_amount`, never as a residual of funds Red Cab received or held. ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) C1, C3, C4; reverses Decision Log `AMB-002`, `AMB-032`)
+- **PAY-13** [Payments/Legal] **Custody.** Tourist payments MUST be received and held by the licensed payment provider, not by Red Cab (`INV-13`). The **Provider** is merchant-of-record for the underlying service. Red Cab's commission MUST reach the platform only as a provider-routed **platform fee** equal to the snapshotted `commission_amount`, never as a residual of funds Red Cab received or held. (ADR-015 C1, C3, C4; reverses Decision Log `AMB-002`, `AMB-032`)
 - **PAY-14** [Payments] Each Payout Queue Entry MUST progress through `QUEUED → PROCESSING → DISBURSED | FAILED`; failed settlements MUST be retriable and visible to Admin until voided for refund interlock. `VOIDED` is a terminal interlock outcome with a recorded `void_reason`; it is not retriable. The entry is the evidentiary record of Red Cab's release instruction under `PAY-15`.
-- **PAY-15** [Payments/Legal] **Control.** Provider settlement MUST NOT be released until Red Cab records a completion determination for the Booking (`PAY-16`). Automatic release at capture is forbidden. Control of transaction completion is a compliance requirement, not an operational preference, and MUST NOT be traded away for settlement convenience. ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) C2, C5)
-- **PAY-16** [Booking/Payments] Each completion determination MUST record the determining actor, the basis, and the instant, and MUST be immutable once recorded. Provider `mark_delivered` and the elapsed-time sweep (`OPR-12`) are **inputs** to the determination, not the determination itself. ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) C8)
-- **PAY-17** [Booking/Payments] Each CheckoutSession MUST record the accepted **Terms of Use version** and its acceptance instant before payment may proceed, alongside the Cancellation Policy agreement required by `BKG-1`. ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) C8)
+- **PAY-15** [Payments/Legal] **Control.** Provider settlement MUST NOT be released until Red Cab records a completion determination for the Booking (`PAY-16`). Automatic release at capture is forbidden. Control of transaction completion is a compliance requirement, not an operational preference, and MUST NOT be traded away for settlement convenience. (ADR-015 C2, C5)
+- **PAY-16** [Booking/Payments] Each completion determination MUST record the determining actor, the basis, and the instant, and MUST be immutable once recorded. Provider `mark_delivered` and the elapsed-time sweep (`OPR-12`) are **inputs** to the determination, not the determination itself. (ADR-015 C8)
+- **PAY-17** [Booking/Payments] Each CheckoutSession MUST record the accepted **Terms of Use version** and its acceptance instant before payment may proceed, alongside the Cancellation Policy agreement required by `BKG-1`. (ADR-015 C8)
 
 ## 5. Booking Rules
 *Reservation, checkout, bundles, packages, manifests.*
@@ -145,11 +145,11 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **OPR-3** [Onboarding] When a License is within 30 days of expiry, the Provider is warned; on expiry, all the Provider's Listings are auto-paused; on renewal + Admin update, they are restored. (`A-06`)
 - **OPR-4** [Onboarding] A Pending registration with no Admin action for more than 14 days is flagged Overdue. (`A-05`, `A3`)
 - **OPR-5** [Corporate] A Quotation Request unanswered for more than 3 business days raises an Admin overdue alert; a Bank Transfer past its deadline raises a payment-overdue alert. (`E-05`, `E-07`)
-- **OPR-6** [Reviews] A valid tourist-submitted Review is **published** immediately; the **Rating Score** includes it at once. A Provider may **report** a published Review; it stays public until Admin **removes** it. The score is recalculated from published Reviews only (`approved`, not `removed`). (`F-01`, `F-03`, `F-04`, [ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation))
+- **OPR-6** [Reviews] A valid tourist-submitted Review is **published** immediately; the **Rating Score** includes it at once. A Provider may **report** a published Review; it stays public until Admin **removes** it. The score is recalculated from published Reviews only (`approved`, not `removed`). (`F-01`, `F-03`, `F-04`, ADR-020)
 - **OPR-7** [Reviews] The Review Link is valid for 14 days from completion; after expiry no Review may be submitted. (`F-01`, `F2`)
 - **OPR-8** [Notifications] Booking confirmation notifications to Tourist and Provider MUST be dispatched within 60 seconds of the triggering event. (`G-01`, `G-02`)
 - **OPR-9** [Notifications] Notifications MUST be rendered in the recipient's stored **Language Preference** (Tourist default EN; Provider/Client Portal default JA). (`G-03`, `G-04`)
-- **OPR-10** [Catalog] Deactivating or archiving a geography node MUST set all Listings in its subtree (`path` prefix match) to `Unlisted` (not deleted), after an explicit Admin confirmation that states the affected count. (`B-05`, `FR-CAT-002`, [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree))
+- **OPR-10** [Catalog] Deactivating or archiving a geography node MUST set all Listings in its subtree (`path` prefix match) to `Unlisted` (not deleted), after an explicit Admin confirmation that states the affected count. (`B-05`, `FR-CAT-002`, ADR-016)
 - **OPR-11** [Catalog/Booking] All service windows, cancellation-tier cutoffs, and completion timers MUST be evaluated in the **Service Timezone** — the Listing's geography timezone for catalog operations; the snapshotted `service_timezone` on CheckoutSession/Booking for in-flight and historical orders (`ADR-014`). Persisted timestamps MUST use UTC (`TIMESTAMPTZ`). Domain code MUST NOT hardcode an IANA zone or numeric offset.
 - **OPR-12** [Booking] A `CONFIRMED` Booking MUST auto-transition to `COMPLETED` 24 hours after the booked service **end time** in the Booking's snapshotted **Service Timezone** if the Provider has not marked it delivered and the Booking has not been cancelled. The resulting completion determination MUST be attributed to an explicit system actor with `elapsed_time` as its recorded basis (`PAY-16`); anonymous completion is forbidden.
 

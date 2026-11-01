@@ -11,8 +11,8 @@ related:
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-209-asset-schedules-closures-holds.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-210-asset-holds-in-checkout-and-booking.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-231-listing-detail-packages.md"
-  - "docs/60-69-initiatives/61-2026/implementation-specs/pay/web-62-tourist-checkout-multi-step-layout.md"
-  - "docs/60-69-initiatives/61-2026/implementation-specs/pay/web-12-checkout-payment-step.md"
+  - "docs/80-89-legacy/implementation-specs/pay/web-62-tourist-checkout-multi-step-layout.md"
+  - "docs/80-89-legacy/implementation-specs/pay/web-12-checkout-payment-step.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract.md"
 ---
 

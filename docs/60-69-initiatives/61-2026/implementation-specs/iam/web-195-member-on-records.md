@@ -11,8 +11,8 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-268-member-columns.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-193-invitations-and-members.md"
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#member-on-records"
-  - "docs/30-49-domains/39-iam/requirements/provider-company-members.md"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#member-on-records"
+  - "docs/30-49-domains/32-iam/requirements/provider-company-members.md"
 ---
 
 ## TL;DR

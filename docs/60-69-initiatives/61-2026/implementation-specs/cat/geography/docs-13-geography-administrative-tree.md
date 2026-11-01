@@ -20,7 +20,7 @@ epic: "https://github.com/markmamba/red-cab-api/issues/130"
 
 ## Problem
 
-The shipped flat `catalog_districts` / `catalog_areas` schema cannot express designated cities as children of prefectures, has no official-code upsert key (`FR-CAT-001`), no coordinates (`FR-CAT-032`), no successor pointer (`INV-11`), and resolves marketplace geography by UUID while Session A froze slug-based public URLs. [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) and [geography data model review §3–§5](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model) define the target tree; this spec is the codegen contract for epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
+The shipped flat `catalog_districts` / `catalog_areas` schema cannot express designated cities as children of prefectures, has no official-code upsert key (`FR-CAT-001`), no coordinates (`FR-CAT-032`), no successor pointer (`INV-11`), and resolves marketplace geography by UUID while Session A froze slug-based public URLs. ADR-016 (removed) and [geography data model review §3–§5](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model) define the target tree; this spec is the codegen contract for epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
 
 Evidence: `red-cab-api/docs/db/catalog.dbml` (flat tables), `config/routes/marketplace_routes.rb` (`:district_id`/`:area_id`), `Catalog::Districts::MarketplaceShowManager` (`find_by(uuid:)`), `MarketplaceAreaEmbeddedSerializer` (no district/ancestors).
 
@@ -31,15 +31,15 @@ Evidence: `red-cab-api/docs/db/catalog.dbml` (flat tables), `config/routes/marke
 | FR-CAT-001–004 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Admin seed/curate, cascade, discovery projection, two-level navigation |
 | FR-CAT-032–034 | same | Near-me, listable-leaf rule, archive successor |
 | NFR-I18N-003 | [requirements/non-functional-requirements.md](/docs/70-79-business/requirements/non-functional-requirements) | EN/JA labels (and kana on listable nodes) on discovery roots and listable nodes |
-| ADR-013 | [30-49-domains/34-architecture-decisions/adr-013-geography-reference-data.md](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data) | Seed source, no PostGIS, partial supersession |
-| ADR-014 | [30-49-domains/34-architecture-decisions/adr-014-service-timezone-model.md](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) | `timezone` on every geography node |
-| ADR-016 | [30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) | Tree shape, C1, listable-leaf, path/successor |
+| ADR-013 | 30-49-domains/34-architecture-decisions/adr-013-geography-reference-data.md (removed) | Seed source, no PostGIS, partial supersession |
+| ADR-014 | 30-49-domains/34-architecture-decisions/adr-014-service-timezone-model.md (removed) | `timezone` on every geography node |
+| ADR-016 | 30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md (removed) | Tree shape, C1, listable-leaf, path/successor |
 | INV-8, INV-11 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Subtree discoverability; archive never delete |
 | AMB-036 | [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions) | Partial supersession — storage vs navigation |
-| Session A | [/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | Frozen URL family; slug resolution + ancestor embed **delivered** in [`red-cab-api#134`](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) (`API-1`/`API-2` traceability aliases) |
+| Session A | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Frozen URL family; slug resolution + ancestor embed **delivered** in [`red-cab-api#134`](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) (`API-1`/`API-2` traceability aliases) |
 | api-134 | [/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) | Delivered marketplace slug resolution (`API-1`) and listing-detail ancestor embed (`API-2`) |
 | Geography review | [/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model) | DBML §3.4, migration §4, API matrix §5 |
-| geography.md | [architecture/geography.md](/docs/30-49-domains/patterns/geography) | Seed pipeline sources, admin workflow |
+| geography.md | architecture/geography.md (removed) | Seed pipeline sources, admin workflow |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | Target storage shape; manager surface names |
 
 ## Design decisions

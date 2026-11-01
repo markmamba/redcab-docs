@@ -8,7 +8,7 @@ status: approved
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/architecture-decisions/cancellation-policy.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-168-cancellation-policy-presets-and-custom-tiers.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-157-provider-coverage-and-checkout-booking-location.md"
 ---
@@ -75,7 +75,7 @@ Read these before design, and do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
-| Decision | [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy) | The only source for the presets, the Japanese names, the custom checks and rules 8 to 10 |
+| Decision | [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/catalog-decisions/#cancellation-policy) | The only source for the presets, the Japanese names, the custom checks and rules 8 to 10 |
 | Spec | api-168 | The endpoints, the error text and the agreed-policy keys |
 | Spec | web-157 | The pattern for a provider tab, and the checkout create error flow |
 | Invariant | [Invariants](/docs/70-79-business/business-rules/invariants) `INV-1`, `BKG-1`, `BKG-8` | A booking keeps the policy it copied. The tourist agrees to it before payment. |

@@ -23,13 +23,13 @@ Do not invent new `##` names. Do not present a solution as a final spec.
 | --- | --- |
 | `markmamba/red-cab-api` | Rails domains, endpoints, migrations |
 | `markmamba/red-cab-web` | Routes, loaders, API clients, UI |
-| `markmamba/redcab-docs` | Planning docs, specs, ADRs, explainers |
+| `markmamba/redcab-docs` | Domain decisions, specs, explainers |
 
 ## Three-act structure
 
 Use this order for non-trivial issues:
 
-1. **Context** — Teach the problem space: models, prior ADRs, FR lines, or user journey.
+1. **Context** — Teach the problem space: models, prior decision entries, or user journey.
 2. **Problem** — State what is wrong or missing. Number multiple problems.
 3. **Direction** — One suggested approach. Leave design detail for the implementation spec.
 
@@ -102,10 +102,10 @@ Sentence rule, bullet shape, naming, and words come from `write-plain-english`.
 
 Link governing docs when you know them:
 
-- `FR-*` from `docs/70-79-business/72-requirements/functional-requirements/`
-- `INV-*` from `docs/70-79-business/71-business-rules/invariants.md`
-- `ADR-*` from `docs/30-49-domains/34-architecture-decisions/`
-- `AMB-*` from `docs/70-79-business/73-planning/open-questions.md`
+- Decision entries (`D<number>`) from `docs/30-49-domains/{nn}-{domain}/{domain}-decisions.md`
+- Model pages from `docs/30-49-domains/{nn}-{domain}/models/`
+- Open questions from the same decisions page
+- Do not cite an old `FR-*`, `INV-*`, `AMB-*` or `ADR-*` item. If the domain has no ruling, say so and ask for one.
 
 If unsure, leave a task to confirm the ID rather than guessing.
 
@@ -145,7 +145,7 @@ Skeleton text: `references/templates.md`.
 
 When the issue leads to an implementation spec:
 
-- Do not restate a decision that lives in an ADR or invariant doc. Link to it.
+- Do not restate a decision that lives in a decision entry. Link to it.
 - Every issue describes complete behavior a reviewer can verify. Every merged PR leaves `main` runnable.
 - Do not paste final implementation code. Specify inputs, decisions, observable outcomes, and tests.
 - Link the spec path in the issue when it exists: `docs/60-69-initiatives/61-2026/implementation-specs/...`.
