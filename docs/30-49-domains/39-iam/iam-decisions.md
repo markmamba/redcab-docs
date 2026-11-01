@@ -7,7 +7,7 @@ doc_type: domain-decisions
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-10-31
+last_reviewed: 2026-11-01
 supersedes:
   - ADR-018
   - ADR-019
@@ -320,6 +320,7 @@ Some records keep the member who did the action.
 - A change that the system makes names no member.
 - One example is a listing that the system unlists when a place is deactivated.
 - Another example is a booking that the system completes on its own.
+- Only an owner reads the member, so Staff and the team do not see it for now.
 - Tourists see the company name, not the member.
 - Why: the owner must be able to ask who did an action on money, public text or the listing status.
 - Replaces: nothing, because the system has no members today.
