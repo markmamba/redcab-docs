@@ -207,7 +207,8 @@ A provider saves drafts and publishes on purpose.
 - There is no administrator approval for each listing.
 - A provider can edit a published listing in place.
 - RedCab checks completeness on every save and hides a failing listing at once.
-- Publish gates: one photo, an approved provider company, verified payout and at least one available package.
+- Publish gates: one photo, pickup coverage, an approved provider company, verified payout and at least one available package.
+- A provider can save a draft with no coverage, but a listing with no coverage cannot publish.
 - An expired permit blocks only the listings that depend on it, because their packages are not available.
 - Why: preparing a listing and publishing it are two different acts.
 - Replaces: the draft-only edit rule in the provider update path, and `INV-7`.
