@@ -78,7 +78,8 @@ This page describes what the provider does and sees, without screens, APIs or al
 | The provider can close a single day of an asset. | US-5 | The provider closes 31 October for an inspection. |
 | The provider cannot close a day, or shorten a schedule, while a live hold is on it. | US-5 | Closing 29 October fails when a booking holds the asset. |
 | The provider sets a buffer for each asset and for each timed package. | US-5 | The asset buffer is 15 minutes and the package buffer is 30 minutes. |
-| Publishing needs a photo, an approved provider company, a verified payout and at least one available package. | US-6 | Publishing without a photo shows what to add. |
+| Publishing needs a photo, pickup coverage, an approved provider company, a verified payout and at least one available package. | US-6 | Publishing without a photo shows what to add. |
+| A draft may have no pickup coverage, but a listing with no coverage cannot publish. | US-3, US-6 | A new listing starts with no coverage, and the provider adds Tokyo before publishing. |
 | A draft or an unpublished listing never appears to tourists. | US-6 | A paused listing is hidden. |
 | A published listing that is not complete is hidden until it is complete again. | US-6 | The provider removes all coverage rows, so the listing is hidden. |
 | A listing that becomes complete again and is still published appears again without a new publish. | US-6 | The provider adds coverage again, and the listing returns. |
