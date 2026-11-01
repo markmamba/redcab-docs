@@ -48,17 +48,103 @@ Non-normative explainer. Authoritative rules live in requirements and business r
 Section hints:
 
 - **TL;DR**: At most five bullets, one fact each. Write last.
-- **Body sections**: Tier A prose. Link `FR-*`, `INV-*`, and glossary terms instead of redefining them.
+- **Body sections**: Tier A prose. Link decision entries and glossary terms instead of redefining them.
 - **Diagrams**: Use skill `mermaid-diagram`. One sentence summary above each diagram.
 
-## ADR (`34-architecture-decisions/`)
+## Decision entry (`{domain}-decisions.md`)
+
+Add the entry at the end of the numbered entries, before *Open questions*.
+
+```markdown
+## D{n} — {Title} ({YYYY-MM-DD}) \{#{slug}\}
+
+{One sentence: the ruling.}
+
+- {One rule. One sentence.}
+- {Another rule.}
+- Replaces: {Only when it replaces a ruling that the code still follows.}
+- Structure: [{Model page}](./models/{page}.md)
+
+### Why \{#{slug}-why\}
+
+- {The use case or the problem. One sentence.}
+
+### What changes with it \{#{slug}-changes\}
+
+- {A lasting effect on code, data or another domain.}
+
+### Options we did not choose \{#{slug}-options\}
+
+| Option | Why not chosen |
+| --- | --- |
+| {Option} | {Reason} |
+```
+
+Section hints:
+
+- **Number**: the last number plus one. Never reuse a number and never renumber.
+- **Date**: the day the principal developer approved the ruling.
+- **Anchor**: the slug never changes after the entry is published.
+- **Small entry**: a short ruling may omit the three sub-sections. A big ruling keeps all three.
+- **Rule index**: add one row to the *Rule index* table of the front door.
+- **Old rules**: name an old rule only in a *Replaces* bullet.
+
+## Domain page (`{nn}-{domain}/`)
+
+The front door is `index.md`. A model page is `models/{slug}.md`. A use-case page is `use-cases/{slug}.md`.
+
+Front door skeleton:
 
 ```markdown
 ---
-title: "ADR-NNN: {Decision title}"
-sidebar_label: ADR-NNN
-sidebar_position: N
-description: "{One line.}"
+title: {Domain} domain
+sidebar_label: {Domain} domain
+sidebar_position: 1
+description: Start here. {One sentence.}
+doc_type: domain-overview
+normative: {false while draft, true when current}
+status: {draft | current}
+context: {domain}
+last_reviewed: {YYYY-MM-DD}
+---
+
+## TL;DR \{#{domain}-overview\}
+
+-
+
+## About this document
+
+| Topic | Document |
+| --- | --- |
+| Precedence of documents | [Documentation system](../../00-09-meta/conventions/documentation-system.md#precedence) |
+| Rulings | [{Domain} decisions](./{domain}-decisions.md) |
+| Column truth | The DBML file in `red-cab-api/docs/db/` |
+
+## Words used in this doc \{#words\}
+
+## The model on one page \{#model\}
+
+## Reading order \{#reading-order\}
+
+## Rule index \{#rule-index\}
+
+## Do not do \{#do-not-do\}
+
+## Open questions \{#open-questions\}
+```
+
+Model page skeleton:
+
+```markdown
+---
+title: {Model name}
+sidebar_label: {Short label}
+description: {One sentence.}
+doc_type: model-spec
+normative: true
+status: current
+context: {domain}
+last_reviewed: {YYYY-MM-DD}
 ---
 
 ## TL;DR
@@ -69,63 +155,26 @@ description: "{One line.}"
 
 | Topic | Document |
 | --- | --- |
-| Contexts | [Bounded contexts](/docs/30-49-domains/bounded-contexts) |
-| Open questions | [Open questions](/docs/70-79-business/planning/open-questions) |
+| Rulings | [{Domain} decisions](../{domain}-decisions.md#{slug}) |
+| Column truth | The DBML file in `red-cab-api/docs/db/` |
 
----
+## Words used in this doc \{#words\}
 
-## Context
+## Structure \{#structure\}
 
-## Decision
+## States \{#states\}
 
-## Consequences
+## Contract \{#contract\}
 
-## Alternatives considered
+## Worked example \{#worked-example\}
 ```
 
 Section hints:
 
-- **Context**: Problem space and constraints. No full implementation spec.
-- **Decision**: One clear statement. Use **shall** / **may** only when citing normative requirements.
-- **Alternatives considered**: Table with Option | Why not chosen | One row per real alternative.
-- Tier C prose is allowed in rationale; TL;DR and Decision stay Tier A.
-
-## Bounded context (`31-bounded-contexts/`)
-
-```markdown
----
-title: "{Context name}"
-description: "{Owns which aggregates and integrations.}"
----
-
-## TL;DR
-
--
-
-## About this document
-
-| Topic | Document |
-| --- | --- |
-| Domain models | [Domain models](/docs/30-49-domains/domain-models/domain-models) |
-| Invariants | [Invariants](/docs/70-79-business/business-rules/invariants) |
-
----
-
-## Purpose
-
-## Core concepts
-
-## Integrations
-
-## Related requirements
-```
-
-Section hints:
-
-- **Purpose**: One paragraph on what this context owns and what it does not own.
-- **Core concepts**: Glossary-aligned terms; link domain model sections.
-- **Integrations**: Table or bullets: partner context, direction of dependency, ACL pattern.
-- **Related requirements**: Links to `FR-*` files, not pasted requirement text.
+- A model page holds what stays true after the spec ships: tables in words, states, the endpoint contract and payloads.
+- A model page links to the decision entry for the reason. It does not repeat the reason.
+- Move content here from an implementation spec when the spec reaches `implemented`.
+- A front door of a new domain starts with `status: draft` and with *First questions* in place of the rule index.
 
 ## Engineering convention
 

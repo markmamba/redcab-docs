@@ -21,14 +21,14 @@ Human-readable text uses [Prose and ASD-STE100](/docs/00-09-meta/conventions/pro
 | Level | Numbered? | Example |
 | --- | --- | --- |
 | Area | Yes | `30-49-domains/` |
-| Category | Yes | `31-bounded-contexts/` |
+| Category | Yes | `31-catalog/` |
 | Page / topic | No | `catalog/index.md` |
 
 Numbers apply at **area** and **category** only so new pages can be inserted without renumbering files.
 
 ## File naming
 
-- Folders: kebab-case (`bounded-contexts`, `implementation-specs`).
+- Folders: kebab-case (`catalog`, `implementation-specs`).
 - Main page: `index.md` per folder.
 - Implementation specs: `{repo}-{issue}-{slug}.md` under `60-69-initiatives/61-2026/implementation-specs/{context}/`.
 

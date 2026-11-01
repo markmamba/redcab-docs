@@ -74,7 +74,7 @@ A heading and its first sentence resolve every word they use, in place.
 - When one heading fails, sweep the whole file.
 
 A link says what it points at.
-- `[ADR-006 — Booking snapshots](/docs/30-49-domains/34-architecture-decisions/adr-006-booking-snapshots.md)`, never `[ADR-006]`.
+- `[Catalog D19 — Asset holds](/docs/30-49-domains/catalog/catalog-decisions/#asset-holds)`, never `[D19]`.
 - An ADR or invariant link carries the id and one short phrase.
 
 ## Words

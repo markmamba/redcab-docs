@@ -20,7 +20,7 @@ v2 backlog themes — not part of the Phase 0–3 baseline.
 | Roadmap overview | [Phasing Roadmap](/docs/70-79-business/planning/roadmap) |
 | Prior phase | [Phase 3](/docs/70-79-business/planning/roadmap/phase-3-corporate-packages) |
 | Ambiguity register | [Open Questions](/docs/70-79-business/planning/open-questions) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
+| Context map | Bounded Contexts |
 
 ---
 
@@ -39,7 +39,7 @@ Tracked in [/docs/70-79-business/planning/open-questions](/docs/70-79-business/p
 | Automated bank reconciliation        | AMB-030 (automation beyond manual)                                                                     |
 | OCR license extraction               | — (future)                                                                                             |
 | Bundle discounts                     | — (future)                                                                                             |
-| Dedicated search engine (OpenSearch) | Catalog fitness function in [Bounded contexts](/docs/30-49-domains/bounded-contexts) |
+| Dedicated search engine (OpenSearch) | Catalog fitness function in Bounded contexts |
 | Support monetization after trial     | AMB-035                                                                                                |
 | Multi-currency beyond JPY            | AMB-025                                                                                                |
 

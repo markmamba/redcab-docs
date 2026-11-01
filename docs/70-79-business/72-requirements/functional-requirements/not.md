@@ -17,7 +17,7 @@ Functional requirements for **NOT — Notifications** (supporting context).
 | Topic | Document |
 | --- | --- |
 | All FR contexts | [Functional Requirements](/docs/70-79-business/requirements/functional-requirements) |
-| Notifications context | [Notifications (Context)](/docs/30-49-domains/bounded-contexts/notifications) |
+| Notifications context | Notifications (Context) |
 | SLA rules | [Business Rules](/docs/70-79-business/business-rules/invariants) (`OPR-8`, `OPR-9`) |
 
 ---

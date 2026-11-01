@@ -17,7 +17,7 @@ Functional requirements for the **IAM** bounded context.
 | Topic | Document |
 | --- | --- |
 | All FR contexts | [Functional Requirements](/docs/70-79-business/requirements/functional-requirements) |
-| Identity context | [Identity & Access](/docs/30-49-domains/bounded-contexts/identity) |
+| Identity context | Identity & Access |
 | Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
 
 ---

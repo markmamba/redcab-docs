@@ -8,9 +8,9 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#pickup-coverage-validation-timing"
-  - "docs/30-49-domains/38-catalog/requirements/tourist-booking.md"
-  - "docs/30-49-domains/38-catalog/models/geography.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#pickup-coverage-validation-timing"
+  - "docs/30-49-domains/31-catalog/requirements/tourist-booking.md"
+  - "docs/30-49-domains/31-catalog/models/geography.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-214-booking-location-and-charge-reversal.md"
 ---
 

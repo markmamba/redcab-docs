@@ -60,7 +60,7 @@ Summary of audit recommendations. PR 4 applies them. See the [audit](/docs/60-69
 | Phase 0 audit (PR 3) | [`audit.md`](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#audit-tldr) | Complete in this PR |
 | Apply audit dispositions (PR 4) | [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions/), banners, `superseded` statuses | **Done** (this PR) |
 | Invariant and booking rule edits (PR 5) | `INV-8`, `LC-10`, `PRC-2`, `BKG-11` | **Done** (this PR) |
-| Domain requirements pages (phase 1) | First pages under `38-catalog/requirements/` | Planned |
+| Domain requirements pages (phase 1) | First pages under `31-catalog/requirements/` | Planned |
 
 ## Change log \{#program-change-log}
 

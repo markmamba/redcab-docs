@@ -10,9 +10,9 @@ context: CAT
 related:
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-215-most-booked-count-and-sort.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-67-listing-sort-control-url-params.md"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#most-booked-sort"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#marketplace-sort-options"
-  - "docs/30-49-domains/38-catalog/requirements/tourist-browse-and-search.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#most-booked-sort"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#marketplace-sort-options"
+  - "docs/30-49-domains/31-catalog/requirements/tourist-browse-and-search.md"
 ---
 
 ## TL;DR

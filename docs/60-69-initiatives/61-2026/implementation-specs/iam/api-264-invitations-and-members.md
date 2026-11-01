@@ -12,13 +12,13 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-261-permits-and-approval.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-263-portal-access.md"
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#company-roles"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#staff-invitations"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-company"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#portal-access"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#current-session-answer"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#access-codes"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#member-on-records"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#company-roles"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#staff-invitations"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-company"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#portal-access"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#current-session-answer"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#access-codes"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#member-on-records"
 ---
 
 ## TL;DR

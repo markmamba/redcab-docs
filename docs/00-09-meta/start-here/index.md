@@ -30,6 +30,6 @@ description: Recommended reading path for product owners, business analysts, and
 
 ## Go deeper (optional)
 
-- [Architecture overview](/docs/30-49-domains/system-design/overview) — system structure and integration
-- [Domain models](/docs/30-49-domains/domain-models/domain-models) — aggregates and ownership
+- [Catalog domain](../../30-49-domains/31-catalog/index.md) — listings, packages, geography and discovery
+- [IAM domain](../../30-49-domains/32-iam/index.md) — accounts, provider companies and sessions
 - [Implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/) — per-issue design (engineers only)

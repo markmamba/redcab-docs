@@ -8,8 +8,8 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#region-level"
-  - "docs/30-49-domains/38-catalog/models/geography.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#region-level"
+  - "docs/30-49-domains/31-catalog/models/geography.md"
 ---
 
 ## TL;DR
@@ -40,12 +40,12 @@ Read these before design, and do not invent behavior that contradicts them.
 | --- | --- | --- |
 | Ruling | [Region level](/docs/30-49-domains/catalog/catalog-decisions/#region-level) | Four levels, 9 regions, `redcab_region` codes |
 | Model | [Geography model](/docs/30-49-domains/catalog/models/geography) | Tree rules, `path`, slug and `popular_rank` rules |
-| Record | [Region is the top level of the geography tree](/docs/30-49-domains/catalog/architecture-decisions/region-level) | Why, and the alternatives that were rejected |
+| Record | [Region is the top level of the geography tree](/docs/30-49-domains/catalog/catalog-decisions/#region-level) | Why, and the alternatives that were rejected |
 | Schema | [catalog.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/catalog.dbml) | Column and CHECK truth. Tags `ships in: S1` mark this slice |
 | FR-CAT-001 | [Functional requirements — CAT](/docs/70-79-business/requirements/functional-requirements/cat) | Idempotent seed with official codes |
-| ADR-013 | [Geography reference data](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data) | Vendored offline seed data, no download at runtime |
-| ADR-014 | [Service timezone model](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) | Every node has a timezone |
-| ADR-016 | [Geography administrative tree](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) | Partly replaced: the tree gets a fourth level |
+| ADR-013 | Geography reference data (removed) | Vendored offline seed data, no download at runtime |
+| ADR-014 | Service timezone model (removed) | Every node has a timezone |
+| ADR-016 | Geography administrative tree (removed) | Partly replaced: the tree gets a fourth level |
 | INV-8 | [Invariants](/docs/70-79-business/business-rules/invariants) | A node shows only with a discoverable listing below it |
 | AMB-036 | [Open questions](/docs/70-79-business/planning/open-questions) | Resolved. The 67 discovery roots stay. The region level is added above them by the ruling |
 | INV-11, OPR-10 | [Invariants](/docs/70-79-business/business-rules/invariants) | Archive keeps history. Deactivation unlists the subtree by `path` prefix |

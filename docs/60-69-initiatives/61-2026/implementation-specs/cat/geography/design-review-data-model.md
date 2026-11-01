@@ -11,19 +11,19 @@ description: Critique of the shipped District/Area geography schema, three redes
 - **There is no geography data yet.** `db/seeds.rb` contains none, and the 1,750-row seed task was never written. Restructuring now costs a migration and a rename; restructuring after the seed and after the Session A URL work ships costs a data migration plus 301s on indexable URLs.
 - **The real modelling defect is that `catalog_districts` holds two different kinds of thing** (prefecture, designated city) with no parent link between them, so Yokohama is a *sibling* of Kanagawa rather than a child. That is what forces the ten-homonym bare-slug hack and what makes a third level a table-adding change instead of a row-adding one.
 - **Recommendation: Option C** — add `catalog_countries` (1 row, `JP`) and replace the two taxonomy tables with one self-referencing `catalog_geographies` tree (`subdivision → municipality → ward`), with `is_discovery_root` and `is_listable` as *roles* rather than levels.
-- **Public URLs do not change.** `/districts/{districtSlug}/areas/{areaSlug}/listings` from [Session A](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) survives intact, because 67 discovery roots (47 prefectures + 20 designated cities) and slug-unique-within-root are preserved as a projection of the tree.
+- **Public URLs do not change.** `/districts/{districtSlug}/areas/{areaSlug}/listings` from Session A (removed) survives intact, because 67 discovery roots (47 prefectures + 20 designated cities) and slug-unique-within-root are preserved as a projection of the tree.
 - **`AMB-036`: supersede in part.** Keep administrative semantics, official-code seeding, no PostGIS, and tourism-tags-on-Listings. Supersede only the clause "designated cities as Districts" — it becomes a presentation rule, not a storage rule.
 
 ## About this document
 
-Roadmap note, not a decision. It proposes amendments to [Geography](/docs/30-49-domains/patterns/geography) and [ADR-013](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data) and asks Product + Engineering for a call on `AMB-036`.
+Roadmap note, not a decision. It proposes amendments to Geography (removed) and ADR-013 (removed) and asks Product + Engineering for a call on `AMB-036`.
 
 | Topic | Document |
 | --- | --- |
-| Current geography design | [Geography](/docs/30-49-domains/patterns/geography) |
-| Current ADR | [ADR-013: Geography Reference Data](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data) |
-| Timezone dependency | [ADR-014: Service Timezone Model](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) |
-| Public URL contract | [Session A — Tourist UI access model and public URL architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) |
+| Current geography design | Geography (removed) |
+| Current ADR | ADR-013: Geography Reference Data (removed) |
+| Timezone dependency | ADR-014: Service Timezone Model (removed) |
+| Public URL contract | Session A — Tourist UI access model and public URL architecture (removed) |
 | Requirements | [CAT functional requirements](/docs/70-79-business/requirements/functional-requirements/cat) (`FR-CAT-001`–`004`, `FR-CAT-032`) |
 | Decision Log | [Open Questions](/docs/70-79-business/planning/open-questions) (`AMB-020`, `AMB-036`) |
 | Storage shape | `red-cab-api/docs/db/catalog.dbml`, `red-cab-api/db/schema.rb` |

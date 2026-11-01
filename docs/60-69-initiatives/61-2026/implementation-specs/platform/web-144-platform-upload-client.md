@@ -20,7 +20,7 @@ related:
 - Ships **provider license document upload** on the registration documents page (remove the “not available” gate).
 - Ships **marketplace listing image** rendering when API photo embeds include `url` (fallback to placeholder).
 - Ships **`providers-uploads-api.js`** and **`PlatformObjectStorageService`** (domain helper) with unit tests.
-- Does **not** ship tourist review photo picker (deferred in [web-121](../rev/web-121-tourist-review-submit-ui.md)), full listing edit/photo UI (edit page is still a stub), or submit-for-review HTTP (**FR-PRV-005** has no provider route yet).
+- Does **not** ship tourist review photo picker (deferred in [web-121](../../../../80-89-legacy/implementation-specs/rev/web-121-tourist-review-submit-ui.md)), full listing edit/photo UI (edit page is still a stub), or submit-for-review HTTP (**FR-PRV-005** has no provider route yet).
 - **Breaking change:** No.
 - **Blocked on:** [api-197](./api-197-object-storage-direct-upload.md) deployed or available in dev with `status: approved`.
 
@@ -40,13 +40,13 @@ Security rule **F6** forbids sending user-controlled paths to presign endpoints;
 
 | ID | Document | Why |
 | --- | --- | --- |
-| ADR-021 | [adr-021-object-storage-direct-upload](/docs/30-49-domains/architecture-decisions/adr-021-object-storage-direct-upload) | Direct upload architecture |
+| ADR-021 | adr-021-object-storage-direct-upload (removed) | Direct upload architecture |
 | api-197 | [api-197-object-storage-direct-upload.md](./api-197-object-storage-direct-upload.md) | Grant paths, response fields, register coupling |
 | FR-PRV-004 | [prv.md](/docs/70-79-business/requirements/functional-requirements/prv) | Document types and size |
 | FR-CAT-011 | [cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Listing photo rules (helper only in #144) |
 | NFR-SEC-006 | [non-functional-requirements](/docs/70-79-business/requirements/non-functional-requirements) | Client-side pre-check before grant |
-| web-121 | [web-121-tourist-review-submit-ui.md](../rev/web-121-tourist-review-submit-ui.md) | Review photos still deferred |
-| web-122 | [web-122-team-review-moderation-pages.md](../rev/web-122-team-review-moderation-pages.md) | Team photo metadata-only unchanged |
+| web-121 | [web-121-tourist-review-submit-ui.md](../../../../80-89-legacy/implementation-specs/rev/web-121-tourist-review-submit-ui.md) | Review photos still deferred |
+| web-122 | [web-122-team-review-moderation-pages.md](../../../../80-89-legacy/implementation-specs/rev/web-122-team-review-moderation-pages.md) | Team photo metadata-only unchanged |
 | frontend.md | [frontend conventions](/docs/50-59-frontend/conventions/frontend) | Domain modules, forms, ky clients |
 | F6 | `red-cab-web/.ai/skills/review-react-style/rules/security.md` | No client-supplied storage paths on grant |
 
@@ -190,7 +190,7 @@ Follow `providers-profile-registration-edit-page.jsx`:
 
 ## Out of scope
 
-- Tourist review photo picker and `tourists-uploads-api.js` (follow [web-121](../rev/web-121-tourist-review-submit-ui.md)).
+- Tourist review photo picker and `tourists-uploads-api.js` (follow [web-121](../../../../80-89-legacy/implementation-specs/rev/web-121-tourist-review-submit-ui.md)).
 - Provider listing edit page photo UI (`provider-catalog-listings-edit-page.jsx` stub).
 - Team document download or moderation photo previews.
 - Submit for review (**FR-PRV-005**) until API exposes an endpoint.

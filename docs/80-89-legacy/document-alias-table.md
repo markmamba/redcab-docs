@@ -31,8 +31,8 @@ normative: false
 | `cat/web-124-discover-toolbar-filters-api-forwarding.md` | [/docs/30-49-domains/catalog/catalog-decisions#marketplace-filter-combination](/docs/30-49-domains/catalog/catalog-decisions#marketplace-filter-combination), [/docs/30-49-domains/catalog/catalog-decisions#keyword-search-scope](/docs/30-49-domains/catalog/catalog-decisions#keyword-search-scope); successor spec TBD | superseded |
 | `cat/api-161-marketplace-listing-index-discover-filters.md` | Same as web-124; successor spec TBD | superseded |
 | `iam/web-56-tourist-access-and-route-contract.md` (URL / redirect sections) | [/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia); access sections carry | superseded (partial) |
-| `38-catalog/overview/index.md` | [/docs/30-49-domains/catalog/](/docs/30-49-domains/catalog/) | moved |
-| `ADR-016` (three-level tree, District and Area roles) | [/docs/30-49-domains/catalog/architecture-decisions/region-level](/docs/30-49-domains/catalog/architecture-decisions/region-level) | superseded (partial) |
+| `31-catalog/overview/index.md` | [/docs/30-49-domains/catalog/](/docs/30-49-domains/catalog/) | moved |
+| `ADR-016` (three-level tree, District and Area roles) | [/docs/30-49-domains/catalog/catalog-decisions/#region-level](/docs/30-49-domains/catalog/catalog-decisions/#region-level) | superseded (partial) |
 | `INV-3`, `INV-4`, `CON-1` to `CON-6` (slot seat counter) | [/docs/30-49-domains/catalog/catalog-decisions#asset-holds](/docs/30-49-domains/catalog/catalog-decisions#asset-holds) | amended in place |
 | `AvailabilitySlot`, `catalog_availability_slots` | [/docs/30-49-domains/catalog/models/asset-availability](/docs/30-49-domains/catalog/models/asset-availability) | superseded (removed in slice S5) |
 | `PRC-2` (one policy for each listing) | [/docs/30-49-domains/catalog/catalog-decisions#packages-and-pricing-policy](/docs/30-49-domains/catalog/catalog-decisions#packages-and-pricing-policy) | amended in place |

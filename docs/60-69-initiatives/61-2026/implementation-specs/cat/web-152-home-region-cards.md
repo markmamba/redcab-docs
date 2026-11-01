@@ -8,9 +8,9 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#tourist-discovery-ia"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#popular-destinations-and-images"
-  - "docs/30-49-domains/38-catalog/requirements/tourist-browse-and-search.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#tourist-discovery-ia"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#popular-destinations-and-images"
+  - "docs/30-49-domains/31-catalog/requirements/tourist-browse-and-search.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-207-scoped-listings-index.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-153-listing-scope-pages.md"
 ---
@@ -149,7 +149,7 @@ Static files:
 
 Docs:
 
-- `redcab-docs/docs/30-49-domains/38-catalog/catalog-decisions.md`: record the image key (decision 14).
+- `redcab-docs/docs/30-49-domains/31-catalog/catalog-decisions.md`: record the image key (decision 14).
 
 Skills to use when coding: `creating-route-pages`, `creating-domain-views`, then `review-react-style`.
 

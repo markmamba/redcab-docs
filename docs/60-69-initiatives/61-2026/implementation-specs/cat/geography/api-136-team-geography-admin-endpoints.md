@@ -35,8 +35,8 @@ Evidence: `config/routes/team_routes.rb` (no `catalog/geographies`), no `app/dom
 | FR-CAT-001/002/034 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Admin curation, cascade, archive successor |
 | NFR-I18N-003 | [requirements/non-functional-requirements.md](/docs/70-79-business/requirements/non-functional-requirements) | EN/JA (and kana) labels |
 | INV-8, INV-11, OPR-10 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Subtree discoverability; archive never delete; cascade |
-| ADR-016 | [30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) | Tree shape, path, successor |
-| geography.md | [architecture/geography.md](/docs/30-49-domains/patterns/geography) | Admin workflow, label conventions |
+| ADR-016 | 30-49-domains/34-architecture-decisions/adr-016-geography-administrative-tree.md (removed) | Tree shape, path, successor |
+| geography.md | architecture/geography.md (removed) | Admin workflow, label conventions |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | `geographies/team_*` surface |
 | Backend conventions | [Backend conventions](/docs/20-29-backend/conventions/backend) | Request → Manager → Validator; explicit routes |
 

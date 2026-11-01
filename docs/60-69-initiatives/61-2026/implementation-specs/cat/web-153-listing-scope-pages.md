@@ -8,12 +8,12 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#tourist-discovery-ia"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#marketplace-filter-combination"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#marketplace-sort-options"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#keyword-search-scope"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#listing-slug"
-  - "docs/30-49-domains/38-catalog/requirements/tourist-browse-and-search.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#tourist-discovery-ia"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#marketplace-filter-combination"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#marketplace-sort-options"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#keyword-search-scope"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#listing-slug"
+  - "docs/30-49-domains/31-catalog/requirements/tourist-browse-and-search.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-206-listing-slug.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-207-scoped-listings-index.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-208-keyword-search.md"

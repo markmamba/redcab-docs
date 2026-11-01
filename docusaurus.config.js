@@ -10,10 +10,9 @@ import johnnyDecimalRedirects from './scripts/johnny-decimal-redirects.json';
 const redirectTargetFixes = {
   '/docs/60-69-initiatives/61-2026/implementation-specs/README': '/docs/60-69-initiatives/61-2026/implementation-specs/',
   '/docs/60-69-initiatives/61-2026/implementation-specs/_template': '/docs/60-69-initiatives/61-2026/implementation-specs/',
-  '/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08/index':
-    '/docs/60-69-initiatives/61-2026/implementation-specs/iam/iam-audit-2026-08/',
+  '/docs/80-89-legacy/implementation-specs/iam/iam-audit-2026-08/index':
+    '/docs/80-89-legacy/implementation-specs/iam/iam-audit-2026-08/',
   '/docs/70-79-business/business-rules/': '/docs/70-79-business/business-rules/glossary',
-  '/docs/30-49-domains/domain-models/': '/docs/30-49-domains/domain-models/domain-models',
   '/docs/70-79-business/requirements': '/docs/70-79-business/requirements/',
   '/docs/70-79-business/planning/roadmap': '/docs/70-79-business/planning/roadmap/',
   '/docs/60-69-initiatives/implementation-specs': '/docs/60-69-initiatives/61-2026/implementation-specs/',
@@ -24,7 +23,6 @@ const extraRedirects = [
   {from: '/docs/roadmap', to: '/docs/70-79-business/planning/roadmap/'},
   {from: '/docs/business-rules/glossary', to: '/docs/70-79-business/business-rules/glossary'},
   {from: '/docs/business-rules/invariants', to: '/docs/70-79-business/business-rules/invariants'},
-  {from: '/docs/domain/domain-models', to: '/docs/30-49-domains/domain-models/domain-models'},
   {from: '/docs/specs', to: '/docs/60-69-initiatives/61-2026/implementation-specs/'},
   {
     from: '/docs/60-69-initiatives/implementation-specs/',

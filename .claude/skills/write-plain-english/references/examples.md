@@ -134,7 +134,7 @@ See [ADR-006].
 Right:
 
 ```
-See [ADR-006 — Booking snapshots are immutable after create](/docs/30-49-domains/34-architecture-decisions/adr-006-booking-snapshots.md).
+See [Catalog D19 — Asset holds](/docs/30-49-domains/catalog/catalog-decisions/#asset-holds).
 ```
 
 ## 10. Do not borrow a technical word
@@ -216,7 +216,7 @@ Right:
 
 ```
 Price at checkout lives only in the booking snapshot.
-- History of that decision: [ADR-006](/docs/30-49-domains/34-architecture-decisions/adr-006-booking-snapshots.md).
+- History of that decision: [Catalog D19](/docs/30-49-domains/catalog/catalog-decisions/#asset-holds).
 ```
 
 ## 16. Code is shown, not described

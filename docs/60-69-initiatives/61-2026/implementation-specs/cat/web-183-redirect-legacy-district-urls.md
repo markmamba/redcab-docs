@@ -9,7 +9,7 @@ phase: 2
 context: CAT
 related:
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-216-remove-legacy-geography-roles-and-slot-code.md"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#legacy-geography-roles"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#legacy-geography-roles"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/web-153-listing-scope-pages.md"
 ---
 

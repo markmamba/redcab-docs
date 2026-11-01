@@ -17,8 +17,8 @@ Functional requirements for **CAT — Catalog & Inventory**.
 | Topic | Document |
 | --- | --- |
 | All FR contexts | [Functional Requirements](/docs/70-79-business/requirements/functional-requirements) |
-| Catalog context | [Catalog & Inventory](/docs/30-49-domains/bounded-contexts/catalog) |
-| Geography design | [Geography](/docs/30-49-domains/patterns/geography) |
+| Catalog context | Catalog & Inventory |
+| Geography design | Geography |
 | Pricing authority | [Business Rules](/docs/70-79-business/business-rules/invariants) (`PRC-`) |
 
 ---
@@ -28,7 +28,7 @@ Functional requirements for **CAT — Catalog & Inventory**.
 
 ### FR-CAT-001 — Geography management
 The system **shall** provide Admin with an administrative geography tree (`catalog_countries` + `catalog_geographies`) seeded from official Japanese administrative codes (全国地方公共団体コード) with `code_system` and `external_code` as the idempotent upsert key, and **shall** allow Admin to edit labels, reorder, deactivate, and archive nodes with a successor on merger. Each discovery root (District) and listable node (Area) **shall** carry English and Japanese labels per `NFR-I18N-003`. Admin create of new nodes remains available for exceptional cases.
-- Source: B-05, [ADR-013](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree). Governs: FR-CAT-003, FR-CAT-033, FR-CAT-034, NFR-I18N-003. Status: Approved.
+- Source: B-05, ADR-013, ADR-016. Governs: FR-CAT-003, FR-CAT-033, FR-CAT-034, NFR-I18N-003. Status: Approved.
 
 ### FR-CAT-002 — Geography deactivation cascade
 When Admin deactivates or archives a geography node with active Listings anywhere in its subtree (`path` prefix), the system **shall** require confirmation stating the affected count and **shall** set those Listings to Unlisted without deleting them.
@@ -110,7 +110,7 @@ The system **shall** allow a Provider to define mandatory and optional extra cha
 
 ### FR-CAT-018 — Cancellation policy configuration
 
-This section is superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
+This section is superseded by [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/catalog-decisions/#cancellation-policy). It remains for history until moved to [Legacy](/docs/80-89-legacy/).
 
 The system **shall** allow up to four cancellation tiers per Listing and **shall** apply the Platform Default when none is set.
 - Source: C-08. Governs: PRC-7. Status: Approved.
@@ -183,7 +183,7 @@ When a Tourist books a per-vehicle (flat-rate) listing against a slot, the syste
 
 ### FR-CAT-032 — Near-me Area discovery
 The system **shall** allow Tourists to discover Areas (listable geography nodes) ranked by distance from the user's geolocation, **shall** include only nodes whose subtree has at least one Published Listing (`INV-8`), and **shall** use listable-node centroids (city-hall coordinates) for distance calculation without a spatial database extension.
-- Source: [ADR-013](/docs/30-49-domains/architecture-decisions/adr-013-geography-reference-data), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree). Governs: INV-8. Status: Approved.
+- Source: ADR-013, ADR-016. Governs: INV-8. Status: Approved.
 
 ### FR-CAT-033 — Listing attaches to listable node
 
@@ -192,10 +192,10 @@ This section is superseded by [Catalog decisions — destination structure](/doc
 :::
 
 The system **shall** allow a Listing to attach only to a geography node with `is_listable = true`. The system **shall** reject create/update when the submitted geography node is a discovery root without listable children (e.g. a designated city node).
-- Source: [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree). Governs: INV-8. Status: Approved.
+- Source: ADR-016. Governs: INV-8. Status: Approved.
 
 ### FR-CAT-034 — Archived geography successor
 When Admin archives a geography node by merger, the system **shall** require a successor geography node and **shall** expose the successor for redirect resolution. Historical Bookings referencing Listings at the archived node **shall** be preserved (`INV-11`).
-- Source: [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree). Governs: INV-11. Status: Approved.
+- Source: ADR-016. Governs: INV-11. Status: Approved.
 
 ---

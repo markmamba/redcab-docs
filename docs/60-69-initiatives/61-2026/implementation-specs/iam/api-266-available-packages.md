@@ -12,12 +12,12 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-261-permits-and-approval.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-263-portal-access.md"
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#permits-and-package-availability"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#packages-and-pricing-policy"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#discoverability-completeness"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#listing-publication"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#schema-ground-rules"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-licenses"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#permits-and-package-availability"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#packages-and-pricing-policy"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#discoverability-completeness"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#listing-publication"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#schema-ground-rules"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-licenses"
 ---
 
 ## TL;DR
@@ -312,8 +312,8 @@ Developers run `bin/rails db:reset`.
 
 | Page | Change |
 | --- | --- |
-| `docs/30-49-domains/38-catalog/catalog-decisions.md`, section Listing publication | The publish gates become five: one photo, pickup coverage, an approved provider company, verified payout and at least one available package |
-| `docs/30-49-domains/38-catalog/requirements/provider-listings.md` | The publish rule lists the fifth gate, and the example shows it |
+| `docs/30-49-domains/31-catalog/catalog-decisions.md`, section Listing publication | The publish gates become five: one photo, pickup coverage, an approved provider company, verified payout and at least one available package |
+| `docs/30-49-domains/31-catalog/requirements/provider-listings.md` | The publish rule lists the fifth gate, and the example shows it |
 
 ### Files to create or modify (API)
 

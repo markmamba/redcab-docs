@@ -21,8 +21,8 @@ Planning tier index for product owners, tech leads, and agents. Implementation d
 | Phase sequencing (IAM → CAT → BKG …) | [Phasing roadmap](/docs/70-79-business/planning/roadmap) |
 | Tourist marketplace UX (web) | [Tourist UI — pre–Phase 2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) |
 | Auth redesign + tourist UI coordination | [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) |
-| Auth execution phases (engineering) | [Authentication implementation roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap) |
-| Auth how-to series | [Authentication](/docs/90-99-engineering-meta/authentication) |
+| Auth execution phases (engineering) | Authentication implementation roadmap |
+| Auth how-to series | Authentication |
 | Provisional requirements | [Open questions](/docs/70-79-business/planning/open-questions) |
 
 ## How to use planning docs
@@ -37,7 +37,7 @@ Planning tier index for product owners, tech leads, and agents. Implementation d
 When work touches routes, auth, or tourist surfaces:
 
 1. Read [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) for track boundaries and gates.
-2. Read the track-specific doc ([tourist UI](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) or [auth roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap)).
+2. Read the track-specific doc ([tourist UI](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) or auth roadmap).
 3. Confirm the issue’s implementation spec is `status: approved` in `docs/60-69-initiatives/61-2026/implementation-specs/`.
 4. Update planning snapshots when closing milestones (tourist snapshot table, program strategy “where we stand”).
 

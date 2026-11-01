@@ -10,6 +10,6 @@ Non-normative explainer. Every rule cited below links to the authoritative sourc
 
 ## Related documents
 
-- [Payments architecture](/docs/30-49-domains/patterns/payments-architecture)
+- Payments architecture
 - [Invariants — payment rules](/docs/70-79-business/business-rules/invariants#4-payment-rules)
 - [FR — Payments](/docs/70-79-business/requirements/functional-requirements/pay)

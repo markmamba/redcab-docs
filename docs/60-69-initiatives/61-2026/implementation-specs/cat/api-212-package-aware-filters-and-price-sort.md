@@ -8,7 +8,7 @@ status: implemented
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/models/listings-and-packages.md"
+  - "docs/30-49-domains/31-catalog/models/listings-and-packages.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-207-scoped-listings-index.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-211-many-packages-and-display-prices.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-231-listing-detail-packages.md"

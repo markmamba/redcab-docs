@@ -10,7 +10,6 @@ phase: 1
 context: CAT
 depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract.md"
-  - "docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-135-near-me-areas-endpoint.md"
   - "red-cab-web#58"
   - "red-cab-web#60"
@@ -39,10 +38,10 @@ Evidence: no `geolocation` usage in `red-cab-web`; district hub is `marketplace-
 | ID | Document | Why |
 | --- | --- | --- |
 | FR-CAT-032 | [/docs/70-79-business/requirements/functional-requirements/cat.md](/docs/70-79-business/requirements/functional-requirements/cat) | Near-me behavior |
-| ADR-017 | [/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | Section on `/districts` |
+| ADR-017 | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Section on `/districts` |
 | api-135 | [api-135-near-me-areas-endpoint.md](./geography/api-135-near-me-areas-endpoint.md) | `GET …/areas/near`, `areas` envelope |
 | web-56 | [/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) | Public catalog routes |
-| web-58 | [/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell) | Tourist public shell |
+| web-58 | /docs/80-89-legacy/implementation-specs/platform/web-58-tourist-unified-layout-shell (removed) | Tourist public shell |
 | frontend.md | [/docs/50-59-frontend/conventions/frontend.md](/docs/50-59-frontend/conventions/frontend) | Geolocation → API; homonym labels |
 | INV-8 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Discoverable nodes only (API) |
 

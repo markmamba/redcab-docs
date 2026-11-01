@@ -17,7 +17,7 @@ Functional requirements for **PRV — Provider Onboarding & Verification**.
 | Topic | Document |
 | --- | --- |
 | All FR contexts | [Functional Requirements](/docs/70-79-business/requirements/functional-requirements) |
-| Onboarding context | [Onboarding](/docs/30-49-domains/bounded-contexts/onboarding) |
+| Onboarding context | Onboarding |
 | Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
 
 ---

@@ -7,7 +7,7 @@ description: Epics, waves, dependencies, spec backlog, and web slot wiring for M
 
 ## TL;DR
 
-- **Start here after** [Tourist UI pre–Phase 2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) Milestones A–D and [web-68](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots) placeholder slots.
+- **Start here after** [Tourist UI pre–Phase 2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) Milestones A–D and web-68 (removed) placeholder slots.
 - **Wave 0** is a schema gap pass: add `reviews.dbml`, bundle link in `bookings.dbml`, and any remaining Phase 2 columns in `payments.dbml` (refund interlock states per `AMB-005`).
 - **Build order:** schema gate → **REV** (parallel-friendly) → **CAT search + advanced pricing config** → **BKG cancel/bundle** with **PAY refunds** → **PRV automation** → **NOT** emails.
 - **No GitHub Phase 2 epic exists yet** (2026-10-04). This doc proposes wave names and issue titles; create the epic and children when you open the program.
@@ -20,8 +20,8 @@ Turns [Phase 2 — Marketplace depth](/docs/70-79-business/planning/roadmap/phas
 | --- | --- |
 | Phase 2 scope and exit criteria | [phase-2-marketplace-depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) |
 | Roadmap index | [Phasing roadmap](/docs/70-79-business/planning/roadmap) |
-| Tourist UI slots to wire | [web-68](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots) |
-| Auth gate for new `/account` features | [Authentication roadmap Phase 3](/docs/90-99-engineering-meta/authentication/implementation-roadmap#phase-3--auth-core-team-account-login-pages) (shipped) |
+| Tourist UI slots to wire | web-68 (removed) |
+| Auth gate for new `/account` features | Authentication roadmap Phase 3 (shipped) |
 | Spec workflow | [Implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/) |
 
 ---
@@ -167,7 +167,7 @@ flowchart TD
 | W1-6 | Team dispute queue pages (dismiss report / remove) | web | `rev/` |
 | W1-7 | Provider response UI | web | `rev/` |
 
-**Events for W7:** `ReviewSubmitted`, `ReviewRemoved`, optional `ReviewReportDismissed`, review invitation on `BookingCompleted` (`FR-REV-002`). `ReviewApproved` is retired ([ADR-020](/docs/30-49-domains/architecture-decisions/adr-020-review-post-publication-moderation)).
+**Events for W7:** `ReviewSubmitted`, `ReviewRemoved`, optional `ReviewReportDismissed`, review invitation on `BookingCompleted` (`FR-REV-002`). `ReviewApproved` is retired (ADR-020).
 
 ---
 
@@ -316,7 +316,7 @@ Do **not** open web wiring PRs until the matching API spec is `approved` and the
 2. Pick **one wave slice** from this map.
 3. Confirm slice-specific open questions remain (e.g. `AMB-013`/`AMB-014` for full cancel spec lock); `AMB-017`, `AMB-019`, and `AMB-034` Phase 2 scope are resolved (Decision Log 2026-10-04).
 4. Write or read an **approved** spec under `docs/60-69-initiatives/61-2026/implementation-specs/{context}/`.
-5. For tourist web work, read [web-68](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-68-tourist-phase-2-placeholder-slots) and replace stubs — do not add parallel UI patterns.
+5. For tourist web work, read web-68 (removed) and replace stubs — do not add parallel UI patterns.
 6. After merge, tick deliverables in [phase-2-marketplace-depth](/docs/70-79-business/planning/roadmap/phase-2-marketplace-depth) and update the baseline table in this doc.
 
 ---
@@ -326,5 +326,5 @@ Do **not** open web wiring PRs until the matching API spec is `approved` and the
 - [REV functional requirements](/docs/70-79-business/requirements/functional-requirements/rev)
 - [CAT functional requirements](/docs/70-79-business/requirements/functional-requirements/cat)
 - [BKG functional requirements](/docs/70-79-business/requirements/functional-requirements/bkg)
-- [Reviews bounded context](/docs/30-49-domains/bounded-contexts/reviews)
+- Reviews bounded context
 - [Open questions](/docs/70-79-business/planning/open-questions)

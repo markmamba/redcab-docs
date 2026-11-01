@@ -17,7 +17,6 @@ Frontend implementation conventions for `red-cab-web`.
 | --- | --- |
 | Code mapping | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
 | Engineering overview | [Engineering](/docs/90-99-engineering-meta) |
-| API contracts | [API Design](/docs/30-49-domains/system-design/api-design) |
 | Functional behavior | [Functional Requirements](/docs/70-79-business/requirements/functional-requirements) |
 
 ---
@@ -164,7 +163,7 @@ Account routes (`/account/**`) stay `noindex, nofollow` and may keep `clientLoad
 
 ## Auth policies
 
-Protected surfaces use **policy route parents** in `app/routes.js` ([ADR-018](/docs/30-49-domains/architecture-decisions/adr-018-web-authentication-enforcement-model)). New pages on a migrated surface nest under its policy — never re-add `app/components/hocs/with-*-auth` (removed in [#88](https://github.com/markmamba/red-cab-web/issues/88); ESLint enforced). Never put a policy and a deleted HOC pattern on the same subtree. See the [authentication series](/docs/90-99-engineering-meta/authentication) and the [roadmap](/docs/90-99-engineering-meta/authentication/implementation-roadmap).
+Protected surfaces use **policy route parents** in `app/routes.js`. New pages on a migrated surface nest under its policy — never re-add `app/components/hocs/with-*-auth` (removed in [#88](https://github.com/markmamba/red-cab-web/issues/88); ESLint enforced). Never put a policy and a deleted HOC pattern on the same subtree. See the authentication series (removed) and the roadmap (removed).
 
 | Policy parent | Surface | Guard |
 | --- | --- | --- |
@@ -205,7 +204,7 @@ export const marketplaceCatalogListingsApi = {
 ### ky-client features
 
 - CSRF token injection
-- 401 → JWT refresh (rules R1–R8 in [ADR-019](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2); on Node the refresh lock must be per request)
+- 401 → JWT refresh (on Node the refresh lock must be per request)
 - HTTP errors → `ApiError` class
 - `getApiErrorToastConfig` + `setApiErrorsToFormFields` in submit handlers
 
@@ -308,7 +307,7 @@ return (
 - `DateField` holds naive wall-clock values; RHF carries them untouched
 - Convert in exactly one place — the submit handler — via `DateTimeUtils.toApiString(value, { timezone })`
 - Edit forms: `DateTimeUtils.toFormValue(apiValue, { timezone })`
-- **`timezone` is required** on every `DateTimeUtils` call — pass the Listing's embedded geography `timezone` from the API, or `service_timezone` on booking/order payloads. Do not hardcode `Asia/Tokyo` or use display-only constants for slot or cancellation UI (`OPR-11`, [ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)).
+- **`timezone` is required** on every `DateTimeUtils` call — pass the Listing's embedded geography `timezone` from the API, or `service_timezone` on booking/order payloads. Do not hardcode `Asia/Tokyo` or use display-only constants for slot or cancellation UI (`OPR-11`).
 - Geography centroids are for map display and near-me only — not a timezone source.
 - See [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones) for the full classification test and anti-patterns.
 
@@ -317,7 +316,6 @@ return (
 - Render District/Area **pins** from API `latitude`/`longitude` — no client-side boundary loading.
 - Near-me: request browser geolocation; pass coordinates to near-me Areas API; do not compute haversine in the client for authoritative ranking.
 - Geography labels: render `name_en` or `name_ja` per language preference; disambiguate homonymous Areas with parent District in UI.
-- See [Geography](/docs/30-49-domains/patterns/geography).
 
 ---
 
@@ -474,5 +472,4 @@ Env hiding is **not** API security — backend must enforce authorization indepe
 
 - [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping)
 - [Backend Conventions](/docs/20-29-backend/conventions/backend)
-- [../architecture/api-design.md](/docs/30-49-domains/system-design/api-design)
 

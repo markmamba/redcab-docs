@@ -17,7 +17,6 @@ Backend implementation conventions for `red-cab-api`.
 | --- | --- |
 | Code mapping | [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) |
 | Engineering overview | [Engineering](/docs/90-99-engineering-meta) |
-| API design | [API Design](/docs/30-49-domains/system-design/api-design) |
 | Rules | [Business Rules](/docs/70-79-business/business-rules/invariants) |
 
 ---
@@ -26,17 +25,17 @@ Backend implementation conventions for `red-cab-api`.
 
 | Layer | Choice | Notes |
 | --- | --- | --- |
-| Framework | Ruby on Rails 8.x, API-only | Single modular monolith ([ADR-001](/docs/30-49-domains/architecture-decisions/adr-001-modular-monolith)) |
-| Database | PostgreSQL | Single shared DB ([ADR-002](/docs/30-49-domains/architecture-decisions/adr-002-technology-stack)) |
+| Framework | Ruby on Rails 8.x, API-only | Single modular monolith |
+| Database | PostgreSQL | Single shared DB |
 | Cache / jobs | Redis | Cache, JWT session store, Sidekiq backend |
 | Types | Sorbet (`sorbet-runtime`) | `# typed: true` on Managers, Requests, Services |
 | Serialization | Panko Serializer | Context-scoped `{Actor}{Model}{Base\|Detail}Serializer` |
 | Pagination | Pagy | Via `paginate_and_render` helper |
 | Auth | `jwt_sessions` | Cookie-based JWT; separate team/admin cookies |
-| Background jobs | Sidekiq + sidekiq-scheduler | Idempotent, retriable ([ADR-008](/docs/30-49-domains/architecture-decisions/adr-008-domain-event-architecture)) |
+| Background jobs | Sidekiq + sidekiq-scheduler | Idempotent, retriable |
 | Tests | Minitest | Rails default |
 | Search | pg_search (MVP) | Inside Catalog; dedicated engine only per fitness function |
-| Payments | Licensed payment provider (vendor open, `AMB-040`) | Capability-declaring adapter + normalized event reconciliation ([../architecture/payments-architecture.md](/docs/30-49-domains/patterns/payments-architecture), [ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation)) |
+| Payments | Licensed payment provider (vendor open, `AMB-040`) | Capability-declaring adapter + normalized event reconciliation |
 | PDF (COR) | Server-side with embedded JA fonts | Owned by `corporate/` domain |
 
 ---
@@ -99,7 +98,7 @@ ApplicationController (ActionController::API)
         └── Sets: CurrentRequest.identities_user (may be nil)
 ```
 
-Session cookies are set and cleared in `SessionCookieManager` (`set_session_cookie`, `set_csrf_cookie`, `delete_session_cookie`). There is no `ApplicationController#cookie_domain` helper. Production cookie `Domain` is configuration per identity system — see [ADR-019 Production cookie topology](/docs/30-49-domains/architecture-decisions/adr-019-session-technology-phase-1-and-2#production-cookie-topology); wiring `domain:` on set/delete is [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77).
+Session cookies are set and cleared in `SessionCookieManager` (`set_session_cookie`, `set_csrf_cookie`, `delete_session_cookie`). There is no `ApplicationController#cookie_domain` helper. Production cookie `Domain` is configuration per identity system; wiring `domain:` on set/delete is [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77).
 
 ### CurrentRequest (thread-local state)
 
@@ -313,7 +312,7 @@ Records are not hard-deleted. Soft delete uses `status :archived` — no `is_del
 
 ## Date / time / timezone handling
 
-**Source of truth:** [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones) and [ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model).
+**Source of truth:** [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones).
 
 Ask: **did the system create this time, or did a person pick it?**
 
@@ -324,7 +323,7 @@ Ask: **did the system create this time, or did a person pick it?**
 | **Person-picked local datetime** | User picks slot start/end | `timestamptz` | Naive `YYYY-MM-DDTHH:mm` per endpoint contract | Anchor in listing geography timezone on write |
 | **Zone-free civil date** | Same calendar day everywhere (rare) | `date` | `YYYY-MM-DD` | Date-only, no conversion |
 
-**Service timezone** resolves from `listing.geography.timezone` (live catalog) or `booking.service_timezone` (snapshotted). Never hardcode `Asia/Tokyo` in domain code. App clock is UTC. See [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones) and [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree).
+**Service timezone** resolves from `listing.geography.timezone` (live catalog) or `booking.service_timezone` (snapshotted). Never hardcode `Asia/Tokyo` in domain code. App clock is UTC. See [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones).
 
 ---
 
@@ -370,7 +369,7 @@ These extend the baseline API conventions with Red Cab domain rules:
 4. **Seat reservation only via guarded command.** `Catalog::Availability::ReserveSeatsManager` is the only writer of `available_seats` decrement; called inside `Bookings::CheckoutManager`'s transaction.
 5. **Corporate → Booking via ACL manager.** `Corporate::Quotations::CreateBookingFromQuoteManager` translates quotation vocabulary; Booking domain never imports Corporate models.
 6. **Domain events after commit.** Publish past-tense events (`BookingCreated`, `PaymentSucceeded`) after transaction commits; consumers are idempotent.
-7. **Provider event ingestion in Payments only.** Verified provider events converge state; never roll back committed booking transitions. Events are normalized at the adapter boundary — no provider payload shape enters the domain, and no domain branch may key on provider identity ([ADR-015](/docs/30-49-domains/architecture-decisions/adr-015-payment-custody-and-control-separation) C6). A client-supplied signal, including a return redirect, MUST NOT drive a money-moving transition (`FIN-13`).
+7. **Provider event ingestion in Payments only.** Verified provider events converge state; never roll back committed booking transitions. Events are normalized at the adapter boundary — no provider payload shape enters the domain, and no domain branch may key on provider identity. A client-supplied signal, including a return redirect, MUST NOT drive a money-moving transition (`FIN-13`).
 8. **Whole-yen integers.** Money columns as integer cents or `decimal` with scale 0 — no fractional yen (`PAY-1`).
 
 ---
@@ -462,6 +461,4 @@ DBML files live in `app/docs/db/` (red-cab-api) per [Domain-to-Code Mapping](/do
 
 - [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping)
 - [Frontend Conventions](/docs/50-59-frontend/conventions/frontend)
-- [../architecture/api-design.md](/docs/30-49-domains/system-design/api-design)
-- [../architecture/payments-architecture.md](/docs/30-49-domains/patterns/payments-architecture)
 

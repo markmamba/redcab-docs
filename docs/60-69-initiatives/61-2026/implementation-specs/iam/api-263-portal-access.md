@@ -11,13 +11,13 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-260-provider-company-and-memberships.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/api-261-permits-and-approval.md"
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#person-account"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#tourist-profile"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#portal-access"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#current-session-answer"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#access-codes"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#own-company-booking"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#no-corporate-accounts"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#person-account"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#tourist-profile"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#portal-access"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#current-session-answer"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#access-codes"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#own-company-booking"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#no-corporate-accounts"
 ---
 
 ## TL;DR
@@ -306,10 +306,10 @@ Other:
 
 | Spec | Part replaced |
 | --- | --- |
-| [api-145](auth-platform/api-145-portal-gate-forbidden.md) | The portal gate codes and the tourist, corporate and provider gates |
-| [api-146](auth-platform/api-146-auth-contract-tests.md) | The rows for `corporate/**`, the role gate and the account shape |
-| [pr-05](iam-audit-2026-08/pr-05-actor-base-controllers.md) | The corporate base controller and the profile presence gate |
-| [pr-07](iam-audit-2026-08/pr-07-oauth-account-provisioning.md) | The hardcoded role `tourist` in the OAuth manager |
+| [api-145](../../../../80-89-legacy/implementation-specs/iam/auth-platform/api-145-portal-gate-forbidden.md) | The portal gate codes and the tourist, corporate and provider gates |
+| [api-146](../../../../80-89-legacy/implementation-specs/iam/auth-platform/api-146-auth-contract-tests.md) | The rows for `corporate/**`, the role gate and the account shape |
+| [pr-05](../../../../80-89-legacy/implementation-specs/iam/iam-audit-2026-08/pr-05-actor-base-controllers.md) | The corporate base controller and the profile presence gate |
+| [pr-07](../../../../80-89-legacy/implementation-specs/iam/iam-audit-2026-08/pr-07-oauth-account-provisioning.md) | The hardcoded role `tourist` in the OAuth manager |
 
 This spec changes no Catalog code, so it replaces no part of [api-208](../cat/api-208-keyword-search.md) or [api-213](../cat/api-213-pickup-coverage-and-discoverable-gate.md).
 

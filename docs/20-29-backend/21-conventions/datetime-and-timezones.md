@@ -14,13 +14,12 @@ description: Engineering conventions for instants, civil dates, and service time
 
 ## About this document
 
-Single source of truth for date/time engineering rules. Business meaning of Service Timezone: [Glossary](/docs/70-79-business/business-rules/glossary). ADRs: [ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model), [ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree) (`catalog_geographies.timezone`, seeded from `catalog_countries.default_timezone`).
+Single source of truth for date/time engineering rules. Business meaning of Service Timezone: [Glossary](/docs/70-79-business/business-rules/glossary). Storage: `catalog_geographies.timezone`, seeded from `catalog_countries.default_timezone`.
 
 | Topic | Document |
 | --- | --- |
 | Backend patterns | [Backend Conventions](/docs/20-29-backend/conventions/backend) |
 | Frontend patterns | [Frontend Conventions](/docs/50-59-frontend/conventions/frontend) |
-| Snapshot | [Immutable Snapshots](/docs/30-49-domains/data-model/snapshots) |
 
 ---
 
@@ -34,7 +33,7 @@ Single source of truth for date/time engineering rules. Business meaning of Serv
 
 **Rules:**
 
-- Every `catalog_geographies` row MUST have a valid IANA timezone, seeded from `catalog_countries.default_timezone` at ingest ([ADR-016](/docs/30-49-domains/architecture-decisions/adr-016-geography-administrative-tree)). Missing timezone is a data bug — fail loud in validators.
+- Every `catalog_geographies` row MUST have a valid IANA timezone, seeded from `catalog_countries.default_timezone` at ingest. Missing timezone is a data bug — fail loud in validators.
 - NEVER hardcode `'Asia/Tokyo'`, `'JST'`, or numeric offsets in domain Managers, Validators, or Services.
 - Phase 1 Japan seed sets `catalog_countries.default_timezone = Asia/Tokyo` and propagates to every geography node; behavior matches legacy JST without hardcoding.
 

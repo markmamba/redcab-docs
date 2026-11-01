@@ -23,10 +23,10 @@ depends_on:
 The current tourist web implementation contradicts three sources of truth simultaneously:
 
 1. **Requirements.** `FR-IAM-012` states visitors *may* browse catalog content without an account (status was `Provisional (AMB-022)`), and `NFR-SEC-005` requires auth only at booking initiation. In code, the discover funnel layout exports `withTouristAuth(...)` (`tourist-catalog-district-page-layout.jsx:110`), gating every catalog page behind a Tourist session.
-2. **Architecture.** [`geography.md`](/docs/30-49-domains/patterns/geography) specifies the canonical public path family as `/districts/{district_slug}/areas/{area_slug}/listings`. The live routes are `/account/discover/:districtId/:areaId/:listingId` (`tourist.routes.js:10-24`) — wrong prefix, wrong segment type (UUID instead of slug), and owned by the wrong route file (`tourist.routes.js` instead of `marketplace.routes.js` / today's `public.routes.js`).
+2. **Architecture.** `geography.md` (removed) specifies the canonical public path family as `/districts/{district_slug}/areas/{area_slug}/listings`. The live routes are `/account/discover/:districtId/:areaId/:listingId` (`tourist.routes.js:10-24`) — wrong prefix, wrong segment type (UUID instead of slug), and owned by the wrong route file (`tourist.routes.js` instead of `marketplace.routes.js` / today's `public.routes.js`).
 3. **SEO / rendering.** With SEO priority high, indexable pages must render via server `loader`. All three public funnel modules currently use `clientLoader` (`tourist-catalog-district-page-layout.jsx:23`, `tourist-catalog-listing-list-page.jsx:19`, `tourist-catalog-listing-detail-page.jsx:39`) and are marked `noindex, nofollow`.
 
-Evidence and verdicts for each row are recorded in the Session A alignment matrix — see [`/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture`](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture#2-alignment-matrix). This spec exists to convert that decision record into a spec artifact the codegen skills and `#60` can implement from without re-opening the access-model or URL-scheme debate.
+Evidence and verdicts for each row are recorded in the Session A alignment matrix — see `/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture` (removed). This spec exists to convert that decision record into a spec artifact the codegen skills and `#60` can implement from without re-opening the access-model or URL-scheme debate.
 
 ## Governing docs
 
@@ -42,10 +42,10 @@ Evidence and verdicts for each row are recorded in the Session A alignment matri
 | AMB-020 | [/docs/70-79-business/planning/open-questions](/docs/70-79-business/planning/open-questions) | Navigation model — District → Area hierarchy must appear in the URL, ruling out flat `/areas/...` schemes |
 | PRC-1 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | No client-side price computation — public listing pages display server-computed indicative pricing only |
 | INV-8 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Zero-listing Districts/Areas stay hidden; public exposure does not widen what is discoverable |
-| geography.md | [architecture/geography.md](/docs/30-49-domains/patterns/geography) | Source of the canonical URL hierarchy (slug-based District/Area segments) |
+| geography.md | architecture/geography.md (removed) | Source of the canonical URL hierarchy (slug-based District/Area segments) |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | Frontend surface → route group table; patched by this issue's Docs tasks |
 | tourist-ui-pre-phase-2 | [roadmap/tourist-ui-pre-phase-2.md](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Milestone A track plan; patched by this issue's Docs tasks |
-| Session A decision record | [/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | Authoritative source for every decision below — not re-derived |
+| Session A decision record | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Authoritative source for every decision below — not re-derived |
 
 ## Design decisions
 

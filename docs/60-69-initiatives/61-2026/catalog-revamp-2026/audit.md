@@ -12,7 +12,7 @@ status: active
 - This audit lists every legacy Catalog artifact that the [Catalog revamp](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/) may change.
 - Each row has a disposition: **carry**, **supersede**, **retire**, or **pending**.
 - Each row also has one code-gap line: **exists**, **partial**, or **missing**.
-- Read this page before you write a new Catalog spec or a normative page under `38-catalog/`.
+- Read this page before you write a new Catalog spec or a normative page under `31-catalog/`.
 - The audit **recommends** dispositions. PR 4 applies them. PR 5 owns invariant edits.
 
 ## Non-normative banner \{#non-normative\}
@@ -35,7 +35,7 @@ Sources read in `redcab-docs`:
 - `docs/70-79-business/73-planning/roadmap/phase-2-marketplace-depth.md`
 - `docs/70-79-business/73-planning/roadmap/tourist-ui-pre-phase-2.md`
 - `docs/30-49-domains/34-architecture-decisions/adr-004`, `adr-007`, `adr-013`, `adr-016`, `adr-017`
-- `docs/30-49-domains/38-catalog/index.md`
+- `docs/30-49-domains/31-catalog/index.md`
 - Every file under `docs/60-69-initiatives/61-2026/implementation-specs/cat/` (including `geography/`)
 - `docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract.md`
 

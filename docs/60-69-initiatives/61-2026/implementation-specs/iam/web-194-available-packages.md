@@ -12,9 +12,9 @@ depends_on:
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-191-permits-registration-and-team-approval.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/iam/web-192-portal-access-and-switch.md"
 related:
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#permits-and-package-availability"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#listing-publication"
-  - "docs/30-49-domains/38-catalog/catalog-decisions.md#discoverability-completeness"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#permits-and-package-availability"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#listing-publication"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md#discoverability-completeness"
 ---
 
 ## TL;DR

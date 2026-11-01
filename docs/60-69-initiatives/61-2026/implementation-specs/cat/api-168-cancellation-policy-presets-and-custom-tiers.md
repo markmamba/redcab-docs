@@ -8,8 +8,8 @@ status: approved
 phase: 2
 context: CAT
 related:
-  - "docs/30-49-domains/38-catalog/architecture-decisions/cancellation-policy.md"
-  - "docs/30-49-domains/38-catalog/models/listings-and-packages.md"
+  - "docs/30-49-domains/31-catalog/catalog-decisions.md"
+  - "docs/30-49-domains/31-catalog/models/listings-and-packages.md"
   - "docs/60-69-initiatives/61-2026/implementation-specs/cat/api-213-pickup-coverage-and-discoverable-gate.md"
 ---
 
@@ -48,7 +48,7 @@ Read these before design, and do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
-| Decision | [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/architecture-decisions/cancellation-policy) | The only source for the presets, the custom checks and the checkout rules 9 and 10 |
+| Decision | [Cancellation policy with presets and custom tiers](/docs/30-49-domains/catalog/catalog-decisions/#cancellation-policy) | The only source for the presets, the custom checks and the checkout rules 9 and 10 |
 | Model | [Listings and packages model](/docs/30-49-domains/catalog/models/listings-and-packages) | The pricing policy holds the cancellation for all packages |
 | Spec | api-213 | The pattern for a `GET` and `PUT` pair that replaces a list |
 | Invariant | [Invariants](/docs/70-79-business/business-rules/invariants) `INV-1`, `BKG-1`, `BKG-8` | A booking keeps the policy it copied at checkout. A tourist agrees to it before payment. |

@@ -20,7 +20,7 @@ Phase 0 deliverables, out-of-scope items, open decisions, exit criteria, and pos
 | Roadmap overview | [Phasing Roadmap](/docs/70-79-business/planning/roadmap) |
 | Next phase | [Phase 1 — MVP](/docs/70-79-business/planning/roadmap/phase-1-mvp) |
 | Engineering | [Engineering](/docs/90-99-engineering-meta) |
-| Identity context | [Identity & Access](/docs/30-49-domains/bounded-contexts/identity) |
+| Identity context | Identity & Access |
 
 ---
 

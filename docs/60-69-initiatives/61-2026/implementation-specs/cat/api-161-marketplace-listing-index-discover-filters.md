@@ -40,7 +40,7 @@ Tourist discover must filter area listings by date, service type, language, grou
 | CON-1 | [invariants](/docs/70-79-business/business-rules/invariants) | Seat decrement only at checkout; this index must not reserve seats |
 | AMB-024 | [open-questions](/docs/70-79-business/planning/open-questions) | Provisional supported filter language set (`en`, `ja`, `zh`, `ko`, `es`, `other`) |
 | web-67 | [web-67-listing-sort-control-url-params.md](./web-67-listing-sort-control-url-params.md) | Sort params compose with filters (`order_by` / `order_dir`); **not a ship gate** — web-67/web-68 shipped; API ships independently |
-| ADR-014 | [adr-014-service-timezone-model.md](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model) | Per-listing civil date via geography timezone |
+| ADR-014 | adr-014-service-timezone-model.md (removed) | Per-listing civil date via geography timezone |
 
 ## Design decisions
 

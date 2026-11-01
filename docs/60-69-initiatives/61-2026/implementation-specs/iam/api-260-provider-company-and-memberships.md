@@ -8,10 +8,10 @@ status: approved
 phase: 2
 context: IAM
 related:
-  - "docs/30-49-domains/39-iam/iam-decisions.md#provider-company"
-  - "docs/30-49-domains/39-iam/iam-decisions.md#company-roles"
-  - "docs/30-49-domains/39-iam/requirements/provider-company-members.md"
-  - "docs/30-49-domains/39-iam/architecture-decisions/accounts-and-provider-companies.md"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#provider-company"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#company-roles"
+  - "docs/30-49-domains/32-iam/requirements/provider-company-members.md"
+  - "docs/30-49-domains/32-iam/iam-decisions.md"
 ---
 
 ## TL;DR
@@ -56,7 +56,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | Rule | [Provider company](/docs/30-49-domains/iam/iam-decisions/#provider-company) | The company owns the business, and other domains keep `provider_id` |
 | Rule | [Company roles](/docs/30-49-domains/iam/iam-decisions/#company-roles) | One active membership for each person, Owner or Staff, and removed rows stay |
 | Requirement | [Provider company members](/docs/30-49-domains/iam/requirements/provider-company-members) | What an owner and a staff member see |
-| Record | [Accounts are persons, and provider companies have members](/docs/30-49-domains/iam/architecture-decisions/accounts-and-provider-companies) | Reasons and rejected options |
+| Record | [Accounts are persons, and provider companies have members](/docs/30-49-domains/iam/iam-decisions/#person-account) | Reasons and rejected options |
 | Column truth | [providers.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/providers.dbml) | `providers_companies` and `providers_memberships` |
 | Code rules | `red-cab-api/db/AGENTS.md` | Migration rules |
 

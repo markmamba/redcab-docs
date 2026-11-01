@@ -34,7 +34,7 @@ Also avoid idioms: "circle back", "low-hanging fruit", "out of the box".
 
 ## The finance exception
 
-A finance term of art is allowed in payment and booking money docs when the first use defines it in plain words. See payment ADRs under `docs/30-49-domains/34-architecture-decisions/`.
+A finance term of art is allowed in payment and booking money docs when the first use defines it in plain words.
 
 ## AI vocabulary
 

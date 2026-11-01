@@ -21,14 +21,12 @@ Engineering overview — how planning docs connect to implementation repos.
 | Web conventions | [Frontend Conventions](/docs/50-59-frontend/conventions/frontend) |
 | Date / time / timezone | [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones) |
 | Prose (ASD-STE100) | [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) |
-| Context map | [Bounded Contexts](/docs/30-49-domains/bounded-contexts) |
-| Domain | [Domain Models](/docs/30-49-domains/domain-models/domain-models) |
 
 ---
 
 ## Purpose
 
-The architecture set ([/docs/30-49-domains/system-design/overview](/docs/30-49-domains/system-design/overview), ADRs, bounded contexts) describes **what** the system must do and **who owns what**. This engineering set describes **how to structure the codebase** so implementation is consistent and predictable across both repos.
+The domain pages describe **what** the system must do and **who owns what**. This engineering set describes **how to structure the codebase** so implementation is consistent and predictable across both repos.
 
 These conventions use the same structural patterns you will apply when scaffolding (`Request → Manager → Validator`, `app/domains/`, explicit routes, React Router v7 SSR, ky + zod + RHF). Red Cab–specific rules (pricing authority, snapshots, actor namespaces) sit on top of that baseline — they do not replace it.
 
@@ -49,7 +47,7 @@ Domain rules from Red Cab planning **always win** over generic patterns when the
 2. [Backend Conventions](/docs/20-29-backend/conventions/backend) — API structure, request lifecycle, DBML/migrations
 3. [Frontend Conventions](/docs/50-59-frontend/conventions/frontend) — routes, API clients, forms, surfaces
 4. [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones) — instants, civil dates, service timezone resolution
-5. [Authentication series](/docs/90-99-engineering-meta/authentication) — sessions, policy routes, entry rules, Web↔API contract (required before any auth or route-guard work)
+5. [IAM decisions](../30-49-domains/32-iam/iam-decisions.md#iam-decisions-tldr) — sessions, portals and policy routes (read before any auth or route-guard work)
 
 ### With domain context (already in planning set)
 
@@ -57,8 +55,6 @@ Read in parallel with:
 
 - [/docs/70-79-business/business-rules/glossary](/docs/70-79-business/business-rules/glossary)
 - [../70-79-business/71-business-rules/invariants](/docs/70-79-business/business-rules/invariants)
-- [../architecture/contexts](/docs/30-49-domains/bounded-contexts)
-- [/docs/30-49-domains/domain-models/domain-models](/docs/30-49-domains/domain-models/domain-models)
 
 ---
 
@@ -121,5 +117,5 @@ Planning docs in this folder are the **planning-time source** for implementation
 | Domain-to-Code Mapping | ✅ Complete |
 | Backend Conventions | ✅ Aligned (baseline + Red Cab rules) |
 | Frontend Conventions | ✅ Aligned (baseline + Red Cab rules) |
-| Date / Time / Timezone | ✅ Complete ([ADR-014](/docs/30-49-domains/architecture-decisions/adr-014-service-timezone-model)) |
+| Date / Time / Timezone | ✅ Complete |
 

@@ -45,7 +45,7 @@ Public routes are locked (`#56`) but the tourist funnel lacks:
 | NFR-I18N-003 | [/docs/70-79-business/requirements/non-functional-requirements](/docs/70-79-business/requirements/non-functional-requirements) | Bilingual District/Area labels (`name_en` / `name_ja`) |
 | web-56 | [/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) | Locked route table, redirect matrix, layout assignment, sitemap path |
 | api-134 | [/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) | District/area slugs + ancestor embed on listing detail |
-| ADR-017 | [/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture](/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture) | Issue chain, stale-slug 301, `/listings/:uuid` alias |
+| ADR-017 | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Issue chain, stale-slug 301, `/listings/:uuid` alias |
 | frontend.md | [/docs/50-59-frontend/conventions/frontend](/docs/50-59-frontend/conventions/frontend) | `handle.breadcrumb` pattern, sitemap resource route, canonical tags |
 | tourist-ui-pre-phase-2 | [/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Milestone A2 deliverables |
 
@@ -139,7 +139,7 @@ Last crumb is never linked (`breadcrumbs.jsx` rule). Prior crumbs link when `to`
 | Area listings | `Districts` → `:district` → `:area` | district + area names from loader | district path; area path omitted on last |
 | Listing detail | `Districts` → `:district` → `:area` → `:listing title` | embeds from listing detail payload (`#134`) | prior levels link to slug paths |
 
-Layout-level crumb (e.g. `Discover` on old layout) is replaced by geography crumbs above. **`CatalogGeographyNav` is deprecated in the follow-on web issue** once breadcrumbs render — remove the component to avoid duplicate hierarchy affordances (coordinated with [`web-58`](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell) decision #16).
+Layout-level crumb (e.g. `Discover` on old layout) is replaced by geography crumbs above. **`CatalogGeographyNav` is deprecated in the follow-on web issue** once breadcrumbs render — remove the component to avoid duplicate hierarchy affordances (coordinated with `web-58` (removed) decision #16).
 
 ### Account booking crumbs
 
@@ -215,7 +215,7 @@ _Follow-on web issue — after this spec is `status: approved` and committed. Co
 - `app/routes/marketplace/catalog-district/marketplace-catalog-listing-list-page.jsx` — `handle.breadcrumb`
 - `app/routes/marketplace/catalog-district/marketplace-catalog-listing-detail-page.jsx` — `handle.breadcrumb` from payload; localized title
 - `app/routes/marketplace/catalog-district/marketplace-catalog-not-found-page.jsx` — **create** — 404 UX per Design decision #12
-- `app/routes/marketplace/catalog-district/marketplace-catalog-district-page-layout.jsx` — remove single-child auto-skip (`#57` follow-on); `<Breadcrumbs />` mount is in [`web-58`](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell) shell
+- `app/routes/marketplace/catalog-district/marketplace-catalog-district-page-layout.jsx` — remove single-child auto-skip (`#57` follow-on); `<Breadcrumbs />` mount is in `web-58` (removed) shell
 - `app/routes/tourist/booking-detail-page.jsx` — add "View listing" link
 - `app/domains/catalog-listing/catalog-listing-constant.js` — `LISTING_RESOLVER_PATH(listingUuid)` helper
 
@@ -254,7 +254,7 @@ _Follow-on web issue — after this spec is `status: approved` and committed. Co
 - [ ] Wire `handle.breadcrumb` on all marketplace catalog route modules
 - [ ] Add booking detail "View listing" link via resolver path
 - [ ] Remove single-child auto-skip on public catalog layout
-- [ ] **Remove `CatalogGeographyNav`** from marketplace catalog layout once breadcrumbs render (avoid duplicate hierarchy; [`web-58`](/docs/60-69-initiatives/61-2026/implementation-specs/platform/web-58-tourist-unified-layout-shell) decision #16)
+- [ ] **Remove `CatalogGeographyNav`** from marketplace catalog layout once breadcrumbs render (avoid duplicate hierarchy; `web-58` (removed) decision #16)
 - [ ] Add `marketplace-catalog-not-found-page.jsx`
 - [ ] Tests: sitemap loader; breadcrumb integration on listing detail
 

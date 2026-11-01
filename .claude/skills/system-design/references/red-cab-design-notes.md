@@ -6,7 +6,7 @@ Single Rails API deployable, PostgreSQL, bounded contexts under `app/domains/`. 
 
 ## Tourist vs team vs provider vs corporate
 
-Surfaces differ in auth and routes. Web enforcement model: ADR-018 and ADR-019; authentication series under `90-99-engineering-meta/93-authentication/`.
+Surfaces differ in auth and routes. Web enforcement model: the IAM decisions in `30-49-domains/32-iam/iam-decisions.md`.
 
 ## Geography
 
