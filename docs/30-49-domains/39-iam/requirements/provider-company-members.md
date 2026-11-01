@@ -7,7 +7,7 @@ doc_type: requirement
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-10-31
+last_reviewed: 2026-11-01
 ---
 
 ## TL;DR \{#members-tldr\}
@@ -62,6 +62,7 @@ This page describes what the owner and the staff do and see, without screens, AP
 | A listing status change, a delivered booking, a review answer and a review report keep the member who did the action. | US-2 | The owner sees that Mika marked a booking delivered. |
 | An invitation keeps the owner who sent it. | US-1 | The invitation for mika@example.com shows that Kenji sent it. |
 | A change that the system makes names no member. | US-2 | The system completes a booking on its own, and no member is named. |
+| Only an owner reads the member on a record. | US-2 | Kenji sees who marked a booking delivered, and Mika does not. |
 | Only an owner changes the company details, the documents, the payout account and the members. | US-3 | Mika cannot open the payout settings. |
 | Staff see the price and the payout amount of each booking, and they do not see the payout account. | US-2, US-3 | Mika sees "¥20,000, payout ¥18,000" on a booking and no bank details. |
 | The approval status of the company applies to every member. | US-3 | No member of a suspended company can publish. |
