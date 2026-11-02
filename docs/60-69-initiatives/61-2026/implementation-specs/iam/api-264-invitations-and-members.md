@@ -252,7 +252,9 @@ The check order for the seven member endpoints is fixed.
 2. `require_company_owner!`.
 3. `require_approved_provider_company!`.
 
-The new code joins `Errors::PortalGateCodes::ALL`.
+The new code is a plain string at the raise.
+
+No Ruby list holds the codes, see decision 15 of `api-147`.
 
 - `PROVIDER_OWNER_REQUIRED = 'provider_owner_required'`
 
@@ -343,7 +345,6 @@ Controllers and routes:
 - `app/controllers/providers/companies_controller.rb`, `documents_controller.rb`, `payments/merchant_accounts_controller.rb`
 - The controller of the license record endpoints from `api-261`.
 - `config/routes/providers_routes.rb`
-- `app/shared/errors/portal_gate_codes.rb`
 - `app/domains/providers/providers_company_detail_serializer.rb`
 
 Other:
