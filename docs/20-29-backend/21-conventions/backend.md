@@ -225,8 +225,12 @@ Errors::BaseError
   ├── ValidationError           (422)
   ├── NotFoundError             (404)
   ├── UnauthorizedError         (401)
+  ├── ForbiddenError            (403)
+  ├── ConflictError             (409)
   ├── UnprocessableContentError (422)
-  └── InternalServerError       (500)
+  ├── TooManyRequestsError      (429)
+  ├── InternalServerError       (500)
+  └── UnimplementedError        (500)
 ```
 
 Response shape:
@@ -236,13 +240,28 @@ Response shape:
   "status_name": "unprocessable_content",
   "status": 422,
   "messages": { "field": ["message"] },
-  "code": "Errors::ValidationError",
+  "code": "validation_error",
   "title": "There was an error when creating the booking",
   "server": "api"
 }
 ```
 
 In Managers, raise `Errors::ValidationError` when validation fails. For non-validation business failures, use `Errors::UnprocessableContentError` (optionally with `skip_sentry: true` for expected auth failures).
+
+### The `code` field
+
+- The client reads `code`, not a Ruby class name.
+- The default `code` is the class name in snake case, for example `validation_error`.
+- A failure that the web must tell apart passes its own `code:`, for example `provider_approval_pending`.
+- A code is a plain snake case string written at the raise.
+- No Ruby list holds the codes, and no error class checks them.
+- The domain decision page lists the codes of its domain.
+- A test pins each code.
+- The web keeps the same strings in its own constants.
+- `class_name` keeps the Ruby class name for Sentry, and the JSON does not include it.
+- A `ForbiddenError` with no `code:` answers `forbidden_error`.
+- A web screen that must tell two reasons apart needs a `code:` for each reason.
+- A new code needs a line on the domain decision page and a test, in the same pull request.
 
 ### Error messages for users
 

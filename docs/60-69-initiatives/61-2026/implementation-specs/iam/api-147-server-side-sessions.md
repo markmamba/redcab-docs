@@ -20,9 +20,14 @@ related:
 - The gem `jwt_sessions` and its Redis token store go away.
 - A person and a team admin can each sign out everywhere.
 - Login endpoints get a rate limit for one IP address.
+- Error codes are plain strings in the raise.
+- No Ruby list holds the codes, and `ForbiddenError` does not check them.
+- The default `code` of every error is the class name in snake case, for example `validation_error`.
 - The current-session answer keeps its fields, because `provider_access` needs the memberships of I2.
 - Breaking change: Yes.
   - The API and `red-cab-web` must deploy together, and everyone signs in again.
+  - The default `code` changes from `Errors::ValidationError` to `validation_error` for all errors.
+  - The web uses the old form only in test data.
 
 ## Problem
 
@@ -77,6 +82,12 @@ The rulings fix the behavior, and these decisions fix the parts that the rulings
 | 12 | The rate limit counts in Redis, on the Redis database that the Google state store uses. | Use `Rails.cache`. | The test environment uses `:null_store`, and production sets no shared cache store. |
 | 13 | The session cookie has the `__Secure-` prefix in production only. | Use one name in all environments. | A browser refuses a `__Secure-` cookie without `Secure`, and development has no HTTPS. |
 | 14 | A new sign-in leaves older session rows of the person in place. | Delete the older rows. | Aiko stays signed in on her phone when she signs in on her laptop. |
+| 15 | An error code is a plain string written at the raise. No Ruby list holds the codes, and `ForbiddenError` does not check them. The domain page lists the codes, and a test pins each one. | Keep a list `Errors::PortalGateCodes` and check it in `ForbiddenError`. | Every other `code:` in the API is a free string. A list that only one error class checks is a special case. |
+| 16 | The default `code` is the class name in snake case, for example `validation_error` and `too_many_requests_error`. | Keep the Ruby class name, for example `Errors::ValidationError`. | A client must not depend on Ruby class names. `ApplicationController` already sends `record_not_found` and `internal_server_error`. |
+| 17 | A CSRF failure raises `Errors::ForbiddenError` with `code: 'csrf_token_missing'` or `code: 'csrf_token_invalid'`. | Render the JSON in the controller. | Every error then has the same six fields, and Sentry handling stays in one place. |
+| 18 | The rate limit uses a fixed window for each endpoint and each IP address. | A sliding window. | It is simple. A burst across the edge of two windows can allow up to twice the attempts. |
+| 19 | If Redis fails, a sign-in request goes through. | Refuse every sign-in. | A Redis error must not block every sign-in. The login lockout after 5 failures still protects an account. |
+| 20 | Person sign-in and team sign-in count their attempts separately. | One shared count. | A person and a team admin on one office network must not block each other. |
 
 ## API contract
 
@@ -141,7 +152,7 @@ The new error answers are these.
 | --- | --- | --- | --- |
 | The header `X-CSRF-Token` is missing | `403` | `csrf_token_missing` | `We could not check your request. Please reload the page and try again.` |
 | The header `X-CSRF-Token` is wrong | `403` | `csrf_token_invalid` | `We could not check your request. Please reload the page and try again.` |
-| Too many login attempts | `429` | `Errors::TooManyRequestsError` | `Too many sign-in attempts. Please wait a few minutes and try again.` |
+| Too many login attempts | `429` | `too_many_requests_error` | `Too many sign-in attempts. Please wait a few minutes and try again.` |
 
 ### Configuration
 
@@ -208,7 +219,9 @@ Controllers and routes:
 Errors:
 
 - `app/shared/errors/too_many_requests_error.rb` (create)
-- `app/shared/errors/portal_gate_codes.rb` (add `CSRF_TOKEN_MISSING` and `CSRF_TOKEN_INVALID`)
+- `app/shared/errors/base_error.rb` (the default `code` is the class name in snake case)
+- `app/shared/errors/forbidden_error.rb` (accept any `code:`, and remove the check against `PortalGateCodes`)
+- `app/shared/errors/portal_gate_codes.rb` (delete)
 
 Jobs and configuration:
 
@@ -241,6 +254,7 @@ The jobs use `queue_as :identities`, because each domain has its own queue.
 | `app/controllers/concerns/session_principal.rb` | The two systems share no code |
 | `app/domains/identities/sessions/revoke_all_service.rb` | `Identities::AccountSessions::DestroyAllService` replaces it |
 | The `update` actions of both session controllers, and their routes | Nothing refreshes |
+| `app/shared/errors/portal_gate_codes.rb` and its check in `ForbiddenError` | Codes are plain strings at the raise (decision 15) |
 
 Keep Redis, because Sidekiq, the Google state store and the rate limit use it.
 
@@ -299,6 +313,11 @@ New tests cover these behaviors.
 - `DELETE team/identities/admins/sessions` deletes all rows of the admin and leaves other admins alone.
 - A wrong CSRF token answers `403`, and the session stays.
 - Both cleanup jobs delete expired rows and keep live rows.
+- A `ForbiddenError` with no `code:` answers `forbidden_error`.
+- A `ForbiddenError` with a `code:` keeps it.
+- Every error class answers a snake case default `code`, and `class_name` still holds the Ruby class name for Sentry.
+- Every `code:` string in `app/` is in the list of the contract test, and each one is in snake case.
+- The cleanup jobs delete in batches, and a run with more rows than one batch deletes them all.
 
 ## Data / domain touchpoints
 

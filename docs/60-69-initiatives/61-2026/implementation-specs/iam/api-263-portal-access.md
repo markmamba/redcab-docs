@@ -201,7 +201,9 @@ The callback manager acts by the case.
 
 The create action `POST /providers/companies` skips the membership check, and it refuses a person who already has one.
 
-The new `PortalGateCodes` hold these values.
+Rails answers with these codes, and each code is a plain string at the raise.
+
+No Ruby list holds them, see decision 15 of `api-147`.
 
 - `provider_membership_required`
 - `provider_approval_pending`
@@ -283,7 +285,6 @@ Sign-up and bookings:
 
 Other:
 
-- `app/shared/errors/portal_gate_codes.rb`
 - `app/models/current_request.rb` (remove `corporate_profile`, add nothing)
 - `lib/dev/test_accounts_seeder.rb`
 - `docs/db/identities.dbml` and `docs/db/redcab.dbml` (remove the tags that this spec ships)
