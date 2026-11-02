@@ -179,7 +179,7 @@ A `401` on a page without a policy route shows the session-expired page. It has 
 
 ## Sessions
 
-The web follows [IAM D8 — Server-side sessions](/docs/30-49-domains/32-iam/iam-decisions/#server-side-sessions), [IAM D10 — Web session rules](/docs/30-49-domains/32-iam/iam-decisions/#web-session-rules) and [IAM D14 — Policy routes](/docs/30-49-domains/32-iam/iam-decisions/#policy-routes).
+The web follows [IAM D8 — Server-side sessions](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions), [IAM D10 — Web session rules](/docs/30-49-domains/iam/iam-decisions/#web-session-rules) and [IAM D14 — Policy routes](/docs/30-49-domains/iam/iam-decisions/#policy-routes).
 
 A session is one record in the API database, and Rails alone decides whether it is alive.
 
@@ -251,7 +251,7 @@ A committed `.env.production` holds the production hosts.
 
 - `VITE_API_REDCAB_URL` is `https://api.redcab.app`.
 - `VITE_API_TEAM_URL` is `https://api.team.redcab.app`.
-- The ruling [IAM D8 — Production hosts](/docs/30-49-domains/32-iam/iam-decisions/#production-hosts) fixes both values.
+- The ruling [IAM D8 — Production hosts](/docs/30-49-domains/iam/iam-decisions/#production-hosts) fixes both values.
 
 ### End-to-end tests
 
@@ -309,7 +309,7 @@ export const marketplaceCatalogListingsApi = {
 The web reads `error.code`, never a Ruby class name.
 
 - The API default `code` is the class name in snake case, for example `validation_error`.
-- The domain decision page lists the codes, for example [IAM D15 — Access codes](/docs/30-49-domains/32-iam/iam-decisions/#access-codes).
+- The domain decision page lists the codes, for example [IAM D15 — Access codes](/docs/30-49-domains/iam/iam-decisions/#access-codes).
 - The section "The `code` field" of [Backend Conventions](/docs/20-29-backend/conventions/backend) describes the rule.
 
 Loader pattern:
