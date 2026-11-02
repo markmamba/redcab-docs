@@ -82,7 +82,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 2 | Delete the root URL guard. Each root uses a small `shouldRevalidate` that only adds `401` and `403`. | Keep the guard. | The router default applies. A failed action with `401` or `403` reloads the root, and the policy on the next click acts on the new session. |
 | 3 | Delete the cross-tab bridge. | Keep the bridge. | The next click in the other tab rereads the session, so the bridge does nothing new. |
 | 4 | A Playwright test proves decision 1 before any code is deleted. The test ends the session without the UI, so the reload workaround in `TouristNavLink` does not run. | Trust the source reading, or keep the two-tab test as the only proof. | Two e2e tests exist today. The two-tab test passes through a full page reload, not through the policy route. The new test showed on 2026-11-02 that the bridge stalls a click after the session is gone. |
-| 5 | A click that enters a policy area reads the session once, through the policy. The root loader reloads only after a failed action with `401` or `403`. | Reload the root on every click, or keep the guard. | Rails writes `last_used_at` at most once every 15 minutes, so most reads do not write. A stale header between clicks grants nothing, because Rails checks the session on every request. |
+| 5 | A click that enters a policy area reads the session once, because the read is shared inside one `.data` request. The root rule only adds a reload after a failed action with `401` or `403`. | Reload the root on every click, or keep the guard. | Rails writes `last_used_at` at most once every 15 minutes, so most reads do not write. A count of the API log on 2026-11-02 showed one session read for one click. |
 | 6 | The file `auth-session-cookies.js` checks both cookie names of each system. | A new environment variable. | The web only checks that the cookie exists, so one file stays the only place with the names. |
 | 7 | Node sends no CSRF header. | Keep the Node branch. | Node reads the session and the browser writes. |
 | 8 | The account menu shows on desktop, and the mobile menu lists the same items. | A separate account page on mobile. | The items stay the same, and the hamburger menu already exists. |
@@ -327,8 +327,6 @@ Aiko's session ends while her browser stays open.
 ## Open items
 
 - The Japanese text for the new keys needs a check by a Japanese speaker.
-- The header can show the old person for a short time after a session ends in another tab.
-  - The next click that enters a policy area sends the person to login.
 - Product Owner sign-off on the IAM rulings is not recorded.
 
 ## Tasks
@@ -340,8 +338,8 @@ Aiko's session ends while her browser stays open.
   - Result on 2026-11-02: the policy route answers the click with a redirect to login, so decision 1 holds.
   - Result on 2026-11-02: the page does not reach login, because the revalidation bridge stalls the navigation.
   - The test is marked `test.fail`, and the commit that removes the bridge removes the marker.
-- [ ] After the bridge is gone, the test passes without the marker.
-  - If the test still fails, stop and update this spec.
+- [x] After the bridge is gone, the test passes without the marker.
+  - Result on 2026-11-02: the redirect wins over a `401` in the `clientLoader`, and the header shows a guest after the redirect.
 - [ ] Change the cookie names.
 - [ ] Remove the refresh code and fix the function `getCookie`.
 - [ ] Remove both bridges and the root URL guard.
