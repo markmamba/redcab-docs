@@ -27,14 +27,14 @@ Red Cab has four external roles. Map them to explicit route files and controller
 
 | Red Cab Role | Glossary term | Controller namespace | Route file | Auth base |
 | --- | --- | --- | --- | --- |
-| Tourist | Tourist | `marketplace/` (public discovery) + `tourists/` (authenticated booking) | `marketplace_routes.rb`, `tourists_routes.rb` | Optional auth for marketplace; required JWT for tourists |
-| Corporate Client | Corporate Client | `corporate/` | `corporate_routes.rb` | Required JWT + corporate profile |
-| Provider | Provider | `providers/` | `providers_routes.rb` | Required JWT + approved provider profile |
-| Admin | Admin | `team/` | `team_routes.rb` | Required JWT (admin identity, separate from user) |
+| Tourist | Tourist | `marketplace/` (public discovery) + `tourists/` (authenticated booking) | `marketplace_routes.rb`, `tourists_routes.rb` | Optional session for marketplace; required session for tourists |
+| Corporate Client | Corporate Client | `corporate/` | `corporate_routes.rb` | Required session + corporate profile |
+| Provider | Provider | `providers/` | `providers_routes.rb` | Required session + approved provider profile |
+| Admin | Admin | `team/` | `team_routes.rb` | Required team session (admin identity, separate from user) |
 
 ### Notes
 
-- **`marketplace/`** serves optional-auth discovery: geography, listings, `calculate_quote`, availability reads. Uses optional auth (try JWT, proceed if absent).
+- **`marketplace/`** serves optional-auth discovery: geography, listings, `calculate_quote`, availability reads. Uses an optional session (a gone session is a guest).
 - **`tourists/`** serves authenticated B2C booking lifecycle, payments visibility, and reviews. Booking initiation requires auth at checkout per `NFR-SEC-005` (guest browse is unauthenticated per `AMB-022`).
 - **`corporate/`** serves corporate quotation requests, document views, manifest submission. Enters Booking only via accepted quotation (ACL).
 - **`providers/`** serves onboarding, catalog authoring, incoming bookings, review responses. Gated by Provider Status conformist read.
