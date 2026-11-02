@@ -173,7 +173,94 @@ Protected surfaces use **policy route parents** in `app/routes.js`. New pages on
 | `provider-required-policy` | Provider portal (`/providers/*`) | Signed-in provider (entry rule + loader `403` onboarding) |
 | Team admin policies | Admin panel (`/team/**`) | Independent admin identity — **not** coupled to tourist auth |
 
-Mid-session hard `401` after refresh failure: root `ErrorBoundary` shows session-expired UI with **Sign in again** (user-initiated navigation). Only **policies** auto-redirect to login on entry (ADR-018 D7).
+A `401` on a page without a policy route shows the session-expired page. It has a **Sign in again** link.
+
+---
+
+## Sessions
+
+The web follows [IAM D8 — Server-side sessions](/docs/30-49-domains/32-iam/iam-decisions/#server-side-sessions), [IAM D10 — Web session rules](/docs/30-49-domains/32-iam/iam-decisions/#web-session-rules) and [IAM D14 — Policy routes](/docs/30-49-domains/32-iam/iam-decisions/#policy-routes).
+
+A session is one record in the API database, and Rails alone decides whether it is alive.
+
+- Nothing refreshes.
+- A `401` means the session is gone.
+- A `403` never signs anyone out.
+- The client never retries a `401` or a `403`.
+- A request with no session cookie never calls Rails.
+- Node only reads the session.
+- The browser writes the session in a `clientAction`.
+  - Sign-in, sign out and sign out of all devices are all browser writes.
+
+### Cookie names
+
+The web checks both names in `app/auth/auth-session-cookies.js`, so it needs no environment variable.
+
+| Who | Development | Production | CSRF cookie |
+| --- | --- | --- | --- |
+| Person | `rc_session` | `__Secure-rc_session` | `CSRF_TOKEN` |
+| Team admin | `rc_team_session` | `__Secure-rc_team_session` | `TEAM_CSRF_TOKEN` |
+
+### Session read in policy areas
+
+- A click that enters a policy area makes one session read.
+- The read is shared inside one `.data` request.
+- A `401` in a `clientLoader` is thrown.
+- The policy route redirects to login on the same click.
+- The Playwright test `e2e/policy-middleware-matrix.spec.js` proves this redirect.
+- The root `shouldRevalidate` in `app/auth/root-should-revalidate.js` has one rule.
+  - A failed action with `401` or `403` reloads the root.
+
+### Sign-out routes
+
+Each route is a resource route with a `clientAction`.
+
+| Route | Who | Ends |
+| --- | --- | --- |
+| `/logout` | Person | This session |
+| `/logout/everywhere` | Person | Every session of the person |
+| `/team/logout` | Team admin | This session |
+| `/team/logout/everywhere` | Team admin | Every session of the team admin |
+
+- A `401` from these routes counts as signed out.
+- A control posts to the route with `fetcher.submit`, from `useLogoutFetcher`.
+
+### Account menu
+
+The tourist menu holds four items.
+
+- **My Profile**
+- **My Bookings**
+- **Sign out**
+- **Sign out of all devices**, in the danger color
+
+Each portal places the same two sign-out controls in its own chrome.
+
+- The mobile menu lists the same items as the desktop menu.
+- The provider header has an **Account** dropdown.
+- The team sidebar has two buttons.
+
+The confirmation for **Sign out of all devices** comes from the `useSignOutAllDevices` hook in `app/hooks/use-sign-out-all-devices.jsx`.
+
+- The hook builds the dialog with the `useModal` hook.
+- The red button repeats the action.
+
+### Production API hosts
+
+A committed `.env.production` holds the production hosts.
+
+- `VITE_API_REDCAB_URL` is `https://api.redcab.app`.
+- `VITE_API_TEAM_URL` is `https://api.team.redcab.app`.
+- The ruling [IAM D8 — Production hosts](/docs/30-49-domains/32-iam/iam-decisions/#production-hosts) fixes both values.
+
+### End-to-end tests
+
+Playwright tests run on a developer machine only, because CI does not run them.
+
+- The tests need `red-cab-api` `main` on port 3000.
+- The tests need the dev accounts.
+- The sign-in limit is 10 sign-ins in 3 minutes for each IP address.
+  - A second run must wait for the limit to reset.
 
 ---
 
@@ -199,12 +286,15 @@ export const marketplaceCatalogListingsApi = {
 - Uppercase `*_PATH` constants
 - Whitelist payload/query fields explicitly
 - Pass SSR cookie headers in loaders when user-scoped
-- `credentials: 'include'` for JWT cookies
+- `credentials: 'include'` for session cookies
 
 ### ky-client features
 
-- CSRF token injection
-- 401 → JWT refresh (on Node the refresh lock must be per request)
+- The browser adds the `X-CSRF-Token` header to every request that is not `GET` or `HEAD`.
+  - The token comes from the cookie `CSRF_TOKEN` (person client) or `TEAM_CSRF_TOKEN` (team client).
+  - No cookie means no header.
+  - Node sends no CSRF header.
+- The client has no refresh code and never retries a `401` or a `403`.
 - HTTP errors → `ApiError` class
 - `getApiErrorToastConfig` + `setApiErrorsToFormFields` in submit handlers
 
@@ -214,7 +304,13 @@ export const marketplaceCatalogListingsApi = {
 | --- | --- |
 | `getApiErrorToastConfig(error)` | Toast config for API errors |
 | `setApiErrorsToFormFields(error, setError)` | Map 422 field errors to RHF |
-| `handleLoaderError(error, fallback)` | Standard loader error handler |
+| `handleLoaderError(error, fallback)` | Standard loader error handler. It rethrows a `401` |
+
+The web reads `error.code`, never a Ruby class name.
+
+- The API default `code` is the class name in snake case, for example `validation_error`.
+- The domain decision page lists the codes, for example [IAM D15 — Access codes](/docs/30-49-domains/32-iam/iam-decisions/#access-codes).
+- The section "The `code` field" of [Backend Conventions](/docs/20-29-backend/conventions/backend) describes the rule.
 
 Loader pattern:
 

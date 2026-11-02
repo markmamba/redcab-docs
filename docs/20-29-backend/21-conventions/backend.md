@@ -27,11 +27,11 @@ Backend implementation conventions for `red-cab-api`.
 | --- | --- | --- |
 | Framework | Ruby on Rails 8.x, API-only | Single modular monolith |
 | Database | PostgreSQL | Single shared DB |
-| Cache / jobs | Redis | Cache, JWT session store, Sidekiq backend |
+| Cache / jobs | Redis | Google sign-in state, login rate limit, Sidekiq backend |
 | Types | Sorbet (`sorbet-runtime`) | `# typed: true` on Managers, Requests, Services |
 | Serialization | Panko Serializer | Context-scoped `{Actor}{Model}{Base\|Detail}Serializer` |
 | Pagination | Pagy | Via `paginate_and_render` helper |
-| Auth | `jwt_sessions` | Cookie-based JWT; separate team/admin cookies |
+| Auth | Server-side sessions | One database record for each sign-in, found through a signed cookie; separate team/admin tables and cookies |
 | Background jobs | Sidekiq + sidekiq-scheduler | Idempotent, retriable |
 | Tests | Minitest | Rails default |
 | Search | pg_search (MVP) | Inside Catalog; dedicated engine only per fitness function |
@@ -77,28 +77,32 @@ ApplicationController (ActionController::API)
   ├── pagination (PaginationHelper)
   │
   ├── Identities::Users::AuthenticatedController
-  │     ├── include SessionCookieManager
-  │     ├── JWT cookie auth (jwt_sessions)
+  │     ├── include AccountSessionCookies
+  │     ├── Server-side session (a gone session answers 401)
   │     ├── CurrentRequest population
   │     │
   │     ├── Tourists::BaseController
   │     ├── Corporate::BaseController
   │     ├── Providers::BaseController
-  │     └── Identities::SessionsController (login/refresh/logout)
+  │     └── Identities::SessionsController (login/logout/logout everywhere)
   │
   ├── Team::AuthenticatedController
-  │     ├── include SessionCookieManager
-  │     ├── JWT cookie auth with team cookies + namespace
+  │     ├── include AdminSessionCookies
+  │     ├── Server-side admin session with team cookies (a gone session answers 401)
   │     ├── CurrentRequest.identities_admin population
   │     └── Team::Identities::Admins::SessionsController
   │
   └── Marketplace::BaseController
-        ├── include SessionCookieManager
-        ├── Optional auth (tries JWT, proceeds if absent)
+        ├── include AccountSessionCookies
+        ├── Optional session (a gone session is a guest)
         └── Sets: CurrentRequest.identities_user (may be nil)
 ```
 
-Session cookies are set and cleared in `SessionCookieManager` (`set_session_cookie`, `set_csrf_cookie`, `delete_session_cookie`). There is no `ApplicationController#cookie_domain` helper. Production cookie `Domain` is configuration per identity system; wiring `domain:` on set/delete is [red-cab-web#77](https://github.com/markmamba/red-cab-web/issues/77).
+The concerns `AccountSessionCookies` and `AdminSessionCookies` own the session cookies. They share no code.
+
+- Each concern finds the session, checks the CSRF token, and sets and clears the cookies.
+- The cookie `Domain` comes from the configuration of each identity system.
+- The ruling is [IAM D8 — Server-side sessions](/docs/30-49-domains/32-iam/iam-decisions/#server-side-sessions).
 
 ### CurrentRequest (thread-local state)
 
