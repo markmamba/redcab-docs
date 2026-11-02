@@ -339,7 +339,8 @@ Aiko's session ends while her browser stays open.
   - Result on 2026-11-02: the page does not reach login, because the revalidation bridge stalls the navigation.
   - The test is marked `test.fail`, and the commit that removes the bridge removes the marker.
 - [x] After the bridge is gone, the test passes without the marker.
-  - Result on 2026-11-02: the redirect wins over a `401` in the `clientLoader`, and the header shows a guest after the redirect.
+  - Result on 2026-11-02: the redirect wins over a `401` in the `clientLoader`.
+  - Result on 2026-11-02: the header shows a guest after the redirect.
 - [ ] Change the cookie names.
 - [ ] Remove the refresh code and fix the function `getCookie`.
 - [ ] Remove both bridges and the root URL guard.
