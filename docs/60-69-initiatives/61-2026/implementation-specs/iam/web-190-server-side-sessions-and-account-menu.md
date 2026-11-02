@@ -81,7 +81,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 1 | Delete the revalidation bridge. A `401` in a `clientLoader` is thrown, and the policy route redirects on the same navigation. | Keep the bridge. | React Router reruns the policy loader on each click, so the policy decides without a bridge. |
 | 2 | Delete the root URL guard. Each root uses a small `shouldRevalidate` that only adds `401` and `403`. | Keep the guard. | The router default applies. A failed action with `401` or `403` reloads the root, and the policy on the next click acts on the new session. |
 | 3 | Delete the cross-tab bridge. | Keep the bridge. | The next click in the other tab rereads the session, so the bridge does nothing new. |
-| 4 | A Playwright test proves decision 1 before any code is deleted. The test ends the session without the UI, so the reload workaround in `TouristNavLink` does not run. | Trust the source reading, or keep the two-tab test as the only proof. | Two e2e tests exist today. The two-tab test passes through a full page reload, not through the policy route. |
+| 4 | A Playwright test proves decision 1 before any code is deleted. The test ends the session without the UI, so the reload workaround in `TouristNavLink` does not run. | Trust the source reading, or keep the two-tab test as the only proof. | Two e2e tests exist today. The two-tab test passes through a full page reload, not through the policy route. The new test showed on 2026-11-02 that the bridge stalls a click after the session is gone. |
 | 5 | A click that enters a policy area reads the session once, through the policy. The root loader reloads only after a failed action with `401` or `403`. | Reload the root on every click, or keep the guard. | Rails writes `last_used_at` at most once every 15 minutes, so most reads do not write. A stale header between clicks grants nothing, because Rails checks the session on every request. |
 | 6 | The file `auth-session-cookies.js` checks both cookie names of each system. | A new environment variable. | The web only checks that the cookie exists, so one file stays the only place with the names. |
 | 7 | Node sends no CSRF header. | Keep the Node branch. | Node reads the session and the browser writes. |
@@ -335,9 +335,13 @@ Aiko's session ends while her browser stays open.
 
 ### Web
 
-- [ ] Add the Playwright path click test, and run it on the code as it is.
+- [x] Add the Playwright path click test, and run it on the code as it is.
   - The test ends the session by clearing the cookies, so the reload workaround does not run.
-  - If the test fails, stop and update this spec before you delete a bridge.
+  - Result on 2026-11-02: the policy route answers the click with a redirect to login, so decision 1 holds.
+  - Result on 2026-11-02: the page does not reach login, because the revalidation bridge stalls the navigation.
+  - The test is marked `test.fail`, and the commit that removes the bridge removes the marker.
+- [ ] After the bridge is gone, the test passes without the marker.
+  - If the test still fails, stop and update this spec.
 - [ ] Change the cookie names.
 - [ ] Remove the refresh code and fix the function `getCookie`.
 - [ ] Remove both bridges and the root URL guard.
