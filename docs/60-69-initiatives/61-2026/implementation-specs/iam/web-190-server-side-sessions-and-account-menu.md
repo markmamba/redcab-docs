@@ -4,7 +4,7 @@ sidebar_label: Web · Server-side sessions
 issue: "https://github.com/markmamba/red-cab-web/issues/190"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: IAM
 related:
@@ -99,93 +99,15 @@ Read these before design. Do not invent behavior that contradicts them.
 
 ## Web contract
 
-| Surface | Route | Loader | API module | Access |
-| --- | --- | --- | --- | --- |
-| Tourist and provider | `/logout` | Redirects to `/` | `identitiesSessionsApi.destroy` | `clientAction`, no page |
-| Tourist and provider | `/logout/everywhere` (new) | Redirects to `/` | `identitiesSessionsApi.destroyAll` | `clientAction`, no page |
-| Team | `/team/logout` | Redirects to `/team` | `teamSessionsApi.destroy` | `clientAction`, no page |
-| Team | `/team/logout/everywhere` (new) | Redirects to `/team` | `teamSessionsApi.destroyAll` | `clientAction`, no page |
+The lasting web contract lives in [Sessions](/docs/30-49-domains/iam/use-cases/sessions#web-contract).
 
-`identitiesSessionsApi.destroyAll` calls `DELETE identities/sessions`, and `teamSessionsApi.destroyAll` calls `DELETE team/identities/admins/sessions`.
+- It holds the sign-out routes and the answers of the web.
+- It holds the cookie names and the account menu.
 
-- A `401` on these routes counts as signed out.
-- Any other failure shows a toast, and the session stays as it is.
-
-### What the web does with each answer
-
-| Answer | Where | Result |
-| --- | --- | --- |
-| `401` in the session read on Node | Session middleware | The person is signed out, and the policy route decides |
-| `401` in a `clientLoader` | The loader helpers throw the error | The policy redirect wins on the same navigation |
-| `401` outside a navigation | Root error boundary | The session-expired page shows "Sign in again" |
-| `403` with `csrf_token_missing` or `csrf_token_invalid` | The caller | The caller shows the API `title`, and the session stays |
-| `429` on login | The login action | The login form shows the API `title` |
-| `5xx` or a network failure | The caller or the boundary | An error shows, and the session stays |
-
-The client sends a request again only for the statuses in `retry.statusCodes`.
-
-- A `401` and a `403` stay final.
-- `POST` and `PATCH` requests are never sent again.
-
-A root loader that gets a `5xx` from the session read still reaches the root error boundary.
-
-- This rule now applies on each click of a signed-in person, not only on a page load.
-
-### Cookie names
-
-| System | Production | Development and test |
-| --- | --- | --- |
-| Person session | `__Secure-rc_session` | `rc_session` |
-| Team session | `__Secure-rc_team_session` | `rc_team_session` |
-
-The CSRF cookie names do not change: `CSRF_TOKEN` and `TEAM_CSRF_TOKEN`.
-
-### Account menu
-
-The menu replaces the Bookings, Account and Sign out links in the tourist nav.
-
-| Order | Item | Target | Shows |
-| --- | --- | --- | --- |
-| 1 | Name and email | None | Always, as a header |
-| 2 | My Profile | `/account` | Always |
-| 3 | My Bookings | `/account/bookings` | Always |
-| 4 | Sign out | `POST /logout` | Always, after a divider |
-| 5 | Sign out of all devices | The confirmation, then `POST /logout/everywhere` | Always, below Sign out, in the danger color |
-
-- The menu opens from a button with the avatar and the name, at the right of the nav.
-- The button has an accessible name.
-- The menu closes on `Escape` and on a click outside.
-- The open menu does not change the height of the nav bar.
-- A guest sees the current guest links.
-- `Services` stays a link in the nav.
-
-The first IAM company spec adds one item above Sign out, so the menu code keeps its items in `tourist-nav-config.js`.
-
-The copy file `app/domains/tourist/tourist-surface-copy.js` gets these keys.
-
-| Key | `en` | `ja` |
-| --- | --- | --- |
-| `nav.my_profile` | `My Profile` | `マイプロフィール` |
-| `nav.my_bookings` | `My Bookings` | `予約一覧` |
-| `nav.sign_out_all_devices` | `Sign out of all devices` | `すべてのデバイスからログアウト` |
-| `account.sign_out_all.title` | `Sign out of all devices?` | `すべてのデバイスからログアウトしますか？` |
-| `account.sign_out_all.body_first` | `This signs you out on every phone and computer.` | `すべてのスマートフォンとパソコンからログアウトします。` |
-| `account.sign_out_all.body_second` | `You must sign in again on each one.` | `それぞれで、もう一度ログインが必要です。` |
-| `account.sign_out_all.cancel` | `Cancel` | `キャンセル` |
-
-The red button of the dialog uses `nav.sign_out_all_devices`.
-
-### Sign-out controls in other portals
-
-| Portal | Place | Controls |
-| --- | --- | --- |
-| Tourist | The account menu, on desktop and in the mobile menu | Sign out, and Sign out of all devices |
-| Provider | An Account dropdown in the header `PortalChrome` | Sign out, and Sign out of all devices |
-| Team | The bottom of `TeamSidebar` | Sign out, and Sign out of all devices |
-
-Sign out of all devices asks for the confirmation in all three portals.
-
-`PortalChrome` gets an optional `actions` prop, so `corporate-layout.jsx` does not change.
+- This spec adds the routes `/logout/everywhere` and `/team/logout/everywhere`.
+- The menu items live in `app/layouts/tourist/tourist-nav-config.js`, and the copy keys live in `app/domains/tourist/tourist-surface-copy.js`.
+- The first IAM company spec adds one item above Sign out.
+- `PortalChrome` gets an optional `actions` prop, so `corporate-layout.jsx` does not change.
 
 ### Files to create or modify (Web)
 
@@ -341,41 +263,47 @@ Aiko's session ends while her browser stays open.
 - [x] After the bridge is gone, the test passes without the marker.
   - Result on 2026-11-02: the redirect wins over a `401` in the `clientLoader`.
   - Result on 2026-11-02: the header shows a guest after the redirect.
-- [ ] Change the cookie names.
-- [ ] Remove the refresh code and fix the function `getCookie`.
-- [ ] Remove both bridges and the root URL guard.
-- [ ] Throw a `401` in `loader-utils.js`.
-- [ ] Add the two `everywhere` routes and the API methods.
-- [ ] Add the account menu and the mobile items.
-- [ ] Add the sign-out controls to the provider dropdown and the team sidebar.
-- [ ] Add the hook `useSignOutAllDevices`, and use it in the tourist menu, the provider dropdown and the team sidebar.
-- [ ] Add the copy keys, and remove `nav.account` and `nav.bookings`.
-- [ ] Update the tests.
-- [ ] Add `.env.production` with `VITE_API_REDCAB_URL=https://api.redcab.app` and `VITE_API_TEAM_URL=https://api.team.redcab.app`.
-- [ ] Update `AGENTS.md` and `app/routes/AGENTS.md`.
+- [x] Change the cookie names.
+- [x] Remove the refresh code and fix the function `getCookie`.
+- [x] Remove both bridges and the root URL guard.
+- [x] Throw a `401` in `loader-utils.js`.
+- [x] Add the two `everywhere` routes and the API methods.
+- [x] Add the account menu and the mobile items.
+- [x] Add the sign-out controls to the provider dropdown and the team sidebar.
+- [x] Add the hook `useSignOutAllDevices`, and use it in the tourist menu, the provider dropdown and the team sidebar.
+- [x] Add the copy keys, and remove `nav.account` and `nav.bookings`.
+- [x] Update the tests.
+  - Result on 2026-11-02: `npm run test` runs 163 files and 1,306 tests with 0 failures.
+- [x] Add `.env.production` with `VITE_API_REDCAB_URL=https://api.redcab.app` and `VITE_API_TEAM_URL=https://api.team.redcab.app`.
+- [x] Update `AGENTS.md` and `app/routes/AGENTS.md`.
 
 ### Docs
 
-- [ ] Update `docs/50-59-frontend/51-conventions/frontend.md`.
-- [ ] Set spec `status: implemented` after merge.
+- [x] Update `docs/50-59-frontend/51-conventions/frontend.md`.
+  - Done in [redcab-docs#177](https://github.com/markmamba/redcab-docs/pull/177).
+- [x] Set spec `status: implemented` after merge.
+  - Merged in [red-cab-web#197](https://github.com/markmamba/red-cab-web/pull/197) on 2026-11-02.
 
 ## Acceptance criteria
 
-- [ ] The web has no call to a refresh endpoint.
-- [ ] A request with no session cookie never calls Rails.
-- [ ] Only a `401` signs a person out in the web.
-- [ ] A `403`, a `5xx` and a network failure change nothing about the session.
-- [ ] A person whose session ended sees the login page on the next click.
-- [ ] That person returns to the same page after sign-in.
-- [ ] The Playwright test proves this for a path click inside a policy area.
-- [ ] A sign-out in one tab reaches the other tab on its next click.
-- [ ] A missing CSRF cookie sends no `X-CSRF-Token` header.
-- [ ] The account menu holds the items in the order of this spec.
-- [ ] Sign out of all devices is in the account menu, below Sign out.
-- [ ] A tourist, a provider and a team admin can sign out and sign out of all devices.
-- [ ] Sign out of all devices asks for confirmation.
-- [ ] No private page shows content to a signed-out person.
-- [ ] The web still shows the session-expired page for a `401` outside a navigation.
+- [x] The web has no call to a refresh endpoint.
+- [x] A request with no session cookie never calls Rails.
+- [x] Only a `401` signs a person out in the web.
+- [x] A `403`, a `5xx` and a network failure change nothing about the session.
+- [x] A person whose session ended sees the login page on the next click.
+- [x] That person returns to the same page after sign-in.
+- [x] The Playwright test proves this for a path click inside a policy area.
+  - The test is in `e2e/policy-middleware-matrix.spec.js`.
+  - The pull request records 7 of 7 Playwright tests as passing.
+  - I did not run Playwright for this close-out, because it needs the API on port 3000 and the dev accounts.
+- [x] A sign-out in one tab reaches the other tab on its next click.
+- [x] A missing CSRF cookie sends no `X-CSRF-Token` header.
+- [x] The account menu holds the items in the order of [Sessions](/docs/30-49-domains/iam/use-cases/sessions#account-menu).
+- [x] Sign out of all devices is in the account menu, below Sign out.
+- [x] A tourist, a provider and a team admin can sign out and sign out of all devices.
+- [x] Sign out of all devices asks for confirmation.
+- [x] No private page shows content to a signed-out person.
+- [x] The web still shows the session-expired page for a `401` outside a navigation.
 
 ## Verification
 
@@ -391,4 +319,4 @@ git grep -n -E 'refreshScope|rc_access|rc_refresh|rc_team_access|rc_team_refresh
 
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
-| | | |
+| 2026-11-02 | Close-out check by Claude Code, for the principal developer | Merged in red-cab-web#197. The removed files are gone, and no old cookie name is left in `app/` outside the tests that prove it no longer matches. The Japanese text of the new copy keys still needs a check by a Japanese speaker. |

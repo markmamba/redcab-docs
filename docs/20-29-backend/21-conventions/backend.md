@@ -102,7 +102,7 @@ The concerns `AccountSessionCookies` and `AdminSessionCookies` own the session c
 
 - Each concern finds the session, checks the CSRF token, and sets and clears the cookies.
 - The cookie `Domain` comes from the configuration of each identity system.
-- The ruling is [IAM D8 — Server-side sessions](/docs/30-49-domains/32-iam/iam-decisions/#server-side-sessions).
+- The ruling is [IAM D8 — Server-side sessions](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions).
 
 ### CurrentRequest (thread-local state)
 

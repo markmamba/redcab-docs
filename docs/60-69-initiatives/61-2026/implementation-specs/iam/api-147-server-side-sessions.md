@@ -4,7 +4,7 @@ sidebar_label: API · Server-side sessions
 issue: "https://github.com/markmamba/red-cab-api/issues/147"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 related:
@@ -91,90 +91,14 @@ The rulings fix the behavior, and these decisions fix the parts that the rulings
 
 ## API contract
 
-Each row shows the contract after this spec ships.
+The lasting API contract lives in [Sessions](/docs/30-49-domains/iam/use-cases/sessions#api-contract).
 
-| Method | Path | Auth | Request body | Response | Notes |
-| --- | --- | --- | --- | --- | --- |
-| POST | `identities/sessions` | None | `email`, `password` | `201` Account JSON and cookies | `422` for a wrong password, and `429` at the rate limit |
-| DELETE | `identities/sessions/current` | Session and CSRF | None | `200 { message }` | Deletes one row and clears the cookies |
-| DELETE | `identities/sessions` | Session and CSRF | None | `200 { message }` | New. Deletes all rows of the person and clears the cookies |
-| POST | `identities/oauth/google/callback` | None | As today | `200 { account }` and cookies | Creates one row |
-| PATCH | `identities/password_resets/confirm` | None | As today | `200` | Deletes all rows of the person |
-| GET | `identities/accounts/current` | Session | None | `200` Account JSON | Fields do not change |
-| POST | `team/identities/admins/sessions` | None | `email`, `password` | `201` Admin JSON and team cookies | `422` for a wrong password, and `429` at the rate limit |
-| DELETE | `team/identities/admins/sessions/current` | Team session and CSRF | None | `200 { message }` | Deletes one row and clears the team cookies |
-| DELETE | `team/identities/admins/sessions` | Team session and CSRF | None | `200 { message }` | New. Deletes all rows of the admin and clears the team cookies |
-| GET | `team/identities/admins/current` | Team session | None | `200` Admin JSON | Fields do not change |
+- It holds the endpoints and the order of checks.
+- It holds the cookies, the error answers and the configuration values.
 
-These two endpoints go away.
-
-- `PATCH identities/sessions/current`
-- `PATCH team/identities/admins/sessions/current`
-
-The actor namespaces use the session in these ways.
-
-| Namespace | Session | CSRF on a write | `401` means |
-| --- | --- | --- | --- |
-| `tourists/**`, `corporate/**`, `providers/**`, `identities/**` | Required person session, except the public routes | `CSRF_TOKEN` value in `X-CSRF-Token` | The session is gone |
-| `team/**` | Required team session, except sign-in | `TEAM_CSRF_TOKEN` value in `X-CSRF-Token` | The session is gone |
-| `marketplace/**` | Optional person session | The namespace has no write routes | Never. A gone session is a guest |
-
-A request with a required session passes these checks in this order.
-
-1. Rails reads the signed uuid from the session cookie.
-2. Rails finds the session row, or answers `401`.
-3. Rails checks the idle limit and the absolute limit, or answers `401`.
-4. Rails checks that the account or the admin has `status: "active"`, or answers `401`.
-5. On a method other than `GET` and `HEAD`, Rails checks the CSRF token, or answers `403`.
-6. Rails updates `last_used_at` when the stored value is at least 15 minutes old.
-
-The endpoints use these cookies.
-
-| Environment | Person session | Person CSRF | Team session | Team CSRF | Person domain | Team domain |
-| --- | --- | --- | --- | --- | --- | --- |
-| Production | `__Secure-rc_session` | `CSRF_TOKEN` | `__Secure-rc_team_session` | `TEAM_CSRF_TOKEN` | `.redcab.app` | `.team.redcab.app` |
-| Development and test | `rc_session` | `CSRF_TOKEN` | `rc_team_session` | `TEAM_CSRF_TOKEN` | Not set | Not set |
-
-Every session and CSRF cookie has these attributes.
-
-| Attribute | Session cookie | CSRF cookie |
-| --- | --- | --- |
-| Value | The signed uuid of the row | The `csrf_token` of the row |
-| `HttpOnly` | Yes | No |
-| `Secure` | Yes, outside development and test | Yes, outside development and test |
-| `SameSite` | `Lax` | `Lax` |
-| `Path` | `/` | `/` |
-| `Expires` | `created_at` plus the absolute limit | `created_at` plus the absolute limit |
-
-The new error answers are these.
-
-| Case | Status | `code` | `title` |
-| --- | --- | --- | --- |
-| The header `X-CSRF-Token` is missing | `403` | `csrf_token_missing` | `We could not check your request. Please reload the page and try again.` |
-| The header `X-CSRF-Token` is wrong | `403` | `csrf_token_invalid` | `We could not check your request. Please reload the page and try again.` |
-| Too many login attempts | `429` | `too_many_requests_error` | `Too many sign-in attempts. Please wait a few minutes and try again.` |
-
-### Configuration
-
-The new file `config/identities_sessions.yml` holds every value that the ruling puts in configuration.
-
-| Key | Value |
-| --- | --- |
-| `account.idle_limit_seconds` | `604800` (7 days) |
-| `account.absolute_limit_seconds` | `2592000` (30 days) |
-| `account.cookie_domain` | `.redcab.app` in production |
-| `account.session_cookie_name` | From the cookie table |
-| `account.csrf_cookie_name` | `CSRF_TOKEN` |
-| `admin.idle_limit_seconds` | `86400` (1 day) |
-| `admin.absolute_limit_seconds` | `604800` (7 days) |
-| `admin.cookie_domain` | `.team.redcab.app` in production |
-| `admin.session_cookie_name` | From the cookie table |
-| `admin.csrf_cookie_name` | `TEAM_CSRF_TOKEN` |
-| `last_used_interval_seconds` | `900` (15 minutes) |
-| `login_rate_limit.attempts` | `10` |
-| `login_rate_limit.window_seconds` | `180` (3 minutes) |
-
-The file `config/application.rb` loads it as `config.identities_sessions`.
+- This spec adds `DELETE identities/sessions` and `DELETE team/identities/admins/sessions`.
+- This spec removes `PATCH identities/sessions/current` and `PATCH team/identities/admins/sessions/current`.
+- The new file `config/identities_sessions.yml` holds the configuration, and `config/application.rb` loads it as `config.identities_sessions`.
 
 ### Migration order
 
@@ -358,41 +282,48 @@ Aiko signs in on her laptop, leaves for 8 days, and comes back.
 
 ### API
 
-- [ ] Add the three migrations and the two models.
-- [ ] Add the configuration file, the services and the two concerns.
-- [ ] Move all controllers to the new concerns.
-- [ ] Add the CSRF codes and the `429` error.
-- [ ] Add `DELETE identities/sessions` and `DELETE team/identities/admins/sessions`.
-- [ ] Add the login rate limit.
-- [ ] Add both cleanup jobs.
-- [ ] Rescue the unique index race in `CallbackManager`.
-- [ ] Change the production origins in `config/initializers/cors.rb`.
-- [ ] Remove the code in [Code to remove](#code-to-remove).
-- [ ] Update the tests.
-- [ ] Remove the I1 tags from the files `docs/db/identities.dbml` and `docs/db/redcab.dbml`.
-- [ ] Update `AGENTS.md`, `app/domains/AGENTS.md` and `db/AGENTS.md` for sessions.
+- [x] Add the three migrations and the two models.
+- [x] Add the configuration file, the services and the two concerns.
+- [x] Move all controllers to the new concerns.
+- [x] Add the CSRF codes and the `429` error.
+- [x] Add `DELETE identities/sessions` and `DELETE team/identities/admins/sessions`.
+- [x] Add the login rate limit.
+- [x] Add both cleanup jobs.
+- [x] Rescue the unique index race in `CallbackManager`.
+- [x] Change the production origins in `config/initializers/cors.rb`.
+- [x] Remove the code in [Code to remove](#code-to-remove).
+- [x] Update the tests.
+  - Result on 2026-11-02: `test/integration/auth_contract` and `test/integration/identities_regressions` run 83 tests with 0 failures.
+- [x] Remove the I1 tags from the files `docs/db/identities.dbml` and `docs/db/redcab.dbml`.
+- [x] Update `AGENTS.md`, `app/domains/AGENTS.md` and `db/AGENTS.md` for sessions.
 - [ ] Confirm that the Sidekiq process reads the queue `identities`.
+  - Open on 2026-11-02: the repository has no Sidekiq queue list.
+  - The scheduler sends both cleanup jobs to the queue `identities`.
+  - [red-cab-api#267](https://github.com/markmamba/red-cab-api/issues/267) sets the queue list.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
+  - Merged in [red-cab-api#270](https://github.com/markmamba/red-cab-api/pull/270) on 2026-11-02.
 
 ## Acceptance criteria
 
-- [ ] A sign-in creates one session row and sets the cookies from the cookie table.
-- [ ] A missing, idle or expired session answers `401`.
-- [ ] A wrong password answers `422`.
-- [ ] A missing or wrong CSRF token answers `403` with its code.
-- [ ] `403` never ends a session.
-- [ ] Logout ends one session.
-- [ ] Sign out everywhere and a password reset end all sessions of the person.
-- [ ] Team sign out everywhere ends all sessions of the team admin.
-- [ ] The eleventh login attempt in 3 minutes from one IP address answers `429`.
-- [ ] Five failed logins still lock the account.
-- [ ] No refresh endpoint exists.
-- [ ] A team cookie and a person cookie open only their own routes.
-- [ ] The database refuses a second Google link for one person.
-- [ ] No file in `app/`, `config/` or `test/` names `jwt_sessions` or `JWTSessions`.
+- [x] A sign-in creates one session row and sets the cookies from the cookie table of [Sessions](/docs/30-49-domains/iam/use-cases/sessions#cookies).
+- [x] A missing, idle or expired session answers `401`.
+- [x] A wrong password answers `422`.
+- [x] A missing or wrong CSRF token answers `403` with its code.
+- [x] `403` never ends a session.
+- [x] Logout ends one session.
+- [x] Sign out everywhere and a password reset end all sessions of the person.
+- [x] Team sign out everywhere ends all sessions of the team admin.
+- [x] The eleventh login attempt in 3 minutes from one IP address answers `429`.
+- [x] Five failed logins still lock the account.
+  - The code is unchanged: `MAX_FAILED_ATTEMPTS` is `5` in `app/domains/identities/account.rb`.
+  - I found no test that pins the fifth failure.
+- [x] No refresh endpoint exists.
+- [x] A team cookie and a person cookie open only their own routes.
+- [x] The database refuses a second Google link for one person.
+- [x] No file in `app/`, `config/` or `test/` names `jwt_sessions` or `JWTSessions`.
 
 ## Verification
 
@@ -410,4 +341,4 @@ git grep -n -E 'jwt_sessions|JWTSessions' -- app config test
 
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
-| | | |
+| 2026-11-02 | Close-out check by Claude Code, for the principal developer | Merged in red-cab-api#270. The files, routes, jobs and configuration match this spec. No `jwt_sessions` name is left in `app/`, `config/` or `test/`. One task stays open: the Sidekiq queue list, see red-cab-api#267. |
