@@ -47,6 +47,13 @@ The code still treats one profile as one person.
 - Eight tables of other domains point to `providers_profiles`.
 - The DBML files already point to `providers_companies`.
 
+## Lasting rules \{#lasting-rules\}
+
+The lasting rules of this spec are on the model page [Provider company and members](/docs/30-49-domains/iam/models/provider-company-and-members).
+
+- That page holds the columns, the guards, the onboarding call and the gate order.
+- This spec keeps the scope, the steps and the verification.
+
 ## Governing docs
 
 Read these before design. Do not invent behavior that contradicts them.
