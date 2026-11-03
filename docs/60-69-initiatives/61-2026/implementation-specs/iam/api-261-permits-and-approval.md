@@ -100,6 +100,8 @@ Read these before design. Do not invent behavior that contradicts them.
 | 14 | `valid_until` is stored at midnight at the start of the last valid day. | Store the end of the day. | The DBML sets this, and the test is `now() < valid_until + 1 day`. |
 | 15 | The publish check reads the approved status only. | Keep the old expiry check. | The available package spec adds the permit effect. |
 | 16 | Each migration changes empty production tables, so no three-step migration applies. | Use three migrations. | No production data exists, and developers reset the local database. |
+| 17 | An action that the status does not allow answers `409` with `Errors::ConflictError`. | `422` with a validator message. | A status problem is a state conflict, not a field problem. |
+| 18 | The correction message is stored in `providers_companies.rejection_reason`, and submit clears it. | A new column, or the event only. | The code does this today, and the owner then reads the message on the company JSON. |
 
 ## API contract
 
@@ -229,6 +231,26 @@ A license record holds `uuid`, `license_kind`, `license_number`, `valid_until`, 
 `HoldAssetService` reads the `discoverable` scope, so a suspended company takes no new booking.
 
 - `catalog_provider_assets.display_name` stays, because it names a vehicle.
+
+### Actions that the status does not allow
+
+These cases answer `409` with `Errors::ConflictError` and `skip_sentry: true`.
+
+| Case | `title` |
+| --- | --- |
+| Submit from `approved` or `suspended` | `Your company cannot be submitted in its current status.` |
+| Reject or request correction on a company that has not submitted | `This company is not waiting for review.` |
+| Approve a company that has not submitted | `This company is not waiting for review.` |
+| Suspend a company that is not `approved` | `Only an approved company can be suspended.` |
+| Reinstate a company that is not `suspended` | `Only a suspended company can be reinstated.` |
+| An owner edits `business_name` of an `approved` company | `Please contact the team to change the business name.` |
+| An owner changes anything on a `suspended` company | `Your company is suspended. Please contact the team.` |
+
+A request correction stores its message in `providers_companies.rejection_reason`.
+
+- The company stays `pending`, and `submitted_for_review_at` is cleared.
+- The owner reads the message on the company JSON.
+- The next submit clears it.
 
 ### New error answers
 
