@@ -4,7 +4,7 @@ sidebar_label: Web · Permits and approval
 issue: "https://github.com/markmamba/red-cab-web/issues/191"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -59,6 +59,13 @@ The web still follows the provider type.
 - The asset form offers guide assets, and the package form offers guide-only packages.
 - The listing form offers the old service types, filtered by the provider type.
 - The API modules call `providers/profiles` and `team/providers/profiles`.
+
+## Lasting rules \{#lasting-rules\}
+
+The lasting rules of this spec are on the model page [Provider company and members](/docs/30-49-domains/iam/models/provider-company-and-members).
+
+- That page holds the columns, the states, the owner and team calls, submit, approval and suspension.
+- This spec keeps the scope, the steps and the verification.
 
 ## Governing docs
 
@@ -344,33 +351,39 @@ Kenji applies, and the team approves Kanto Charter.
 
 ### Web
 
-- [ ] Rename the domain folders, the route files, the loader keys and the API modules.
-- [ ] Move `LANGUAGE_SPOKEN_OPTIONS` and the checkbox group field to the listing domain.
-- [ ] Replace the registration form, and add the licenses page.
-- [ ] Add the missing list and enable Submit for review.
-- [ ] Replace the team detail view, and remove the approve form.
-- [ ] Add the check, withdraw, edit, suspend and reinstate controls.
-- [ ] Update the asset, package, listing and filter forms.
-- [ ] Update the tests.
-- [ ] Update `AGENTS.md` and `app/routes/AGENTS.md` where they name the removed code.
+- [x] Rename the domain folders, the route files, the loader keys and the API modules.
+- [x] Move `LANGUAGE_SPOKEN_OPTIONS` and the checkbox group field to the listing domain.
+- [x] Replace the registration form, and add the licenses page.
+- [x] Add the missing list and enable Submit for review.
+- [x] Replace the team detail view, and remove the approve form.
+- [x] Add the check, withdraw, edit, suspend and reinstate controls.
+- [x] Update the asset, package, listing and filter forms.
+- [x] Update the tests.
+  - Result on 2026-11-03: `npm run ci:test` runs 1354 tests with 0 failures.
+  - A manual run in a browser against the API found one defect.
+  - Four inputs shared one id, and the same PR fixes it.
+- [x] Update `AGENTS.md` and `app/routes/AGENTS.md` where they name the removed code.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
+  - Merged in [red-cab-web#198](https://github.com/markmamba/red-cab-web/pull/198) on 2026-11-03, with [red-cab-api#273](https://github.com/markmamba/red-cab-api/pull/273).
 
 ## Acceptance criteria
 
-- [ ] An owner can add and edit unchecked license records, and a checked record is locked.
-- [ ] The documents page lists each missing requirement by name.
-- [ ] Submit for review works for a pending and a rejected company.
-- [ ] A rejected owner sees the reason and can correct the application.
-- [ ] The team can check and renew a record with a date, and withdraw a check.
-- [ ] The team can approve, reject, request a correction, suspend and reinstate.
-- [ ] The team queue shows submitted companies by default.
-- [ ] No screen shows a provider type, a checklist or a guide choice.
-- [ ] The listing form and the discovery filter show the four service types.
-- [ ] The asset form needs a plate and a category.
-- [ ] No file in `app/` names `provider_type`, `asset_kind` or `providers/profiles`.
+- [x] An owner can add and edit unchecked license records, and a checked record is locked.
+- [x] The documents page lists each missing requirement by name.
+- [x] Submit for review works for a pending and a rejected company.
+  - A provider can finish Submit only after [web-144](../platform/web-144-platform-upload-client.md) ships the upload.
+  - The browser run inserted the four documents through Rails.
+- [x] A rejected owner sees the reason and can correct the application.
+- [x] The team can check and renew a record with a date, and withdraw a check.
+- [x] The team can approve, reject, request a correction, suspend and reinstate.
+- [x] The team queue shows submitted companies by default.
+- [x] No screen shows a provider type, a checklist or a guide choice.
+- [x] The listing form and the discovery filter show the four service types.
+- [x] The asset form needs a plate and a category.
+- [x] No file in `app/` names `provider_type`, `asset_kind` or `providers/profiles`.
 
 ## Verification
 

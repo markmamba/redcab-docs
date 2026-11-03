@@ -4,7 +4,7 @@ sidebar_label: API · Permits and approval
 issue: "https://github.com/markmamba/red-cab-api/issues/261"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -64,6 +64,13 @@ The code still sorts companies by provider type.
 - No team action sets the status `suspended`.
 - The `discoverable` scope does not read the company status.
 - The keyword search reads `provider_type` and `display_name`.
+
+## Lasting rules \{#lasting-rules\}
+
+The lasting rules of this spec are on the model page [Provider company and members](/docs/30-49-domains/iam/models/provider-company-and-members).
+
+- That page holds the columns, the states, the owner and team calls, submit, approval and suspension.
+- This spec keeps the scope, the steps and the verification.
 
 ## Governing docs
 
@@ -445,33 +452,41 @@ Kenji applies, and the team approves Kanto Charter.
 
 ### API
 
-- [ ] Add the six migrations, and update the DBML tags.
-- [ ] Add the owner license record endpoints and the submit action.
-- [ ] Add the team check, withdraw, edit, suspend and reinstate actions.
-- [ ] Replace the approve validator and request.
-- [ ] Remove the code in [Code to remove](#code-to-remove).
-- [ ] Update the Catalog rules, the discoverable scope and the keyword search.
-- [ ] Rename the URLs and the JSON keys.
-- [ ] Update the dev seeders and the tests.
+- [x] Add the six migrations, and update the DBML tags.
+  - `bin/rails db:reset` runs on a clean database, and the dev seed works.
+- [x] Add the owner license record endpoints and the submit action.
+- [x] Add the team check, withdraw, edit, suspend and reinstate actions.
+- [x] Replace the approve validator and request.
+- [x] Remove the code in [Code to remove](#code-to-remove).
+- [x] Update the Catalog rules, the discoverable scope and the keyword search.
+- [x] Rename the URLs and the JSON keys.
+- [x] Update the dev seeders and the tests.
+  - Result on 2026-11-03: `bin/rails test` runs 1445 tests with 0 failures.
+  - `rubocop` and `brakeman` pass.
+  - `srb tc` reports 24 errors, and each one is on `main` already.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
+  - Merged in [red-cab-api#273](https://github.com/markmamba/red-cab-api/pull/273) on 2026-11-03, with [red-cab-web#198](https://github.com/markmamba/red-cab-web/pull/198).
+  - The API also sends `service_timezone` (decision 19), and the web reads it.
 
 ## Acceptance criteria
 
-- [ ] A company has at most one license record of each kind.
-- [ ] An owner cannot change a checked record.
-- [ ] Only the team writes `verified_at` and `valid_until`.
-- [ ] Submit refuses a company with a missing item, and it names each item.
-- [ ] A rejected company can submit again, and it returns to pending.
-- [ ] Approval needs a valid permit with a matching active vehicle.
-- [ ] Approval needs a checked insurance record and a checked company registration record.
-- [ ] A vehicle save needs a permit record of the vehicle kind, checked or not.
-- [ ] A suspended company has no discoverable listing and takes no new booking.
-- [ ] A suspension changes no confirmed booking.
-- [ ] The keyword search matches `business_name` for every company.
-- [ ] No file in `app/` names `provider_type`, `asset_kind` or `Asia/Tokyo` outside the country seed.
+- [x] A company has at most one license record of each kind.
+- [x] An owner cannot change a checked record.
+- [x] Only the team writes `verified_at` and `valid_until`.
+- [x] Submit refuses a company with a missing item, and it names each item.
+- [x] A rejected company can submit again, and it returns to pending.
+- [x] Approval needs a valid permit with a matching active vehicle.
+- [x] Approval needs a checked insurance record and a checked company registration record.
+- [x] A vehicle save needs a permit record of the vehicle kind, checked or not.
+- [x] A suspended company has no discoverable listing and takes no new booking.
+- [x] A suspension changes no confirmed booking.
+  - The suspension writes only the company row.
+  - The discoverable scope and the hold service refuse new bookings.
+- [x] The keyword search matches `business_name` for every company.
+- [x] No file in `app/` names `provider_type`, `asset_kind` or `Asia/Tokyo` outside the country seed.
 
 ## Verification
 
