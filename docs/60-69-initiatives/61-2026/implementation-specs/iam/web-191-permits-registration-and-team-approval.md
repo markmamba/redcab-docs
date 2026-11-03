@@ -92,6 +92,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 12 | The category list of the asset form comes from the API, and an empty list links to the licenses page. | A hard-coded list. | The API returns the kinds that the company has a permit record for. |
 | 13 | `LANGUAGE_SPOKEN_OPTIONS` and the checkbox group field move to the listing domain before the old folder is deleted. | Delete them. | The listing form uses both today. |
 | 14 | The page shows `valid_until` as the date that the API sends. | Convert it in the browser. | The API already gives the date in the Service Timezone. |
+| 15 | The company screens show system times in `service_timezone`, which the company JSON and each team list row hold. | A hardcoded display zone, or the browser zone. | The web must not hardcode a zone, and the API owns the Service Timezone. |
 
 ## Web contract
 
@@ -258,6 +259,7 @@ Catalog and shared:
 | Code | Reason |
 | --- | --- |
 | `PROVIDER_TYPE`, `PROVIDER_TYPE_OPTIONS` and `PROVIDER_TYPE_VALUES` | One kind of company |
+| `PROVIDER_PROFILE_DISPLAY_TIMEZONE` | The company screens read `service_timezone` |
 | `VEHICLE_TYPE*`, `BUS_CAPACITY*`, `GUIDE_LICENSE_TYPE*`, `SPECIALTY_TAG*` and `VEHICLE_OWNED_OPTIONS` | The type detail forms go |
 | `JAPAN_PREFECTURE_OPTIONS`, if no other file reads it after the move | The company has no service prefectures |
 | `VERIFICATION_CHECKLIST_ITEM*` and `providers-profile-checklist-item-list-view.jsx` | Approval reads rows |
@@ -331,6 +333,7 @@ Kenji applies, and the team approves Kanto Charter.
 - Team forms for `business_name` and `contact_phone`.
 - A request form for a change to a locked record.
 - Emails and reminders.
+- The reviews screens keep their own display zone constant until the Reviews audit (topic B4 in markmamba/redcab-docs#154).
 - The layout redesign, because topic A2 in markmamba/redcab-docs#154 owns it.
 
 ## Open items
