@@ -102,6 +102,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 16 | Each migration changes empty production tables, so no three-step migration applies. | Use three migrations. | No production data exists, and developers reset the local database. |
 | 17 | An action that the status does not allow answers `409` with `Errors::ConflictError`. | `422` with a validator message. | A status problem is a state conflict, not a field problem. |
 | 18 | The correction message is stored in `providers_companies.rejection_reason`, and submit clears it. | A new column, or the event only. | The code does this today, and the owner then reads the message on the company JSON. |
+| 19 | The company JSON and each team list row hold `service_timezone`, the IANA zone of the Service Timezone. | The web hardcodes a zone, or uses the browser zone. | The web must not hardcode a zone, and the web shows system times in this zone. |
 
 ## API contract
 
@@ -199,9 +200,12 @@ The owner and team company JSON hold these keys.
 - `missing_requirements`
 - `submitted_for_review_at`, `approved_at`, `rejected_at` and `rejection_reason`
 - `suspended_at` and `suspension_reason`
+- `service_timezone`
 - `documents` and `license_records`
 
 The team JSON also holds `support_trial`.
+
+Each row of the team list holds `uuid`, `status`, `business_name`, `submitted_for_review_at` and `service_timezone`.
 
 These keys go away.
 
