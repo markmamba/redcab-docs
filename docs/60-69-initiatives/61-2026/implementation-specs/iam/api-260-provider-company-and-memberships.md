@@ -4,7 +4,7 @@ sidebar_label: API · Company and memberships
 issue: "https://github.com/markmamba/red-cab-api/issues/260"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 related:
@@ -46,6 +46,13 @@ The code still treats one profile as one person.
 - 98 test files use the same names.
 - Eight tables of other domains point to `providers_profiles`.
 - The DBML files already point to `providers_companies`.
+
+## Lasting rules \{#lasting-rules\}
+
+The lasting rules of this spec are on the model page [Provider company and members](/docs/30-49-domains/iam/models/provider-company-and-members).
+
+- That page holds the columns, the guards, the onboarding call and the gate order.
+- This spec keeps the scope, the steps and the verification.
 
 ## Governing docs
 
@@ -322,31 +329,40 @@ Kenji signs up and creates his company.
 
 ### API
 
-- [ ] Add the three migrations.
-- [ ] Add `Providers::Company` and `Providers::Membership`, and remove `Providers::Profile`.
-- [ ] Rename the folders, the classes, the serializers and the keywords.
-- [ ] Update the account, the `CurrentRequest` attributes and the gate.
-- [ ] Make onboarding create the owner membership, and map the race to `409`.
-- [ ] Update the dev seeders and the test helpers.
-- [ ] Update the tests.
-- [ ] Remove the I2 tags that this spec ships from `docs/db/providers.dbml` and `docs/db/redcab.dbml`.
+Merged in [red-cab-api#272](https://github.com/markmamba/red-cab-api/pull/272) on 2026-11-03.
+
+- [x] Add the three migrations.
+- [x] Add `Providers::Company` and `Providers::Membership`, and remove `Providers::Profile`.
+- [x] Rename the folders, the classes, the serializers and the keywords.
+- [x] Update the account, the `CurrentRequest` attributes and the gate.
+- [x] Make onboarding create the owner membership, and map the race to `409`.
+- [x] Update the dev seeders and the test helpers.
+- [x] Update the tests.
+  - Result on 2026-11-03: `bin/rails test` runs 1378 tests with 0 failures.
+- [x] Remove the I2 tags that this spec ships from `docs/db/providers.dbml` and `docs/db/redcab.dbml`.
 - [ ] Run the checks in [Verification](#verification).
+  - `bin/rails test`, `rubocop` and `brakeman` pass.
+  - `srb tc` reports 35 errors. `main` reported 40 before this change. Each of the 35 has a match on `main`.
+  - `bin/rails db:reset` is not run. Another process held the development database open. The migrations ran with `db:migrate`.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] Onboarding creates one company and one owner membership.
-- [ ] The database refuses a second active membership for one person.
-- [ ] The database refuses a removed membership with no `removed_at`.
-- [ ] A person with no active membership gets `403` with `provider_profile_required`.
-- [ ] Catalog, Bookings, Reviews and Payments keep the column `provider_id`, and it points to `providers_companies`.
-- [ ] The URLs and the JSON keys of the provider and team endpoints are the same as before.
-- [ ] No file in `app/` or `test/` names `Providers::Profile`.
-- [ ] No file in `app/` or `test/` names `provider_profile`, except the examples in `AGENTS.md`.
-- [ ] The three type detail tables are the only tables that still hold `providers_profile_id`.
+- [x] Onboarding creates one company and one owner membership.
+- [x] The database refuses a second active membership for one person.
+- [x] The database refuses a removed membership with no `removed_at`.
+- [x] A person with no active membership gets `403` with `provider_profile_required`.
+- [x] Catalog, Bookings, Reviews and Payments keep the column `provider_id`, and it points to `providers_companies`.
+- [x] The URLs and the JSON keys of the provider and team endpoints are the same as before.
+- [x] No file in `app/` or `test/` names `Providers::Profile`.
+- [x] No file in `app/` or `test/` names `provider_profile`, except the examples in `AGENTS.md`.
+  - The error code `provider_profile_required` stays, because the spec keeps the code.
+  - Route helper names such as `providers_profiles_path` stay, because the URLs do not change.
+  - One test uses a temporary view named `providers_profiles`. It lets an old migration run on the renamed table.
+- [x] The three type detail tables are the only tables that still hold `providers_profile_id`.
 
 ## Verification
 

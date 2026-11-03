@@ -79,6 +79,7 @@ erDiagram
 | --- | --- |
 | What did we decide, and why? | [IAM decisions](/docs/30-49-domains/iam/iam-decisions/#iam-decisions-tldr) |
 | How does a person sign up, sign in and switch portals? | [Sign-up, sign-in and portals](/docs/30-49-domains/iam/requirements/sign-up-sign-in-and-portals) |
+| What are the company and the membership, and how does the provider gate work? | [Provider company and members model](/docs/30-49-domains/iam/models/provider-company-and-members) |
 | How does a company add and manage its staff? | [Provider company members](/docs/30-49-domains/iam/requirements/provider-company-members) |
 | How does a session work in the API and in the web? | [Sessions](/docs/30-49-domains/iam/use-cases/sessions) |
 | Why this design, and what else did we weigh? | [Why one account is one person](/docs/30-49-domains/iam/iam-decisions/#person-account-why), [Why sessions are database records](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions-why) |
