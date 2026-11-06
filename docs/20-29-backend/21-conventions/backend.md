@@ -36,7 +36,6 @@ Backend implementation conventions for `red-cab-api`.
 | Tests | Minitest | Rails default |
 | Search | pg_search (MVP) | Inside Catalog; dedicated engine only per fitness function |
 | Payments | Licensed payment provider (vendor open, `AMB-040`) | Capability-declaring adapter + normalized event reconciliation |
-| PDF (COR) | Server-side with embedded JA fonts | Owned by `corporate/` domain |
 
 ---
 
@@ -389,10 +388,9 @@ These extend the baseline API conventions with Red Cab domain rules:
 2. **Never mutate booking snapshots.** No update path for price, commission, or cancellation policy snapshots after create.
 3. **Payments reads snapshots only.** Charge/refund/payout managers take a `booking:` and read its frozen snapshots; they never recompute commission from live `CommissionRateSetting`.
 4. **Seat reservation only via guarded command.** `Catalog::Availability::ReserveSeatsManager` is the only writer of `available_seats` decrement; called inside `Bookings::CheckoutManager`'s transaction.
-5. **Corporate → Booking via ACL manager.** `Corporate::Quotations::CreateBookingFromQuoteManager` translates quotation vocabulary; Booking domain never imports Corporate models.
-6. **Domain events after commit.** Publish past-tense events (`BookingCreated`, `PaymentSucceeded`) after transaction commits; consumers are idempotent.
-7. **Provider event ingestion in Payments only.** Verified provider events converge state; never roll back committed booking transitions. Events are normalized at the adapter boundary — no provider payload shape enters the domain, and no domain branch may key on provider identity. A client-supplied signal, including a return redirect, MUST NOT drive a money-moving transition (`FIN-13`).
-8. **Whole-yen integers.** Money columns as integer cents or `decimal` with scale 0 — no fractional yen (`PAY-1`).
+5. **Domain events after commit.** Publish past-tense events (`BookingCreated`, `PaymentSucceeded`) after transaction commits; consumers are idempotent.
+6. **Provider event ingestion in Payments only.** Verified provider events converge state; never roll back committed booking transitions. Events are normalized at the adapter boundary — no provider payload shape enters the domain, and no domain branch may key on provider identity. A client-supplied signal, including a return redirect, MUST NOT drive a money-moving transition (`FIN-13`).
+7. **Whole-yen integers.** Money columns as integer cents or `decimal` with scale 0 — no fractional yen (`PAY-1`).
 
 ---
 

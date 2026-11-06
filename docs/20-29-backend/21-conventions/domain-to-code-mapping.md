@@ -52,7 +52,6 @@ Each bounded context maps to a top-level domain folder. Table names use `{domain
 | --- | --- | --- | --- |
 | IAM | Identity & Access | `identities/` | `Identities::Account` → `identities_accounts` (thin auth principal) |
 | — | Tourist profile (demand) | `tourists/` | `Tourists::Profile` → `tourists_profiles` |
-| COR | Corporate Quotation & Invoicing | None. No code exists | The corporate role and the corporate profile do not exist, see [IAM D12 — No corporate accounts](/docs/30-49-domains/iam/iam-decisions/#no-corporate-accounts) |
 | PRV | Provider company and onboarding | `providers/` | `Providers::Company` → `providers_companies`; `Providers::Membership` → `providers_memberships` |
 | CAT | Catalog & Inventory | `catalog/` | `Catalog::Listing` → `catalog_listings` |
 | BKG | Booking & Checkout | `bookings/` | `Bookings::Booking` → `bookings_bookings` |
