@@ -7,7 +7,7 @@ description: React Router v7 SSR, API clients, forms, surfaces.
 ## TL;DR
 
 - React Router v7 SSR (JavaScript): `app/routes/`, `app/api/`, `app/domains/`, ky + zod + RHF.
-- Role-confined surfaces (Tourist, Corporate, Provider, Admin); no client-side price computation.
+- Portal-confined surfaces (Tourist, Provider, Admin); the access word opens the provider portal; no client-side price computation.
 
 ## About this document
 
@@ -33,7 +33,7 @@ Frontend implementation conventions for `red-cab-web`.
 | Forms | react-hook-form + zod + @hookform/resolvers | Schemas in `*-schema.js` |
 | HTTP | ky | Configured in `app/api/ky-client.js` |
 | Lint / format | ESLint v9 + Prettier | 2-space, no semicolons, single quotes |
-| i18n | EN/JA | Cross-cutting (`OPR-9`); surface defaults per role |
+| i18n | EN/JA | Cross-cutting (`OPR-9`); surface defaults per portal |
 
 ---
 
@@ -67,7 +67,6 @@ app/
     use-toast.jsx
   layouts/
     tourist/
-    corporate/
     provider/
     team/
   routes/                      # Page modules (*-page.jsx)
@@ -79,7 +78,6 @@ app/
   routes.js                    # Master registry
   marketplace.routes.js
   tourist.routes.js
-  corporate.routes.js
   provider.routes.js
   team.routes.js
 ```
@@ -144,7 +142,7 @@ Supported formats: string, `{ label, isClickable }`, or function `({ params }) =
 ### Robots
 
 - Public discovery: `index, follow`
-- Authenticated tourist / corporate / provider / admin: `noindex, nofollow`
+- Authenticated tourist / provider / admin: `noindex, nofollow`
 
 ### SEO / public catalog routes
 
@@ -168,12 +166,24 @@ Protected surfaces use **policy route parents** in `app/routes.js`. New pages on
 | Policy parent | Surface | Guard |
 | --- | --- | --- |
 | `account-guest-policy` | Guest IAM (`/login`, sign-up, forgot password) | Redirect signed-in users away from guest URLs |
-| `tourist-required-policy` | Tourist account (`/account/*` dashboard) | Signed-in tourist |
-| `corporate-required-policy` | Client portal (`/corporate/*`) | Signed-in corporate client |
-| `provider-required-policy` | Provider portal (`/providers/*`) | Signed-in provider (entry rule + loader `403` onboarding) |
+| `tourist-required-policy` | Tourist account (`/account/*` dashboard) | Any signed-in person, with or without a tourist profile |
+| `provider-required-policy` | Provider portal (`/providers/*`) | Signed-in person, opened by the access word (entry rule) |
 | Team admin policies | Admin panel (`/team/**`) | Independent admin identity — **not** coupled to tourist auth |
 
 A `401` on a page without a policy route shows the session-expired page. It has a **Sign in again** link.
+
+### Portal access
+
+The rules are in [Portal access and switch](/docs/30-49-domains/iam/use-cases/portal-access-and-switch).
+
+- The session answer is `{ person, provider_access }`, and an account has no role.
+- An entry rule reads whether a person is signed in, and the access word.
+- An entry rule never reads a role.
+- A word that the web does not know sends the person to `/`, and it opens no private page.
+- The URL decides the portal, and the web stores no active portal.
+- `postAuthPath(portal, redirectTo)` and `createLoginAction(portal)` take the portal of the login page.
+- `IDENTITIES_PORTAL` and `PROVIDER_ACCESS_STATE` hold the portals and the words.
+- The hook `useGoogleSignIn(portal)` serves the four Google buttons.
 
 ---
 
@@ -207,7 +217,6 @@ The web checks both names in `app/auth/auth-session-cookies.js`, so it needs no 
 - The read is shared inside one `.data` request.
 - A `401` in a `clientLoader` is thrown.
 - The policy route redirects to login on the same click.
-- The Playwright test `e2e/policy-middleware-matrix.spec.js` proves this redirect.
 - The root `shouldRevalidate` in `app/auth/root-should-revalidate.js` has one rule.
   - A failed action with `401` or `403` reloads the root.
 
@@ -255,12 +264,10 @@ A committed `.env.production` holds the production hosts.
 
 ### End-to-end tests
 
-Playwright tests run on a developer machine only, because CI does not run them.
+The web has no browser end-to-end tests.
 
-- The tests need `red-cab-api` `main` on port 3000.
-- The tests need the dev accounts.
-- The sign-in limit is 10 sign-ins in 3 minutes for each IP address.
-  - A second run must wait for the limit to reset.
+- PR CI runs lint and Vitest with `npm run ci:test`.
+- A change to a policy route, a rule or a loader needs a unit test.
 
 ---
 
@@ -348,7 +355,7 @@ const handleSubmit = async (values) => {
 
 ### Naming
 
-Folders: flat, hyphenated — `catalog-listing/`, `bookings-booking/`, `corporate-quotation/`
+Folders: flat, hyphenated — `catalog-listing/`, `bookings-booking/`, `providers-company/`
 
 | File | Purpose |
 | --- | --- |
@@ -368,7 +375,7 @@ Folders: flat, hyphenated — `catalog-listing/`, `bookings-booking/`, `corporat
 
 ### Embedded relationships in detail views
 
-When a detail serializer includes an embedded `has_one` (e.g. `provider_profile` inside a listing), render as a distinct section within the same card — not flat inlined fields:
+When a detail serializer includes an embedded `has_one` (e.g. `provider_company` inside a listing), render as a distinct section within the same card — not flat inlined fields:
 
 - Parent attributes first in `<ListGroup variant="flush">`
 - Embedded section below with subdued header (`bg-secondary-subtle`) and its own attribute rows
@@ -437,9 +444,9 @@ Use `prepareSearchParams` / `serializeUrlParams` from `app/utils/search-param-ut
 1. **Never compute price on the client.** Display `price_breakdown` from `calculate_quote` API response only. No `listing.base_price * passengers` in JSX or utils.
 2. **Never mutate API response objects.** Pass-through data from serializers.
 3. **Checkout shows server-confirmed breakdown.** Submit booking with slot/listing/passenger selections; amounts come back from API.
-4. **Role-confined surfaces.** Tourist pages don't nest under provider or corporate policy parents. One segment per page.
+4. **Portal-confined surfaces.** Tourist pages don't nest under the provider policy parent. One segment per page.
 5. **EN/JA rendering.** Use stored language preference; geography labels use `name_en` / `name_ja` / `name_kana` from API; disambiguate homonymous Areas with parent District.
-6. **corporate documents.** PDF download links from API; no client-side PDF generation.
+6. **Documents.** PDF download links from API; no client-side PDF generation.
 7. **Payment step is provider-agnostic.** The API returns a payment handoff descriptor and the UI branches on its `kind` (redirect to a hosted page, or embedded fields). Only the embedded branch may lazy-load a provider SDK, keeping it out of the main bundle. The charge amount always originates from the server snapshot, never client input. The post-payment return route is a **presentation hint only** — booking confirmation is read from our own API, which converges to verified provider events (`FIN-11`, `FIN-13`).
 
 ---
@@ -542,7 +549,7 @@ Env hiding is **not** API security — backend must enforce authorization indepe
 4. Domain forms in `app/components/`
 5. Domain views in `app/routes/`
 6. `process.env.VITE_*` (use `import.meta.env`)
-7. Mixing policy parents across role surfaces (e.g. tourist page under `provider-required-policy`)
+7. Mixing policy parents across portal surfaces (e.g. tourist page under `provider-required-policy`)
 8. Custom CSS when Bootstrap utilities suffice
 9. Skipping `meta` export on route pages
 10. Importing `TeamPageShell` directly in page components

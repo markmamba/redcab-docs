@@ -81,9 +81,8 @@ ApplicationController (ActionController::API)
   │     ├── Server-side session (a gone session answers 401)
   │     ├── CurrentRequest population
   │     │
-  │     ├── Tourists::BaseController
-  │     ├── Corporate::BaseController
-  │     ├── Providers::BaseController
+  │     ├── Tourists::BaseController (any signed-in person)
+  │     ├── Providers::BaseController (reads the access word)
   │     └── Identities::SessionsController (login/logout/logout everywhere)
   │
   ├── Team::AuthenticatedController
@@ -109,11 +108,11 @@ The concerns `AccountSessionCookies` and `AdminSessionCookies` own the session c
 `CurrentRequest` extends `ActiveSupport::CurrentAttributes`. Controllers populate it; Managers receive values as keyword arguments — never read `CurrentRequest` inside Managers.
 
 ```ruby
-CurrentRequest.identities_user      # Identities::User (optional on marketplace)
-CurrentRequest.tourist_profile      # Tourist profile (tourists base)
-CurrentRequest.corporate_profile    # Corporate client profile
-CurrentRequest.provider_profile     # Provider profile
-CurrentRequest.identities_admin     # Admin identity (team base)
+CurrentRequest.identities_user      # Identities::Account (optional on marketplace)
+CurrentRequest.tourist_profile      # Tourists::Profile, or nil until the first booking (tourists base)
+CurrentRequest.provider_membership  # Providers::Membership (providers base)
+CurrentRequest.provider_company     # Providers::Company (providers base)
+CurrentRequest.identities_admin     # Identities::Admin (team base)
 ```
 
 ### Manager rules
@@ -212,7 +211,7 @@ namespace :providers do
 end
 ```
 
-Route files per actor: `config/routes/marketplace_routes.rb`, `tourists_routes.rb`, `corporate_routes.rb`, `providers_routes.rb`, `team_routes.rb`, `shared_routes.rb`.
+Route files per actor: `config/routes/marketplace_routes.rb`, `tourists_routes.rb`, `providers_routes.rb`, `team_routes.rb`, `shared_routes.rb`.
 
 Main `config/routes.rb` uses `draw('marketplace_routes')` etc.
 
@@ -271,7 +270,7 @@ In Managers, raise `Errors::ValidationError` when validation fails. For non-vali
 
 Tier A [ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) applies to all user-visible API validation and error strings.
 
-Target users are non-technical tourists and corporate clients. Every message should answer:
+Target users are non-technical tourists and providers. Every message should answer:
 
 1. What went wrong?
 2. Why it went wrong?
@@ -364,7 +363,7 @@ Ask: **did the system create this time, or did a person pick it?**
 
 ### Naming
 
-- Variables match their class name: `provider_profile = Providers::Profile.find(id)` not `profile = ...`
+- Variables match their class name: `provider_company = Providers::Company.find(id)` not `company = ...`
 - Boolean variables and columns use `is_` prefix: `is_active`, `is_email_verified`
 
 ### Syntax
@@ -427,11 +426,11 @@ DBML conventions:
 Example table creation:
 
 ```ruby
-class CreateCatalogListings < ActiveRecord::Migration[8.0]
+class CreateCatalogListings < ActiveRecord::Migration[8.1]
   def change
     create_table :catalog_listings, comment: 'Provider-authored tour listing' do |t|
       t.string :uuid, null: false, comment: 'external reference'
-      t.references :provider_profile, null: false, foreign_key: { to_table: :providers_profiles }
+      t.references :provider, null: false, foreign_key: { to_table: :providers_companies }
       t.string :status, null: false, default: 'draft', comment: 'rails_enum(:draft, :active, :archived)'
       t.timestamptz :created_at, null: false
       t.timestamptz :updated_at, null: false

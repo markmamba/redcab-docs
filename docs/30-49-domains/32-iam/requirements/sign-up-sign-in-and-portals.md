@@ -7,7 +7,7 @@ doc_type: requirement
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-10-31
+last_reviewed: 2026-11-07
 ---
 
 ## TL;DR \{#sign-in-tldr\}
@@ -26,6 +26,7 @@ This page describes what the person does and sees, without screens, APIs or algo
 | --- | --- |
 | Rulings | [Person account](/docs/30-49-domains/iam/iam-decisions/#person-account), [Tourist profile](/docs/30-49-domains/iam/iam-decisions/#tourist-profile), [Portal access and switching](/docs/30-49-domains/iam/iam-decisions/#portal-access) |
 | Sessions | [Server-side sessions](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions) |
+| How it works | [Person and provider access model](/docs/30-49-domains/iam/models/person-and-provider-access) and [Portal access and switch](/docs/30-49-domains/iam/use-cases/portal-access-and-switch) |
 | Use cases | UC-01 to UC-09 and UC-20 to UC-22 in [redcab-docs#155](https://github.com/markmamba/redcab-docs/issues/155) |
 
 ---
