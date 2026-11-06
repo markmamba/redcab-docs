@@ -4,7 +4,7 @@ sidebar_label: Web · Portal access
 issue: "https://github.com/markmamba/red-cab-web/issues/192"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -76,6 +76,15 @@ The web still decides the portal by the role.
 - `verify-email-page.jsx` sends every person to `/login`, so a new provider lands in the tourist portal.
 - `tourist-shell-layout.jsx` reads `should_prompt_language`, which leaves the answer.
 - 27 files in `app/` hold Corporate code.
+
+## Lasting rules \{#lasting-rules\}
+
+The lasting rules of this spec are on the use-case page [Portal access and switch](/docs/30-49-domains/iam/use-cases/portal-access-and-switch).
+
+- That page holds the entry rules, the redirect after sign-in and the Google record.
+- It also holds the portal controls, the holding page, the company create page and the entry pages.
+- The account menu is also on [Sessions](/docs/30-49-domains/iam/use-cases/sessions#account-menu).
+- This spec keeps the scope, the steps and the verification.
 
 ## Governing docs
 
@@ -582,44 +591,54 @@ Aiko is a tourist who starts a business.
 
 ### Web
 
-- [ ] Add `IDENTITIES_PORTAL` and `PROVIDER_ACCESS_STATE`.
-- [ ] Read the session answer in the middleware, the guard, the root and `AuthProvider`.
-- [ ] Replace the entry rules, and add the onboarding path rule.
-- [ ] Replace `postAuthPath` and `createLoginAction`.
-- [ ] Add the Google record, the hook and the `portal` parameter.
-- [ ] Add the holding page and its route.
-- [ ] Add the menu item, the mobile item, the header control and the footer link.
-- [ ] Update the create page, the dashboard and the provider loader helper.
-- [ ] Update the provider sign-up page and the verify-email page.
-- [ ] Update `hasCheckoutProfile`.
-- [ ] Remove the language prompt modal.
-- [ ] Remove the Corporate code and `ACCOUNT_ROLE`.
-- [ ] Update the tests.
-- [ ] Remove the Playwright e2e tests, their fixture route and the Playwright setup.
-- [ ] Update `AGENTS.md` and `app/routes/AGENTS.md`.
+- [x] Add `IDENTITIES_PORTAL` and `PROVIDER_ACCESS_STATE`.
+- [x] Read the session answer in the middleware, the guard, the root and `AuthProvider`.
+- [x] Replace the entry rules, and add the onboarding path rule.
+- [x] Replace `postAuthPath` and `createLoginAction`.
+- [x] Add the Google record, the hook and the `portal` parameter.
+- [x] Add the holding page and its route.
+- [x] Add the menu item, the mobile item, the header control and the footer link.
+- [x] Update the create page, the dashboard and the provider loader helper.
+- [x] Update the provider sign-up page and the verify-email page.
+- [x] Update `hasCheckoutProfile`.
+- [x] Remove the language prompt modal.
+- [x] Remove the Corporate code and `ACCOUNT_ROLE`.
+- [x] Update the tests.
+  - Result on 2026-11-06: `npm test` runs 1463 tests in 179 files with 0 failures.
+  - `npm run lint` and `npm run build` pass.
+- [x] Remove the Playwright e2e tests, their fixture route and the Playwright setup.
+- [x] Update `AGENTS.md` and `app/routes/AGENTS.md`.
 
 ### Docs
 
-- [ ] Update `docs/50-59-frontend/51-conventions/frontend.md`.
-- [ ] Set spec `status: implemented` after merge.
+- [x] Update `docs/50-59-frontend/51-conventions/frontend.md`.
+- [x] Set spec `status: implemented` after merge.
+  - Merged on 2026-11-06 in [red-cab-web#204](https://github.com/markmamba/red-cab-web/pull/204), with [red-cab-api#280](https://github.com/markmamba/red-cab-api/pull/280).
+  - The parts are [#199](https://github.com/markmamba/red-cab-web/pull/199), [#200](https://github.com/markmamba/red-cab-web/pull/200), [#201](https://github.com/markmamba/red-cab-web/pull/201) and [#202](https://github.com/markmamba/red-cab-web/pull/202).
+  - A run in a real browser on 2026-11-06 passed 64 checks.
+  - The checks covered the five words, the menus, the holding page, the Google record and the login forms.
 
 ## Acceptance criteria
 
-- [ ] A person with a company can use both portals with one sign-in.
-- [ ] The provider portal opens by the access word.
-- [ ] A pending or rejected company opens only the onboarding area.
-- [ ] A person with the word `missing` opens only the company create page in the provider portal.
-- [ ] A suspended company opens only the holding page, which shows the reason.
-- [ ] Sign-in on a login page opens the portal of that page, also with Google.
-- [ ] A signed-in person who opens a login page lands in the portal of that page.
-- [ ] A `redirect_to` for the other portal is dropped.
-- [ ] A rule never reads a role, and an unknown word never opens a private page.
-- [ ] "Switch to traveling" shows on every provider page.
-- [ ] "Switch to provider" shows only for the four words that are not `missing`.
-- [ ] "List your service" shows only for the word `missing`.
-- [ ] A person with no tourist profile opens `/account` and can start checkout.
-- [ ] A new provider can reach `/providers/login` from the verify-email page.
-- [ ] No file in `app/` names `corporate` or `ACCOUNT_ROLE`.
+- [x] A person with a company can use both portals with one sign-in.
+- [x] The provider portal opens by the access word.
+- [x] A pending or rejected company opens only the onboarding area.
+- [x] A person with the word `missing` opens only the company create page in the provider portal.
+- [x] A suspended company opens only the holding page, which shows the reason.
+- [x] Sign-in on a login page opens the portal of that page, also with Google.
+  - The browser run covered the login forms and the Google record.
+  - A real round trip through Google was not run.
+- [x] A signed-in person who opens a login page lands in the portal of that page.
+- [x] A `redirect_to` for the other portal is dropped.
+- [x] A rule never reads a role, and an unknown word never opens a private page.
+- [x] "Switch to traveling" shows on every provider page.
+- [x] "Switch to provider" shows only for the four words that are not `missing`.
+- [x] "List your service" shows only for the word `missing`.
+- [x] A person with no tourist profile opens `/account` and can start checkout.
+  - The browser run opened `/account` and `/account/bookings`.
+  - The checkout rule is covered by unit tests, and the API test covers the first booking.
+- [x] A new provider can reach `/providers/login` from the verify-email page.
+- [x] No file in `app/` names `corporate` or `ACCOUNT_ROLE`.
 
 ## Verification
 

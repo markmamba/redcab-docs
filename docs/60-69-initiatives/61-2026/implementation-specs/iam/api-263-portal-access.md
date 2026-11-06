@@ -4,7 +4,7 @@ sidebar_label: API · Portal access
 issue: "https://github.com/markmamba/red-cab-api/issues/263"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -64,6 +64,16 @@ The code still gives each account one role.
 - The session answer holds `role` and `should_prompt_language`, and no access word.
 - A member can book a listing of the own company.
 - 13 API files, the table `corporate_profiles` and a test portal route hold Corporate code.
+
+## Lasting rules \{#lasting-rules\}
+
+The lasting rules of this spec are on the model page [Person and provider access](/docs/30-49-domains/iam/models/person-and-provider-access).
+
+- That page holds the session answer, the access word and the endpoints.
+- It also holds the gates, the sign-up flow and the Google flow.
+- It also holds the first booking, the own-company rule and the codes.
+- The company side stays on [Provider company and members](/docs/30-49-domains/iam/models/provider-company-and-members).
+- This spec keeps the scope, the steps and the verification.
 
 ## Governing docs
 
@@ -388,32 +398,41 @@ Aiko is a tourist who starts a business.
 
 ### API
 
-- [ ] Add the two migrations, and update the DBML tags.
-- [ ] Add the services, the answer and its serializers.
-- [ ] Update both gates, the codes and `CurrentRequest`.
-- [ ] Update the sign-up flows and the create-company endpoint.
-- [ ] Update the Google flow and the state store.
-- [ ] Add the first booking profile and the own-company refusal.
-- [ ] Remove the code in [Code to remove](#code-to-remove).
-- [ ] Update the dev seeders and the tests.
+- [x] Add the two migrations, and update the DBML tags.
+  - The migration for `corporate_profiles` is in the Corporate removal pull request, which was merged into the same branch.
+- [x] Add the services, the answer and its serializers.
+- [x] Update both gates, the codes and `CurrentRequest`.
+- [x] Update the sign-up flows and the create-company endpoint.
+- [x] Update the Google flow and the state store.
+- [x] Add the first booking profile and the own-company refusal.
+- [x] Remove the code in [Code to remove](#code-to-remove).
+- [x] Update the dev seeders and the tests.
+  - Result on 2026-11-06: `bin/rails test` runs 1463 tests with 0 failures.
+  - `rubocop` passes.
+  - `srb tc` reports 22 errors, and none is in a file of this work.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
+  - Merged on 2026-11-06 in [red-cab-api#280](https://github.com/markmamba/red-cab-api/pull/280), with [red-cab-web#204](https://github.com/markmamba/red-cab-web/pull/204).
+  - The parts are [#275](https://github.com/markmamba/red-cab-api/pull/275), [#276](https://github.com/markmamba/red-cab-api/pull/276), [#277](https://github.com/markmamba/red-cab-api/pull/277), [#278](https://github.com/markmamba/red-cab-api/pull/278) and the Corporate removal [#281](https://github.com/markmamba/red-cab-api/pull/281).
 
 ## Acceptance criteria
 
-- [ ] No file in `app/` names `role_provider`, `role_tourist`, `roles[` or `Corporate::`.
-- [ ] Every endpoint that returns a person returns `{ person, provider_access }` and nothing else.
-- [ ] A removed member and an invited person who has not accepted both get the word `missing`.
-- [ ] A person with no tourist profile can open the tourist portal.
-- [ ] A new person from the provider login gets a pending company and an owner membership, and no tourist profile.
-- [ ] A signed-in tourist can create a company with the same account.
-- [ ] The first booking creates the tourist profile once.
-- [ ] Checkout refuses a listing of the own company.
-- [ ] A suspended company gets `provider_account_suspended` on every provider endpoint but the company read.
+- [x] No file in `app/` names `role_provider`, `role_tourist`, `roles[` or `Corporate::`.
+  - The pattern `roles\[` also matches `company_roles[`, which is the role of a membership.
+- [x] Every endpoint that returns a person returns `{ person, provider_access }` and nothing else.
+- [x] A removed member and an invited person who has not accepted both get the word `missing`.
+- [x] A person with no tourist profile can open the tourist portal.
+- [x] A new person from the provider login gets a pending company and an owner membership, and no tourist profile.
+- [x] A signed-in tourist can create a company with the same account.
+- [x] The first booking creates the tourist profile once.
+- [x] Checkout refuses a listing of the own company.
+- [x] A suspended company gets `provider_account_suspended` on every provider endpoint but the company read.
 - [ ] A locked person can use no portal, and the memberships stay.
-- [ ] The database has no column `identities_accounts.role` and no table `corporate_profiles`.
+  - A locked person gets `401`, and no code removes a membership.
+  - No test checks that the memberships stay, so this box stays open.
+- [x] The database has no column `identities_accounts.role` and no table `corporate_profiles`.
 
 ## Verification
 

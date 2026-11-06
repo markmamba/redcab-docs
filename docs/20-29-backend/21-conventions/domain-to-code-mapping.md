@@ -23,20 +23,18 @@ Domain-to-code mapping for Red Cab API and web repos.
 
 ## Actor → API controller namespace
 
-Red Cab has four external roles. Map them to explicit route files and controller namespaces — one file per actor, explicit verb + path (never `resources`).
+Red Cab has three external actors. Map them to explicit route files and controller namespaces — one file per actor, explicit verb + path (never `resources`).
 
-| Red Cab Role | Glossary term | Controller namespace | Route file | Auth base |
+| Red Cab Actor | Glossary term | Controller namespace | Route file | Auth base |
 | --- | --- | --- | --- | --- |
-| Tourist | Tourist | `marketplace/` (public discovery) + `tourists/` (authenticated booking) | `marketplace_routes.rb`, `tourists_routes.rb` | Optional session for marketplace; required session for tourists |
-| Corporate Client | Corporate Client | `corporate/` | `corporate_routes.rb` | Required session + corporate profile |
-| Provider | Provider | `providers/` | `providers_routes.rb` | Required session + approved provider profile |
+| Tourist | Tourist | `marketplace/` (public discovery) + `tourists/` (authenticated booking) | `marketplace_routes.rb`, `tourists_routes.rb` | Optional session for marketplace; required session for tourists. Any signed-in person may use `tourists/`, with or without a tourist profile |
+| Provider | Provider | `providers/` | `providers_routes.rb` | Required session + the access word of the person (`missing`, `pending`, `active`, `rejected` or `suspended`) |
 | Admin | Admin | `team/` | `team_routes.rb` | Required team session (admin identity, separate from user) |
 
 ### Notes
 
 - **`marketplace/`** serves optional-auth discovery: geography, listings, `calculate_quote`, availability reads. Uses an optional session (a gone session is a guest).
 - **`tourists/`** serves authenticated B2C booking lifecycle, payments visibility, and reviews. Booking initiation requires auth at checkout per `NFR-SEC-005` (guest browse is unauthenticated per `AMB-022`).
-- **`corporate/`** serves corporate quotation requests, document views, manifest submission. Enters Booking only via accepted quotation (ACL).
 - **`providers/`** serves onboarding, catalog authoring, incoming bookings, review responses. Gated by Provider Status conformist read.
 - **`team/`** serves Admin operations across all contexts. Independent admin identity, separate from tourist/user accounts.
 
@@ -54,8 +52,8 @@ Each bounded context maps to a top-level domain folder. Table names use `{domain
 | --- | --- | --- | --- |
 | IAM | Identity & Access | `identities/` | `Identities::Account` → `identities_accounts` (thin auth principal) |
 | — | Tourist profile (demand) | `tourists/` | `Tourists::Profile` → `tourists_profiles` |
-| COR | Corporate Quotation & Invoicing | `corporate/` | `Corporate::Profile` → `corporate_profiles`; `Corporate::Quotation` → `corporate_quotations` |
-| PRV | Provider Onboarding & Verification | `providers/` | `Providers::Profile` → `providers_profiles` |
+| COR | Corporate Quotation & Invoicing | None. No code exists | The corporate role and the corporate profile do not exist, see [IAM D12 — No corporate accounts](/docs/30-49-domains/iam/iam-decisions/#no-corporate-accounts) |
+| PRV | Provider company and onboarding | `providers/` | `Providers::Company` → `providers_companies`; `Providers::Membership` → `providers_memberships` |
 | CAT | Catalog & Inventory | `catalog/` | `Catalog::Listing` → `catalog_listings` |
 | BKG | Booking & Checkout | `bookings/` | `Bookings::Booking` → `bookings_bookings` |
 | PAY | Payments & Payouts | `payments/` | `Payments::Charge` → `payments_charges` |
@@ -118,13 +116,12 @@ Map Red Cab consumer surfaces to React Router route files — one `*.routes.js` 
 | --- | --- | --- | --- | --- |
 | Tourist App (public) | `TouristPublicLayout` | `marketplace.routes.js` | `/`, `/districts`, `/districts/:districtSlug/areas/:areaSlug/listings`, `/listings/:listingUuid` (resolver) | None |
 | Tourist App (private) | `TouristDashboardLayout` | `tourist.routes.js` | `/account`, `/account/checkout`, `/account/bookings`, `/account/reviews` | `withTouristAuth` |
-| Client Portal (Corporate) | `CorporateLayout` | `corporate.routes.js` | `/corporate` | `withCorporateAuth` |
 | Provider Portal | `ProviderLayout` | `provider.routes.js` | `/providers` | `withProviderAuth` |
 | Admin Panel | `TeamLayout` | `team.routes.js` | `/team` | Team admin auth (independent) |
 
 Public catalog pages use server `loader` and `index, follow` robots per [spec #56](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract). Checkout and account routes remain in `tourist.routes.js` with `withTouristAuth`.
 
-The **Auth HOC** column is transitional. Each private surface moves to a policy route (`tourist-required`, `corporate-required`, `provider-required`, `admin-required`) one surface at a time. See Policy routes and surfaces (removed) and the roadmap (removed).
+The **Auth HOC** column is transitional. Each private surface moves to a policy route (`tourist-required`, `provider-required`, `admin-required`) one surface at a time. See Policy routes and surfaces (removed) and the roadmap (removed).
 
 ### API client naming
 
@@ -134,7 +131,7 @@ Examples:
 
 - `marketplace-catalog-listings-api.js`
 - `tourists-bookings-booking-api.js`
-- `corporate-quotations-api.js`
+- `providers-companies-api.js`
 - `providers-catalog-listings-api.js`
 - `team-payments-commission-rates-api.js`
 
@@ -146,8 +143,7 @@ Hyphenated domain-model names under `app/domains/`:
 app/domains/
   catalog-listing/
   bookings-booking/
-  corporate-quotation/
-  providers-application/
+  providers-company/
   payments-charge/
   reviews-review/
 ```
@@ -167,7 +163,6 @@ docs/db/               # in red-cab-api
   catalog.dbml
   bookings.dbml
   payments.dbml
-  corporate.dbml
   reviews.dbml
   redcab.dbml          # index / cross-references
 ```

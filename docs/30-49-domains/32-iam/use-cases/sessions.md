@@ -7,7 +7,7 @@ doc_type: use-case
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-11-02
+last_reviewed: 2026-11-07
 ---
 
 ## TL;DR \{#sessions-tldr\}
@@ -29,6 +29,7 @@ This page holds what stays true after the sessions work shipped, and the rulings
 | Rulings | [Server-side sessions](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions), [Web session rules](/docs/30-49-domains/iam/iam-decisions/#web-session-rules), [Policy routes](/docs/30-49-domains/iam/iam-decisions/#policy-routes), [Access codes](/docs/30-49-domains/iam/iam-decisions/#access-codes), [Production hosts](/docs/30-49-domains/iam/iam-decisions/#production-hosts) |
 | Column truth | [identities.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/identities.dbml) |
 | Web conventions | [Frontend conventions, Sessions](/docs/50-59-frontend/conventions/frontend#sessions) |
+| The session answer and the portal switch | [Person and provider access model](/docs/30-49-domains/iam/models/person-and-provider-access) and [Portal access and switch](/docs/30-49-domains/iam/use-cases/portal-access-and-switch) |
 | Work record | [API spec api-147](/docs/60-69-initiatives/61-2026/implementation-specs/iam/api-147-server-side-sessions) and [web spec web-190](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-190-server-side-sessions-and-account-menu) |
 
 ---
@@ -57,12 +58,12 @@ Persons and team admins use separate endpoints.
 
 | Method | Path | Auth | Answer | Notes |
 | --- | --- | --- | --- | --- |
-| POST | `identities/sessions` | None | `201` account JSON and cookies | `422` for a wrong password. `429` at the rate limit |
+| POST | `identities/sessions` | None | `201` session answer and cookies | `422` for a wrong password. `429` at the rate limit |
 | DELETE | `identities/sessions/current` | Session and CSRF | `200 { message }` | Deletes one row and clears the cookies |
 | DELETE | `identities/sessions` | Session and CSRF | `200 { message }` | Deletes all rows of the person and clears the cookies |
-| POST | `identities/oauth/google/callback` | None | `200 { account }` and cookies | Creates one row |
+| POST | `identities/oauth/google/callback` | None | `200` session answer and cookies | Creates one row |
 | PATCH | `identities/password_resets/confirm` | None | `200` | Deletes all rows of the person |
-| GET | `identities/accounts/current` | Session | `200` account JSON | |
+| GET | `identities/accounts/current` | Session | `200` session answer | |
 | POST | `team/identities/admins/sessions` | None | `201` admin JSON and team cookies | `422` for a wrong password. `429` at the rate limit |
 | DELETE | `team/identities/admins/sessions/current` | Team session and CSRF | `200 { message }` | Deletes one row and clears the team cookies |
 | DELETE | `team/identities/admins/sessions` | Team session and CSRF | `200 { message }` | Deletes all rows of the admin and clears the team cookies |
@@ -74,7 +75,7 @@ The actor namespaces use the session in these ways.
 
 | Namespace | Session | CSRF on a write | `401` means |
 | --- | --- | --- | --- |
-| `tourists/**`, `corporate/**`, `providers/**`, `identities/**` | Required person session, except the public routes | `CSRF_TOKEN` value in `X-CSRF-Token` | The session is gone |
+| `tourists/**`, `providers/**`, `identities/**` | Required person session, except the public routes | `CSRF_TOKEN` value in `X-CSRF-Token` | The session is gone |
 | `team/**` | Required team session, except sign-in | `TEAM_CSRF_TOKEN` value in `X-CSRF-Token` | The session is gone |
 | `marketplace/**` | Optional person session | The namespace has no write routes | Never. A gone session is a guest |
 
@@ -185,10 +186,12 @@ The menu replaces the Bookings, Account and Sign out links in the tourist nav.
 | 1 | Name and email | None | Always, as a header |
 | 2 | My Profile | `/account` | Always |
 | 3 | My Bookings | `/account/bookings` | Always |
-| 4 | Sign out | `POST /logout` | Always, after a divider |
-| 5 | Sign out of all devices | The confirmation, then `POST /logout/everywhere` | Always, in the danger color |
+| 4 | List your service, or Switch to provider | `/providers` | By the access word, after a divider |
+| 5 | Sign out | `POST /logout` | Always. A divider comes before it only when the menu has no portal item |
+| 6 | Sign out of all devices | The confirmation, then `POST /logout/everywhere` | Always, in the danger color |
 
 - The mobile menu lists the same items as the desktop menu.
+- The words of the portal item are in [Portal access and switch](/docs/30-49-domains/iam/use-cases/portal-access-and-switch#portal-controls).
 - A guest sees the guest links, and `Services` stays a link in the nav.
 - The menu items live in `app/layouts/tourist/tourist-nav-config.js`.
 - The copy keys live in `app/domains/tourist/tourist-surface-copy.js`.
@@ -196,7 +199,7 @@ The menu replaces the Bookings, Account and Sign out links in the tourist nav.
 | Portal | Place | Controls |
 | --- | --- | --- |
 | Tourist | The account menu, on desktop and in the mobile menu | Sign out, and Sign out of all devices |
-| Provider | An Account dropdown in the header `PortalChrome` | Sign out, and Sign out of all devices |
+| Provider | An Account dropdown in the header `PortalChrome`, after the link Switch to traveling | Sign out, and Sign out of all devices |
 | Team | The bottom of `TeamSidebar` | Sign out, and Sign out of all devices |
 
 - Sign out of all devices asks for confirmation in all three portals.
@@ -222,4 +225,5 @@ Aiko signs in on her laptop, and her session later ends.
 - Before launch, we confirm that `request.remote_ip` gives the real visitor address behind the production proxy.
   - The login rate limit and the column `ip_address` both depend on this.
 - A Japanese speaker must check the Japanese text of the new copy keys.
+  - This includes the two keys of the portal item.
 - Product Owner sign-off on the IAM rulings is not recorded.

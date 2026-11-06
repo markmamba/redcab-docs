@@ -7,7 +7,7 @@ doc_type: domain-overview
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-10-31
+last_reviewed: 2026-11-07
 ---
 
 ## TL;DR \{#iam-overview\}
@@ -80,6 +80,8 @@ erDiagram
 | What did we decide, and why? | [IAM decisions](/docs/30-49-domains/iam/iam-decisions/#iam-decisions-tldr) |
 | How does a person sign up, sign in and switch portals? | [Sign-up, sign-in and portals](/docs/30-49-domains/iam/requirements/sign-up-sign-in-and-portals) |
 | What are the company and the membership, and how does the provider gate work? | [Provider company and members model](/docs/30-49-domains/iam/models/provider-company-and-members) |
+| How does the API give the session answer, the access word and the gates? | [Person and provider access model](/docs/30-49-domains/iam/models/person-and-provider-access) |
+| How does the web open the portals and show the switch? | [Portal access and switch](/docs/30-49-domains/iam/use-cases/portal-access-and-switch) |
 | How does a company add and manage its staff? | [Provider company members](/docs/30-49-domains/iam/requirements/provider-company-members) |
 | How does a session work in the API and in the web? | [Sessions](/docs/30-49-domains/iam/use-cases/sessions) |
 | Why this design, and what else did we weigh? | [Why one account is one person](/docs/30-49-domains/iam/iam-decisions/#person-account-why), [Why sessions are database records](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions-why) |
@@ -118,7 +120,7 @@ Each rule has one section in [IAM decisions](/docs/30-49-domains/iam/iam-decisio
 - Read the access word in an entry rule.
 - Do not link listings, assets, bookings, reviews or payouts to a person.
 - Do not let Staff change the company details, the documents, the payout account or the members.
-- Do not add new Corporate code, because the corporate role goes away.
+- Do not add Corporate code, because the corporate role, the corporate profile and the Corporate sign-up do not exist.
 - Do not cite an old ADR for these rules, and do not cite ADR-018 or ADR-019.
 
 ## Open questions \{#open-questions\}

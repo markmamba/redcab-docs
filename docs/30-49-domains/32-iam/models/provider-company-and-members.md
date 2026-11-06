@@ -7,7 +7,7 @@ doc_type: model-spec
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-11-03
+last_reviewed: 2026-11-07
 ---
 
 ## TL;DR \{#company-members-tldr\}
@@ -31,6 +31,7 @@ It also covers the license records, and the rulings are in [IAM decisions](/docs
 | Rulings | [Provider company](/docs/30-49-domains/iam/iam-decisions/#provider-company), [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses) and [Company roles](/docs/30-49-domains/iam/iam-decisions/#company-roles) |
 | What owners and staff do | [Provider company members](/docs/30-49-domains/iam/requirements/provider-company-members) |
 | Column truth | [providers.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/providers.dbml) |
+| The person and the access word | [Person and provider access model](/docs/30-49-domains/iam/models/person-and-provider-access) |
 | Work records | [Company and memberships](/docs/60-69-initiatives/61-2026/implementation-specs/iam/api-260-provider-company-and-memberships) and [Permits and approval](/docs/60-69-initiatives/61-2026/implementation-specs/iam/api-261-permits-and-approval) |
 
 ---
@@ -158,7 +159,7 @@ The calls of the owner use the URL path `companies`.
 | Method | Path | Who may call it | Answer |
 | --- | --- | --- | --- |
 | GET | `/providers/companies` | A person with an active membership | `200` and the company |
-| POST | `/providers/companies` | A signed-in person with the role `provider` | `201` and the company |
+| POST | `/providers/companies` | A signed-in person with no active membership | `201` and the company |
 | PATCH | `/providers/companies` | A person with an active membership | `200` and the company |
 | POST | `/providers/companies/submit` | A person with an active membership | `200` and the company |
 | POST | `/providers/companies/license_records` | A person with an active membership | `201` and the license record |
@@ -166,7 +167,8 @@ The calls of the owner use the URL path `companies`.
 | POST | `/providers/documents` | A person with an active membership | `201` and the document |
 
 - Any member can use these calls, because only owners exist today.
-- The create call accepts empty details, so a sign-up step can call it first.
+- The create call accepts empty details.
+- A tourist uses the create call to start a company with the same account.
 
 ### What each status may do \{#status-rules\}
 
@@ -182,8 +184,11 @@ The calls of the owner use the URL path `companies`.
 The manager `Providers::Companies::ProvidersCreateManager` runs in one transaction.
 
 1. It checks that the person has no active membership.
-2. It creates a `Providers::Company` with `status: "pending"`.
-3. It creates a `Providers::Membership` with `company_role: "owner"` and `status: "active"`.
+2. It calls the service `Providers::Companies::CreateService`.
+3. The service creates a `Providers::Company` with `status: "pending"`.
+4. The service creates a `Providers::Membership` with `company_role: "owner"` and `status: "active"`.
+
+- Provider sign-up and the Google flow call the same service, see [Person and provider access model](/docs/30-49-domains/iam/models/person-and-provider-access#sign-up).
 
 | Case | Answer | Message |
 | --- | --- | --- |
@@ -308,13 +313,15 @@ The team JSON also holds `support_trial`.
 The gate answers in this order.
 
 1. A person who is not signed in gets `401`.
-2. A person whose account role is not `provider` gets `403` with `provider_role_required`.
-3. A person with no active membership gets `403` with `provider_profile_required`.
+2. A person whose access word is `missing` gets `403` with `provider_membership_required`.
+3. A person whose access word is `suspended` gets `403` with `provider_account_suspended`.
 4. An action that needs approval reads `providers_companies.status` and answers with an approval code.
 
+- The access word comes from `Providers::Memberships::ProviderAccessService`, see [Person and provider access model](/docs/30-49-domains/iam/models/person-and-provider-access#states).
 - The gate sets `CurrentRequest.provider_membership` and `CurrentRequest.provider_company`.
-- The action `create` skips step 3, because a new person has no membership yet.
-- A removed member gets `provider_profile_required`, the same as a person who never joined.
+- The action `create` skips steps 2 and 3, because a new person has no membership yet.
+- The company read skips step 3, so a suspended member can read the reason.
+- A removed member gets `provider_membership_required`, the same as a person who never joined.
 - Managers take the keyword `provider_company:`, and they never read `CurrentRequest`.
 
 ## Worked example \{#worked-example\}
@@ -322,16 +329,15 @@ The gate answers in this order.
 Kenji applies, and the team approves Kanto Charter.
 
 1. Kenji signs up on "List your service".
-   - The system creates his account with the role `provider`.
-2. Kenji sends `POST /providers/companies`, and the system creates Kanto Charter with `status: "pending"` and an owner membership.
-3. Kenji enters the business name and the contact phone.
-4. Kenji adds a `passenger_car_permit`, an `insurance` and a `company_registration` record with their numbers.
-5. Kenji uploads the four documents and saves one `private_car` vehicle.
-6. Kenji sends `POST /providers/companies/submit`.
+   - The system creates his account, a company with `status: "pending"` and an owner membership.
+2. Kenji enters the business name Kanto Charter and the contact phone with `PATCH /providers/companies`.
+3. Kenji adds a `passenger_car_permit`, an `insurance` and a `company_registration` record with their numbers.
+4. Kenji uploads the four documents and saves one `private_car` vehicle.
+5. Kenji sends `POST /providers/companies/submit`.
    - The list `missing_requirements` is empty, so the company reaches the team queue.
-7. The team checks the permit with `valid_until` 2027-03-31, and it checks the other two records.
-8. The team approves, and the validator finds a valid permit and a matching vehicle.
-9. Kenji sees a typo in the permit number, but the record is locked, so he contacts the team.
-10. The team edits the number, and the check stays.
-11. The permit is revoked, so the team withdraws the check and suspends Kanto Charter.
-12. The listings disappear from discovery, and confirmed bookings stay.
+6. The team checks the permit with `valid_until` 2027-03-31, and it checks the other two records.
+7. The team approves, and the validator finds a valid permit and a matching vehicle.
+8. Kenji sees a typo in the permit number, but the record is locked, so he contacts the team.
+9. The team edits the number, and the check stays.
+10. The permit is revoked, so the team withdraws the check and suspends Kanto Charter.
+11. The listings disappear from discovery, and confirmed bookings stay.
