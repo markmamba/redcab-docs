@@ -478,7 +478,7 @@ This code goes away from other files.
 | [web-84](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-84-auth-core-modules.md) | The role reading in `auth-safe-redirect.js` and the entry rules |
 | [web-86](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-86-tourist-account-policy-routes.md) | Decisions 15, 19 and 21, and the Corporate rows |
 | [web-87](../../../../80-89-legacy/implementation-specs/iam/auth-platform/web-87-corporate-provider-policy-routes.md) | The Corporate policy, the wrong-role redirect, and decisions 7 and 9 |
-| [web-190](web-190-server-side-sessions-and-account-menu.md) | The `corporate-layout.jsx` note on `PortalChrome` |
+| [web-190](web-190-server-side-sessions-and-account-menu.md) | The `corporate-layout.jsx` note on `PortalChrome`, and its Playwright tests |
 | [web-191](web-191-permits-registration-and-team-approval.md) | The `suspended` row of "What each status shows", and the create page loader |
 
 - `web-85` and `web-88` need no change, because they do not read a role in code that stays.
@@ -509,7 +509,13 @@ This code goes away from other files.
 | `app/routes/tourist/booking-list-page.spec.jsx` | Remove `ACCOUNT_ROLE` |
 | `app/routes/tourist/booking-detail-page.spec.jsx` | Remove `ACCOUNT_ROLE` |
 | `app/utils/loader-utils.spec.js` | Remove the onboarding redirect cases |
-| `e2e/policy-middleware-matrix.spec.js` | Add a path click for each access word |
+
+The owner removed the Playwright e2e tests on 2026-11-06.
+
+- The folder `e2e/`, `playwright.config.js`, the dev dependency `@playwright/test` and the scripts `test:e2e` and `ci:e2e` go away.
+- The fixture route `/account/e2e/policy-action-fixture` goes away with them.
+- PR CI never ran these tests.
+- The unit tests of this spec cover each access word and each path group, so this spec adds no e2e test.
 
 New tests cover these behaviors.
 
@@ -568,7 +574,7 @@ Aiko is a tourist who starts a business.
 - Rejected companies may apply again for now, and the Product Owner may change this.
 - A Japanese speaker must check the two new `ja` values.
 - A signed-in person who opens `/reset-password?token=` still goes to `/account`, as `web-86` records.
-- The JSON keys `suspended_at` and `suspension_reason` come from `api-261`, and the API code is not built.
+- The JSON keys `suspended_at` and `suspension_reason` come from `api-261`.
 - A mobile browser may open the Google return with empty storage, and nobody has tested this.
   - The fallback in decision 9 covers it.
 
@@ -589,6 +595,7 @@ Aiko is a tourist who starts a business.
 - [ ] Remove the language prompt modal.
 - [ ] Remove the Corporate code and `ACCOUNT_ROLE`.
 - [ ] Update the tests.
+- [ ] Remove the Playwright e2e tests, their fixture route and the Playwright setup.
 - [ ] Update `AGENTS.md` and `app/routes/AGENTS.md`.
 
 ### Docs
@@ -620,7 +627,6 @@ Aiko is a tourist who starts a business.
 # Web (from red-cab-web/)
 npm run lint
 npm run test
-VITE_E2E_AUTH_FIXTURES=true npm run test:e2e
 git grep -n -i -E 'corporate|ACCOUNT_ROLE|should_prompt_language|LanguagePromptModal|getIdentitiesHomePath' -- app
 git grep -n -E '\.role\b' -- app ':!*.spec.*'
 ```
