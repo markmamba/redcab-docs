@@ -386,7 +386,7 @@ The corporate role and the corporate profile go away.
 
 - There is no corporate sign-up.
 - No new code may use `corporate_profiles`.
-- Why: the principal developer dropped corporate clients from the product, and the Product Owner must confirm it.
+- Why: the principal developer dropped corporate clients from the product, and the Product Owner confirmed it.
 - Replaces: `FR-IAM-013` and the Corporate Account in `FR-IAM-012`.
 
 ## D13 — Member on records (2026-10-31) \{#member-on-records\}

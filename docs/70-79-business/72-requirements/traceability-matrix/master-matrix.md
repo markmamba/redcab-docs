@@ -34,11 +34,11 @@ Four-way mapping table for all requirements.
 | FR-IAM-006 | A-02 | SEC posture; IAM | Invalid credentials produce a single non-specific failure revealing no field. |
 | FR-IAM-007 | A-02 | OPR-1; IAM | 5 consecutive failures lock the Account 15 min and notify the holder. |
 | FR-IAM-008 | A-01, meeting-notes | glossary (Account); IAM | Email/password authenticates; Google sign-in works if offered; captcha may gate registration. |
-| FR-IAM-009 | 1.1–1.6 | bounded-contexts (IAM) | An Actor reaches only Role-permitted surfaces; all others are blocked. |
+| FR-IAM-009 | 1.1–1.6 | bounded-contexts (IAM) | A person reaches only the surfaces that the portal rules allow; all others are blocked. |
 | FR-IAM-010 | A-01, G-03 | OPR-9; IAM | First login prompts EN/JA, persists the choice, and does not re-prompt unless changed. |
 | FR-IAM-011 | G-03 | OPR-9; IAM | Dismissing selection defaults to EN and re-presents the choice next login. |
-| FR-IAM-012 | 1.1, B-01, meeting-notes | IAM | Visitors browse public discovery; initiating a booking requires an authenticated Tourist/Corporate. |
-| FR-IAM-013 | A-08 | glossary (Corporate Client); IAM | Corporate registration captures organization identity + group-size range and records type Corporate. |
+| FR-IAM-012 | 1.1, B-01, meeting-notes | IAM | Visitors browse public discovery; initiating a booking requires an authenticated person. |
+| FR-IAM-013 | A-08 | IAM | Withdrawn. Superseded by IAM D12. No corporate sign-up exists. |
 
 ### 1.2 PRV — Provider Onboarding & Verification
 | Req ID | Source | Governs (rules / context) | Acceptance criterion (observable) |
@@ -133,6 +133,8 @@ Four-way mapping table for all requirements.
 | FR-PAY-010 | Admin Panel, E-10 | PAY-2; PAY | Admin can set the platform-wide commission rate. |
 
 ### 1.6 Corporate — Quotation & Invoicing
+
+These rows are void. The page `corporate.md` is deleted. See [IAM D12 — No corporate accounts](/docs/30-49-domains/iam/iam-decisions/#no-corporate-accounts).
 | Req ID | Source | Governs (rules / context) | Acceptance criterion (observable) |
 | --- | --- | --- | --- |
 | FR-COR-001 | E-05 | COR | Corporate submits a quotation request (trip/dates/passengers/locations/type/requirements). |
@@ -186,7 +188,7 @@ Four-way mapping table for all requirements.
 | NFR-SEC-002 | IAM | A-02 | OPR-1 | An Account locks after 5 consecutive failures and the holder is notified. |
 | NFR-SEC-003 | IAM | A-01 | — | Passwords require ≥8 chars including ≥1 number when set. |
 | NFR-SEC-004 | IAM | 1.1–1.6 | — | Each Actor is confined to Role-permitted surfaces; others blocked. |
-| NFR-SEC-005 | IAM | 1.1, B-01 | — | Booking initiation requires an authenticated Tourist/Corporate account. |
+| NFR-SEC-005 | IAM | 1.1, B-01 | — | Booking initiation requires an authenticated person. |
 | NFR-SEC-006 | PRV, CAT | A-04, C-02 | — | Uploads outside permitted size/format are rejected. |
 | NFR-SEC-007 | IAM | A-01, meeting-notes | — | Email/password is supported; Google sign-in optional; captcha may gate registration. |
 | NFR-PRIV-001 | BKG | E-08 | BKG-6 | A manifest is viewable only by the assigned Provider and submitting Corporate Client. |

@@ -182,5 +182,5 @@ layout('roots/team-root.jsx', [
 
 ## Related documents
 
-- [Web platform program strategy](/docs/70-79-business/planning/web-platform-program-strategy) — `web-85-team-policy-routes.md`
+- Web platform program strategy — `web-85-team-policy-routes.md`
 - Implementation roadmap Phase 3 row 7

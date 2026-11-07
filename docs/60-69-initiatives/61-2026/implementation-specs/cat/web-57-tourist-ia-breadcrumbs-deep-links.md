@@ -47,7 +47,7 @@ Public routes are locked (`#56`) but the tourist funnel lacks:
 | api-134 | [/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/api-134-marketplace-geography-slug-and-ancestors) | District/area slugs + ancestor embed on listing detail |
 | ADR-017 | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Issue chain, stale-slug 301, `/listings/:uuid` alias |
 | frontend.md | [/docs/50-59-frontend/conventions/frontend](/docs/50-59-frontend/conventions/frontend) | `handle.breadcrumb` pattern, sitemap resource route, canonical tags |
-| tourist-ui-pre-phase-2 | [/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Milestone A2 deliverables |
+| tourist-ui-pre-phase-2 | /docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2 | Milestone A2 deliverables |
 
 ## Design decisions
 

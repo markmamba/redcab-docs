@@ -44,7 +44,7 @@ Evidence and verdicts for each row are recorded in the Session A alignment matri
 | INV-8 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Zero-listing Districts/Areas stay hidden; public exposure does not widen what is discoverable |
 | geography.md | architecture/geography.md (removed) | Source of the canonical URL hierarchy (slug-based District/Area segments) |
 | domain-to-code-mapping | [Domain-to-code mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) | Frontend surface → route group table; patched by this issue's Docs tasks |
-| tourist-ui-pre-phase-2 | [roadmap/tourist-ui-pre-phase-2.md](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Milestone A track plan; patched by this issue's Docs tasks |
+| tourist-ui-pre-phase-2 | roadmap/tourist-ui-pre-phase-2.md | Milestone A track plan; patched by this issue's Docs tasks |
 | Session A decision record | /docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture (removed) | Authoritative source for every decision below — not re-derived |
 
 ## Design decisions

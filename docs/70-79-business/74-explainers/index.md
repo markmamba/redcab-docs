@@ -15,5 +15,4 @@ description: Plain-language walkthroughs that link to normative docs (ASD-STE100
 - [Booking lifecycle](/docs/70-79-business/explainers/booking-lifecycle)
 - [Money flow](/docs/70-79-business/explainers/money-flow)
 - [Provider onboarding](/docs/70-79-business/explainers/provider-onboarding)
-- [Corporate workflow](/docs/70-79-business/explainers/corporate-workflow)
 - [Key decisions](/docs/70-79-business/explainers/key-decisions)

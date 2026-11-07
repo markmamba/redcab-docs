@@ -7,7 +7,7 @@ description: Functional requirements for IAM context.
 
 ## TL;DR
 
-- Identity & Access FRs: registration, login, lockout, roles, language preference, guest browsing, corporate accounts.
+- Identity & Access FRs: registration, login, lockout, roles, language preference, guest browsing.
 - Platform Admin uses a **separate principal** — not a marketplace `Account.role`.
 
 ## About this document
@@ -57,7 +57,7 @@ The system **shall** support email/password authentication and **may** support G
 - Source: A-01, meeting-notes. Governs: glossary (Account). Status: Provisional (AMB-021).
 
 ### FR-IAM-009 — Role-based access surfaces
-The system **shall** grant each authenticated marketplace Actor access only to the surfaces permitted by their Role (Tourist, Corporate, Provider) and **shall** block access to all others. Platform Admin **shall** authenticate via a separate Admin principal and **shall** reach the Admin Panel (`/team`) only through that principal — Admin is not a marketplace Role.
+The system **shall** grant each authenticated marketplace Actor access only to the surfaces permitted by the portal rules of the IAM domain and **shall** block access to all others. A person has no role. Platform Admin **shall** authenticate via a separate Admin principal and **shall** reach the Admin Panel (`/team`) only through that principal — Admin is not a marketplace Role.
 - Source: 1.1–1.6. Governs: bounded-contexts (IAM). Status: Approved.
 
 ### FR-IAM-010 — Language preference capture and persistence
@@ -69,11 +69,11 @@ If a Tourist dismisses language selection without choosing, the system **shall**
 - Source: G-03. Status: Approved.
 
 ### FR-IAM-012 — Guest browsing scope
-Unauthenticated Visitors **may** browse public discovery content; the system **shall** require an authenticated Tourist or Corporate Account to initiate a booking.
+Unauthenticated Visitors **may** browse public discovery content; the system **shall** require an authenticated person to initiate a booking.
 - Source: 1.1, B-01, meeting-notes. Status: Approved (Decision Log AMB-022).
 
 ### FR-IAM-013 — Corporate account registration
-The system **shall** allow registration of a Corporate/Group Account capturing organization identity and group-size range, and **shall** record the account type as Corporate.
-- Source: A-08. Governs: glossary (Corporate Client). Status: Approved.
+This requirement is withdrawn. The corporate account, the corporate role and the corporate sign-up do not exist. See [IAM D12 — No corporate accounts](/docs/30-49-domains/iam/iam-decisions/#no-corporate-accounts).
+- Source: A-08. Status: Superseded by IAM D12.
 
 ---

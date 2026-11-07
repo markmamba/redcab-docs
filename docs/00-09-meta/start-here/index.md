@@ -17,8 +17,7 @@ description: Recommended reading path for product owners, business analysts, and
 1. [Glossary](/docs/70-79-business/business-rules/glossary) — shared vocabulary
 2. [Business rules (invariants)](/docs/70-79-business/business-rules/invariants) — what must never break
 3. [Functional requirements](/docs/70-79-business/requirements/functional-requirements) — observable behavior by context
-4. [Phasing roadmap](/docs/70-79-business/planning/roadmap) — what ships when
-5. [Open questions](/docs/70-79-business/planning/open-questions) — unresolved decisions
+4. [Open questions](/docs/70-79-business/planning/open-questions) — unresolved decisions
 
 ## By role
 

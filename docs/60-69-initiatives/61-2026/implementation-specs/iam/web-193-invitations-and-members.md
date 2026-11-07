@@ -371,7 +371,6 @@ This spec changes no Catalog ruling, so it replaces no part of [api-208](../cat/
 | `app/domains/providers-company/providers-company-service.spec.js` | Assert `canManageCompany` for `owner`, `staff`, an unknown role and no role |
 | `app/domains/tourist/tourist-surface-copy.spec.js` | Assert the new keys in both languages |
 | The registration page specs from `web-191` | Assert the read-only state for staff |
-| `e2e/policy-middleware-matrix.spec.js` | Add the open accept route for a guest, and `/providers/members` for each word |
 
 New tests cover these behaviors.
 
@@ -445,7 +444,7 @@ Kenji runs Kanto Charter and adds Mika as staff.
 - [ ] Add `PROVIDERS_COMPANY_ROLE` and `canManageCompany`.
 - [ ] Add the read-only state to the registration pages.
 - [ ] Add the Members link to the dashboard.
-- [ ] Update the tests and the e2e matrix.
+- [ ] Update the tests.
 - [ ] Update `AGENTS.md` and `app/routes/AGENTS.md`.
 
 ### Docs
@@ -471,7 +470,6 @@ Kenji runs Kanto Charter and adds Mika as staff.
 # Web (from red-cab-web/)
 npm run lint
 npm run test
-VITE_E2E_AUTH_FIXTURES=true npm run test:e2e
 git grep -n 'company_role' -- app ':!*.spec.*'
 git grep -n -E 'PORTAL_GATE_CODE|isPortalGateError' -- app
 ```

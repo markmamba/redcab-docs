@@ -145,5 +145,5 @@ See PKM plan file list: entry rules, admin stack, factory, guards, safe-redirect
 
 ## Related documents
 
-- [Web platform program strategy § GitHub issues](/docs/70-79-business/planning/web-platform-program-strategy#github-issues--auth-phases)
+- Web platform program strategy § GitHub issues
 - #83 spike evidence

@@ -35,7 +35,7 @@ Evidence: `tourist-checkout-page.jsx`, `bookings-checkout-session-fulfillment-fo
 
 | ID | Document | Why |
 | --- | --- | --- |
-| Milestone B | [tourist-ui-pre-phase-2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Checkout + slot selection P0 |
+| Milestone B | tourist-ui-pre-phase-2 | Checkout + slot selection P0 |
 | ADR-017 | adr-017-tourist-ui-public-url-architecture | Auth at checkout; route family |
 | web-56 | [web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) | Handoff query params |
 | web-58 | web-58-tourist-unified-layout-shell (removed) | Account shell |

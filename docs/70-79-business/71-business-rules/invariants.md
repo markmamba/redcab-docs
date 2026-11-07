@@ -102,8 +102,8 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **PAY-6** Refund amount MUST be computed from the Booking's snapshotted Cancellation Policy: `refund = gross_amount × (matched_tier_refund_pct / 100)`. (`E-12`)
 - **PAY-7** When a cancellation is initiated by Provider or Admin (not the Tourist), the Tourist MUST receive a 100% refund regardless of Cancellation Policy. (`E-12`)
 - **PAY-8** A cancelled or refunded Booking MUST reverse/void its Payout Queue entry; payout MUST NOT be disbursed for a Booking whose queue entry is not in a disbursable state. (`E-09`, `E-12`, `LC-14`)
-- **PAY-9** [Corporate] Corporate Bank Transfer funds MUST be collected by the payment provider via a per-transaction virtual account; they MUST NOT be received into a Red Cab bank account (`INV-13`). A Corporate Bank Transfer Booking becomes `CONFIRMED` only on provider-confirmed receipt. (`E-07`, `AMB-029`, `AMB-030`)
-- **PAY-10** [Corporate] A Quotation/Invoice MUST itemize line items and the 10% Consumption Tax. (`E-06`)
+- **PAY-9** [Corporate] _Dropped by IAM D12._ Corporate Bank Transfer funds MUST be collected by the payment provider via a per-transaction virtual account; they MUST NOT be received into a Red Cab bank account (`INV-13`). A Corporate Bank Transfer Booking becomes `CONFIRMED` only on provider-confirmed receipt. (`E-07`, `AMB-029`, `AMB-030`)
+- **PAY-10** [Corporate] _Dropped by IAM D12._ A Quotation/Invoice MUST itemize line items and the 10% Consumption Tax. (`E-06`)
 - **PAY-11** [Payments] Commission arithmetic MUST use whole JPY: `commission_amount = FLOOR(gross_amount × commission_rate_snapshot)` and `net_payout_amount = gross_amount − commission_amount`, guaranteeing `INV-2` identically.
 - **PAY-12** [Payments/Catalog] B2C prices displayed and charged are **tax-inclusive**; corporate formal documents itemize 10% consumption tax separately (`PAY-10`).
 - **PAY-13** [Payments/Legal] **Custody.** Tourist payments MUST be received and held by the licensed payment provider, not by Red Cab (`INV-13`). The **Provider** is merchant-of-record for the underlying service. Red Cab's commission MUST reach the platform only as a provider-routed **platform fee** equal to the snapshotted `commission_amount`, never as a residual of funds Red Cab received or held. (ADR-015 C1, C3, C4; reverses Decision Log `AMB-002`, `AMB-032`)
@@ -144,7 +144,7 @@ Invariant-oriented business rules — **what** must hold, not **how** it is impl
 - **OPR-2** [Onboarding] The 3-Month Support Trial starts at the Admin approval date. (`A-07`, `A1`)
 - **OPR-3** [Onboarding] When a License is within 30 days of expiry, the Provider is warned; on expiry, all the Provider's Listings are auto-paused; on renewal + Admin update, they are restored. (`A-06`)
 - **OPR-4** [Onboarding] A Pending registration with no Admin action for more than 14 days is flagged Overdue. (`A-05`, `A3`)
-- **OPR-5** [Corporate] A Quotation Request unanswered for more than 3 business days raises an Admin overdue alert; a Bank Transfer past its deadline raises a payment-overdue alert. (`E-05`, `E-07`)
+- **OPR-5** [Corporate] _Dropped by IAM D12._ A Quotation Request unanswered for more than 3 business days raises an Admin overdue alert; a Bank Transfer past its deadline raises a payment-overdue alert. (`E-05`, `E-07`)
 - **OPR-6** [Reviews] A valid tourist-submitted Review is **published** immediately; the **Rating Score** includes it at once. A Provider may **report** a published Review; it stays public until Admin **removes** it. The score is recalculated from published Reviews only (`approved`, not `removed`). (`F-01`, `F-03`, `F-04`, ADR-020)
 - **OPR-7** [Reviews] The Review Link is valid for 14 days from completion; after expiry no Review may be submitted. (`F-01`, `F2`)
 - **OPR-8** [Notifications] Booking confirmation notifications to Tourist and Provider MUST be dispatched within 60 seconds of the triggering event. (`G-01`, `G-02`)

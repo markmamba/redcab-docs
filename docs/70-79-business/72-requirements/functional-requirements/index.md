@@ -39,7 +39,6 @@ Index and reading guide for functional requirements by context.
 - [Catalog & Inventory (CAT)](/docs/70-79-business/requirements/functional-requirements/cat)
 - [Booking & Checkout (BKG)](/docs/70-79-business/requirements/functional-requirements/bkg)
 - [Payments & Payouts (PAY)](/docs/70-79-business/requirements/functional-requirements/pay)
-- [Quotation & Invoicing (Corporate)](/docs/70-79-business/requirements/functional-requirements/corporate)
 - [Reviews & Ratings (REV)](/docs/70-79-business/requirements/functional-requirements/rev)
 - [Notifications (NOT)](/docs/70-79-business/requirements/functional-requirements/not)
 - [Provisional index](/docs/70-79-business/requirements/functional-requirements/provisional-index)

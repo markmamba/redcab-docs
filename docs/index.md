@@ -7,7 +7,7 @@ displayed_sidebar: docsSidebar
 
 ## Welcome
 
-Red Cab is a two-sided marketplace connecting inbound travelers and corporate clients with verified transportation and tourism providers in Japan.
+Red Cab is a two-sided marketplace connecting inbound travelers with verified transportation and tourism providers in Japan.
 
 Documentation uses **Johnny Decimal** area numbers. See [About these docs](/docs/00-09-meta/about-these-docs) and [Conventions](/docs/00-09-meta/conventions).
 
@@ -24,7 +24,7 @@ Documentation uses **Johnny Decimal** area numbers. See [About these docs](/docs
 
 | I am a… | Go to |
 | --- | --- |
-| Executive or sponsor | [Key decisions](/docs/70-79-business/explainers/key-decisions) → [Roadmap](/docs/70-79-business/planning/roadmap) → [Open questions](/docs/70-79-business/planning/open-questions) |
+| Executive or sponsor | [Key decisions](/docs/70-79-business/explainers/key-decisions) → [Open questions](/docs/70-79-business/planning/open-questions) |
 | Product owner or PM | [Start here](/docs/00-09-meta/start-here) |
 | Business analyst or ops | [Booking lifecycle](/docs/70-79-business/explainers/booking-lifecycle) → [Money flow](/docs/70-79-business/explainers/money-flow) |
 | Backend or frontend engineer | [Documentation system](/docs/00-09-meta/conventions/documentation-system#documentation-system) → [Specs](/docs/60-69-initiatives/61-2026/implementation-specs/) |
@@ -50,7 +50,6 @@ For a specific issue, start at `60-69-initiatives/61-2026/implementation-specs/{
 ## Platform capabilities
 
 - B2C instant booking and payment
-- Corporate quotation and invoicing workflows
 - Provider onboarding and verification
 - Inventory, pricing, and availability management
 - Booking lifecycle management

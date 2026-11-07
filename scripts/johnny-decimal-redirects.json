@@ -112,14 +112,6 @@
     "to": "/docs/70-79-business/requirements/"
   },
   {
-    "from": "/docs/ambiguities/open-questions",
-    "to": "/docs/70-79-business/planning/open-questions"
-  },
-  {
-    "from": "/docs/roadmap",
-    "to": "/docs/70-79-business/planning/roadmap/"
-  },
-  {
     "from": "/docs/engineering/backend-conventions",
     "to": "/docs/20-29-backend/conventions/backend"
   },
