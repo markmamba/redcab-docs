@@ -25,8 +25,8 @@ Audit of the Identity & Access layer of `red-cab-api`, covering session lifecycl
 
 | Topic | Document |
 | --- | --- |
-| Roadmap overview | [Phasing Roadmap](/docs/70-79-business/planning/roadmap) |
-| Foundation phase | [Phase 0](/docs/70-79-business/planning/roadmap/phase-0-foundation) |
+| Roadmap overview | Phasing Roadmap |
+| Foundation phase | Phase 0 |
 | Identity context | Identity & Access |
 | Identity ADR | ADR-010 |
 | IAM requirements | [FR-IAM](/docs/70-79-business/requirements/functional-requirements/iam) |

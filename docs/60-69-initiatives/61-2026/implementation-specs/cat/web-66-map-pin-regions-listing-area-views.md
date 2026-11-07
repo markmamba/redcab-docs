@@ -25,7 +25,7 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 
 ## Problem
 
-Milestone C requires map/pin **container regions** on tourist discover surfaces ([`tourist-ui-pre-phase-2.md`](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2)). Phase 1 API already serializes listable-node centroids on marketplace `areaShow` and listing `area` embeds; web loaders fetch those payloads but **never read** lat/lng. No issue-scoped web contract exists for component boundaries, fallback UX, or tests.
+Milestone C requires map/pin **container regions** on tourist discover surfaces (`tourist-ui-pre-phase-2.md`). Phase 1 API already serializes listable-node centroids on marketplace `areaShow` and listing `area` embeds; web loaders fetch those payloads but **never read** lat/lng. No issue-scoped web contract exists for component boundaries, fallback UX, or tests.
 
 Evidence: no `latitude` / `longitude` usage under `red-cab-web/app` except near-me **client** geolocation (#65); listing/area pages implemented in `marketplace-catalog-listing-list-page.jsx` and `marketplace-catalog-listing-detail-page.jsx`.
 
@@ -33,7 +33,7 @@ Evidence: no `latitude` / `longitude` usage under `red-cab-web/app` except near-
 
 | ID | Document | Why |
 | --- | --- | --- |
-| Milestone C | [/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Map pins deliverable |
+| Milestone C | /docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2 | Map pins deliverable |
 | frontend.md | [/docs/50-59-frontend/conventions/frontend](/docs/50-59-frontend/conventions/frontend) | Geography and maps — API-sourced pins |
 | geography.md | /docs/30-49-domains/patterns/geography (removed) | Centroid semantics |
 | web-56 | [/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract) | Public catalog URLs |

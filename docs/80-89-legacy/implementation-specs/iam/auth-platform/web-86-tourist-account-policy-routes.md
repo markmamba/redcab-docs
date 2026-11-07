@@ -45,7 +45,7 @@ Do not use it as a source. The domain pages in `30-49-domains/` replace it.
 | web-85 | [web-85-team-policy-routes.md](/docs/80-89-legacy/implementation-specs/iam/auth-platform/web-85-team-policy-routes) | Parallel guest/required/logout pattern |
 | ADR-018 | adr-018-web-authentication-enforcement-model.md | Policy enforcement; open pages |
 | frontend | [frontend.md](/docs/50-59-frontend/conventions/frontend) | R-2 single door |
-| program | [web-platform-program-strategy.md](/docs/70-79-business/planning/web-platform-program-strategy) | Phase 3 sequencing |
+| program | web-platform-program-strategy.md | Phase 3 sequencing |
 
 ## Design decisions
 

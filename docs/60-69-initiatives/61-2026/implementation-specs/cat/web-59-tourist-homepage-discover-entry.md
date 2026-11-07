@@ -35,7 +35,7 @@ depends_on:
 
 Homepage `/` is still a Phase 0 scaffold (`app/routes/home-page.jsx`) with auth CTAs and no discover entry. Milestone B P0 and ADR-017 require a real SEO landing that routes guests into the public catalog funnel at `/districts`.
 
-Evidence: `home-page.jsx` placeholder copy; roadmap [`tourist-ui-pre-phase-2.md`](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) Milestone B; ADR-017 §5 issue #59 row.
+Evidence: `home-page.jsx` placeholder copy; roadmap `tourist-ui-pre-phase-2.md` Milestone B; ADR-017 §5 issue #59 row.
 
 ## Governing docs
 

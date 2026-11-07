@@ -79,7 +79,7 @@ The system **shall** instruct the payment provider to route a platform fee equal
 - Source: E-10, E-13. Governs: FIN-12, INV-2, PAY-13. Status: Provisional (ADR-015 C4).
 
 ### FR-PAY-014 — Corporate transfer collection
-The system **shall** collect Corporate bank transfer payments through a payment-provider virtual account and **shall** confirm a Corporate Booking on provider-confirmed receipt rather than on manual Admin entry.
+_Dropped by IAM D12._ The system **shall** collect Corporate bank transfer payments through a payment-provider virtual account and **shall** confirm a Corporate Booking on provider-confirmed receipt rather than on manual Admin entry.
 - Source: E-07, E-03. Governs: PAY-9, INV-13, FIN-11. Status: Provisional (ADR-015 C1; resolves `AMB-029`, `AMB-030`).
 
 ### FR-PAY-015 — Settlement driven by verified provider events

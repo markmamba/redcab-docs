@@ -35,7 +35,7 @@ Evidence: `app/layouts/team/team-sidebar-config.js:70-75`, `app/routes/team/team
 | FR-PAY-010 | [/docs/70-79-business/requirements/functional-requirements/pay.md](/docs/70-79-business/requirements/functional-requirements/pay) | Admin can set platform-wide commission rate |
 | PAY-2 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Historical bookings retain commission snapshot |
 | INV-1 | [/docs/70-79-business/business-rules/invariants](/docs/70-79-business/business-rules/invariants) | Booking snapshots immutable after create |
-| Phase 1 | [Phase 1 MVP](/docs/70-79-business/planning/roadmap/phase-1-mvp) | Admin commission rate setting UI |
+| Phase 1 | Phase 1 MVP | Admin commission rate setting UI |
 | OPR-11 | `red-cab-api/docs/db/payments.dbml` | `effective_from` evaluated in `Asia/Tokyo` |
 | Web conventions | [Frontend conventions](/docs/50-59-frontend/conventions/frontend) | Team portal patterns |
 

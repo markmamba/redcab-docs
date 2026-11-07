@@ -27,7 +27,7 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 
 ## Problem
 
-Milestone C requires a listing index sort control wired to URL params ([`tourist-ui-pre-phase-2.md`](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2)). Marketplace listings index API accepts `order_by` / `order_dir` (`Catalog::Listings::MarketplaceIndexValidator`). The web area listings route loader today only passes `{ page }` to `indexByArea` ([`marketplace-catalog-listing-list-page.jsx`](https://github.com/markmamba/red-cab-web/blob/main/app/routes/marketplace/catalog-district/marketplace-catalog-listing-list-page.jsx)).
+Milestone C requires a listing index sort control wired to URL params (`tourist-ui-pre-phase-2.md`). Marketplace listings index API accepts `order_by` / `order_dir` (`Catalog::Listings::MarketplaceIndexValidator`). The web area listings route loader today only passes `{ page }` to `indexByArea` ([`marketplace-catalog-listing-list-page.jsx`](https://github.com/markmamba/red-cab-web/blob/main/app/routes/marketplace/catalog-district/marketplace-catalog-listing-list-page.jsx)).
 
 Evidence: no `order_by` usage under `red-cab-web/app` for marketplace catalog listings; provider catalog list already documents sort params.
 
@@ -41,7 +41,7 @@ Evidence: no `order_by` usage under `red-cab-web/app` for marketplace catalog li
 | frontend.md | [/docs/50-59-frontend/conventions/frontend.md](/docs/50-59-frontend/conventions/frontend) | URL-driven filters; no client authoritative ranking |
 | web-66 | [web-66-map-pin-regions-listing-area-views.md](./web-66-map-pin-regions-listing-area-views.md) | Page regions: title → map → list (sort placement Q4) |
 | red-cab-web#60 | GitHub issue | Public area listings route |
-| Milestone C | [/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2](/docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2) | Sort deliverable + rating when REV live |
+| Milestone C | /docs/70-79-business/planning/roadmap/tourist-ui-pre-phase-2 | Sort deliverable + rating when REV live |
 
 ## Design decisions
 

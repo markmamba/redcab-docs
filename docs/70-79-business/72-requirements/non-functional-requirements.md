@@ -132,7 +132,7 @@ The system **shall** confine each authenticated Actor to the surfaces permitted 
 - Source: 1.1–1.6. Governs: bounded-contexts (IAM); relates FR-IAM-009. Status: Approved.
 
 ### NFR-SEC-005 — Authenticated booking initiation
-The system **shall** require an authenticated Tourist or Corporate Account to initiate a booking, regardless of guest browsing scope.
+The system **shall** require an authenticated person to initiate a booking, regardless of guest browsing scope.
 - Source: 1.1, B-01. Governs: relates FR-IAM-012. Status: Approved (Decision Log AMB-022).
 
 ### NFR-SEC-006 — Upload constraints

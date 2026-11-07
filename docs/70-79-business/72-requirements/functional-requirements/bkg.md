@@ -89,7 +89,7 @@ The system **shall** verify availability of every constituent slot across all da
 - Source: E-04. Governs: BKG-4, BKG-5. Status: Approved.
 
 ### FR-BKG-014 — Passenger manifest
-The system **shall** allow a Corporate/Group Client to submit a passenger manifest for a confirmed group Booking and **shall** make it viewable to the assigned Provider.
+_Dropped by IAM D12._ The system **shall** allow a Corporate/Group Client to submit a passenger manifest for a confirmed group Booking and **shall** make it viewable to the assigned Provider.
 - Source: E-08. Governs: BKG-6. Status: Approved.
 
 ### FR-BKG-015 — Snapshot immutability across edits

@@ -36,9 +36,9 @@ Ubiquitous language for Red Cab Marketplace — change terms here first before o
 
 ## Cross-cutting terms
 
-- **Actor** — a person/system interacting with the platform: Visitor, Tourist, Corporate Client, Provider (Pending/Approved), Platform Admin.
+- **Actor** — a person/system interacting with the platform: Visitor, Tourist, Provider, Platform Admin.
 - **Tourist (Consumer)** — an authenticated individual traveler who browses, books, pays, and reviews. Demand side.
-- **Corporate / Group Client** — a school/company/group coordinator account (`account_type = Corporate`) that can request quotations, pay by bank transfer, and submit manifests. Demand side, COR.
+- **Corporate / Group Client** — dropped. Dropped by IAM D12. The product has no corporate clients.
 - **Provider (Supplier / Client)** — a verified vehicle travel company that holds at least one permit, lists services and receives bookings. Supply side. (Note: the raw notes call this a "Client"; in code/docs we use **Provider** to avoid collision with "Corporate Client".)
 - **Platform Admin** — internal Red Cab staff with full override access. Authenticates via a **separate Admin principal** (`Identities::Admin` / `admin_users`); Admin is **not** a value on marketplace `Account.role`.
 - **Platform** — Red Cab itself, the technology intermediary that earns commission.
@@ -123,11 +123,11 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 
 - **CheckoutSession** — pre-booking aggregate created when a Tourist initiates checkout. Holds frozen Price Snapshot, Commission Snapshot, Cancellation Policy Snapshot, Fulfillment Payload, Terms of Use acceptance (`PAY-17`), seat reservation, and a link to the **Payment Attempt** with the configured payment provider. On verified payment success, a Booking is materialized from the session (`BKG-9`).
 - **Payment Attempt** — the provider-side payment record keyed to a CheckoutSession, referenced by a provider discriminator plus an opaque reference rather than a provider-named identifier. *(Formerly "Stripe PaymentIntent".)*
-- **Booking** — a paid reservation of a slot by a Tourist/Corporate Client; the central order aggregate. B2C card checkout enters at `CONFIRMED` immediately after payment success (`BKG-2`, `BKG-10`).
+- **Booking** — a paid reservation of a slot by a Tourist; the central order aggregate. B2C card checkout enters at `CONFIRMED` immediately after payment success (`BKG-2`, `BKG-10`).
 - **Checkout** — the synchronous flow: select slot → enter fulfillment details → review snapshotted summary → agree to policy and Terms of Use → pay through the payment provider.
 - **Fulfillment Payload** — operational fields captured at checkout and copied immutably onto the Booking: **booking location** (pickup address until structured location ships), drop-off address, optional flight number, passenger name, passenger phone, luggage count, optional special notes (`BKG-11`).
 - **Price Snapshot** — the Price Breakdown frozen at CheckoutSession creation; immune to later provider changes (`C1`, `E-02`, `PRC-8`).
-- **Booking State** — `PENDING | CONFIRMED | COMPLETED | PAYOUT_QUEUED | CANCELLED | REFUNDED`. B2C card path enters at `CONFIRMED`; `PENDING` retained for corporate / pre-payment paths. Governed by the Booking State Machine (`E-09`).
+- **Booking State** — `PENDING | CONFIRMED | COMPLETED | PAYOUT_QUEUED | CANCELLED | REFUNDED`. B2C card path enters at `CONFIRMED`; `PENDING` stays for pre-payment paths. Governed by the Booking State Machine (`E-09`).
 - **Seat Reservation** — **(Legacy)** atomic decrement of `available_seats` during CheckoutSession creation. Replaced by creating an **Asset Hold** (`CON-1`, `BKG-9`).
 - **Bundle Booking** — a car + guide booked together; creates 2 Booking records linked by `bundle_booking_id`; commission per sub-booking (`E-03`). Cancelling one leg does not auto-cancel the other; each leg is cancelled and refunded on its own (`FR-BKG-012`, Decision Log `AMB-017`).
 - **Multi-Day Package** — a single-provider day-by-day itinerary booked as one purchase; all days' availability checked before checkout (`E-04`). **Term collision:** not the same as a sellable **package** in [Catalog decisions — packages and pricing policy](/docs/30-49-domains/catalog/catalog-decisions#packages-and-pricing-policy) (`BKG-4` itinerary concept vs listing price packages).
@@ -150,7 +150,9 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 - **Bank Transfer (Furikomi)** — Japanese corporate bank-transfer payment, collected by the Payment Provider through a per-transaction **virtual account**; confirmed by provider event, not by manual Admin entry (`PAY-9`, `E-07`).
 - **Payments Overview** — Admin screen of all transactions with snapshotted commission splits (`E-13`).
 
-## 5. Corporate Quotation & Invoicing (core)
+## 5. Corporate Quotation & Invoicing (dropped)
+
+The product dropped these terms. See [IAM D12 — No corporate accounts](/docs/30-49-domains/iam/iam-decisions/#no-corporate-accounts).
 
 - **Quotation Request** — a Corporate Client's custom-price request (trip name, dates, pax, stops, requirements) (`E-05`).
 - **Quotation (Omitsumorisho)** — Admin-issued formal quote PDF with line items, 10% consumption tax, bank details, validity date (`E-06`).
@@ -187,7 +189,7 @@ Revamp naming crosswalk: [Naming and legacy aliases](/docs/30-49-domains/catalog
 ---
 
 ## Terms intentionally avoided / disambiguated
-- **"Client"** — ambiguous in raw notes (means Provider in the Client Portal, but also "Corporate Client"). Use **Provider** for suppliers and **Corporate Client** for Corporate Client buyers.
+- **"Client"** — ambiguous in raw notes (means Provider in the Client Portal). Use **Provider** for suppliers and **Tourist** for buyers.
 - **"Quote"** — reserve **Price Breakdown** for the computed B2C price; reserve **Quotation** for the corporate document.
 - **"Cancellation policy" vs "refund"** — policy is the rule (config); refund is the computed money returned.
 - **"Admin" vs `Role`** — Admin is a standalone principal; never conflate with marketplace Account roles.

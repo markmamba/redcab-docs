@@ -40,7 +40,7 @@ Evidence: audit 2026-09-26; `implementation-roadmap.md` Phase 0 row 1.
 | changing-a-session | changing-a-session.md | Only `401` means signed out on session read |
 | worked-examples | worked-examples.md | SSR refresh sequence; parallel requests isolated |
 | implementation-roadmap | implementation-roadmap.md | Phase 0 ordering and acceptance themes |
-| web-platform-program-strategy | [web-platform-program-strategy.md](/docs/70-79-business/planning/web-platform-program-strategy) | Issue ↔ spec mapping (#78) |
+| web-platform-program-strategy | web-platform-program-strategy.md | Issue ↔ spec mapping (#78) |
 
 ## Design decisions
 

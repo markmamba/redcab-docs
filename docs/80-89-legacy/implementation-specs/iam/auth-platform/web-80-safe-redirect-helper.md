@@ -37,7 +37,7 @@ Evidence: audit 2026-09-28; `team-login-page.jsx` (`searchParams.get('redirect_t
 | entry-rules | entry-rules.md | Single helper before rules use `redirect_to` |
 | appendix | appendix-entry-rules-spec.md | Normative helper API + **S1–S9**, **L1–L2** |
 | roadmap | implementation-roadmap.md | Phase 0 ordering |
-| web-platform-program-strategy | [web-platform-program-strategy.md](/docs/70-79-business/planning/web-platform-program-strategy) | Issue ↔ spec mapping (#80) |
+| web-platform-program-strategy | web-platform-program-strategy.md | Issue ↔ spec mapping (#80) |
 | web-78 | [web-78-ssr-refresh-request-scope.md](web-78-ssr-refresh-request-scope.md) | Sibling Phase 0 spec pattern |
 
 ## Design decisions
