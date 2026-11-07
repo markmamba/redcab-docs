@@ -26,6 +26,7 @@ This page describes what the owner and the staff do and see, without screens, AP
 | --- | --- |
 | Rulings | [Provider company](/docs/30-49-domains/iam/iam-decisions/#provider-company), [Company roles](/docs/30-49-domains/iam/iam-decisions/#company-roles), [Staff invitations](/docs/30-49-domains/iam/iam-decisions/#staff-invitations) |
 | Use cases | UC-10 to UC-18 in [redcab-docs#155](https://github.com/markmamba/redcab-docs/issues/155) |
+| How it works | [Provider company and members model](/docs/30-49-domains/iam/models/provider-company-and-members) and [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members) |
 
 ---
 

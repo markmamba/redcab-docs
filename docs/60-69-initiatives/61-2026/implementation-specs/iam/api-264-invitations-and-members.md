@@ -4,7 +4,7 @@ sidebar_label: API · Invitations and members
 issue: "https://github.com/markmamba/red-cab-api/issues/264"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -66,6 +66,32 @@ The API has memberships, but it has no way to add or manage a member.
 - The company JSON does not say what role the asking person has.
 - An invited person has the access word `missing`, so `Providers::BaseController` refuses that person.
 - A copied link does not prove that the person owns the inbox.
+
+## Lasting rules \{#lasting-rules\}
+
+The lasting rules of this spec are on the model page [Provider company and members](/docs/30-49-domains/iam/models/provider-company-and-members).
+
+- That page holds the invitation columns and guards, and the owner-only check.
+- It also holds the invitation, preview, accept and member calls, with their answers and titles.
+- It also holds the last-owner rule and the `company_role` key.
+- The web side is on [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members).
+- This spec keeps the scope, the steps and the verification.
+
+## Implementation notes \{#implementation-notes\}
+
+The code differs from the plan of this spec in these places.
+
+- Four small classes joined the planned files: `AcceptStateService`, `LiveInvitationFinderService`, `LastOwnerService` and two plain data objects (`IssuedInvitationDto` and `PreviewDto`).
+  - `AcceptStateService` gives the accept state to the preview and to the accept validator, so the rule has one home.
+- The owner-only tests are in one file, `test/controllers/providers/owner_only_actions_test.rb`, and not in each controller test.
+- Two guard tests joined the plan: `staff_access_test.rb` and `locked_person_test.rb`.
+- The "two owners at the same moment" rule has a sequential test only.
+  - The row lock is in the code.
+- The accept `409` test models the race through the unique index.
+  - It does not run two requests at the same time.
+- The dev seeder adds `provider-staff@dev.redcab.test`.
+- The invitation sends no email, as decision 1 says.
+  - A later spec may add one.
 
 ## Governing docs
 
@@ -456,35 +482,35 @@ Kenji runs Kanto Charter and adds Mika as staff.
 
 ### API
 
-- [ ] Add the migration and the model, and update the DBML tags.
-- [ ] Add the token service and the link builder.
-- [ ] Add the invitation managers, validators, requests and serializers.
-- [ ] Add the membership managers, validators and serializer.
-- [ ] Add the four controllers and the routes.
-- [ ] Add `require_company_owner!` and the new code.
-- [ ] Apply the owner check to the six existing owner actions.
-- [ ] Add `company_role` to the company JSON.
-- [ ] Update the dev seeder and the test helpers.
-- [ ] Update the tests.
+- [x] Add the migration and the model, and update the DBML tags.
+- [x] Add the token service and the link builder.
+- [x] Add the invitation managers, validators, requests and serializers.
+- [x] Add the membership managers, validators and serializer.
+- [x] Add the four controllers and the routes.
+- [x] Add `require_company_owner!` and the new code.
+- [x] Apply the owner check to the six existing owner actions.
+- [x] Add `company_role` to the company JSON.
+- [x] Update the dev seeder and the test helpers.
+- [x] Update the tests.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] The database stores only the digest of the token.
-- [ ] A send again stops the old link.
-- [ ] A link works for 7 days from `sent_at`.
-- [ ] The accept refuses another email, an unverified email, an active membership and a suspended company.
-- [ ] Only an approved company can invite, list members, change a role or remove a member.
-- [ ] Staff get `403` with `provider_owner_required` on the six existing owner actions and the seven member endpoints.
-- [ ] Staff can use every catalog, booking and review endpoint.
-- [ ] A role change and a removal apply on the next request.
-- [ ] The last owner cannot leave and cannot become Staff.
-- [ ] A removed row stays, and the person can come back with a new invitation.
-- [ ] The company JSON holds `company_role` for the asking person.
-- [ ] The session answer still holds two keys and no role.
+- [x] The database stores only the digest of the token.
+- [x] A send again stops the old link.
+- [x] A link works for 7 days from `sent_at`.
+- [x] The accept refuses another email, an unverified email, an active membership and a suspended company.
+- [x] Only an approved company can invite, list members, change a role or remove a member.
+- [x] Staff get `403` with `provider_owner_required` on the six existing owner actions and the seven member endpoints.
+- [x] Staff can use every catalog, booking and review endpoint.
+- [x] A role change and a removal apply on the next request.
+- [x] The last owner cannot leave and cannot become Staff.
+- [x] A removed row stays, and the person can come back with a new invitation.
+- [x] The company JSON holds `company_role` for the asking person.
+- [x] The session answer still holds two keys and no role.
 
 ## Verification
 

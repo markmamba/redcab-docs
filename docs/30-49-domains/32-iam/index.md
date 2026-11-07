@@ -82,6 +82,7 @@ erDiagram
 | What are the company and the membership, and how does the provider gate work? | [Provider company and members model](/docs/30-49-domains/iam/models/provider-company-and-members) |
 | How does the API give the session answer, the access word and the gates? | [Person and provider access model](/docs/30-49-domains/iam/models/person-and-provider-access) |
 | How does the web open the portals and show the switch? | [Portal access and switch](/docs/30-49-domains/iam/use-cases/portal-access-and-switch) |
+| How does an owner invite staff, and what do staff see? | [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members) |
 | How does a company add and manage its staff? | [Provider company members](/docs/30-49-domains/iam/requirements/provider-company-members) |
 | How does a session work in the API and in the web? | [Sessions](/docs/30-49-domains/iam/use-cases/sessions) |
 | Why this design, and what else did we weigh? | [Why one account is one person](/docs/30-49-domains/iam/iam-decisions/#person-account-why), [Why sessions are database records](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions-why) |

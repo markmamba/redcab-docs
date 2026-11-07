@@ -4,7 +4,7 @@ sidebar_label: Web · Invitations and members
 issue: "https://github.com/markmamba/red-cab-web/issues/193"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -65,6 +65,30 @@ The web has no page for members or invitations.
 - `postAuthPath` drops a `redirect_to` that is not a public return path or under `/account` or `/providers`.
 - Every company page shows its edit controls to every member, and the API will refuse staff.
 - The dashboard has no link to a members page.
+
+## Lasting rules \{#lasting-rules\}
+
+The lasting rules of this spec are on the use-case page [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members).
+
+- That page holds the routes, the accept page and its states.
+- It also holds the members page, the link panel and the confirmations.
+- It also holds the staff read-only views and the dashboard link.
+- The API side is on [Provider company and members](/docs/30-49-domains/iam/models/provider-company-and-members).
+- This spec keeps the scope, the steps and the verification.
+
+## Implementation notes \{#implementation-notes\}
+
+The code differs from the plan of this spec in these places.
+
+- The file `providers-invitation-service.js` joined the plan.
+  - It reads the preview and maps a `404` to `unavailable`, so the page holds no read logic.
+- `ProvidersMembershipService` holds `fetchMembers`, `formatDate` and `buildPersonLabel`.
+  - Step 7 adds `formatMemberName` to it.
+- Two small views joined the plan: the owner-only note and the read-only company details.
+- The members loader returns the company in every answer, because the page shows dates in the Service Timezone.
+  - A real browser run found this. The first version returned the company only when the load failed.
+- The accept error shows the API `title` as the toast title.
+- A real browser run passed 20 steps against the API integration branch.
 
 ## Governing docs
 
@@ -437,32 +461,33 @@ Kenji runs Kanto Charter and adds Mika as staff.
 
 ### Web
 
-- [ ] Add the four API modules.
-- [ ] Add the accept route, page and views.
-- [ ] Add the copy keys, and have a Japanese speaker check them.
-- [ ] Add the members route, page, forms and views.
-- [ ] Add `PROVIDERS_COMPANY_ROLE` and `canManageCompany`.
-- [ ] Add the read-only state to the registration pages.
-- [ ] Add the Members link to the dashboard.
-- [ ] Update the tests.
-- [ ] Update `AGENTS.md` and `app/routes/AGENTS.md`.
+- [x] Add the four API modules.
+- [x] Add the accept route, page and views.
+- [x] Add the copy keys.
+  - A Japanese speaker still has to check every `ja` value.
+- [x] Add the members route, page, forms and views.
+- [x] Add `PROVIDERS_COMPANY_ROLE` and `canManageCompany`.
+- [x] Add the read-only state to the registration pages.
+- [x] Add the Members link to the dashboard.
+- [x] Update the tests.
+- [x] Update `AGENTS.md` and `app/routes/AGENTS.md`.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] A guest with a link signs in and returns to the accept page.
-- [ ] A person with a matching, verified email and no company accepts, and `/providers` opens with no new sign-in.
-- [ ] The accept page shows the right text for each accept state.
-- [ ] A dead link shows no company name.
-- [ ] An owner of an approved company can invite, send again, cancel, change a role and remove a member.
-- [ ] The invitation link shows once, and the page cannot show it again.
-- [ ] Staff see the registration pages as read-only, and the dashboard shows no Members link.
-- [ ] Staff can still use the catalog, bookings and reviews pages.
-- [ ] No entry rule reads a role.
-- [ ] `postAuthPath` and `providerRequired` keep the rules of `web-192`.
+- [x] A guest with a link signs in and returns to the accept page.
+- [x] A person with a matching, verified email and no company accepts, and `/providers` opens with no new sign-in.
+- [x] The accept page shows the right text for each accept state.
+- [x] A dead link shows no company name.
+- [x] An owner of an approved company can invite, send again, cancel, change a role and remove a member.
+- [x] The invitation link shows once, and the page cannot show it again.
+- [x] Staff see the registration pages as read-only, and the dashboard shows no Members link.
+- [x] Staff can still use the catalog, bookings and reviews pages.
+- [x] No entry rule reads a role.
+- [x] `postAuthPath` and `providerRequired` keep the rules of `web-192`.
 
 ## Verification
 
