@@ -106,6 +106,7 @@ Each rule has one section in [IAM decisions](/docs/30-49-domains/iam/iam-decisio
 | Policy routes | [policy-routes](/docs/30-49-domains/iam/iam-decisions/#policy-routes) |
 | Access codes | [access-codes](/docs/30-49-domains/iam/iam-decisions/#access-codes) |
 | Language | [language](/docs/30-49-domains/iam/iam-decisions/#language) |
+| Emails | [emails](/docs/30-49-domains/iam/iam-decisions/#emails) |
 | Member on records | [member-on-records](/docs/30-49-domains/iam/iam-decisions/#member-on-records) |
 | Booking a listing of the own company | [own-company-booking](/docs/30-49-domains/iam/iam-decisions/#own-company-booking) |
 | No corporate accounts | [no-corporate-accounts](/docs/30-49-domains/iam/iam-decisions/#no-corporate-accounts) |

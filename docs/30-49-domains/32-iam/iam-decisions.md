@@ -7,7 +7,7 @@ doc_type: domain-decisions
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-11-01
+last_reviewed: 2026-11-07
 supersedes:
   - ADR-018
   - ADR-019
@@ -458,6 +458,59 @@ The web picks the screen language for each request, and the account keeps a save
 - Why: a guest has no account, so a guest could never get Japanese from an account field.
 - Replaces: `FR-IAM-010`, `FR-IAM-011` and the first-login language prompt.
 
+## D17 — Emails (2026-11-07) \{#emails\}
+
+The system sends four kinds of IAM email, and each email has an English text and a Japanese text.
+
+- Password reset: a person who asks for a reset gets an email with a reset link.
+  - The link works for 1 hour and only once.
+  - A reset signs the person out of every session.
+  - The page answer is the same for every email, so nobody can test which emails have an account.
+  - An account with only Google sign-in gets an email with no link.
+  - That email tells the person to use Google sign-in.
+- Email change: a person who changes the email of the account gets a verification email at the new address.
+  - The old address gets a notice that names the new address with most letters hidden, for example `n***@example.com`.
+  - The notice tells the person to contact Red Cab if they did not make the change.
+- Staff invitation: the system sends an email with the invitation link to the invited email.
+  - A new invitation sends the email.
+  - A send again sends a new email, and the old link stops working.
+  - The answer to the owner still shows the link once.
+  - The owner can copy that link when the email does not arrive.
+- Owner decision: every active owner gets an email when the team approves, rejects or asks for a correction.
+  - The rejection email and the correction email show the message that the team wrote.
+  - Each email has a link to the provider portal.
+  - Staff do not get these emails.
+- Language: each email uses the saved language choice of the person who gets it.
+  - The invitation email is in English, with one Japanese line, because the invited email may have no account.
+- Text: every email text follows ASD-STE100 Tier A, in English and in Japanese.
+  - A Japanese speaker checks every Japanese text before the code merges to `main`.
+- Replaces: decision 1 of the spec `api-264`, which sent no invitation email.
+
+### Why \{#emails-why\}
+
+- A person who forgets the password cannot get back into the account today, because no reset email exists.
+- A person who changes the email cannot verify the new address.
+- An invited person needs a verified email to accept.
+- An invited person must not depend on the owner to copy a link into a chat.
+- An owner must know the result of the review without checking the portal each day.
+
+### What changes with it \{#emails-changes\}
+
+- The Notifications domain sends email for more events than registration and verification resend.
+- The API publishes an event when a person changes the email of the account.
+- The web shows the reset pages in English and Japanese.
+
+### Options we did not choose \{#emails-options\}
+
+| Option | Why not chosen |
+| --- | --- |
+| Remove the copy link and send only the email | The email can go to spam, so the owner needs a second way. |
+| Send the decision email to staff too | Only an owner acts on the company application. |
+| Send a short decision email with no team message | The owner must open the portal to learn what to fix. |
+| Send the invitation in the language of the owner | The owner language says nothing about the invited person. |
+| No notice to the old address | A person whose account someone else took gets no warning. |
+| Send no email to a Google-only account | The person gets nothing and does not know why. |
+
 ## Open questions \{#open-forks\}
 
 These items are proposed, not agreed, and no page may treat them as rules.
@@ -470,5 +523,5 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | Does the owner accept a second application after a rejection? | Yes for now. The principal developer decided this, and the owner may change it. | Acceptance |
 | Do confirmed bookings stay after a permit ends? | Yes for now. Operating without a permit may be a legal risk, so an expert must confirm it. | Launch |
 | May a package sell a date after its permit ends? | No for now. The principal developer decided this, and the owner may change it. | Acceptance |
-| Which emails do the team and the owner get? | The owner on approval, rejection and correction. The team on submit. Reminders 30 and 7 days before a permit ends. Not needed for launch. | None |
+| Does the team get an email when an owner submits for review, and do owners get reminders 30 and 7 days before a permit ends? | Not now. [D17 — Emails](#emails) covers the other IAM emails. Not needed for launch. | None |
 | Has the Product Owner signed off these rulings? | Not recorded. | Acceptance |
