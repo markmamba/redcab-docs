@@ -7,12 +7,13 @@ doc_type: use-case
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-11-07
+last_reviewed: 2026-11-08
 ---
 
 ## TL;DR \{#staff-invitations-tldr\}
 
-- An owner invites a person by email, and the owner sends the link by hand.
+- An owner invites a person by email, and Red Cab emails the link to that person.
+- The owner can also copy the link and send it by hand.
 - The invited person opens `/account/staff-invitation`, signs in, and accepts.
 - The accept page is an open route, outside every policy route.
 - The page reads one preview and draws one state from `accept_state`.
@@ -33,7 +34,8 @@ The rulings give the reasons, and the API side is in the model page.
 | The API side | [Provider company and members model](/docs/30-49-domains/iam/models/provider-company-and-members) |
 | What owners and staff do | [Provider company members](/docs/30-49-domains/iam/requirements/provider-company-members) |
 | Entry rules and the access word | [Portal access and switch](/docs/30-49-domains/iam/use-cases/portal-access-and-switch) |
-| Work record | [Web spec web-193](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-193-invitations-and-members) |
+| The invitation email | [IAM emails and reset pages](/docs/30-49-domains/iam/use-cases/emails-and-reset-pages#invitation-email) |
+| Work record | [Web spec web-193](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-193-invitations-and-members) and [Web spec web-214](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-214-reset-pages-and-invitation-texts) |
 
 ---
 
@@ -41,7 +43,7 @@ The rulings give the reasons, and the API side is in the model page.
 
 | Word | Meaning |
 | --- | --- |
-| invitation link | The web address `/account/staff-invitation?token=…`. |
+| invitation link | The web address `/account/staff-invitation?token=…`. Red Cab emails it, and an owner may also copy it. |
 | accept page | The page at that address. |
 | accept state | One word from the API that says what the viewer can do: `guest`, `ready`, `email_mismatch`, `email_unverified`, `has_membership` or `company_suspended`. |
 | link panel | The part of the members page that shows the link once. |
@@ -105,7 +107,7 @@ The page uses a `clientLoader`, so the token stays out of the log of the web ser
 - Accept sends the token, then revalidates the root loader, then moves to `/providers`.
   - The root loader must hold the word `active` before the entry rule runs.
 - An error on Accept shows the API `title` in a toast, and the person stays on the page.
-- A guest sees English.
+- A guest sees English, and the guest note points to the link in the invitation email.
 - A signed-in person sees the saved language.
 - The copy keys have the prefix `staff_invitation.` in `tourist-surface-copy.js`.
 
@@ -129,7 +131,8 @@ An owner sees three cards.
 
 The link panel follows these rules.
 
-- It shows a read-only field, a Copy link button and the note `This link works for 7 days. Red Cab does not show it again.`
+- It shows a read-only field, a Copy link button and the note `Red Cab sent this link by email. It works for 7 days. You can also copy it now, because Red Cab does not show it again.`
+- The link panel stays English, because the provider portal has no Japanese copy yet.
 - It lives in component state only.
   - The link never goes into storage.
 - A new create or send again replaces the link.
@@ -179,7 +182,7 @@ Kenji is an owner of Kanto Charter, and he invites Mika.
 
 1. Kenji opens `/providers/members` and enters `mika@example.com` with the role Staff.
 2. The link panel shows the link once, and Kenji copies it.
-3. Kenji sends the link to Mika by chat.
+3. Red Cab emails the link to Mika, and Kenji may also copy it and send it by chat.
 4. Mika opens the link as a guest, and the page shows the company, the role and her email.
 5. Mika picks Sign in and signs in with `mika@example.com`.
 6. The page opens again in the state `ready`, and Mika picks Accept.
@@ -194,5 +197,4 @@ Kenji is an owner of Kanto Charter, and he invites Mika.
   - The page shows a note about it.
 - A Japanese speaker must check every new `ja` text of the accept page.
 - A staff member whose owners all left cannot leave, and the team fixes this by hand.
-- The invitation sends no email.
-  - A later spec may add the email.
+- The invitation email can go to spam, so the owner keeps the copy link.

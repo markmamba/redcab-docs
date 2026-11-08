@@ -4,7 +4,7 @@ sidebar_label: API · IAM emails
 issue: "https://github.com/markmamba/red-cab-api/issues/292"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -132,7 +132,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | 18 | The three decision events carry a new `decision_id` and the team message, and each owner gets one row. | Read `rejection_reason` when the job runs. | The owner may submit again before the job runs, and the submit clears `rejection_reason`. |
 | 19 | The decision emails go to the active owner memberships at the time of the event. | Also send to staff. | D17 sends to owners only. |
 | 20 | Every decision email links to `{web_base_url}/providers`. | A different page for each decision. | The provider policy routes already open the right page for each access word. |
-| 21 | `Notifications::Dispatches::Shared::EnqueueManager` rescues `StandardError` from its own work, so one place covers every mail key. It reports the error with `Sentry.capture_exception` when `Sentry` is defined, and it returns. | Let the error reach the request. Rescue in each enqueue manager. | The event publishes after commit. A 500 answer after a committed change is wrong, and the owner would lose `invitation_link`. The code reads `Sentry` by name at run time, because the gem is not in the `Gemfile` yet. |
+| 21 | `Notifications::Dispatches::Shared::EnqueueManager` rescues `StandardError` from its own work, so one place covers every mail key. It reports the error with `Sentry.capture_exception` when `Sentry` is defined, and it returns. The two code paths that read records before they call it also rescue: `Notifications::StaffInvitationSent::EnqueueManager` and `Notifications::Shared::OwnerDecisionEnqueueService`. | Let the error reach the request. Rescue in each enqueue manager. | The event publishes after commit. A 500 answer after a committed change is wrong, and the owner would lose `invitation_link`. The code reads `Sentry` by name at run time, because the gem is not in the `Gemfile` yet. |
 | 22 | A blank `support_email` and a missing job argument mark the row `failed` and return. They do not raise. | Raise, so Sidekiq retries. | A retry cannot succeed, because the row is not `pending`. A raise only adds noise to Sentry. |
 | 23 | A `failed` row never retries by itself. Only a republish of the same event resets it. | Retry after an SMTP timeout. | This is the behavior today. A retry rule needs its own ruling. |
 | 24 | `mail_key` is a string-backed enum on `Notifications::Dispatch`. The change is 3 migrations: add, backfill and constrain, as `db/AGENTS.md` asks. The backfill uses an explicit map. It stops with an error on any other `event_name`. | Copy `event_name` in snake case. Delete the other rows. | `EmailVerificationResent` maps to `verification_resent`, so a copy is wrong. Deleting rows hides data. |
@@ -344,6 +344,8 @@ The language event `LanguagePreferenceChanged` keeps its own branch.
 - `app/domains/notifications/shared/report_enqueue_error_service.rb`: writes the log and reports the error.
 - `app/domains/notifications/shared/web_url_builder.rb`: builds a web address from a path and a query.
 - `app/domains/notifications/shared/masked_email_service.rb`: builds the masked email.
+- `app/domains/notifications/shared/owner_decision_enqueue_service.rb`: queues one row for each active owner after a team decision.
+- `app/domains/providers/memberships/active_owners_service.rb`: finds the active owner memberships of a company.
 - `app/domains/notifications/password_reset_requested/enqueue_manager.rb`: replace the stub.
 - `app/domains/notifications/password_reset_requested_without_password/enqueue_manager.rb`
 - `app/domains/notifications/account_email_changed/enqueue_manager.rb`
@@ -369,6 +371,7 @@ The language event `LanguagePreferenceChanged` keeps its own branch.
 - `app/domains/providers/invitations/providers_create_manager.rb` and `providers_resend_manager.rb`
 - `app/domains/providers/companies/team_approve_manager.rb`, `team_reject_manager.rb` and `team_request_correction_manager.rb`
 - `test/mailers/previews/notifications/*_preview.rb` (new folder): one preview for each action, in `en` and `ja`.
+- `test/support/domain_events_test_helper.rb`: a test helper that lists the events that a block publishes.
 
 ### Code to remove
 
@@ -447,47 +450,54 @@ Kenji owns Kanto Charter, and the saved language of Kenji is `ja`.
 - A Japanese speaker must check every `ja` text in this spec before the final API pull request merges.
 - Anyone can ask for a reset email for any address many times, because no rate limit exists.
   - The free Brevo plan sends 300 emails each day.
+  - [red-cab-api#293](https://github.com/markmamba/red-cab-api/issues/293) adds the rate limit.
+- An owner with no name makes the invitation email row fail, and the system reports it.
+- The team message has no length limit.
+- Two team members who decide at the same moment send two emails to each owner.
+  - The team accepts this for now.
+- When Sentry ships, check that it does not send job arguments, because they can hold raw tokens.
 
 ## Tasks
 
 ### API
 
-- [ ] Add the migration, the model change and the DBML change.
-- [ ] Make the enqueue manager and the process manager generic.
-- [ ] Add the URL builder, the masked email service and the setting `support_email`.
-- [ ] Add the four mailers, the templates, the texts and the previews.
-- [ ] Add the three new events and the new payload keys.
-- [ ] Add the six handlers in the publisher.
-- [ ] Change the reset, update, invitation and team managers.
-- [ ] Update the tests.
+- [x] Add the migration, the model change and the DBML change.
+- [x] Make the enqueue manager and the process manager generic.
+- [x] Add the URL builder, the masked email service and the setting `support_email`.
+- [x] Add the four mailers, the templates, the texts and the previews.
+- [x] Add the three new events and the new payload keys.
+- [x] Add the six handlers in the publisher.
+- [x] Change the reset, update, invitation and team managers.
+- [x] Update the tests.
 
 ### Docs \{#tasks-docs\}
 
-- [ ] Set spec `status: implemented` after merge.
-- [ ] Update the two no-email lines on [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members).
+- [x] Set spec `status: implemented` after merge.
+- [x] Update the two no-email lines on [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members).
   - One line says that the owner sends the link by hand.
   - One line says that the invitation sends no email.
-- [ ] Add the email of each flow to its use-case page.
-- [ ] Add `mail_key` to the words of the Notifications docs, if a page names the table.
+- [x] Add the email of each flow to its use-case page.
+- [x] Add `mail_key` to the words of the Notifications docs, if a page names the table.
+  - No Notifications page names the table in a words list, so nothing changed.
 
 ## Acceptance criteria
 
-- [ ] A reset request for an account with a password sends one `password_reset` email.
+- [x] A reset request for an account with a password sends one `password_reset` email.
   - Its link works for 1 hour.
-- [ ] A reset request for a Google-only account sends one `password_reset_without_password` email with no reset link.
-- [ ] A reset request for an unknown email sends nothing, and the answer is the same as for a known email.
-- [ ] An email change sends `email_change_verification` to the new address and `email_change_notice` to the old address.
-- [ ] After an email change, a verification token sent before the change answers `422`.
-- [ ] After an email change, a password reset token sent before the change answers `422`.
-- [ ] The log holds no job argument, so it holds no raw token.
-- [ ] Create and send again each send one `staff_invitation` email, and each answer still holds `invitation_link`.
-- [ ] Each decision sends one email to each active owner, and no email to staff.
-- [ ] The rejection and correction emails show the team message.
-- [ ] Each email uses the saved language of the receiver, and the invitation uses English with the Japanese line.
-- [ ] A republished event writes no second row.
-- [ ] A blank `support_email` marks the notice row `failed`, and the default is `help.support@redcab.app`.
-- [ ] An error while the system queues an email does not change the answer of a committed action.
-- [ ] No table holds a raw token.
+- [x] A reset request for a Google-only account sends one `password_reset_without_password` email with no reset link.
+- [x] A reset request for an unknown email sends nothing, and the answer is the same as for a known email.
+- [x] An email change sends `email_change_verification` to the new address and `email_change_notice` to the old address.
+- [x] After an email change, a verification token sent before the change answers `422`.
+- [x] After an email change, a password reset token sent before the change answers `422`.
+- [x] The log holds no job argument, so it holds no raw token.
+- [x] Create and send again each send one `staff_invitation` email, and each answer still holds `invitation_link`.
+- [x] Each decision sends one email to each active owner, and no email to staff.
+- [x] The rejection and correction emails show the team message.
+- [x] Each email uses the saved language of the receiver, and the invitation uses English with the Japanese line.
+- [x] A republished event writes no second row.
+- [x] A blank `support_email` marks the notice row `failed`, and the default is `help.support@redcab.app`.
+- [x] An error while the system queues an email does not change the answer of a committed action.
+- [x] No table holds a raw token.
 
 ## Verification
 

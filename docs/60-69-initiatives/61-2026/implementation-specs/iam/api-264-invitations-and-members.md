@@ -23,8 +23,9 @@ related:
 
 ## TL;DR
 
-- An owner of an approved company invites a person by email, and the owner sends the link by hand.
-- The API sends no email, because launch does not need it.
+- An owner of an approved company invites a person by email.
+- The API sends the invitation email, as [api-292](api-292-iam-emails.md) builds it.
+- The owner can also copy the link and send it by hand.
 - A signed-in person with a verified, matching email accepts the invitation and gets a membership.
 - An owner lists members, changes a role and removes a member.
 - The last owner cannot leave and cannot become Staff.
@@ -90,8 +91,8 @@ The code differs from the plan of this spec in these places.
 - The accept `409` test models the race through the unique index.
   - It does not run two requests at the same time.
 - The dev seeder adds `provider-staff@dev.redcab.test`.
-- The invitation sends no email, as decision 1 says.
-  - A later spec may add one.
+- The invitation sends an email, as [api-292](api-292-iam-emails.md) builds it.
+  - The create and send-again answers still return the link once.
 
 ## Governing docs
 
@@ -115,7 +116,7 @@ Read these before design. Do not invent behavior that contradicts them.
 
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
-| 1 | The API sends no invitation email. The create and send-again responses return the invitation link once. | Send a mail now. | Launch needs no email. The principal developer chose a copy link. |
+| 1 | The create and send-again responses return the invitation link once, so the owner can copy it. The API also sends the invitation email, see [api-292](api-292-iam-emails.md) and [IAM D17 — Emails](/docs/30-49-domains/iam/iam-decisions/#emails). | Send only the email. | The email can go to spam, so the owner needs a second way. |
 | 2 | The raw token is 32 random bytes, in URL-safe base64. The table stores its SHA-256 digest. | Store the raw token. | A database leak then gives no working link. |
 | 3 | A send again makes a new token, and it sets `sent_at` and `expires_at`. The old link stops working. | Keep the token and extend the date. | The ruling says a new send replaces the old link. |
 | 4 | A send again also sets `invited_by_membership_id` to the owner who sends now. | Keep the first sender. | The table keeps the member who did the latest action. |
@@ -440,7 +441,7 @@ New tests cover these behaviors.
   - The accept creates the membership and updates the invitation in one transaction.
   - A role change or a removal locks the company row in one transaction.
 - Snapshots: none.
-- Events: none, because no email goes out.
+- Events: `StaffInvitationSent`, which sends the invitation email, see [api-292](api-292-iam-emails.md).
 
 ## Worked example
 
@@ -449,7 +450,7 @@ Kenji runs Kanto Charter and adds Mika as staff.
 1. The team approved Kanto Charter, so Kenji has the word `active` and the role `owner`.
 2. Kenji sends `POST /providers/invitations` with `mika@example.com` and `staff`.
 3. The API stores the digest, and it answers `201` with the invitation and the link.
-4. Kenji copies the link and sends it to Mika in a chat.
+4. Red Cab emails the link to Mika, and Kenji can also copy the link and send it in a chat.
 5. Mika opens the link, and `GET /providers/invitation_previews` answers `accept_state` `guest`.
 6. Mika signs in with `mika@example.com`, which is verified, and opens the link again.
 7. The preview answers `ready`, and Mika sends `POST /providers/invitation_acceptances`.
@@ -461,7 +462,7 @@ Kenji runs Kanto Charter and adds Mika as staff.
 
 ## Out of scope
 
-- The invitation email, and any other email.
+- Any email other than the invitation email, which [api-292](api-292-iam-emails.md) covers.
 - The production mail settings, which [red-cab-api#265](https://github.com/markmamba/red-cab-api/issues/265) covers.
 - Invitations from a pending or rejected company.
 - A Leave action for staff.

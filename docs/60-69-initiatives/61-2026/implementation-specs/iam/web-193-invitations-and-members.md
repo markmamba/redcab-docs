@@ -30,7 +30,8 @@ related:
 - The page shows the invitation link once, with a Copy link button.
 - Staff see the company pages as read-only, and the dashboard shows no Members link.
 - Entry rules still read the access word and never a role.
-- This spec ships no email, no payout page and no carry of the link through sign-up.
+- The invitation email comes from the API, see [web-214](web-214-reset-pages-and-invitation-texts.md).
+- This spec ships no payout page and no carry of the link through sign-up.
 - Breaking change: Yes.
   - The web and `red-cab-api` must deploy together.
 
@@ -40,7 +41,7 @@ related:
 | --- | --- |
 | member | A person with an active membership in a provider company. |
 | owner, staff | The two company roles. The company JSON holds the role of the asking person in `company_role`. |
-| invitation link | The address `/account/staff-invitation?token=…`. An owner copies it and sends it by hand. |
+| invitation link | The address `/account/staff-invitation?token=…`. Red Cab emails it, and an owner may also copy it and send it by hand. |
 | accept state | The word `accept_state` in the invitation preview. It says what the viewer can do. |
 | access word | The value of `provider_access.state`: `missing`, `pending`, `active`, `rejected` or `suspended`. |
 | entry rule | A pure function that answers with null or a path. A policy route calls it before a page renders. |
@@ -227,7 +228,7 @@ The keys go into `app/domains/tourist/tourist-surface-copy.js` with the prefix `
 | `role.staff` | `Staff` | `スタッフ` |
 | `sign_in` | `Sign in` | `ログイン` |
 | `sign_up` | `Create an account` | `アカウントを作成` |
-| `guest_note` | `Sign in with the invited email. If you create an account, verify your email first, then open this link again.` | `招待されたメールアドレスでログインしてください。アカウントを作成した場合は、メールを確認してから、このリンクをもう一度開いてください。` |
+| `guest_note` | `Sign in with the invited email. If you create an account, verify your email first. Then open the link in the invitation email again.` | `招待されたメールアドレスでログインしてください。アカウントを作成した場合は、先にメールアドレスを確認してください。その後、招待メールのリンクをもう一度開いてください。` |
 | `chat_browser_note` | `If Google sign-in fails, open this link in Safari or Chrome.` | `Googleでログインできない場合は、このリンクをSafariまたはChromeで開いてください。` |
 | `accept` | `Accept invitation` | `招待を受ける` |
 | `state.email_mismatch` | `This invitation is for another email address. Please sign in with the invited email.` | `この招待は別のメールアドレス宛てです。招待されたメールアドレスでログインしてください。` |
@@ -269,7 +270,7 @@ The invite form acts as follows.
 
 The link panel acts as follows.
 
-- It shows a read-only field with the link, a Copy link button and the note `This link works for 7 days. Red Cab does not show it again.`
+- It shows a read-only field with the link, a Copy link button and the note `Red Cab sent this link by email. It works for 7 days. You can also copy it now, because Red Cab does not show it again.`
 - It holds the link in component state only.
 - A new send again or create replaces the link in the panel.
 - A reload, a move to another page or a Cancel clears the panel.
@@ -426,7 +427,7 @@ Kenji runs Kanto Charter and adds Mika as staff.
 1. Kenji opens `/providers`, and the dashboard shows Members because the word is `active` and the role is owner.
 2. Kenji opens `/providers/members`, enters `mika@example.com`, picks Staff and sends.
 3. The page shows the link panel with the link and the note about 7 days.
-4. Kenji picks Copy link and sends the link to Mika in a chat.
+4. Red Cab emails the link to Mika, and Kenji may also pick Copy link and send it by chat.
 5. Mika opens the link and sees Kanto Charter, Staff and `mika@example.com`, with a Sign in link.
 6. Mika signs in on `/login`, and `postAuthPath` returns Mika to the accept page.
 7. The page shows the Accept button, because `accept_state` is `ready`.
@@ -438,7 +439,7 @@ Kenji runs Kanto Charter and adds Mika as staff.
 
 ## Out of scope
 
-- The invitation email, and any other email.
+- Any email other than the invitation email, which [web-214](web-214-reset-pages-and-invitation-texts.md) covers.
 - A payout page, because the web has none.
 - Carrying the invitation link through sign-up, forgot password and the verify-email page.
 - A message that tells a removed member why the portal changed.

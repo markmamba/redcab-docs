@@ -4,7 +4,7 @@ sidebar_label: Web · Reset pages and invitation texts
 issue: "https://github.com/markmamba/red-cab-web/issues/214"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -212,28 +212,28 @@ Yuki has a password account, and the saved language of Yuki is `ja`.
 
 ### Web
 
-- [ ] Add the option `linkLanguage` to the copy helper, with tests.
-- [ ] Add the `password_reset.*` keys.
-- [ ] Move the reset pages, the forms and the schema to the copy file.
-- [ ] Show the page texts for success and for a bad link.
-- [ ] Change the link panel note and `guest_note`.
-- [ ] Update the tests.
+- [x] Add the option `linkLanguage` to the copy helper, with tests.
+- [x] Add the `password_reset.*` keys.
+- [x] Move the reset pages, the forms and the schema to the copy file.
+- [x] Show the page texts for success and for a bad link.
+- [x] Change the link panel note and `guest_note`.
+- [x] Update the tests.
 
 ### Docs \{#tasks-docs\}
 
-- [ ] Set spec `status: implemented` after merge.
-- [ ] Add the reset pages and the link language to an IAM use-case page.
-- [ ] Update the link panel and `guest_note` lines on [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members).
+- [x] Set spec `status: implemented` after merge.
+- [x] Add the reset pages and the link language to an IAM use-case page.
+- [x] Update the link panel and `guest_note` lines on [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members).
 
 ## Acceptance criteria
 
-- [ ] `/reset-password?lang=ja` shows every text in Japanese, also to a guest.
-- [ ] `/reset-password?lang=xx` shows the page in the normal language and does not fail.
-- [ ] `/forgot-password` shows Japanese to a signed-in person who chose Japanese, and English to a guest.
-- [ ] Neither reset page shows the API `message` text.
-- [ ] The zod errors follow the page language.
-- [ ] The link panel says that Red Cab sent the email.
-- [ ] `guest_note` points to the link in the invitation email.
+- [x] `/reset-password?lang=ja` shows every text in Japanese, also to a guest.
+- [x] `/reset-password?lang=xx` shows the page in the normal language and does not fail.
+- [x] `/forgot-password` shows Japanese to a signed-in person who chose Japanese, and English to a guest.
+- [x] Neither reset page shows the API `message` text.
+- [x] The zod errors follow the page language.
+- [x] The link panel says that Red Cab sent the email.
+- [x] `guest_note` points to the link in the invitation email.
 
 ## Verification
 
