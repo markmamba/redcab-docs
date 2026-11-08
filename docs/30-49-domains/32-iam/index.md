@@ -7,7 +7,7 @@ doc_type: domain-overview
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-11-07
+last_reviewed: 2026-11-08
 ---
 
 ## TL;DR \{#iam-overview\}
@@ -107,6 +107,7 @@ Each rule has one section in [IAM decisions](/docs/30-49-domains/iam/iam-decisio
 | Access codes | [access-codes](/docs/30-49-domains/iam/iam-decisions/#access-codes) |
 | Language | [language](/docs/30-49-domains/iam/iam-decisions/#language) |
 | Emails | [emails](/docs/30-49-domains/iam/iam-decisions/#emails) |
+| Email change closes old tokens | [email-change-tokens](/docs/30-49-domains/iam/iam-decisions/#email-change-tokens) |
 | Member on records | [member-on-records](/docs/30-49-domains/iam/iam-decisions/#member-on-records) |
 | Booking a listing of the own company | [own-company-booking](/docs/30-49-domains/iam/iam-decisions/#own-company-booking) |
 | No corporate accounts | [no-corporate-accounts](/docs/30-49-domains/iam/iam-decisions/#no-corporate-accounts) |

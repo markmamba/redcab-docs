@@ -511,6 +511,43 @@ The system sends four kinds of IAM email, and each email has an English text and
 | No notice to the old address | A person whose account someone else took gets no warning. |
 | Send no email to a Google-only account | The person gets nothing and does not know why. |
 
+## D18 — Email change closes old tokens (2026-11-08) \{#email-change-tokens\}
+
+An email change closes every open token that went to the old address.
+
+- The change closes every open email verification token of the account.
+  - It also creates one new verification token for the new address.
+- The change also closes every open password reset token of the account.
+- A closed token answers like an expired token.
+- The old address gets the notice of [D17 — Emails](/docs/30-49-domains/iam/iam-decisions/#emails) even when the person never verified that address.
+  - The notice shows only the new address with most letters hidden.
+- Structure: the email change flow in the spec `api-292`.
+
+### Why \{#email-change-tokens-why\}
+
+- A verification token that went to the old address must not verify the new address.
+- A reset token that went to the old address must not work after the change.
+  - A person who reads the old inbox could set a new password.
+  - Such a token works for up to 1 hour.
+- The system cannot tell a wrong address from a real address.
+  - So the notice goes to the old address in every case.
+
+### What changes with it \{#email-change-tokens-changes\}
+
+- The change of the account email also closes the open password reset tokens of that account.
+- The confirm check of the email verification treats a token that expires at exactly the current time as expired.
+  - The password reset confirm already does this.
+- A resend of the verification email waits for an email change that runs at the same moment.
+  - It then reads the account again, so it cannot save a token for the old address.
+
+### Options we did not choose \{#email-change-tokens-options\}
+
+| Option | Why not chosen |
+| --- | --- |
+| Close only the verification tokens | A person who reads the old inbox could still reset the password for up to 1 hour. |
+| Leave the reset tokens open until they expire | The same risk, and the person gets no warning. |
+| Send the notice only to a verified old address | A person who signed up with the wrong address would never see that the address changed, and the system cannot tell the two cases apart. |
+
 ## Open questions \{#open-forks\}
 
 These items are proposed, not agreed, and no page may treat them as rules.

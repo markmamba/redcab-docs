@@ -15,13 +15,14 @@ related:
   - "docs/30-49-domains/32-iam/iam-decisions.md#language"
   - "docs/30-49-domains/32-iam/iam-decisions.md#staff-invitations"
   - "docs/30-49-domains/32-iam/iam-decisions.md#company-roles"
+  - "docs/30-49-domains/32-iam/iam-decisions.md#email-change-tokens"
 ---
 
 ## TL;DR
 
 - The API sends four kinds of email: password reset, email change, staff invitation and owner decision.
 - The dispatch code becomes generic, so a new email needs one mailer action and one map row.
-- A change of the account email closes every open verification token of the account.
+- A change of the account email closes every open verification token and every open password reset token of the account.
 - The invitation answers still return the link once.
 - This spec ships no team email on submit and no permit reminder.
 - This spec ships no production mail settings, because [red-cab-api#265](https://github.com/markmamba/red-cab-api/issues/265) covers them.
@@ -96,6 +97,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | ID | Document | Why |
 | --- | --- | --- |
 | Rule | [IAM D17 — Emails](/docs/30-49-domains/iam/iam-decisions/#emails) | The four emails, the receivers, the language rule and the Japanese check |
+| Rule | [IAM D18 — Email change closes old tokens](/docs/30-49-domains/iam/iam-decisions/#email-change-tokens) | An email change closes the open tokens of the old address, and the notice goes to the old address in every case |
 | Rule | [IAM D16 — Language](/docs/30-49-domains/iam/iam-decisions/#language) | The system uses the saved choice for emails |
 | Rule | [IAM D6 — Staff invitations](/docs/30-49-domains/iam/iam-decisions/#staff-invitations) | 7 days, a new send replaces the link |
 | Rule | [IAM D5 — Company roles](/docs/30-49-domains/iam/iam-decisions/#company-roles) | Owner and Staff |
@@ -118,7 +120,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | 6 | A raw token travels in the job arguments, as the verification email does today. | Store the raw token in the database. | The database must never hold a raw token. Redis holds it only until the job runs. |
 | 7 | The password reset email has the suffix `sha256(raw token)`, so each request sends one email. | One email for each hour. | A person who asks twice expects the second email. |
 | 8 | A Google-only account publishes the new event `PasswordResetRequestedWithoutPassword` with a new `request_id`. | Send nothing, as today. | D17 rules a hint email. The `request_id` keeps one email for each request. |
-| 9 | The reset link is `{web_base_url}/reset-password?token=…&lang={en or ja}`. | No `lang`. | The web has no language cookie yet, so the link tells the page which language the email used. |
+| 9 | The reset link is `{web_base_url}/reset-password?lang={en or ja}&token=…`. | No `lang`. | The web has no language cookie yet, so the link tells the page which language the email used. The query builder sorts the keys, and the web reads each key by name. |
 | 10 | An email change creates a new verification token in the same transaction, and it publishes `AccountEmailChanged` after commit. | Ask the person to press Resend. | The web already says "Check your email", and D17 rules the email. |
 | 11 | An email change sets `expires_at` to now on every open verification token of the account. The confirm check changes from `>=` to `>`, so a token with `expires_at` equal to now is expired. | Add an email column to the token table. Set `expires_at` to one second before now. | It closes the old-address hole with no migration, and the new token still works. The password reset confirm already uses the same rule, so the two confirms match. |
 | 12 | `AccountEmailChanged` sends two emails: `email_change_verification` to the new address and `email_change_notice` to the old address. | One event for each email. | One fact happened, and the two rows differ by mail key. |
@@ -130,12 +132,17 @@ Read these before design, and do not invent behavior that contradicts them.
 | 18 | The three decision events carry a new `decision_id` and the team message, and each owner gets one row. | Read `rejection_reason` when the job runs. | The owner may submit again before the job runs, and the submit clears `rejection_reason`. |
 | 19 | The decision emails go to the active owner memberships at the time of the event. | Also send to staff. | D17 sends to owners only. |
 | 20 | Every decision email links to `{web_base_url}/providers`. | A different page for each decision. | The provider policy routes already open the right page for each access word. |
-| 21 | Each Notifications enqueue manager rescues `StandardError` from its own enqueue. It reports the error with `Sentry.capture_exception` when `Sentry` is defined, and it returns. | Let the error reach the request. | The event publishes after commit. A 500 answer after a committed change is wrong, and the owner would lose `invitation_link`. |
+| 21 | `Notifications::Dispatches::Shared::EnqueueManager` rescues `StandardError` from its own work, so one place covers every mail key. It reports the error with `Sentry.capture_exception` when `Sentry` is defined, and it returns. | Let the error reach the request. Rescue in each enqueue manager. | The event publishes after commit. A 500 answer after a committed change is wrong, and the owner would lose `invitation_link`. The code reads `Sentry` by name at run time, because the gem is not in the `Gemfile` yet. |
 | 22 | A blank `support_email` and a missing job argument mark the row `failed` and return. They do not raise. | Raise, so Sidekiq retries. | A retry cannot succeed, because the row is not `pending`. A raise only adds noise to Sentry. |
 | 23 | A `failed` row never retries by itself. Only a republish of the same event resets it. | Retry after an SMTP timeout. | This is the behavior today. A retry rule needs its own ruling. |
-| 24 | `mail_key` is a string-backed enum on `Notifications::Dispatch`. The migration fills it with an explicit map. It stops with an error on any other `event_name`. | Copy `event_name` in snake case. Delete the other rows. | `EmailVerificationResent` maps to `verification_resent`, so a copy is wrong. Deleting rows hides data. |
+| 24 | `mail_key` is a string-backed enum on `Notifications::Dispatch`. The change is 3 migrations: add, backfill and constrain, as `db/AGENTS.md` asks. The backfill uses an explicit map. It stops with an error on any other `event_name`. | Copy `event_name` in snake case. Delete the other rows. | `EmailVerificationResent` maps to `verification_resent`, so a copy is wrong. Deleting rows hides data. |
 | 25 | The job arguments hold plain strings only. The handler copies each value at event time. | Pass a record and read it when the job runs. | The owner may submit again before the job runs, and the submit clears `rejection_reason`. |
 | 26 | `decision_id` lives only in the event payload, the job arguments and the idempotency key. | Store it in a table. | No other code reads it. |
+| 27 | An email change also sets `expires_at` to now on every open password reset token of the account. | Close only the verification tokens. | A person who reads the old inbox could reset the password for up to 1 hour. [IAM D18](/docs/30-49-domains/iam/iam-decisions/#email-change-tokens) rules this. |
+| 28 | The notice goes to the old address even when the person never verified that address. | Send the notice only to a verified old address. | The system cannot tell a wrong address from a real address. The notice shows only the masked new address. [IAM D18](/docs/30-49-domains/iam/iam-decisions/#email-change-tokens) rules this. |
+| 29 | `Identities::EmailVerifications::ResendManager` locks the account row, and it checks the email and `is_email_verified` again before it saves a token. | Leave the manager as it is. | A resend at the same moment as an email change could save a token for the old address after the change closed the open tokens. |
+| 30 | `Notifications::Dispatches::ProcessJob` does not write its arguments to the log. | Filter the log text. | Active Job writes the arguments at `info` level and does not apply `filter_parameters` to them. A raw token must stay out of the log. |
+| 31 | The mail map has a `required_settings` list for each row. A blank required setting marks the row `failed` and does not raise. | Check the setting in each mailer. | One place covers every mail key, and the row keeps the reason. |
 
 ## API contract
 
@@ -311,8 +318,10 @@ The confirm flow does not change.
 
 `Identities::Accounts::UpdateManager` adds three steps when the email changes.
 
-1. Inside the transaction, it sets `expires_at` to now on each open token of the account in `identities_email_verification_tokens`.
-   - An open token has `verified_at` null and `expires_at` later than now.
+1. Inside the transaction, it sets `expires_at` to now on each open token of the account.
+   - This covers the tables `identities_email_verification_tokens` and `identities_password_reset_tokens`.
+   - An open verification token has `verified_at` null and `expires_at` later than now.
+   - An open password reset token has `used_at` null and `expires_at` later than now.
 2. Inside the transaction, it creates a new token with the 24-hour life of `Identities::EmailVerifications::ResendManager::VERIFICATION_TOKEN_TTL`.
 3. After commit, it publishes `AccountEmailChanged` with the email from before the change.
 
@@ -322,15 +331,17 @@ The language event `LanguagePreferenceChanged` keeps its own branch.
 
 ### Files to create or modify (API)
 
-- `db/migrate/{timestamp}_add_mail_key_to_notifications_dispatches.rb`
-  - Add `mail_key` as a nullable string.
+- `db/migrate/{timestamp}_add_mail_key_to_notifications_dispatches.rb`: add `mail_key` as a nullable string.
+- `db/migrate/{timestamp}_backfill_mail_key_on_notifications_dispatches.rb`
   - Fill it with this map: `AccountRegistered` gives `account_registered`, and `EmailVerificationResent` gives `verification_resent`.
   - Stop with an error when a row has any other `event_name`.
-  - Set it to not null.
+- `db/migrate/{timestamp}_set_mail_key_not_null_on_notifications_dispatches.rb`: set it to not null.
 - `docs/db/notifications.dbml`: add `mail_key` and update the note of `idempotency_key`.
 - `config/red_cab.yml`: add `support_email` from the credential `red_cab.support_email` or `RED_CAB_SUPPORT_EMAIL`, with the default `help.support@redcab.app`.
 - `app/domains/notifications/dispatches/shared/enqueue_manager.rb`: the new arguments and the new key.
-- `app/domains/notifications/dispatches/process_manager.rb`: the map of mail keys.
+- `app/domains/notifications/dispatches/process_manager.rb`: the map of mail keys, with the job arguments and the settings that each row needs.
+- `app/jobs/notifications/dispatches/process_job.rb`: set `log_arguments` to false.
+- `app/domains/notifications/shared/report_enqueue_error_service.rb`: writes the log and reports the error.
 - `app/domains/notifications/shared/web_url_builder.rb`: builds a web address from a path and a query.
 - `app/domains/notifications/shared/masked_email_service.rb`: builds the masked email.
 - `app/domains/notifications/password_reset_requested/enqueue_manager.rb`: replace the stub.
@@ -352,7 +363,8 @@ The language event `LanguagePreferenceChanged` keeps its own branch.
 - `app/domains/providers/events/staff_invitation_sent.rb`
 - `app/domains/providers/events/provider_approved.rb`, `provider_rejected.rb` and `provider_correction_requested.rb`: the new payload keys.
 - `app/domains/identities/password_resets/create_manager.rb`
-- `app/domains/identities/accounts/update_manager.rb`: also rename the local `email_changed` to `is_email_changed`.
+- `app/domains/identities/accounts/update_manager.rb`: also close the open password reset tokens, and rename the local `email_changed` to `is_email_changed`.
+- `app/domains/identities/email_verifications/resend_manager.rb`: lock the account row and check the email again before it saves a token.
 - `app/domains/identities/email_verifications/confirm_manager.rb`: change `>=` to `>` in the check of `expires_at`.
 - `app/domains/providers/invitations/providers_create_manager.rb` and `providers_resend_manager.rb`
 - `app/domains/providers/companies/team_approve_manager.rb`, `team_reject_manager.rb` and `team_request_correction_manager.rb`
@@ -380,7 +392,10 @@ The language event `LanguagePreferenceChanged` keeps its own branch.
 | `test/domains/notifications/{event}/enqueue_manager_test.rb` | One file for each new handler, and a republish that sends nothing |
 | `test/mailers/notifications/*_test.rb` (new folder) | Subject, receiver, link and language of each action |
 | `test/domains/identities/password_resets/create_manager_test.rb` | The Google-only branch and the unknown email |
-| `test/domains/identities/accounts/update_manager_test.rb` | The token, the closed old token and the event |
+| `test/domains/identities/accounts/update_manager_test.rb` | The token, the closed old tokens of both kinds, the event, two changes in a row, a change back to the old address and a change while unverified |
+| `test/domains/identities/email_verifications/resend_manager_test.rb` | A resend does not save a token when the email changed after the account was read |
+| `test/domains/identities/password_resets/confirm_manager_test.rb` | A reset token from before an email change answers `422` |
+| `test/jobs/notifications/dispatches/process_job_test.rb` | The log holds no job argument |
 | `test/domains/identities/email_verifications/confirm_manager_test.rb` | An old token after an email change answers `422`, also when time is frozen. A token with `expires_at` equal to now answers `422`. |
 | `test/controllers/providers/invitations_controller_test.rb` | Create and send again publish `StaffInvitationSent`, and the answers keep `invitation_link` |
 | `test/domains/providers/companies/team_*_manager_test.rb` | The new payload keys |
@@ -462,7 +477,9 @@ Kenji owns Kanto Charter, and the saved language of Kenji is `ja`.
 - [ ] A reset request for a Google-only account sends one `password_reset_without_password` email with no reset link.
 - [ ] A reset request for an unknown email sends nothing, and the answer is the same as for a known email.
 - [ ] An email change sends `email_change_verification` to the new address and `email_change_notice` to the old address.
-- [ ] After an email change, a token sent before the change answers `422`.
+- [ ] After an email change, a verification token sent before the change answers `422`.
+- [ ] After an email change, a password reset token sent before the change answers `422`.
+- [ ] The log holds no job argument, so it holds no raw token.
 - [ ] Create and send again each send one `staff_invitation` email, and each answer still holds `invitation_link`.
 - [ ] Each decision sends one email to each active owner, and no email to staff.
 - [ ] The rejection and correction emails show the team message.
@@ -492,3 +509,4 @@ git grep -n 'VERIFICATION_EVENTS' -- app
 | --- | --- | --- |
 | 2026-11-07 | Mark Henson Bautista | Approved. The Japanese texts still need a check before the code merges. |
 | 2026-11-08 | Mark Henson Bautista | Approved decisions 11 and 21 to 26, after a design review of the plan. |
+| 2026-11-08 | Mark Henson Bautista | Approved decisions 27 and 28, which are [IAM D18](/docs/30-49-domains/iam/iam-decisions/#email-change-tokens). Decisions 9, 21, 24 and 29 to 31 record what the code and the code reviews showed. |
