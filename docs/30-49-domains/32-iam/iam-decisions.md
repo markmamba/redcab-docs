@@ -7,7 +7,7 @@ doc_type: domain-decisions
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-11-07
+last_reviewed: 2026-11-09
 supersedes:
   - ADR-018
   - ADR-019
@@ -547,6 +547,57 @@ An email change closes every open token that went to the old address.
 | Close only the verification tokens | A person who reads the old inbox could still reset the password for up to 1 hour. |
 | Leave the reset tokens open until they expire | The same risk, and the person gets no warning. |
 | Send the notice only to a verified old address | A person who signed up with the wrong address would never see that the address changed, and the system cannot tell the two cases apart. |
+
+## D19 — Password reset rate limit (2026-11-09) \{#reset-rate-limit\}
+
+A password reset request has two limits, and neither limit changes the answer for an email.
+
+- IP limit: one IP address may send 30 reset requests in 1 hour.
+  - The next request answers `429` with a `Retry-After` header.
+  - The `429` says nothing about any email address.
+- Address limit: one email address gets 1 reset email in 60 seconds and 3 in 1 hour.
+  - A request over this limit sends no email.
+  - It answers the same `200` message as every other request.
+- The address limit counts every request, also a request for an email that has no account.
+- One counter serves both kinds of email: the reset link and the Google sign-in notice.
+- Every valid request does the same work: it queues one job and answers `200`.
+  - The job looks up the account, writes the token and sends the email.
+  - So the answer time does not show which emails have an account.
+- A Redis failure never blocks a request, so the request goes through and the system reports the error to Sentry.
+- The limits live in configuration.
+- The Redis key of an address holds a keyed hash of the email, not the email.
+- Out of scope: a CAPTCHA and a limit on any other endpoint.
+- Structure: the spec `api-293`.
+
+### Why \{#reset-rate-limit-why\}
+
+- A script can ask for many emails for one address.
+  - The owner of that inbox gets a flood of mail.
+- The free Brevo plan sends 300 emails each day, and a script can use all of them.
+  - Then no verification email and no invitation email goes out.
+- A `429` for an address would show which addresses got a request.
+  - An attacker could also block the reset of a victim.
+  - So only the IP limit answers `429`.
+- A shared network, for example hotel wifi or a mobile carrier, puts many people on one IP address.
+  - So the IP limit is 30 and not 10.
+- A reset email is not a payment, and the reset token already protects the account.
+  - So a Redis failure must not stop people from getting back into their account.
+
+### What changes with it \{#reset-rate-limit-changes\}
+
+- The reset request queues a job, and the job does the lookup, the token and the event.
+- The login rate limit code also counts the reset request path.
+- The configuration file `config/identities_sessions.yml` holds the three new limits.
+
+### Options we did not choose \{#reset-rate-limit-options\}
+
+| Option | Why not chosen |
+| --- | --- |
+| A CAPTCHA after a few requests | It needs a web change and an outside vendor. |
+| A `429` for the address limit | It shows which addresses got a request, and it lets an attacker block a victim. |
+| 10 requests for each IP address in 1 hour | Many people share one IP address on hotel wifi and on mobile networks. |
+| Send no email when Redis fails | Nobody can reset a password during the outage, and the page still says "we sent it". |
+| Keep the lookup in the request and add only the limits | The answer time still shows which emails have an account. |
 
 ## Open questions \{#open-forks\}
 

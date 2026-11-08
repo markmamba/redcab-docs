@@ -109,6 +109,7 @@ Each rule has one section in [IAM decisions](/docs/30-49-domains/iam/iam-decisio
 | Language | [language](/docs/30-49-domains/iam/iam-decisions/#language) |
 | Emails | [emails](/docs/30-49-domains/iam/iam-decisions/#emails) |
 | Email change closes old tokens | [email-change-tokens](/docs/30-49-domains/iam/iam-decisions/#email-change-tokens) |
+| Password reset rate limit | [reset-rate-limit](/docs/30-49-domains/iam/iam-decisions/#reset-rate-limit) |
 | Member on records | [member-on-records](/docs/30-49-domains/iam/iam-decisions/#member-on-records) |
 | Booking a listing of the own company | [own-company-booking](/docs/30-49-domains/iam/iam-decisions/#own-company-booking) |
 | No corporate accounts | [no-corporate-accounts](/docs/30-49-domains/iam/iam-decisions/#no-corporate-accounts) |
