@@ -120,7 +120,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | 8 | A Google-only account publishes the new event `PasswordResetRequestedWithoutPassword` with a new `request_id`. | Send nothing, as today. | D17 rules a hint email. The `request_id` keeps one email for each request. |
 | 9 | The reset link is `{web_base_url}/reset-password?token=…&lang={en or ja}`. | No `lang`. | The web has no language cookie yet, so the link tells the page which language the email used. |
 | 10 | An email change creates a new verification token in the same transaction, and it publishes `AccountEmailChanged` after commit. | Ask the person to press Resend. | The web already says "Check your email", and D17 rules the email. |
-| 11 | An email change sets `expires_at` to now on every open verification token of the account. | Add an email column to the token table. | It closes the old-address hole with no migration, and the new token still works. |
+| 11 | An email change sets `expires_at` to now on every open verification token of the account. The confirm check changes from `>=` to `>`, so a token with `expires_at` equal to now is expired. | Add an email column to the token table. Set `expires_at` to one second before now. | It closes the old-address hole with no migration, and the new token still works. The password reset confirm already uses the same rule, so the two confirms match. |
 | 12 | `AccountEmailChanged` sends two emails: `email_change_verification` to the new address and `email_change_notice` to the old address. | One event for each email. | One fact happened, and the two rows differ by mail key. |
 | 13 | The notice shows the new address as a masked email: the first letter of the local part, then `***`, then `@` and the domain. | The full new address. | Someone who reads the old inbox must not learn the new address. |
 | 14 | The notice shows the setting `red_cab.support_email`. The default is the placeholder `help.support@redcab.app`, and a blank value fails the dispatch. | Write no contact address. | A guard must block. A notice with no contact cannot help the person. The owner gives the real address later. |
@@ -130,6 +130,12 @@ Read these before design, and do not invent behavior that contradicts them.
 | 18 | The three decision events carry a new `decision_id` and the team message, and each owner gets one row. | Read `rejection_reason` when the job runs. | The owner may submit again before the job runs, and the submit clears `rejection_reason`. |
 | 19 | The decision emails go to the active owner memberships at the time of the event. | Also send to staff. | D17 sends to owners only. |
 | 20 | Every decision email links to `{web_base_url}/providers`. | A different page for each decision. | The provider policy routes already open the right page for each access word. |
+| 21 | Each Notifications enqueue manager rescues `StandardError` from its own enqueue. It reports the error with `Sentry.capture_exception` when `Sentry` is defined, and it returns. | Let the error reach the request. | The event publishes after commit. A 500 answer after a committed change is wrong, and the owner would lose `invitation_link`. |
+| 22 | A blank `support_email` and a missing job argument mark the row `failed` and return. They do not raise. | Raise, so Sidekiq retries. | A retry cannot succeed, because the row is not `pending`. A raise only adds noise to Sentry. |
+| 23 | A `failed` row never retries by itself. Only a republish of the same event resets it. | Retry after an SMTP timeout. | This is the behavior today. A retry rule needs its own ruling. |
+| 24 | `mail_key` is a string-backed enum on `Notifications::Dispatch`. The migration fills it with an explicit map. It stops with an error on any other `event_name`. | Copy `event_name` in snake case. Delete the other rows. | `EmailVerificationResent` maps to `verification_resent`, so a copy is wrong. Deleting rows hides data. |
+| 25 | The job arguments hold plain strings only. The handler copies each value at event time. | Pass a record and read it when the job runs. | The owner may submit again before the job runs, and the submit clears `rejection_reason`. |
+| 26 | `decision_id` lives only in the event payload, the job arguments and the idempotency key. | Store it in a table. | No other code reads it. |
 
 ## API contract
 
@@ -318,7 +324,8 @@ The language event `LanguagePreferenceChanged` keeps its own branch.
 
 - `db/migrate/{timestamp}_add_mail_key_to_notifications_dispatches.rb`
   - Add `mail_key` as a nullable string.
-  - Fill it from `event_name` for the two existing events.
+  - Fill it with this map: `AccountRegistered` gives `account_registered`, and `EmailVerificationResent` gives `verification_resent`.
+  - Stop with an error when a row has any other `event_name`.
   - Set it to not null.
 - `docs/db/notifications.dbml`: add `mail_key` and update the note of `idempotency_key`.
 - `config/red_cab.yml`: add `support_email` from the credential `red_cab.support_email` or `RED_CAB_SUPPORT_EMAIL`, with the default `help.support@redcab.app`.
@@ -345,7 +352,8 @@ The language event `LanguagePreferenceChanged` keeps its own branch.
 - `app/domains/providers/events/staff_invitation_sent.rb`
 - `app/domains/providers/events/provider_approved.rb`, `provider_rejected.rb` and `provider_correction_requested.rb`: the new payload keys.
 - `app/domains/identities/password_resets/create_manager.rb`
-- `app/domains/identities/accounts/update_manager.rb`
+- `app/domains/identities/accounts/update_manager.rb`: also rename the local `email_changed` to `is_email_changed`.
+- `app/domains/identities/email_verifications/confirm_manager.rb`: change `>=` to `>` in the check of `expires_at`.
 - `app/domains/providers/invitations/providers_create_manager.rb` and `providers_resend_manager.rb`
 - `app/domains/providers/companies/team_approve_manager.rb`, `team_reject_manager.rb` and `team_request_correction_manager.rb`
 - `test/mailers/previews/notifications/*_preview.rb` (new folder): one preview for each action, in `en` and `ja`.
@@ -367,13 +375,13 @@ The language event `LanguagePreferenceChanged` keeps its own branch.
 
 | Test files | Change |
 | --- | --- |
-| `test/domains/notifications/dispatches/process_manager_test.rb` | Each mail key, a missing argument and an unknown mail key |
+| `test/domains/notifications/dispatches/process_manager_test.rb` | Each mail key, a missing argument and an unknown mail key. A blank `support_email` marks the row `failed` and does not raise. A `failed` row stays `failed` after the job runs again. |
 | `test/domains/notifications/dispatches/shared/enqueue_manager_test.rb` | The new key, a receiver with no account, and two rows for one event |
 | `test/domains/notifications/{event}/enqueue_manager_test.rb` | One file for each new handler, and a republish that sends nothing |
 | `test/mailers/notifications/*_test.rb` (new folder) | Subject, receiver, link and language of each action |
 | `test/domains/identities/password_resets/create_manager_test.rb` | The Google-only branch and the unknown email |
 | `test/domains/identities/accounts/update_manager_test.rb` | The token, the closed old token and the event |
-| `test/domains/identities/email_verifications/confirm_manager_test.rb` | An old token after an email change answers `422` |
+| `test/domains/identities/email_verifications/confirm_manager_test.rb` | An old token after an email change answers `422`, also when time is frozen. A token with `expires_at` equal to now answers `422`. |
 | `test/controllers/providers/invitations_controller_test.rb` | Create and send again publish `StaffInvitationSent`, and the answers keep `invitation_link` |
 | `test/domains/providers/companies/team_*_manager_test.rb` | The new payload keys |
 | `test/integration/notifications/iam_emails_integration_test.rb` | One run of each flow from the request to `ActionMailer::Base.deliveries` |
@@ -461,6 +469,7 @@ Kenji owns Kanto Charter, and the saved language of Kenji is `ja`.
 - [ ] Each email uses the saved language of the receiver, and the invitation uses English with the Japanese line.
 - [ ] A republished event writes no second row.
 - [ ] A blank `support_email` marks the notice row `failed`, and the default is `help.support@redcab.app`.
+- [ ] An error while the system queues an email does not change the answer of a committed action.
 - [ ] No table holds a raw token.
 
 ## Verification
@@ -482,3 +491,4 @@ git grep -n 'VERIFICATION_EVENTS' -- app
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
 | 2026-11-07 | Mark Henson Bautista | Approved. The Japanese texts still need a check before the code merges. |
+| 2026-11-08 | Mark Henson Bautista | Approved decisions 11 and 21 to 26, after a design review of the plan. |
