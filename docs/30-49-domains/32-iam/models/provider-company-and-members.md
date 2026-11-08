@@ -15,7 +15,7 @@ last_reviewed: 2026-11-07
 - The table `providers_companies` holds the business, and other domains point to it with `provider_id`.
 - The table `providers_memberships` links one person to one company with a company role.
 - The table `providers_license_records` holds up to four records for each company, and the team checks them.
-- An owner invites a person by email, and the owner sends the link by hand.
+- An owner invites a person by email, and Red Cab emails the link to that person.
 - An owner changes a role or removes a member, and the last owner cannot leave.
 - An owner sends a pending company to the team with Submit for review.
 - The company JSON lists what is still missing.
@@ -243,8 +243,9 @@ Only an owner of an **approved** company can use these calls.
 | POST | `/providers/invitations/:invitation_id/resend` | None | `200` and `{ invitation, invitation_link }` |
 | POST | `/providers/invitations/:invitation_id/cancel` | None | `200` and `{ invitation }` |
 
-- The API sends no email.
+- The API sends the invitation email, see [IAM emails and reset pages](/docs/30-49-domains/iam/use-cases/emails-and-reset-pages#invitation-email).
   - The create and send-again answers hold the link once, with `Cache-Control: private, no-store`.
+  - The owner can copy that link when the email does not arrive.
 - The raw token is 32 random bytes in URL-safe base64.
   - The link is `{web_base_url}/account/staff-invitation?token=…`.
 - A send again makes a new token, so the old link stops working.
@@ -443,6 +444,8 @@ The check call also records a renewal, because both write the same two columns o
 | Request correction | `pending` and submitted, and a message | Writes the message to `rejection_reason`, and clears `submitted_for_review_at`. The company stays `pending`. |
 | Suspend | `approved`, and a reason | Sets `suspended`, `suspended_at` and `suspension_reason`. |
 | Reinstate | `suspended` | Sets `approved`, and clears `suspended_at` and `suspension_reason`. |
+
+- Approve, reject and request correction each send one email to each active owner, see [IAM emails and reset pages](/docs/30-49-domains/iam/use-cases/emails-and-reset-pages#decision-emails).
 
 - Approve needs a valid permit and an active vehicle of the kind that the permit unlocks.
 - Approve also needs a checked insurance record and a checked company registration record.

@@ -85,6 +85,7 @@ erDiagram
 | How does an owner invite staff, and what do staff see? | [Staff invitations and members](/docs/30-49-domains/iam/use-cases/staff-invitations-and-members) |
 | How does a company add and manage its staff? | [Provider company members](/docs/30-49-domains/iam/requirements/provider-company-members) |
 | How does a session work in the API and in the web? | [Sessions](/docs/30-49-domains/iam/use-cases/sessions) |
+| Which emails does IAM send, and how do the reset pages follow the email language? | [IAM emails and reset pages](/docs/30-49-domains/iam/use-cases/emails-and-reset-pages) |
 | Why this design, and what else did we weigh? | [Why one account is one person](/docs/30-49-domains/iam/iam-decisions/#person-account-why), [Why sessions are database records](/docs/30-49-domains/iam/iam-decisions/#server-side-sessions-why) |
 
 ## Rule index \{#rule-index\}
