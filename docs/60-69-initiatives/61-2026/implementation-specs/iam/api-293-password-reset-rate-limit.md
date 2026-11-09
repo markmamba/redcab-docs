@@ -138,10 +138,17 @@ The middleware `LoginRateLimit::Middleware` also counts `POST /identities/passwo
 
 `Identities::PasswordResets::SendJob` is new.
 
-- It takes the email of the request.
-- It calls the address limit service and stops when the answer is `false`.
-- It then runs the logic of the manager `CreateManager` today: the lookup, the token and the event.
+- It takes the email of the request and runs on the queue `identities`.
+- It calls the address limit service with its own job id, and it stops when the answer is `false`.
+- It then calls the manager `Identities::PasswordResets::SendManager`.
+  - The manager holds the logic that `CreateManager` has today: the lookup, the token and the event.
 - The job does not change the email texts of `api-292`.
+- The job writes no argument to the log, because the email is personal data.
+- The job runs at most 5 times: the first run and 4 retries.
+  - The waits grow, and they add up to about 6 minutes.
+  - The retries end long before the marker of 24 hours ends.
+  - After the last run, the job reports the error and stops.
+  - Sidekiq adds no retry of its own after that.
 
 ### The manager
 
@@ -169,6 +176,7 @@ password_reset_address_limit:
 - `config/identities_sessions.yml`
 - `app/domains/identities/password_resets/create_manager.rb`
 - `app/domains/identities/password_resets/address_rate_limit_service.rb` (create)
+- `app/domains/identities/password_resets/send_manager.rb` (create)
 - `app/jobs/identities/password_resets/send_job.rb` (create)
 - Tests for each file above.
 
@@ -207,7 +215,6 @@ Mika owns `mika@example.com`, and a script sends reset requests for it.
 - Production has no setting for trusted proxies, so the IP limit may count the proxy address.
 - The email verification resend may have the same abuse, and it needs its own issue.
 - During a Redis outage the request answers `200` and no email goes out, because the job cannot queue.
-- The retry limit of `SendJob` is set in the code of sub-PR 3, inside the 24 hours of the marker.
 - A first run can stop between the counters and the decision.
   - Its retry then sends the email, even if the decision was `blocked`.
 - Nobody has checked that the web reset page shows the `429` title.
