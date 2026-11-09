@@ -144,7 +144,8 @@ The middleware `LoginRateLimit::Middleware` also counts `POST /identities/passwo
   - The manager holds the logic that `CreateManager` has today: the lookup, the token and the event.
 - The job does not change the email texts of `api-292`.
 - The job writes no argument to the log, because the email is personal data.
-- The job runs at most 5 times: the first run and 4 retries, with growing waits of about 6 minutes in all.
+- The job runs at most 5 times: the first run and 4 retries.
+  - The waits grow, and they add up to about 6 minutes.
   - The retries end long before the marker of 24 hours ends.
   - After the last run, the job reports the error and stops.
   - Sidekiq adds no retry of its own after that.
