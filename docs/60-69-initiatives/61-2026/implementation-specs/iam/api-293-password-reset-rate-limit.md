@@ -4,7 +4,7 @@ sidebar_label: API · Reset rate limit
 issue: "https://github.com/markmamba/red-cab-api/issues/293"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -233,29 +233,29 @@ Mika owns `mika@example.com`, and a script sends reset requests for it.
 
 ### API
 
-- [ ] Add the IP limit to the middleware and the configuration.
-- [ ] Add `AddressRateLimitService`.
-- [ ] Add `SendJob`, and move the lookup, the token and the event into it.
-- [ ] Change the manager to queue one job.
-- [ ] Add the tests.
+- [x] Add the IP limit to the middleware and the configuration.
+- [x] Add `AddressRateLimitService`.
+- [x] Add `SendJob`, and move the lookup, the token and the event into it.
+- [x] Change the manager to queue one job.
+- [x] Add the tests.
 
 ### Docs
 
-- [ ] Remove the line "A reset request has no rate limit yet" from `use-cases/emails-and-reset-pages.md`, and describe the limits.
-- [ ] Set spec `status: implemented` after merge.
+- [x] Remove the line "A reset request has no rate limit yet" from `use-cases/emails-and-reset-pages.md`, and describe the limits.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] A request over the IP limit answers `429` with `Retry-After`.
-- [ ] A request over the address limit answers the same `200` message and sends no email.
-- [ ] A request for an unknown email follows the same limits.
-- [ ] Every valid request queues one job and does no lookup in the request.
-- [ ] A retry of a job does not lose its email.
-- [ ] A retry of a blocked job stays blocked, also after 1 hour.
-- [ ] An error of the store, and not only an empty answer, lets the request go through.
-- [ ] A Redis failure lets the request go through.
-- [ ] The counters expire, so a person can ask again after the wait.
-- [ ] No Redis key holds a raw email.
+- [x] A request over the IP limit answers `429` with `Retry-After`.
+- [x] A request over the address limit answers the same `200` message and sends no email.
+- [x] A request for an unknown email follows the same limits.
+- [x] Every valid request queues one job and does no lookup in the request.
+- [x] A retry of a job does not lose its email.
+- [x] A retry of a blocked job stays blocked, also after 1 hour.
+- [x] An error of the store, and not only an empty answer, lets the request go through.
+- [x] A Redis failure lets the request go through.
+- [x] The counters expire, so a person can ask again after the wait.
+- [x] No Redis key holds a raw email.
 
 ## Verification
 
