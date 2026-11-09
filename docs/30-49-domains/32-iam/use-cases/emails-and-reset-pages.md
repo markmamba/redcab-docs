@@ -7,7 +7,7 @@ doc_type: use-case
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-11-08
+last_reviewed: 2026-11-09
 ---
 
 ## TL;DR \{#emails-tldr\}
@@ -18,6 +18,8 @@ last_reviewed: 2026-11-08
 - The invitation email is in English, with one Japanese line.
 - A password reset email gives a link that works for 1 hour and only once.
 - A reset request answers the same for every address.
+- A reset request has an IP limit of 30 requests in 1 hour.
+- It also has an address limit of 1 email in 60 seconds and 3 in 1 hour.
 - An email change closes every open verification token and every open reset token of the account.
 - The reset link holds `lang`, so the reset page uses the language of the email.
 - No email holds a raw token in the database.
@@ -61,6 +63,7 @@ The rulings give the reasons, and the work records give the build.
 5. US-5: As an owner, I want Red Cab to email the invitation link, so I need not send it.
 6. US-6: As an owner, I want an email about the team decision, so I need not check each day.
 7. US-7: As a person who chose Japanese, I want the reset page in Japanese, so it matches the email.
+8. US-8: As an inbox owner, I want a limit on reset emails, so no script floods my mail.
 
 ## Rules \{#rules\}
 
@@ -69,6 +72,9 @@ The rulings give the reasons, and the work records give the build.
 | A reset request for an unknown email sends nothing, and the answer is the same as for a known email. | US-1 | A stranger asks for `nobody@example.com` and sees the normal answer. |
 | A reset request for an account with a password sends one `password_reset` email. | US-1 | Yuki asks for a reset and gets a link. |
 | A reset request for a Google-only account sends one `password_reset_without_password` email with no reset link. | US-2 | Aiko signs in with Google, asks for a reset, and gets a hint to use Google. |
+| One IP address may send 30 reset requests in 1 hour, and the next request answers `429` with `Retry-After`. | US-8 | A script sends 31 requests, and request 31 answers `429`. |
+| One email address gets 1 reset email in 60 seconds and 3 in 1 hour, and a request over the limit sends no email and answers the same `200`. | US-8 | Mika asks twice in 10 seconds, gets one email, and sees the same answer both times. |
+| Every valid reset request queues one job and does no lookup, so the answer time is the same for every address. | US-1, US-8 | A known, a Google-only and an unknown address run the same queries. |
 | The reset link works for 1 hour and only once. | US-1 | Yuki opens the link a second time and sees the text that the link does not work. |
 | An email change sends `email_change_verification` to the new address and `email_change_notice` to the old address. | US-3, US-4 | Noriko changes the email, and both addresses get one email. |
 | The notice shows the new address as a masked email, and it shows the support email. | US-4 | The old inbox shows `n***@example.com`. |
@@ -117,9 +123,21 @@ Each flow publishes a domain event after the transaction commits.
 
 `POST /identities/password_resets/request` answers `200` with the same text for every address.
 
-1. The API finds no account, so it does nothing more.
-2. The API finds a Google-only account, so it sends `password_reset_without_password`.
-3. The API finds an account with a password, so it creates a token and sends `password_reset`.
+1. The middleware counts the request for the IP address.
+   - After 30 requests in 1 hour, it answers `429` with `Retry-After`.
+2. The manager `Identities::PasswordResets::CreateManager` checks the email format and queues one job `Identities::PasswordResets::SendJob`.
+3. The job asks the address limit.
+   - It stops when the address got 1 email in 60 seconds or 3 in 1 hour.
+4. The job finds no account, so it does nothing more.
+5. The job finds a Google-only account, so it sends `password_reset_without_password`.
+6. The job finds an account with a password, so it creates a token and sends `password_reset`.
+
+- The address limit counts every request, also for an unknown address, and one counter serves both kinds of email.
+- The Redis key holds a keyed hash of the email.
+- A marker for the job keeps its decision for 24 hours.
+- A retry of the same job gets the same decision, and the job runs at most 5 times.
+- A Redis failure lets the request and the email go through, and the failure goes to the log.
+- The limits live in `config/identities_sessions.yml`.
 
 `PATCH /identities/password_resets/confirm` sets the new password and ends every session of the person.
 
@@ -194,7 +212,9 @@ Yuki has a password account, and the saved language of Yuki is `ja`.
 - The address `help.support@redcab.app` is a placeholder for the support email.
   - The owner gives the real address, and the change is one value in the credential.
 - Production mail is not set up, see [red-cab-api#265](https://github.com/markmamba/red-cab-api/issues/265).
-- A reset request has no rate limit yet, see [red-cab-api#293](https://github.com/markmamba/red-cab-api/issues/293).
+- Production has no setting for trusted proxies, so the IP limit may count the proxy address.
+- An error outside `perform` of `SendJob` reaches Sidekiq, which retries it up to 25 times over days.
+- The email verification resend may have the same abuse as the reset request.
 - The team message has no length limit.
 - An owner with no name makes the invitation email row fail, and the system reports it.
 - Two team members who decide at the same moment send two emails to each owner.
