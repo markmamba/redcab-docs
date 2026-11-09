@@ -144,11 +144,15 @@ The middleware `LoginRateLimit::Middleware` also counts `POST /identities/passwo
   - The manager holds the logic that `CreateManager` has today: the lookup, the token and the event.
 - The job does not change the email texts of `api-292`.
 - The job writes no argument to the log, because the email is personal data.
+- The log of Active Job also writes the message of an error when it retries and when it stops.
+  - So the job turns every error into a new error whose message is only the class of the first error.
+  - The retry and the stop lines then never hold the email.
 - The job runs at most 5 times: the first run and 4 retries.
   - The waits grow, and they add up to about 6 minutes.
   - The retries end long before the marker of 24 hours ends.
   - After the last run, the job reports the error and stops.
-  - Sidekiq adds no retry of its own after that.
+  - Sidekiq adds no retry for an error that the job catches.
+  - An error outside `perform` still reaches Sidekiq, see the open items.
 
 ### The manager
 
@@ -157,6 +161,7 @@ The manager `Identities::PasswordResets::CreateManager` keeps the validator and 
 - After the validator passes, it calls `SendJob.perform_later` for every valid request.
 - It does no lookup and no database write.
 - A failed `perform_later` is reported to Sentry, and the request still answers `200`.
+- A `perform_later` that returns `false` is reported in the same way.
 
 ### Configuration
 
@@ -218,6 +223,11 @@ Mika owns `mika@example.com`, and a script sends reset requests for it.
 - A first run can stop between the counters and the decision.
   - Its retry then sends the email, even if the decision was `blocked`.
 - Nobody has checked that the web reset page shows the `429` title.
+- An error outside `perform` reaches Sidekiq, which retries it up to 25 times over days.
+  - One case is a failed enqueue of a retry while Redis is down.
+  - Another case is an error in the retry block.
+  - A retry after 24 hours finds no marker, so the counters count it again.
+  - Sidekiq also writes the job data, which holds the email, to its log.
 
 ## Tasks
 
