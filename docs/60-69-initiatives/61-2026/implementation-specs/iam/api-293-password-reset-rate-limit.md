@@ -83,13 +83,17 @@ Read these before design. Do not invent behavior that contradicts them.
 | 8 | The address key holds a keyed hash of the email. | The raw email. | An email is personal data, and Redis keys show in tools. |
 | 9 | The reset request queues one job and answers `200`. The job does the lookup, the token and the event. | Keep the lookup in the request. | Every valid request does the same work, so the answer time shows nothing. |
 | 10 | The address limit runs in the job. | Run it in the request. | A limited request and a normal request then do the same work in the request. |
-| 11 | A retry of the same job passes the address limit. | Count a retry again. | A retry after a crash must not lose the email because of its own count. |
+| 11 | A retry of the same job gets the same answer as the first run. A marker holds the job id and the decision. | Count a retry again. Let every retry pass. | A retry after a crash must not lose the email, and a blocked request must stay blocked. |
 | 12 | A Redis failure lets the request go through, and Sentry gets a report. | Send no email. | Reset must work when Redis fails, as in the login limit. |
 | 13 | A failed `perform_later` is reported to Sentry, and the request still answers `200`. | Answer `503`. | The answer must stay the same for every email. |
 | 14 | The three limits live in `config/identities_sessions.yml`. | Constants in code. | The login limit already lives there. |
 | 15 | The IP limit uses the code of `LoginRateLimit`, with its own key prefix and its own configuration block. | Rails `rate_limit` in the controller. | One counter store and one `429` shape serve both limits. |
 | 16 | The `429` uses the existing error `Errors::TooManyRequestsError` and its default code. | A new code. | The code contract list needs no new line. |
 | 17 | A fixed window counter is enough. | A sliding window. | The login limit uses it, and the extra requests at a window edge are small. |
+| 18 | The marker lives 24 hours. `SendJob` stops its retries before the marker ends. | A marker of 1 hour. | A Sidekiq retry can run later than 1 hour, and a late retry must not count again. |
+| 19 | The service answers `true` for any error of the store, and not only for an empty answer. | Let an error reach the caller. | A cache error must not stop a reset email, and the report shows that the limit did not work. |
+| 20 | The service uses the email in lower case with no spaces. | Use the email as given. | The same address always has one count. |
+| 21 | Only tests may set the store. The setter lives in `test/support`. | A setter in `config/initializers/login_rate_limit.rb`. | The production module needs no way to swap its store. |
 
 ## API contract
 
@@ -113,14 +117,22 @@ The middleware `LoginRateLimit::Middleware` also counts `POST /identities/passwo
 `Identities::PasswordResets::AddressRateLimitService.execute(email:, job_id:)` returns `true` when the email may go out.
 
 - The key holds `HMAC-SHA256(email)` with a key from `Rails.application.key_generator`.
-- Step 1: write the marker `password_reset_seen:{job_id}` with `unless_exist: true` and 1 hour of life.
-  - If the marker already exists, this job is a retry, and the service returns `true`.
+- Step 1: write the marker `password_reset_decision:{job_id}` with the value `pending`, with `unless_exist: true` and 24 hours of life.
+  - If the marker already exists, this job is a retry.
+  - A marker with the value `blocked` returns `false`.
+  - A marker with the value `allowed` or `pending` returns `true`.
+  - A marker with `pending` means that the first run stopped before it saved the decision, so the email goes out.
 - Step 2: increment the 60 second counter.
-  - If it is above 1, return `false`.
-- Step 3: increment the hour counter.
-  - If it is above 3, return `false`.
-- A nil answer or an error from the store returns `true` and reports to Sentry.
+  - If it is above 1, the decision is `blocked`.
+- Step 3: increment the hour counter, only when the decision is not `blocked`.
+  - If it is above 3, the decision is `blocked`.
+- Step 4: write the decision `allowed` or `blocked` into the marker, and return it.
+- A nil answer or an error from the store returns `true`.
+  - The service writes the failure to the log.
+  - It also reports to Sentry when Sentry is defined.
+- The service never raises an error.
 - The service never raises `Errors::*`.
+- The key and the log line never hold the email.
 
 ### The job
 
@@ -195,6 +207,9 @@ Mika owns `mika@example.com`, and a script sends reset requests for it.
 - Production has no setting for trusted proxies, so the IP limit may count the proxy address.
 - The email verification resend may have the same abuse, and it needs its own issue.
 - During a Redis outage the request answers `200` and no email goes out, because the job cannot queue.
+- The retry limit of `SendJob` is set in the code of sub-PR 3, inside the 24 hours of the marker.
+- A first run can stop between the counters and the decision.
+  - Its retry then sends the email, even if the decision was `blocked`.
 - Nobody has checked that the web reset page shows the `429` title.
 
 ## Tasks
@@ -219,6 +234,8 @@ Mika owns `mika@example.com`, and a script sends reset requests for it.
 - [ ] A request for an unknown email follows the same limits.
 - [ ] Every valid request queues one job and does no lookup in the request.
 - [ ] A retry of a job does not lose its email.
+- [ ] A retry of a blocked job stays blocked, also after 1 hour.
+- [ ] An error of the store, and not only an empty answer, lets the request go through.
 - [ ] A Redis failure lets the request go through.
 - [ ] The counters expire, so a person can ask again after the wait.
 - [ ] No Redis key holds a raw email.
