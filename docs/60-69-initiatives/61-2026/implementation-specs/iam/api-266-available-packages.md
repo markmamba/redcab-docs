@@ -136,6 +136,9 @@ Read these before design. Do not invent behavior that contradicts them.
 | 35 | The index `index_providers_license_records_on_valid_until` goes away. | Keep it. | The full sweep is its only planned reader, and the new query filters by company. |
 | 36 | Keyword search keeps its read of `business_name`. | Move it in this spec. | The principal developer left it for later, and the open items list it. |
 | 37 | The migration runs in one release with the code change. | The two-deploy rule of `db/AGENTS.md`. | No production system exists, as in `api-260`. |
+| 38 | The permit test reads `last_valid_on` in the country Service Timezone only. The service date of a hold is a `Date` and needs no zone. | Pass the zone of the listing geography to the permit test. | The team check writes `valid_until` in the country zone, so another zone can move the day by one. |
+| 39 | `package_sellable?` also refuses a payment retry when a Stripe intent exists. | Skip the check on a retry. | The check blocks the retry only. An older client secret can still pay, and the webhook confirms the booking, as the ruling on webhooks says. |
+| 40 | `package_sellable?` tests the same rule as the hold, including a paused listing, a missing photo and missing coverage. | Test the package only. | The hold and the payment check must agree (decision 10). |
 
 ## API contract
 
@@ -158,8 +161,8 @@ Read these before design. Do not invent behavior that contradicts them.
 
 ```ruby
 # app/domains/catalog/listing_package.rb (shape, not final code)
-scope :available, ->(at: Time.current) { ... }
-scope :available_on, ->(service_date, at: Time.current) { ... }
+def self.available(at: Time.current, service_timezone: Catalog::Countries::ServiceTimezoneService.execute) = ...
+def self.available_on(service_date, at: Time.current, service_timezone: Catalog::Countries::ServiceTimezoneService.execute) = ...
 ```
 
 `available` keeps a package when all of these are true.
@@ -170,8 +173,12 @@ scope :available_on, ->(service_date, at: Time.current) { ... }
 
 `available_on` also needs `last_valid_on` on or after the service date.
 
-- Both scopes share one SQL builder, `Catalog::Packages::AvailableSql`.
-- The builder embeds the Providers relation as a subquery.
+- Both scopes share one private class method, `where_available`, in the model `Catalog::ListingPackage`.
+- The method writes the raw SQL inline.
+  - The ORM cannot join the derived table of valid permits to the vehicle kind.
+- The method embeds the Providers relation as a subquery.
+- No class returns a SQL String, because Brakeman cannot see inside it (see "Queries" in `AGENTS.md`).
+- The scope keyword `service_timezone:` is the zone of the team check, and its default is `Catalog::Countries::ServiceTimezoneService`.
 
 ### The readers
 
@@ -183,18 +190,33 @@ scope :available_on, ->(service_date, at: Time.current) { ... }
 | `Catalog::Packages::ActivePackageFetchService` | Becomes the first `.available` package by `display_order`, then `id` |
 | `Catalog::Quotes::MarketplaceShowManager` | `resolve_listing_package` uses `.available` |
 | `Catalog::ListingPackages::AvailabilityTargetFetchService` | Finds the package in `.available` |
-| `Catalog::Listings::AvailabilityDateFilterService` | Uses `.available_on` for the chosen date |
+| `Catalog::Listings::AvailabilityDateFilterService` | Keeps its raw SQL. It tests `clpk.id IN (?)` with the relation `.available_on(date).select(:id)` as a bound value, and the date is a `Date`. |
 | `Catalog::Listings::PackageFilterService` | Uses `.available`, and keeps the test on `display_price_jpy` for the price bounds |
-| `Catalog::Availability::FreeStartTimesService` and `OpenDatesService` | Stop at `last_valid_on` |
-| `Catalog::Availability::HoldAssetService` | Calls `SellableCheckService` |
-| `Payments::Charges::TouristsCreateValidator` | New check `package_sellable?` with the date of the hold |
+| `Catalog::Availability::FreeStartTimesService` and `OpenDatesService` | Stop at `last_valid_on`. `FreeStartTimesService` takes the keyword `last_valid_day:`. |
+| `Catalog::Availability::HoldAssetService` | Calls `SellableCheckService.execute(package:, service_date:)` |
+| `Payments::Charges::TouristsCreateValidator` | New check `package_sellable?` with the date of the hold. It does nothing when the hold is missing or not live. The manager loads `:package` for it. |
 | `Catalog::Listings::MarketplaceShowManager` | `is_bookable` needs a discoverable listing and an available package |
 | `Catalog::Listings::MarketplaceScopedIndexManager` | Handles an empty starting price |
 
 `OpenDatesService` reads `last_valid_on` once for the whole month.
 
-- `Catalog::Packages::LastValidDayService.execute(package:)` returns the date, or nil when no permit is valid.
-- `FreeStartTimesService` calls it for a single date and returns an empty list after the last valid day.
+- `Catalog::Packages::LastValidDayService.execute(package:, service_timezone:)` returns the date, or nil when no permit is valid.
+  - It reads the latest `last_valid_on` of the permits that match the package.
+  - A test pins it to the scope: `available_on(last day)` is true, and `available_on(last day + 1)` is false.
+- `FreeStartTimesService` takes the keyword `last_valid_day:` and returns an empty list after that day.
+  - A nil value means no valid permit, so the list is empty.
+  - `OpenDatesService` passes the value that it read once for the month.
+  - `MarketplaceStartTimesManager` reads the value once for the single date.
+- `OpenDatesService` returns an empty list when the last valid day is before the first day of the month.
+
+`Catalog::Packages::SellableCheckService.execute(package:, service_date:)` answers with true or false.
+
+- It is true when `Catalog::Listing.discoverable` holds the listing and `available_on(service_date)` holds the package.
+- It reads the country Service Timezone once, and it runs one query.
+- It owns the refusal message `This time is no longer available. Please choose another date or time.`
+- The quote and the payment check use the same message.
+- The quote refuses a package that exists but cannot sell.
+- A slug that matches no package keeps the validation error.
 
 ### Marketplace detail answer
 
@@ -488,7 +510,7 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 ### API
 
 - [ ] Add the valid permits query and the approved companies query.
-- [ ] Add the scopes and the shared SQL builder.
+- [ ] Add the scopes with one private method that holds the inline SQL.
 - [ ] Move every reader to the scopes.
 - [ ] Add the service date rule to the open dates, the start times, the hold and the payment check.
 - [ ] Handle an empty starting price in the index.
