@@ -31,9 +31,12 @@ related:
 - Publishing needs pickup coverage as a fifth gate, and it needs an available package.
 - The provider JSON says why a listing or a package cannot sell.
 - The coverage prefill and `skipped_prefectures` go away.
+- A package that is `inactive` or `archived` gets the code `package_not_offered`.
+- A package slug is unique for a listing across all statuses, so an old link never points to another package.
 - This spec ships no email, no reminder, and no change to a confirmed booking.
 - Breaking change: Yes.
   - The create response loses `skipped_prefectures`, and `unavailable_reason` changes its values.
+  - The code `package_not_offered` is new, and the web reads it.
   - The API and `red-cab-web` must deploy together.
 
 ## Words used in this spec
@@ -47,6 +50,7 @@ related:
 | display prices | The columns `catalog_listing_packages.display_price_jpy` and `catalog_listings.starting_price_jpy`. |
 | discoverable | A listing that may appear in browse and search. |
 | hidden reason | One code that says why a listing does not reach tourists. |
+| not offered | A package with status `inactive` or `archived`. The tourist cannot book it. |
 | prefill | The code that copies the prefectures of the company into the pickup coverage of a new listing. |
 
 ## User stories
@@ -85,6 +89,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | Rule | [Packages and pricing policy](/docs/30-49-domains/catalog/catalog-decisions/#packages-and-pricing-policy) | The three tests of an available package |
 | Rule | [Discoverability completeness](/docs/30-49-domains/catalog/catalog-decisions/#discoverability-completeness) | The query decides, and the stored price is not read |
 | Rule | [Listing publication](/docs/30-49-domains/catalog/catalog-decisions/#listing-publication) | The publish gates |
+| Rule | [D26 Package not offered and package slug](/docs/30-49-domains/catalog/catalog-decisions/#package-not-offered) | The code `package_not_offered`, and the slug that is never used again |
 | Rule | [Schema ground rules](/docs/30-49-domains/catalog/catalog-decisions/#schema-ground-rules) | One writer for each derived column |
 | Rule | [Provider licenses](/docs/30-49-domains/iam/iam-decisions/#provider-licenses) | What a permit unlocks, and when a record is valid |
 | Requirement | [Provider listings](/docs/30-49-domains/catalog/requirements/provider-listings) | What the provider sees |
@@ -109,7 +114,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 8 | The tourist sees no reason for a date that is not open. | Show "Permit ends on …". | The permit is private to the company, and the tourist cannot act on it. |
 | 9 | The service date rule reads the start date only. A trip may end after the last valid day. | Check the end of the trip. | The ruling says "service date". An expert should review this for a short trip past midnight. |
 | 10 | `Catalog::Packages::SellableCheckService` answers "can this package sell on this date". The hold and the payment check call it. | Two copies. | The two checks must agree. |
-| 11 | `HoldAssetService` returns nil for a package that is not sellable, and checkout keeps its message `This time is no longer available. Please choose another date or time.` | A new error for the permit. | The tourist needs no reason, and the API adds no new error. |
+| 11 | `HoldAssetService` returns nil for a package that is not sellable, and checkout keeps its message `This time is no longer available. Please choose another date or time.` This holds for a package with status `active`. Decision 41 covers `inactive` and `archived`. | A new error for the permit. | The tourist needs no reason for a permit, and the API adds no new error for it. |
 | 12 | The payment validator checks the package again with the date of the hold. | Trust the hold. | A team can withdraw a permit between the hold and the payment. |
 | 13 | A listing is not discoverable when its company is not approved. The test uses a Providers subquery. | Keep the `EXISTS` on `providers_companies` from `api-261`. | The same rule: Catalog names no Providers table. |
 | 14 | `Listing.discoverable` stops reading `starting_price_jpy`. | Keep both tests. | The ruling says the price can lag, so the test must not read it. |
@@ -136,6 +141,18 @@ Read these before design. Do not invent behavior that contradicts them.
 | 35 | The index `index_providers_license_records_on_valid_until` goes away. | Keep it. | The full sweep is its only planned reader, and the new query filters by company. |
 | 36 | Keyword search keeps its read of `business_name`. | Move it in this spec. | The principal developer left it for later, and the open items list it. |
 | 37 | The migration runs in one release with the code change. | The two-deploy rule of `db/AGENTS.md`. | No production system exists, as in `api-260`. |
+| 38 | The permit test reads `last_valid_on` in the country Service Timezone only. The service date of a hold is a `Date` and needs no zone. | Pass the zone of the listing geography to the permit test. | The team check writes `valid_until` in the country zone, so another zone can move the day by one. |
+| 39 | `package_sellable?` also refuses a payment retry when a Stripe intent exists. | Skip the check on a retry. | The check blocks the retry only. An older client secret can still pay, and the webhook confirms the booking, as the ruling on webhooks says. |
+| 40 | `package_sellable?` tests the same rule as the hold, including a paused listing, a missing photo and missing coverage. | Test the package only. | The hold and the payment check must agree (decision 10). |
+| 41 | A package with status `inactive` or `archived` gets `422` with the code `package_not_offered` and the title `This package is not offered now. Please choose another package.` The quote, the checkout start, the payment start, the open dates and the start times all use it. | The date and time message. A validation error on `package_slug`. Two codes. | Another date cannot fix a removed package, and "not valid" is too strong for a package that existed. The web reads the code. |
+| 42 | One code covers `inactive` and `archived`. | One code for each status. | The tourist can do the same thing in both cases. |
+| 43 | In the quote, the checkout start and the payment start, a listing that fails a listing-level test gets the time message before the package check. The five listing-level tests are published, one photo, pickup coverage, an active pricing policy and an approved company. "Has an available package" is not one of them. | Use the full `discoverable` rule. | A listing whose only package is paused would then get a message about dates that no date can fix. |
+| 44 | The payment validator reads `package.status`, which the manager loaded, and the listing-level tests. A status `inactive` or `archived` on a listing that passes them gives `package_not_offered`, before the other payment refusals. Any other refusal keeps the time message, and then the hold stays until it expires (decision 48 covers the release). | Block the archive while a checkout is open. | An older Stripe intent can still pay, so a release with a pending charge could book the asset twice. |
+| 45 | The listing detail sends no flag for a stale slug. The web compares the slug of the link with `price_breakdown.package_id`, and it shows a notice when they differ. | A flag in the detail answer. | The web needs no new field, and the API contract stays small. |
+| 46 | The unique index on `catalog_listing_packages` covers all statuses, and `SlugGenerateService` avoids archived slugs too. | The generator only. The package `uuid` in checkout. | An old link must never point to another package or another price. |
+| 47 | The open dates and the start times answer `package_not_offered` for an `inactive` or `archived` package. A slug that matches no package, and an active package that is not available, keep `404`. | The same code for every unavailable package. An empty list. | This keeps the change to the rule of decision 41. The owner may change the second case (see Open items). |
+| 48 | When the payment start gives `package_not_offered` and no pending charge exists, `Bookings::CheckoutSessions::ReleaseForPackageNotOfferedManager` releases the hold and expires the checkout session. With a pending charge, the hold and the session stay until the hold expires. The release uses the hold reason `session_expired`. | Keep the hold in every case. Let the same tourist ignore an old hold. | The tourist must not wait up to 15 minutes for a hold that no charge can use. The manager takes the row lock of the payment start, so a charge cannot appear between the check and the release. |
+| 49 | A payment retry with a pending charge gets `package_not_offered`, and the API leaves the older Stripe intent alone. The Payments redesign decides if the API cancels the intent or returns the existing handoff first. | Cancel or expire the intent now. Return the existing handoff before the package check. | The Payments domain has no ruling yet, so this spec cannot decide it. The older intent can still pay, and the webhook then confirms the booking (decision 39). |
 
 ## API contract
 
@@ -158,8 +175,8 @@ Read these before design. Do not invent behavior that contradicts them.
 
 ```ruby
 # app/domains/catalog/listing_package.rb (shape, not final code)
-scope :available, ->(at: Time.current) { ... }
-scope :available_on, ->(service_date, at: Time.current) { ... }
+def self.available(at: Time.current, service_timezone: Catalog::Countries::ServiceTimezoneService.execute) = ...
+def self.available_on(service_date, at: Time.current, service_timezone: Catalog::Countries::ServiceTimezoneService.execute) = ...
 ```
 
 `available` keeps a package when all of these are true.
@@ -170,8 +187,12 @@ scope :available_on, ->(service_date, at: Time.current) { ... }
 
 `available_on` also needs `last_valid_on` on or after the service date.
 
-- Both scopes share one SQL builder, `Catalog::Packages::AvailableSql`.
-- The builder embeds the Providers relation as a subquery.
+- Both scopes share one private class method, `where_available`, in the model `Catalog::ListingPackage`.
+- The method writes the raw SQL inline.
+  - The ORM cannot join the derived table of valid permits to the vehicle kind.
+- The method embeds the Providers relation as a subquery.
+- No class returns a SQL String, because Brakeman cannot see inside it (see "Queries" in `AGENTS.md`).
+- The scope keyword `service_timezone:` is the zone of the team check, and its default is `Catalog::Countries::ServiceTimezoneService`.
 
 ### The readers
 
@@ -181,20 +202,59 @@ scope :available_on, ->(service_date, at: Time.current) { ... }
 | `Catalog::Pricing::RefreshDisplayPricesService` | `available_package_ids_for` uses `.available` |
 | `Catalog::Packages::BookablePackagesFetchService` | Uses `.available` |
 | `Catalog::Packages::ActivePackageFetchService` | Becomes the first `.available` package by `display_order`, then `id` |
-| `Catalog::Quotes::MarketplaceShowManager` | `resolve_listing_package` uses `.available` |
-| `Catalog::ListingPackages::AvailabilityTargetFetchService` | Finds the package in `.available` |
-| `Catalog::Listings::AvailabilityDateFilterService` | Uses `.available_on` for the chosen date |
+| `Catalog::Quotes::MarketplaceShowManager` | `resolve_listing_package` uses `.available`. The failure path raises the time message for a listing that is not discoverable, then `package_not_offered` for an `inactive` or `archived` package, then the time message for an active package that is not available. |
+| `Bookings::CheckoutSessions::TouristsCreateManager` | Finds the package with status `active`. On the failure path, `Catalog::Packages::PackageSlugStateService` reports a slug that is not offered, and the manager raises `package_not_offered` when the listing-level tests pass. A slug that matches no package keeps the validation error. |
+| `Catalog::Packages::PackageSlugStateService` | Gives `:unknown`, `:active` or `:not_offered` for a slug on a listing, with one query. An active package wins over an archived row with the same slug. |
+| `Catalog::Listing.discoverable_apart_from_packages` | Holds the five listing-level tests. `discoverable` adds the available package test to it. |
+| `Catalog::ListingPackages::AvailabilityTargetFetchService` | Finds the package in `.available`, and it also reports a package with status `inactive` or `archived`. The open dates manager and the start times manager raise `package_not_offered` for it. |
+| `Catalog::Listings::AvailabilityDateFilterService` | Keeps its raw SQL. It tests `clpk.id IN (?)` with the relation `.available_on(date).select(:id)` as a bound value, and the date is a `Date`. |
 | `Catalog::Listings::PackageFilterService` | Uses `.available`, and keeps the test on `display_price_jpy` for the price bounds |
-| `Catalog::Availability::FreeStartTimesService` and `OpenDatesService` | Stop at `last_valid_on` |
-| `Catalog::Availability::HoldAssetService` | Calls `SellableCheckService` |
-| `Payments::Charges::TouristsCreateValidator` | New check `package_sellable?` with the date of the hold |
+| `Catalog::Availability::FreeStartTimesService` and `OpenDatesService` | Stop at `last_valid_on`. `FreeStartTimesService` takes the keyword `last_valid_day:`. |
+| `Catalog::Availability::HoldAssetService` | Calls `SellableCheckService.execute(package:, service_date:)` |
+| `Payments::Charges::TouristsCreateValidator` | New check `package_sellable?` with the date of the hold. It does nothing when the hold is missing or not live. The manager loads `:package` for it. A status `inactive` or `archived` gives `package_not_offered`, and the manager raises it with the code. Before it raises, the manager calls `Bookings::CheckoutSessions::ReleaseForPackageNotOfferedManager` (decision 48). |
 | `Catalog::Listings::MarketplaceShowManager` | `is_bookable` needs a discoverable listing and an available package |
 | `Catalog::Listings::MarketplaceScopedIndexManager` | Handles an empty starting price |
 
 `OpenDatesService` reads `last_valid_on` once for the whole month.
 
-- `Catalog::Packages::LastValidDayService.execute(package:)` returns the date, or nil when no permit is valid.
-- `FreeStartTimesService` calls it for a single date and returns an empty list after the last valid day.
+- `Catalog::Packages::LastValidDayService.execute(package:, service_timezone:)` returns the date, or nil when no permit is valid.
+  - It reads the latest `last_valid_on` of the permits that match the package.
+  - A test pins it to the scope: `available_on(last day)` is true, and `available_on(last day + 1)` is false.
+- `FreeStartTimesService` takes the keyword `last_valid_day:` and returns an empty list after that day.
+  - A nil value means no valid permit, so the list is empty.
+  - `OpenDatesService` passes the value that it read once for the month.
+  - `MarketplaceStartTimesManager` reads the value once for the single date.
+- `OpenDatesService` returns an empty list when the last valid day is before the first day of the month.
+
+`Catalog::Packages::SellableCheckService.execute(package:, service_date:)` answers with true or false.
+
+- It is true when `Catalog::Listing.discoverable` holds the listing and `available_on(service_date)` holds the package.
+- It reads the country Service Timezone once, and it runs one query.
+- It owns the refusal message `This time is no longer available. Please choose another date or time.`
+- The quote and the payment check use the same message.
+- The quote refuses a package that exists but cannot sell.
+- A slug that matches no package keeps the validation error.
+
+### The not offered answer
+
+A request for a package with status `inactive` or `archived` gets this body (decision 41).
+
+```json
+{
+  "status_name": "unprocessable_content",
+  "status": 422,
+  "messages": {},
+  "code": "package_not_offered",
+  "title": "This package is not offered now. Please choose another package.",
+  "server": "api"
+}
+```
+
+- Each raise site writes the string `code: 'package_not_offered'`, so `test/shared/errors/error_code_contract_test.rb` finds it.
+- The constant `Catalog::Packages::SellableCheckService::NOT_OFFERED_MESSAGE` holds the title.
+- The code needs a line in `EXPECTED_CODES`, a line on the [Catalog decision D26](/docs/30-49-domains/catalog/catalog-decisions/#package-not-offered) and a web constant.
+- The web constant ships with [red-cab-web#194](https://github.com/markmamba/red-cab-web/issues/194).
+- The API change and the web constant must deploy together.
 
 ### Marketplace detail answer
 
@@ -213,6 +273,9 @@ scope :available_on, ->(service_date, at: Time.current) { ... }
 
 - The old value `no_active_package` goes away.
 - The page still opens for a published listing, and checkout is blocked.
+- A stale `package_slug` never gives an error.
+- The quote prices the first available package.
+- The web compares the slug of the link with `price_breakdown.package_id` and shows a notice when they differ (decision 45).
 
 ### Empty starting price
 
@@ -304,7 +367,9 @@ No production data exists, so this spec needs no backfill.
 Developers run `bin/rails db:reset`.
 
 1. Remove the index `index_providers_license_records_on_valid_until`.
-2. Update the comments and the tags in `docs/db/catalog.dbml`, `docs/db/providers.dbml` and `docs/db/redcab.dbml`.
+2. Replace the index `index_catalog_listing_packages_on_listing_and_slug` with one that has no `WHERE` clause (decision 46).
+   - It ships in its own sub-PR, after the decision page merges.
+3. Update the comments and the tags in `docs/db/catalog.dbml`, `docs/db/providers.dbml` and `docs/db/redcab.dbml`.
    - The refresh note says "every listing".
    - The publish gate note lists the fifth gate.
 
@@ -330,9 +395,15 @@ Catalog scopes and services:
 - `app/domains/catalog/listing_package.rb`
 - `app/domains/catalog/listing.rb`
 - `app/domains/catalog/geography.rb`
-- `app/domains/catalog/packages/available_sql.rb` (create)
 - `app/domains/catalog/packages/sellable_check_service.rb` (create)
 - `app/domains/catalog/packages/last_valid_day_service.rb` (create)
+- `app/domains/catalog/packages/package_slug_state_service.rb` (create)
+- `test/domains/catalog/packages/package_not_offered_test.rb` (create)
+- `app/domains/catalog/listing_packages/slug_generate_service.rb`
+- `app/domains/catalog/listing_packages/availability_target_fetch_service.rb` and its open dates and start times managers
+- `app/domains/bookings/checkout_sessions/tourists_create_manager.rb`
+- `app/domains/payments/charges/tourists_create_manager.rb`
+- `test/shared/errors/error_code_contract_test.rb`
 - `app/domains/catalog/packages/unavailable_reasons_service.rb` (create)
 - `app/domains/catalog/listings/hidden_reasons_service.rb` (create)
 - `app/domains/catalog/packages/bookable_packages_fetch_service.rb`
@@ -426,6 +497,15 @@ New tests cover these behaviors.
 - A listing with an empty starting price stays in the index and the card has a null price.
 - A service date after the last valid day is not open, cannot start and cannot be held.
 - A hold, a payment and a quote refuse a package that is not available.
+- A package with status `inactive` or `archived` gives `package_not_offered`.
+  - This holds in the quote, the checkout start, the payment start, the open dates and the start times.
+- A payment start with `package_not_offered` and no pending charge releases the hold and expires the session.
+- A payment start with a pending charge keeps the hold and the session.
+- An active package that is not available keeps the time message.
+- A slug that matches no package keeps its answer.
+- The slug sub-PR adds these tests.
+  - A new package with the name of an archived package gets a new slug.
+  - The database refuses a duplicate slug.
 - A confirmed booking does not change when a permit ends.
 - A first check, a renewal and a withdrawal refresh the prices in the same transaction.
 - A team edit of a license number, a suspend and a reinstate do not refresh.
@@ -477,6 +557,9 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 
 - Product Owner sign-off on the IAM rulings is not recorded.
 - The owner may change the rule for service dates after a permit ends.
+- An active package that is not available gets `404` on the open dates and the start times.
+- The owner may want an empty list or another answer for that case.
+- The Payments redesign in [redcab-docs#155](https://github.com/markmamba/redcab-docs/issues/155) decides what happens to an open Stripe intent when a package is not offered (decision 49).
 - An expert should review a trip that starts on the last valid day and ends after it.
 - Nobody has measured the cost of the permit subquery on a large catalog.
 - Keyword search still reads `business_name` from a Providers table.
@@ -488,7 +571,7 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 ### API
 
 - [ ] Add the valid permits query and the approved companies query.
-- [ ] Add the scopes and the shared SQL builder.
+- [ ] Add the scopes with one private method that holds the inline SQL.
 - [ ] Move every reader to the scopes.
 - [ ] Add the service date rule to the open dates, the start times, the hold and the payment check.
 - [ ] Handle an empty starting price in the index.
@@ -497,6 +580,8 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 - [ ] Update the publish check.
 - [ ] Add the hidden reasons and the unavailable reasons.
 - [ ] Remove the code in [Code to remove](#code-to-remove).
+- [ ] Add `package_not_offered` to the quote, the checkout start, the payment start, the open dates and the start times.
+- [ ] Add the slug migration and the generator change, in their own sub-PR.
 - [ ] Add the migration, and update the DBML.
 - [ ] Update the Catalog pages named in [Docs this spec changes](#docs-this-spec-changes).
 - [ ] Update the dev seeders, the test helpers and the tests.

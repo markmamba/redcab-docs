@@ -128,6 +128,7 @@ Each rule has one section in [Catalog decisions](/docs/30-49-domains/catalog/cat
 | Booking confirmation | [booking-confirmation](/docs/30-49-domains/catalog/catalog-decisions/#booking-confirmation) |
 | Packages and pricing policy | [packages-and-pricing-policy](/docs/30-49-domains/catalog/catalog-decisions/#packages-and-pricing-policy) |
 | Cancellation policy | [cancellation-policy](/docs/30-49-domains/catalog/catalog-decisions/#cancellation-policy) |
+| Package not offered and package slug | [package-not-offered](/docs/30-49-domains/catalog/catalog-decisions/#package-not-offered) |
 | Vehicle category reference data | [vehicle-category-reference-data](/docs/30-49-domains/catalog/catalog-decisions/#vehicle-category-reference-data) |
 | Listing service type | [listing-service-type](/docs/30-49-domains/catalog/catalog-decisions/#listing-service-type) |
 | Permits and package availability | [permits-and-package-availability](/docs/30-49-domains/catalog/catalog-decisions/#permits-and-package-availability) |

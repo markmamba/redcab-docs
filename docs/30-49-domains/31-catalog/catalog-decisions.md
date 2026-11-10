@@ -7,7 +7,7 @@ doc_type: domain-decisions
 normative: true
 status: current
 context: catalog
-last_reviewed: 2026-10-31
+last_reviewed: 2026-11-10
 supersedes:
   - FR-CAT-003 (partial)
   - FR-CAT-004 (partial)
@@ -664,6 +664,52 @@ References for the market comparison:
 - [Viator: cancellation policies for partners](https://partnerresources.viator.com/travel-commerce/merchant/cancellation-policies/)
 - [Airbnb: cancellation policies](https://www.airbnb.com/terms/cancellation_policies_en)
 - [Osaka Info: travel terms with the domestic cancellation fee table](https://osaka-info.jp/experience/ja/page/travel-terms-planning)
+
+## D26 — Package not offered and package slug (2026-11-10) \{#package-not-offered\}
+
+A tourist who names a package that the provider no longer offers gets one clear answer.
+
+- A package with status `inactive` or `archived` is not offered.
+- A request for such a package fails with `422` and the code `package_not_offered`.
+- The title is `This package is not offered now. Please choose another package.`
+- The same code and title apply to five places.
+  - The quote.
+  - The checkout start.
+  - The payment start.
+  - The open dates.
+  - The start times.
+- The code covers `inactive` and `archived` alike, because the tourist can do the same thing in both cases.
+- A package with status `active` that cannot sell keeps the answer `This time is no longer available. Please choose another date or time.`
+  - The cause is a permit, an asset, or a listing that is not discoverable.
+- A slug that matches no package keeps its answer.
+  - The quote and the checkout start give a validation error on `package_slug`.
+  - The open dates and the start times give `404`.
+- In the quote, the checkout start and the payment start, a listing-level failure gets the time answer first.
+  - The package check comes after the listing-level tests.
+  - "The listing has an available package" is not a listing-level test for this rule.
+  - A listing whose only package is paused still gets the package answer, because the package is the only cause.
+- A listing-level test is one of these five.
+  - The listing is published.
+  - The listing has a photo.
+  - The listing has pickup coverage.
+  - The listing has an active pricing policy.
+  - The company is approved.
+- The listing detail never fails for a stale slug.
+  - It prices the first available package, and `price_breakdown.package_id` names it.
+  - The web compares the slug of the link with that id, and it shows a notice when they differ.
+- A payment that starts after a provider pauses or archives the package gets `package_not_offered`.
+  - The package answer comes before the other payment refusals, for example a merchant that is not verified.
+  - The system releases the hold and expires the checkout session when no charge is pending.
+  - The hold stays until it expires when a charge is pending, because an older Stripe intent can still pay.
+- A package slug is unique for one listing across all statuses.
+  - An archived slug is never used again, so an old link never points to another package.
+  - A new package with the same name gets a short random suffix.
+- Why: the tourist cannot fix a removed package by choosing another date.
+- Why: the web reads the code to show the right message in English or Japanese.
+- Why: a reused slug can show a new price behind an old link.
+- Replaces: the rule in `catalog.dbml` that the slug is unique among packages that are not `archived`.
+- Ships: the slug rule ships in its own sub-PR of api-266, and the old index applies until then.
+- Code: `package_not_offered` is the only new code of this entry.
 
 ## Open questions \{#open-forks\}
 
