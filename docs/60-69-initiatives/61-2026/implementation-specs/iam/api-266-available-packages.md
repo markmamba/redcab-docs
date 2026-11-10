@@ -152,6 +152,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 46 | The unique index on `catalog_listing_packages` covers all statuses, and `SlugGenerateService` avoids archived slugs too. | The generator only. The package `uuid` in checkout. | An old link must never point to another package or another price. |
 | 47 | The open dates and the start times answer `package_not_offered` for an `inactive` or `archived` package. A slug that matches no package, and an active package that is not available, keep `404`. | The same code for every unavailable package. An empty list. | This keeps the change to the rule of decision 41. The owner may change the second case (see Open items). |
 | 48 | When the payment start gives `package_not_offered` and no pending charge exists, `Bookings::CheckoutSessions::ReleaseForPackageNotOfferedManager` releases the hold and expires the checkout session. With a pending charge, the hold and the session stay until the hold expires. The release uses the hold reason `session_expired`. | Keep the hold in every case. Let the same tourist ignore an old hold. | The tourist must not wait up to 15 minutes for a hold that no charge can use. The manager takes the row lock of the payment start, so a charge cannot appear between the check and the release. |
+| 49 | A payment retry with a pending charge gets `package_not_offered`, and the API leaves the older Stripe intent alone. The Payments redesign decides if the API cancels the intent or returns the existing handoff first. | Cancel or expire the intent now. Return the existing handoff before the package check. | The Payments domain has no ruling yet, so this spec cannot decide it. The older intent can still pay, and the webhook then confirms the booking (decision 39). |
 
 ## API contract
 
@@ -558,8 +559,7 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 - The owner may change the rule for service dates after a permit ends.
 - An active package that is not available gets `404` on the open dates and the start times.
 - The owner may want an empty list or another answer for that case.
-- A payment retry with a pending charge gets `package_not_offered`, and the older Stripe intent can still pay.
-- The owner must decide if a retry returns the existing handoff first.
+- The Payments redesign in [redcab-docs#155](https://github.com/markmamba/redcab-docs/issues/155) decides what happens to an open Stripe intent when a package is not offered (decision 49).
 - An expert should review a trip that starts on the last valid day and ends after it.
 - Nobody has measured the cost of the permit subquery on a large catalog.
 - Keyword search still reads `business_name` from a Providers table.
