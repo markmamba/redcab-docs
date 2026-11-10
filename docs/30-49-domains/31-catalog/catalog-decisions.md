@@ -710,6 +710,7 @@ A tourist who names a package that the provider no longer offers gets one clear 
 - Replaces: the rule in `catalog.dbml` that the slug is unique among packages that are not `archived`.
 - Ships: the slug rule ships in its own sub-PR of api-266, and the old index applies until then.
 - Code: `package_not_offered` is the only new code of this entry.
+- Status: accepted on 2026-11-10 so that development can start, and open to later change.
 
 ## Open questions \{#open-forks\}
 
@@ -724,3 +725,6 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | How does a Multi-Day Package (`E-04`) hold assets over many days? | Not designed; `BKG-4` still names slots | A later ruling |
 | What happens to a listing whose additional destination is in a node that an admin deactivates (`OPR-10`)? | Not decided; `OPR-10` names the subtree of the primary destination | Team geography spec |
 | Has the Product Owner signed off these rulings? | Not recorded | Release |
+| What is the final wording of the title for `package_not_offered`? | The current title in [D26](#package-not-offered) | The web copy in red-cab-web#194 |
+| What do the open dates and the start times answer for an `active` package that cannot sell? | `404` | A later ruling |
+| What does the API do with an open Stripe intent when a package is not offered? | It leaves the intent alone | The Payments redesign in redcab-docs#155 |
