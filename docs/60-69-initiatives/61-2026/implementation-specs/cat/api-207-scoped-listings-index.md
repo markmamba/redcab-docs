@@ -16,12 +16,15 @@ related:
 
 ## TL;DR
 
-- Ships `GET /marketplace/catalog/listings`. It returns listings for all of Japan, one region, or one prefecture.
+- Ships `GET /marketplace/catalog/listings`.
+  - It returns listings for all of Japan, one region, or one prefecture.
 - Ships `GET /marketplace/catalog/regions` for the home page.
 - Ships the scope `Catalog::Listing.discoverable` and the Top rated sort index.
-- Service type and language take many values. OR inside a category, AND across categories.
+- Service type and language take many values.
+  - OR inside a category, AND across categories.
 - The sorts are Recently added (default) and Top rated.
-- The database paginates. The server quotes the card price only for the listings on the current page.
+- The database paginates.
+  - The server quotes the card price only for the listings on the current page.
 - Does NOT ship keyword search, the price filter, the vehicle filter, the price sort or the Most booked sort.
 - Does NOT change the legacy route `/districts/:d/areas/:a/listings`.
 - Breaking change: No. Both endpoints are new.
@@ -30,9 +33,17 @@ related:
 
 No endpoint returns the listings of a region, a prefecture or the whole marketplace.
 
-The current index finds the rows of one area, quotes the price of every row in Ruby, and paginates the full list in memory. A large scope is slow.
+The current index does three things:
 
-The filters take one value. Tourists need OR inside a category and AND across categories.
+- It finds the rows of one area.
+- It quotes the price of every row in Ruby.
+- It paginates the full list in memory.
+
+A large scope is slow.
+
+The filters take one value.
+
+Tourists need OR inside a category and AND across categories.
 
 Evidence: `app/domains/catalog/listings/marketplace_index_manager.rb`, `app/controllers/marketplace/catalog/listings_controller.rb`, issue #207.
 
@@ -86,7 +97,9 @@ Region item:
 - `uuid`, `slug`, `name_en`, `name_ja`, `listing_count`
 - `prefectures`: a list of `uuid`, `slug`, `name_en`, `name_ja`, `popular_rank`, `listing_count`
 
-Order: regions by `display_order`. Prefectures by `popular_rank` ascending with no rank last, then `display_order`.
+Order: regions by `display_order`.
+
+Prefectures by `popular_rank` ascending with no rank last, then `display_order`.
 
 Error text:
 
@@ -114,7 +127,9 @@ Error text:
 
 - Bounded context: CAT
 - Transaction boundaries: read only.
-- Snapshots: none. The card price is a quote, not a stored price. Pricing authority stays `Catalog::Pricing::CalculateQuoteService`.
+- Snapshots: none.
+  - The card price is a quote, not a stored price.
+  - Pricing authority stays `Catalog::Pricing::CalculateQuoteService`.
 
 ## Out of scope
 
@@ -153,18 +168,25 @@ Error text:
 - [ ] A region request returns only listings with a destination in that region, once each.
 - [ ] A prefecture request returns listings whose primary or additional destination is in that prefecture.
 - [ ] A request with no scope returns all discoverable listings.
-- [ ] Two values in one filter category return the union. Two categories return the intersection.
+- [ ] Two values in one filter category return the union.
+  - Two categories return the intersection.
 - [ ] Draft, paused, unlisted and unpublished listings never appear.
 - [ ] A published listing with no photo never appears.
 - [ ] A published listing with no active pricing policy never appears, and the request does not fail.
 - [ ] The default order is `published_at` descending, then `created_at` descending.
-- [ ] `order_by=rating_average` puts rated listings first, highest first, then more ratings, then the newer listing. Unrated listings come last.
+- [ ] `order_by=rating_average` puts rated listings first, highest first, then more ratings, then the newer listing.
+  - Unrated listings come last.
 - [ ] `order_dir=asc` and an unknown `order_by` return 422.
-- [ ] A request for an unknown region or prefecture returns 404. A known scope with no listing returns 200 and an empty list.
-- [ ] A prefecture slug without a region slug returns 422. A prefecture under another region returns 404. The slug `hokkaido` works for the region and for the prefecture.
+- [ ] A request for an unknown region or prefecture returns 404.
+  - A known scope with no listing returns 200 and an empty list.
+- [ ] A prefecture slug without a region slug returns 422.
+  - A prefecture under another region returns 404.
+  - The slug `hokkaido` works for the region and for the prefecture.
 - [ ] `vehicle_type`, `min_price`, `max_price`, `price_min`, `price_max` and `keyword` return 422.
-- [ ] The response has `meta` with `page`, `page_size`, `count` and `pages`. The price quote runs only for the rows of the current page.
-- [ ] `GET /marketplace/catalog/regions` returns only nodes with a discoverable listing, with `listing_count` and `popular_rank`. A listing with two destinations in different regions counts once in each region.
+- [ ] The response has `meta` with `page`, `page_size`, `count` and `pages`.
+  - The price quote runs only for the rows of the current page.
+- [ ] `GET /marketplace/catalog/regions` returns only nodes with a discoverable listing, with `listing_count` and `popular_rank`.
+  - A listing with two destinations in different regions counts once in each region.
 - [ ] The regions endpoint runs a fixed number of queries, not one for each prefecture.
 - [ ] The legacy area route returns the same results as before.
 - [ ] `catalog.dbml` has no `ships in: S8` tag for the Top rated index.

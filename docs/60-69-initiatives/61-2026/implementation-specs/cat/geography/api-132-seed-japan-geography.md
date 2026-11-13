@@ -21,7 +21,15 @@ epic: "https://github.com/markmamba/red-cab-api/issues/130"
 
 ## Problem
 
-Epic #130 step 8 requires ~1,963 Japan geography rows seeded from official administrative codes with C1 discovery roots (67), listable leaves (~1,900), and idempotent upsert on `(country_id, code_system, external_code)` (`FR-CAT-001`). Schema migration (#131) creates empty `catalog_geographies`; no seed task exists.
+Epic #130 step 8 requires ~1,963 Japan geography rows, seeded from official administrative codes (`FR-CAT-001`).
+
+The seed has these parts:
+
+- C1 discovery roots (67).
+- Listable leaves (~1,900).
+- Idempotent upsert on `(country_id, code_system, external_code)`.
+
+Schema migration (#131) creates empty `catalog_geographies`; no seed task exists.
 
 Evidence: `redcab-docs/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/docs-13-geography-administrative-tree.md` Seed contract §; `redcab-docs/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model.md` §4 step 8; issue #132.
 
@@ -73,7 +81,9 @@ Each file **must** include a provenance header comment (or companion `README.md`
 
 ### MIG-* placeholder cleanup
 
-Before upsert, delete rows where `external_code LIKE 'MIG-%'` (throwaway #131 dev backfill keys). Official upsert keys will not match these placeholders; without cleanup, slug/path unique-index collisions are possible in polluted dev DBs.
+Before upsert, delete rows where `external_code LIKE 'MIG-%'` (throwaway #131 dev backfill keys).
+
+Official upsert keys will not match these placeholders; without cleanup, slug/path unique-index collisions are possible in polluted dev DBs.
 
 ### Pass sequence
 
@@ -96,11 +106,15 @@ Per parent spec Seed contract:
 
 ### Homonym slug map (10 pairs)
 
-Designated city keeps bare slug; prefecture gets `-prefecture` suffix. Reuse logic from `db/migrate/20260921140200_add_geography_to_catalog_listings.rb` (`DESIGNATED_CITY_SLUGS`, `DESIGNATED_CITY_PREFECTURE_SLUG`).
+Designated city keeps bare slug; prefecture gets `-prefecture` suffix.
+
+Reuse logic from `db/migrate/20260921140200_add_geography_to_catalog_listings.rb` (`DESIGNATED_CITY_SLUGS`, `DESIGNATED_CITY_PREFECTURE_SLUG`).
 
 ### Expected row counts
 
-Counts track the vendored 2025-04-01 municipal snapshot (`municipal_codes.csv`). Integration test constants are authoritative.
+Counts track the vendored 2025-04-01 municipal snapshot (`municipal_codes.csv`).
+
+Integration test constants are authoritative.
 
 | Category | Count |
 | --- | --- |

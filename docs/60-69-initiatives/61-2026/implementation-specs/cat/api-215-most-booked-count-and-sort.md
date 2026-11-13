@@ -22,18 +22,26 @@ related:
 - Ships `Catalog::Listings::RefreshBookingCountsService`, the only writer of the two columns.
 - Ships a nightly sweep job that starts one refresh job for each listing.
 - Ships the sort `order_by=bookings_count_90d` on `GET /marketplace/catalog/listings`.
-- Does NOT change the web. The sort option is a web follow-up.
+- Does NOT change the web.
+  - The sort option is a web follow-up.
 - Does NOT show the count in any payload.
-- Does NOT update the count when a booking changes. Only the nightly job updates it.
+- Does NOT update the count when a booking changes.
+  - Only the nightly job updates it.
 - Breaking change: No.
 
 ## Problem
 
-A tourist cannot sort listings by demand. No booking count exists on the listing.
+A tourist cannot sort listings by demand.
 
-The count must come from Bookings. Catalog must not read `bookings_` tables (the DBML rule for derived columns).
+No booking count exists on the listing.
 
-The 90-day window moves every day without a new event. A stored count goes stale unless something refreshes it.
+The count must come from Bookings.
+
+Catalog must not read `bookings_` tables (the DBML rule for derived columns).
+
+The 90-day window moves every day without a new event.
+
+A stored count goes stale unless something refreshes it.
 
 Evidence: `docs/db/catalog.dbml` (`bookings_count_90d`, S8), `app/domains/catalog/listings/marketplace_scoped_index_manager.rb`, `marketplace_scoped_index_validator.rb`, `config/sidekiq_scheduler.yml`, issue #215.
 
@@ -55,7 +63,9 @@ Read these before design, and do not invent behavior that contradicts them.
 
 Each row says who made the decision.
 
-"Added point, please review" means the author added it. The owner must confirm or change each row before approval.
+"Added point, please review" means the author added it.
+
+The owner must confirm or change each row before approval.
 
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
@@ -97,16 +107,20 @@ Each row says who made the decision.
 - Add `catalog_listings.bookings_count_refreshed_at`: timestamptz, null.
 - Add the partial index `index_catalog_listings_on_bookings_count_90d` on `bookings_count_90d` where `status = 'published'`.
 - Add a check constraint: `bookings_count_90d >= 0`.
-- The migration does not fill the counts. The first job run fills them (see Known limits).
+- The migration does not fill the counts.
+  - The first job run fills them (see Known limits).
 - The migration `down` drops the index and both columns.
 
 ### Files to create or modify (API)
 
 - `db/migrate/{timestamp}_add_bookings_count_to_catalog_listings.rb`.
 - `app/domains/bookings/orders/listing_booking_counts_manager.rb`, with a test.
-- `app/domains/catalog/listings/refresh_booking_counts_service.rb`, with a test. It takes one `listing:`.
-- `app/jobs/catalog/listings/refresh_booking_counts_sweep_job.rb`, with a test. It starts one refresh job for each listing.
-- `app/jobs/catalog/listings/refresh_booking_counts_job.rb`, with a test. It takes one `listing_id`.
+- `app/domains/catalog/listings/refresh_booking_counts_service.rb`, with a test.
+  - It takes one `listing:`.
+- `app/jobs/catalog/listings/refresh_booking_counts_sweep_job.rb`, with a test.
+  - It starts one refresh job for each listing.
+- `app/jobs/catalog/listings/refresh_booking_counts_job.rb`, with a test.
+  - It takes one `listing_id`.
 - `config/sidekiq_scheduler.yml`: add `catalog_listings_refresh_booking_counts` for the sweep job, with `cron: '0 18 * * *'`, `queue: catalog` and `enabled: true`.
 - `app/domains/catalog/listings/marketplace_scoped_index_validator.rb`: add the key to `VALID_ORDER_COLUMNS` and `ORDER_DIR_BY_COLUMN`.
 - `app/domains/catalog/listings/marketplace_scoped_index_manager.rb`: add the `order_relation` branch.
@@ -115,20 +129,27 @@ Each row says who made the decision.
 
 ## Data / domain touchpoints
 
-- Bounded contexts: CAT writes the cache. BKG owns the booking data and answers the count query.
-- Transaction boundaries: each refresh job writes one listing with one statement. A failed job does not change the other listings, and Sidekiq retries it alone.
-- Snapshots: none. The count is a cache. A confirmed booking never changes (`INV-1`).
+- Bounded contexts: CAT writes the cache.
+  - BKG owns the booking data and answers the count query.
+- Transaction boundaries: each refresh job writes one listing with one statement.
+  - A failed job does not change the other listings, and Sidekiq retries it alone.
+- Snapshots: none.
+  - The count is a cache.
+  - A confirmed booking never changes (`INV-1`).
 
 ## Known limits
 
 - A new booking does not change the count until the nightly job runs.
-- A listing that is new, or exists before the first job run, has count 0 and ranks last for Most booked.
+- A new listing has count 0 and ranks last for Most booked.
+- A listing that exists before the first job run has count 0 and ranks last for Most booked.
 - A booking that leaves the window drops out at the next run, not at the exact minute.
-- The ranking is not exact in real time. This is the cost of a stored count.
+- The ranking is not exact in real time.
+  - This is the cost of a stored count.
 
 ## Out of scope
 
-- The web sort option. It is a small web follow-up after this issue merges.
+- The web sort option.
+  - It is a small web follow-up after this issue merges.
 - Showing the count on a card or a page.
 - A refresh on booking events.
 - A new index on `bookings_orders`.
@@ -160,12 +181,14 @@ Each row says who made the decision.
 - [ ] A cancelled, failed or fully refunded booking does not count.
 - [ ] A pending booking does not count.
 - [ ] A booking counts once, even after it becomes Completed or Payout queued.
-- [ ] A booking confirmed 91 days ago does not count. A booking confirmed 89 days ago counts.
+- [ ] A booking confirmed 91 days ago does not count.
+  - A booking confirmed 89 days ago counts.
 - [ ] A listing with no qualifying booking gets count 0 after a run.
 - [ ] A count that was 3 and drops to 0 after bookings leave the window is written as 0.
 - [ ] Equal counts rank by `published_at`, then `created_at`.
 - [ ] `order_by=bookings_count_90d&order_dir=asc` returns 422 with "Please use descending order for this sort."
-- [ ] No Catalog code reads a `bookings_` table. Only the Bookings read manager does.
+- [ ] No Catalog code reads a `bookings_` table.
+  - Only the Bookings read manager does.
 - [ ] The service is the only code that writes `bookings_count_90d`.
 - [ ] `bin/rails test`, `bundle exec srb tc` and `bundle exec rubocop` pass at their current baseline.
 - [ ] No client-side price computation.
