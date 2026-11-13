@@ -6,10 +6,10 @@
 #
 # Skipped: legacy and background pages. They are not rule sources, and a rewrite risks losing facts.
 #   docs/80-89-legacy/  docs/70-79-business/72-requirements/  docs/70-79-business/73-planning/
-#   docs/70-79-business/71-business-rules/invariants.md
+#   docs/70-79-business/71-business-rules/invariants.md  docs/70-79-business/71-business-rules/glossary.md
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)"
-SKIP='^docs/(80-89-legacy/|70-79-business/(72-requirements/|73-planning/|71-business-rules/invariants\.md))'
+SKIP='^docs/(80-89-legacy/|70-79-business/(72-requirements/|73-planning/|71-business-rules/(invariants|glossary)\.md))'
 
 SKILLS=.claude/skills
 if [ "${1:-}" = "--changed" ]; then
