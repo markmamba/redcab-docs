@@ -14,19 +14,29 @@ related:
 
 ## TL;DR
 
-- Ships the column `primary_geography_id` on `catalog_listings`. It replaces `geography_id` and must be a prefecture.
-- Ships `Catalog::Listings::PrimaryDestinationValidation`. It replaces `GeographyListableValidation`.
-- Provider create and update requests take `primary_geography_id`. They no longer take `area_id`.
+- Ships the column `primary_geography_id` on `catalog_listings`.
+  - It replaces `geography_id` and must be a prefecture.
+- Ships `Catalog::Listings::PrimaryDestinationValidation`.
+  - It replaces `GeographyListableValidation`.
+- Provider create and update requests take `primary_geography_id`.
+  - They no longer take `area_id`.
 - Does NOT ship additional destinations, pickup coverage, new endpoints, new URLs or the web provider form.
-- Breaking change: Yes. The provider request field changes from `area_id` to `primary_geography_id`. The provider payload field `area_uuid` becomes `primary_geography_id`. The old web provider form breaks until its own issue ships.
+- Breaking change: Yes.
+  - The provider request field changes from `area_id` to `primary_geography_id`.
+  - The provider payload field `area_uuid` becomes `primary_geography_id`.
+  - The old web provider form breaks until its own issue ships.
 
 ## Problem
 
-A listing attaches to a ward or a small city today. Region and prefecture pages cannot find it.
+A listing attaches to a ward or a small city today.
+
+Region and prefecture pages cannot find it.
 
 `Catalog::Listings::GeographyListableValidation` requires a listable leaf, and its messages talk about areas.
 
-The provider create flow needs one `area_id`. The target design uses one prefecture as the primary destination.
+The provider create flow needs one `area_id`.
+
+The target design uses one prefecture as the primary destination.
 
 Evidence: `app/domains/catalog/listings/geography_listable_validation.rb`, `app/domains/catalog/listings/providers_create_manager.rb`, `db/schema.rb` (`catalog_listings.geography_id`).
 
@@ -60,7 +70,9 @@ Read these before design, and do not invent behavior that contradicts them.
 
 ## API contract
 
-No new endpoint ships. The changes below are in existing provider and marketplace payloads.
+No new endpoint ships.
+
+The changes below are in existing provider and marketplace payloads.
 
 | Method | Path | Auth | Request body | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -99,7 +111,8 @@ Error text:
 
 - Bounded context: CAT
 - Transaction boundaries: the migration runs in one transaction.
-- Snapshots: the booking `service_timezone` is still a snapshot taken at checkout. Only its source changes.
+- Snapshots: the booking `service_timezone` is still a snapshot taken at checkout.
+  - Only its source changes.
 
 ## Out of scope
 
@@ -126,7 +139,8 @@ Error text:
 
 ### Web
 
-- [ ] None in this issue. The provider form is a separate issue.
+- [ ] None in this issue.
+  - The provider form is a separate issue.
 
 ### Docs
 

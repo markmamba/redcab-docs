@@ -1,5 +1,5 @@
 ---
-description: Produce a short design plan before an implementation spec — invariants, options, boundaries, and open questions. Does not write code or formal specs.
+description: "Help the user design a new model, aggregate, flow or feature before any implementation spec or code exists. Use when the user wants to design something new, weigh two or three options, decide aggregate boundaries, sketch a schema, or work out what must always be true. Trigger words include design, weigh options, before we write the spec, aggregate, sketch the schema, invariants. Produces a short design plan in scratchpad, never code and never a formal spec. Loads write-plain-english first."
 globs: []
 alwaysApply: false
 ---

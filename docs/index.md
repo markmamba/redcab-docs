@@ -9,7 +9,9 @@ displayed_sidebar: docsSidebar
 
 Red Cab is a two-sided marketplace connecting inbound travelers with verified transportation and tourism providers in Japan.
 
-Documentation uses **Johnny Decimal** area numbers. See [About these docs](/docs/00-09-meta/about-these-docs) and [Conventions](/docs/00-09-meta/conventions).
+Documentation uses **Johnny Decimal** area numbers.
+
+See [About these docs](/docs/00-09-meta/about-these-docs) and [Conventions](/docs/00-09-meta/conventions).
 
 | Area | Audience | What you'll find |
 | --- | --- | --- |
@@ -32,7 +34,9 @@ Documentation uses **Johnny Decimal** area numbers. See [About these docs](/docs
 
 ## Document precedence
 
-See [Documentation system](/docs/00-09-meta/conventions/documentation-system#precedence). Program pages under `61-2026/` are not normative.
+See [Documentation system](/docs/00-09-meta/conventions/documentation-system#precedence).
+
+Program pages under `61-2026/` are not normative.
 
 ## AI agent read path
 

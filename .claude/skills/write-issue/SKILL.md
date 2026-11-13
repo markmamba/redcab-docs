@@ -1,6 +1,6 @@
 ---
 name: write-issue
-description: Draft a GitHub issue for red-cab-api, red-cab-web, or redcab-docs — Context, Problem, Direction, stable section names, templates A–E, and gh workflow. Loads write-plain-english first.
+description: "Draft a GitHub issue for red-cab-api, red-cab-web or redcab-docs in the team format, Context then Problem then Direction, with a words table, a worked example and tasks, so an engineer can start cold from the issue alone. Use when the user asks to write, draft, compose or post a GitHub issue, says \"an issue\", or wants a finding or a conversation turned into an issue. Loads write-plain-english first for the sentence, bullet and naming rules."
 argument-hint: "[repo] [topic]"
 ---
 
@@ -8,7 +8,7 @@ argument-hint: "[repo] [topic]"
 
 Read `.claude/skills/write-plain-english/SKILL.md` first.
 
-The issue body is Tier A prose. An engineer must start cold from the issue alone.
+The issue body follows `write-plain-english`. An engineer must start cold from the issue alone.
 
 > In one read, the engineer understands the problem space, the problem, and the direction.
 > No follow-up conversation is required.
@@ -118,7 +118,7 @@ If unsure, leave a task to confirm the ID rather than guessing.
 | --- | --- | --- |
 | | | |
 
-- Mermaid for state flows or system maps when a branch or relationship matters. Tier A labels. Skill `mermaid-diagram`.
+- Mermaid for state flows or system maps when a branch or relationship matters. Short plain labels. Skill `mermaid-diagram`.
 - Do not use "Steps to reproduce" / "Expected" / "Actual" as separate section titles. Use the table above.
 
 ### Code blocks

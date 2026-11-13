@@ -17,11 +17,14 @@ related:
 
 - Every old `/districts...` URL and every old `/account/discover/:districtId...` district or area URL redirects to the all-services page with a 301.
 - These redirects make no API call.
-- An old listing URL still redirects to the listing slug page. This call stays, because it needs the listing.
+- An old listing URL still redirects to the listing slug page.
+  - This call stays, because it needs the listing.
 - Removes the districts API client and the code that uses it.
-- Does NOT remove the redirect routes. The old URLs must still answer with a 301.
+- Does NOT remove the redirect routes.
+  - The old URLs must still answer with a 301.
 - Does NOT change the API.
-- Breaking change: No for visitors. An old district URL of a prefecture now lands on all services, not on the prefecture page.
+- Breaking change: No for visitors.
+  - An old district URL of a prefecture now lands on all services, not on the prefecture page.
 
 ## Problem
 
@@ -32,7 +35,9 @@ The web still depends on them in two places:
 1. `app/routes/tourist/tourist-account-discover-redirect-utils.js` calls `marketplaceCatalogDistrictsApi.show` and `areaShow` to find a district slug from an old id.
 2. `app/routes/marketplace/catalog-listing/marketplace-catalog-legacy-redirect-utils.js` calls the regions endpoint in `resolveDistrictRedirectPath` to send an old district slug to a prefecture page.
 
-After PR 2, call 1 fails with 404 and the visitor lands on all services by accident. Call 2 only works when an old district slug equals a prefecture slug, and the API no longer promises that.
+After PR 2, call 1 fails with 404 and the visitor lands on all services by accident.
+
+Call 2 only works when an old district slug equals a prefecture slug, and the API no longer promises that.
 
 Owner ruling 3 of api-216 says the redirect is static, so no API outage can break an old URL.
 
@@ -53,7 +58,9 @@ Read these before design, and do not invent behavior that contradicts them.
 
 Each row says who made the decision.
 
-"Added point, please review" means the author added it. The owner must confirm or change each row before approval.
+"Added point, please review" means the author added it.
+
+The owner must confirm or change each row before approval.
 
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
@@ -89,8 +96,11 @@ Each row says who made the decision.
 
 ### Files to modify (Web)
 
-- `app/routes/marketplace/catalog-listing/marketplace-catalog-legacy-redirect-utils.js`: remove `resolveDistrictRedirectPath` and its imports of the regions API and `CatalogListingService`. The loader sends a district or area URL to `MARKETPLACE_CATALOG_PATHS.LISTINGS` without a call. Export `redirectToAllServices`.
-- `app/routes/tourist/tourist-account-discover-redirect-utils.js`: remove the districts API import and both calls. `redirectLegacyDiscoverDistrict` and `redirectLegacyDiscoverArea` call `redirectToAllServices`.
+- `app/routes/marketplace/catalog-listing/marketplace-catalog-legacy-redirect-utils.js`: remove `resolveDistrictRedirectPath` and its imports of the regions API and `CatalogListingService`.
+  - The loader sends a district or area URL to `MARKETPLACE_CATALOG_PATHS.LISTINGS` without a call.
+  - Export `redirectToAllServices`.
+- `app/routes/tourist/tourist-account-discover-redirect-utils.js`: remove the districts API import and both calls.
+  - `redirectLegacyDiscoverDistrict` and `redirectLegacyDiscoverArea` call `redirectToAllServices`.
 - `app/routes/marketplace/catalog-listing/marketplace-catalog-legacy-redirect-utils.spec.js` and `app/routes/tourist/tourist-account-discover-redirect-utils.spec.js`: update to the table above.
 
 ### Files to remove (Web)
@@ -106,12 +116,15 @@ Each row says who made the decision.
 ## Known limits
 
 - An old district URL of a prefecture loses its prefecture page and lands on all services.
-- The web cannot tell a district that never existed from one that did. Both go to all services.
+- The web cannot tell a district that never existed from one that did.
+  - Both go to all services.
 
 ## Out of scope
 
-- Any change to the API. That is red-cab-api#216.
-- The `/discover` and `/discover/*` redirects in `marketplace.routes.js`. They do not call the district API.
+- Any change to the API.
+  - That is red-cab-api#216.
+- The `/discover` and `/discover/*` redirects in `marketplace.routes.js`.
+  - They do not call the district API.
 - A new region or prefecture redirect map.
 - The Most booked sort option.
 
@@ -139,7 +152,8 @@ Each row says who made the decision.
 ## Acceptance criteria
 
 - [ ] Each old district and area URL in the table returns a 301 to `/listings`.
-- [ ] The district and area redirects make no API call. A test checks that no API module is called.
+- [ ] The district and area redirects make no API call.
+  - A test checks that no API module is called.
 - [ ] An old listing URL returns a 301 to the listing slug page.
 - [ ] An unknown listing returns a 301 to `/listings`.
 - [ ] An error other than 404 from the listing call is not hidden.

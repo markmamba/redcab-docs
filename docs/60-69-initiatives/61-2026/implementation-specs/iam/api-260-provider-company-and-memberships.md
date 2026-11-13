@@ -56,7 +56,9 @@ The lasting rules of this spec are on the model page [Provider company and membe
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
@@ -342,8 +344,12 @@ Merged in [red-cab-api#272](https://github.com/markmamba/red-cab-api/pull/272) o
 - [x] Remove the I2 tags that this spec ships from `docs/db/providers.dbml` and `docs/db/redcab.dbml`.
 - [ ] Run the checks in [Verification](#verification).
   - `bin/rails test`, `rubocop` and `brakeman` pass.
-  - `srb tc` reports 35 errors. `main` reported 40 before this change. Each of the 35 has a match on `main`.
-  - `bin/rails db:reset` is not run. Another process held the development database open. The migrations ran with `db:migrate`.
+  - `srb tc` reports 35 errors.
+  - `main` reported 40 before this change.
+  - Each of the 35 has a match on `main`.
+  - `bin/rails db:reset` is not run.
+  - Another process held the development database open.
+  - The migrations ran with `db:migrate`.
 
 ### Docs
 
@@ -361,7 +367,8 @@ Merged in [red-cab-api#272](https://github.com/markmamba/red-cab-api/pull/272) o
 - [x] No file in `app/` or `test/` names `provider_profile`, except the examples in `AGENTS.md`.
   - The error code `provider_profile_required` stays, because the spec keeps the code.
   - Route helper names such as `providers_profiles_path` stay, because the URLs do not change.
-  - One test uses a temporary view named `providers_profiles`. It lets an old migration run on the renamed table.
+  - One test uses a temporary view named `providers_profiles`.
+  - It lets an old migration run on the renamed table.
 - [x] The three type detail tables are the only tables that still hold `providers_profile_id`.
 
 ## Verification

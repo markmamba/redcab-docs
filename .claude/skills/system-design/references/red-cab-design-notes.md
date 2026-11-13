@@ -1,5 +1,10 @@
 # Red Cab design notes (for system-design)
 
+These are reminders to check, not rulings.
+- A rule here applies to a plan only when a decision entry in `{domain}-decisions.md` states it, or the owner states it.
+- Where a note cites `INV-*` or `ADR-*`, that page is background. Ask the owner, or look for the domain entry that replaced it.
+- When no entry exists, list the rule under *Open questions* of the plan.
+
 ## Modular monolith
 
 Single Rails API deployable, PostgreSQL, bounded contexts under `app/domains/`. Prefer in-process integration unless an ADR says otherwise.
@@ -10,7 +15,7 @@ Surfaces differ in auth and routes. Web enforcement model: the IAM decisions in 
 
 ## Geography
 
-Administrative tree and reference data: ADR-013, ADR-016. Team admin and marketplace slugs may need separate issues; check open questions.
+Administrative tree and reference data: old ADR-013 and ADR-016 are background. Check `catalog-decisions.md` for the current rulings. Team admin and marketplace slugs may need separate issues; check open questions.
 
 ## Payments
 

@@ -61,7 +61,9 @@ The web holds code for a refresh that goes away, and some sign-out controls are 
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |

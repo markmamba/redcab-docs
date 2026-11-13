@@ -15,26 +15,41 @@ related:
 
 ## TL;DR
 
-- Ships `GET /providers/catalog/regions`. It lists all active regions with their active prefectures.
-- The list has no discoverable rule. A prefecture with no listing is in the list.
+- Ships `GET /providers/catalog/regions`.
+  - It lists all active regions with their active prefectures.
+- The list has no discoverable rule.
+  - A prefecture with no listing is in the list.
 - The list has no designated city, ward or other municipality.
-- Any provider with a profile may call it. The provider does not need to be approved.
+- Any provider with a profile may call it.
+  - The provider does not need to be approved.
 - Does NOT change the public regions or districts endpoints.
 - Does NOT ship migrations, new tables or web code.
 - Breaking change: No. It is a new endpoint.
 
 ## Problem
 
-The web provider listing form must offer every active prefecture as a destination. The form uses `GET /marketplace/catalog/districts` today.
+The web provider listing form must offer every active prefecture as a destination.
 
-That endpoint returns only discoverable discovery roots. A node is discoverable only when a published listing sits below it. The result has two faults:
+The form uses `GET /marketplace/catalog/districts` today.
 
-- A prefecture with no published listing is not in the list. A provider cannot create the first listing in a new prefecture.
-- A designated city can be in the list. The API rejects it as a primary destination (api-204).
+That endpoint returns only discoverable discovery roots.
 
-The public endpoints must keep INV-8: a node shows only with a discoverable listing. They cannot serve this need.
+A node is discoverable only when a published listing sits below it.
 
-No provider endpoint lists geographies. Only `/team/catalog/geographies` exists, and it is for admins.
+The result has two faults:
+
+- A prefecture with no published listing is not in the list.
+  - A provider cannot create the first listing in a new prefecture.
+- A designated city can be in the list.
+  - The API rejects it as a primary destination (api-204).
+
+The public endpoints must keep INV-8: a node shows only with a discoverable listing.
+
+They cannot serve this need.
+
+No provider endpoint lists geographies.
+
+Only `/team/catalog/geographies` exists, and it is for admins.
 
 Evidence:
 
@@ -110,12 +125,14 @@ Response example:
 - Bounded context: CAT
 - Transaction boundaries: read only.
 - Snapshots: none.
-- No migration. The endpoint reads `catalog_geographies` with existing columns and indexes (`parent_id` with `display_order`, and `parent_id` with `popular_rank`).
+- No migration.
+  - The endpoint reads `catalog_geographies` with existing columns and indexes (`parent_id` with `display_order`, and `parent_id` with `popular_rank`).
 
 ## Out of scope
 
 - A change to `/marketplace/catalog/regions` and `/marketplace/catalog/districts`.
-- Names of additional destinations in the provider listing payload. The web looks them up in this list.
+- Names of additional destinations in the provider listing payload.
+  - The web looks them up in this list.
 - A `listing_count` or a `popular_rank` field for providers.
 - Municipalities and wards as destinations.
 - Pickup coverage (release 4).
@@ -133,7 +150,8 @@ Response example:
 
 ### Web
 
-- [ ] None in this issue. See [web-154](./web-154-provider-listing-destinations.md).
+- [ ] None in this issue.
+  - See [web-154](./web-154-provider-listing-destinations.md).
 
 ### Docs
 
@@ -149,10 +167,12 @@ Response example:
 - [ ] A deactivated or archived region or prefecture is not in the list.
 - [ ] A prefecture of an inactive region is not in the list.
 - [ ] An active region with no active prefecture is in the list with `prefectures: []`.
-- [ ] Regions come back by `display_order`. Prefectures come back by `popular_rank` (no rank last), then `display_order`.
+- [ ] Regions come back by `display_order`.
+  - Prefectures come back by `popular_rank` (no rank last), then `display_order`.
 - [ ] The response has no `listing_count` and no `popular_rank`.
 - [ ] A request without a session returns 401.
-- [ ] A user without the provider role returns 403. A provider without a profile returns 403.
+- [ ] A user without the provider role returns 403.
+  - A provider without a profile returns 403.
 - [ ] The endpoint runs a fixed number of queries, not one for each region.
 - [ ] The public regions and districts endpoints return the same results as before.
 - [ ] Integration test: `test/integration/providers/catalog/regions_index_integration_test.rb`

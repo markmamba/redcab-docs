@@ -8,7 +8,8 @@ description: What Red Cab does — business language for stakeholders and produc
 
 - Red Cab is a B2C marketplace connecting travelers with verified Japanese transport and tour providers.
 - This tier holds **business rules**, **requirements**, **explainers**, and **planning** — no implementation specs or API detail.
-- For system design, see [Architecture](/docs/30-49-domains). For implementation, see [Engineering](/docs/90-99-engineering-meta).
+- For system design, see [Architecture](/docs/30-49-domains).
+  - For implementation, see [Engineering](/docs/90-99-engineering-meta).
 
 ## About this document
 

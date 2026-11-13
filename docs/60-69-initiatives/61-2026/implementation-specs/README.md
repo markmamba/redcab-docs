@@ -22,7 +22,7 @@ This page says how to write, review and link implementation specs.
 
 The [Documentation system](../../../00-09-meta/conventions/documentation-system.md#documentation-system) page gives the precedence and the doc types.
 
-Narrative sections follow [Prose and ASD-STE100](../../../00-09-meta/conventions/prose-and-ste100.md) (Tier A).
+Narrative sections follow [Prose and ASD-STE100](../../../00-09-meta/conventions/prose-and-ste100.md).
 
 Contract tables and file paths stay exact.
 
@@ -46,7 +46,7 @@ Contract tables and file paths stay exact.
    - Never copy a rule from an old spec, invariant, requirement or ADR.
 2. **Write.**
    - Copy `_template.md` to `{context}/{repo}-{issue}-{slug}.md`.
-   - Fill all sections in Tier A prose, see the `write-plain-english` skill.
+   - Fill all sections in plain English, see the `write-plain-english` skill.
    - The Governing docs table links the decision entry that the spec implements.
 3. **Review.**
    - The owner reviews the spec in the docs pull request.

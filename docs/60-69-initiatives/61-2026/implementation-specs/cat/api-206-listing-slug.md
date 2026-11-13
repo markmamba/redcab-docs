@@ -14,9 +14,12 @@ related:
 
 ## TL;DR
 
-- Ships the column `catalog_listings.slug`. It is global, unique and NOT NULL.
-- Ships a slug generator. The slug is the English title plus a 4-character random suffix.
-- A draft rebuilds the text part of its slug when its English title changes. The suffix stays.
+- Ships the column `catalog_listings.slug`.
+  - It is global, unique and NOT NULL.
+- Ships a slug generator.
+  - The slug is the English title plus a 4-character random suffix.
+- A draft rebuilds the text part of its slug when its English title changes.
+  - The suffix stays.
 - The slug is fixed after the first publish.
 - The marketplace show route accepts a listing UUID or a slug.
 - Marketplace and provider payloads return `slug`.
@@ -25,9 +28,13 @@ related:
 
 ## Problem
 
-A tourist reaches a listing by UUID. Shared links and search results need one stable address.
+A tourist reaches a listing by UUID.
 
-The listing has no slug column. The resolver can only send tourists to the legacy district and area path.
+Shared links and search results need one stable address.
+
+The listing has no slug column.
+
+The resolver can only send tourists to the legacy district and area path.
 
 Evidence: `db/schema.rb` (`catalog_listings` has no `slug`), `app/domains/catalog/listings/marketplace_show_manager.rb` (`find_by(uuid:)`), issue #206.
 
@@ -59,7 +66,9 @@ Read these before design, and do not invent behavior that contradicts them.
 
 ## API contract
 
-No new route ships. The changes below are in existing payloads and in one route parameter.
+No new route ships.
+
+The changes below are in existing payloads and in one route parameter.
 
 | Method | Path | Auth | Request body | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -87,7 +96,8 @@ No new route ships. The changes below are in existing payloads and in one route 
 
 - Bounded context: CAT
 - Transaction boundaries: the Manager saves the listing and its slug in one save.
-- Snapshots: none. Bookings keep the listing UUID.
+- Snapshots: none.
+  - Bookings keep the listing UUID.
 
 ## Out of scope
 
@@ -102,7 +112,8 @@ No new route ships. The changes below are in existing payloads and in one route 
 
 - [ ] Add the migration with the backfill and `down`.
 - [ ] Add `SlugGenerateService` and its tests.
-- [ ] Set the slug in the create manager. Rebuild it in the update manager for drafts.
+- [ ] Set the slug in the create manager.
+  - Rebuild it in the update manager for drafts.
 - [ ] Look up the listing by UUID or slug in the marketplace show manager.
 - [ ] Add `slug` to the serializers.
 - [ ] Update the test helpers and the dev seeder.
@@ -111,7 +122,8 @@ No new route ships. The changes below are in existing payloads and in one route 
 
 ### Web
 
-- [ ] None in this issue. The web routes and redirects are a separate issue.
+- [ ] None in this issue.
+  - The web routes and redirects are a separate issue.
 
 ### Docs
 

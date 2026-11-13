@@ -109,7 +109,7 @@ flowchart TD
   ROLE --> ACTION
   SETA --> ACTION
 
-  style GLOBAL fill:#ffe6e6,stroke:#cc0000
+  class GLOBAL problem
 ```
 
 The red node is finding **IAM-05**: every authenticated request writes a module-level attribute that all threads in the worker share.
@@ -152,9 +152,9 @@ flowchart LR
   R2 --> R3[require_provider_profile!: presence]
   R3 --> R4[["authorize_approved_provider_profile<br/>defined, never called"]]
 
-  style TB fill:#ffe6e6,stroke:#cc0000
-  style CB fill:#ffe6e6,stroke:#cc0000
-  style R4 fill:#fff4e6,stroke:#cc8800
+  class TB problem
+  class CB problem
+  class R4 problem
 ```
 
 ### 2.4 Endpoint map

@@ -10,11 +10,12 @@ Layers, precedence, spec status (`superseded`), and migration rules: [Documentat
 
 ## Prose (ASD-STE100)
 
-Human-readable text uses [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) by tier:
+Every human-readable text follows [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100).
 
-- **Tier A (required):** explainers, spec narrative, user-facing errors, GitHub issues and PRs.
-- **Tier B (sentences only):** requirements and glossary — keep **shall** / **may** and defined terms.
-- **Tier C:** ADRs and dense architecture — STE optional.
+One register applies to docs, specs, issues, PRs and user-facing errors.
+
+- A legacy requirement keeps its `FR-*` ID and its **shall** / **may** keywords.
+- A legacy ADR keeps its text until a domain page replaces it.
 
 ## Johnny Decimal structure
 
@@ -39,4 +40,6 @@ Numbers apply at **area** and **category** only so new pages can be inserted wit
 
 ## Document precedence
 
-See [Documentation system — precedence](/docs/00-09-meta/conventions/documentation-system#precedence). Program pages under `61-2026/` are not in the normative chain.
+See [Documentation system — precedence](/docs/00-09-meta/conventions/documentation-system#precedence).
+
+Program pages under `61-2026/` are not in the normative chain.

@@ -1,9 +1,0 @@
----
-description: Red Cab STE Tier A/B/C — when prose rules apply, glossary tie-in, and hand-off checklist. Load write-plain-english first for sentence, bullet, naming, and check scripts.
-globs: []
-alwaysApply: false
----
-
-# /write-tier-a-prose
-
-Read and follow the instructions in `.claude/skills/write-tier-a-prose/SKILL.md`.

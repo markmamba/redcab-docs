@@ -6,4 +6,6 @@ description: Observability — stub; to be expanded.
 
 ## TL;DR
 
-Stub page. Document observability for Red Cab Marketplace infrastructure here.
+Stub page.
+
+Document observability for Red Cab Marketplace infrastructure here.

@@ -73,7 +73,9 @@ A provider can reach only one listing status action today.
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |

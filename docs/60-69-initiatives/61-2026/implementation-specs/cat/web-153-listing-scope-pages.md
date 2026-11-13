@@ -21,24 +21,36 @@ related:
 
 ## TL;DR
 
-- Ships three listing pages: `/listings`, `/regions/:region-slug/listings` and `/regions/:region-slug/:prefecture-slug/listings`. One page module serves the three routes.
-- Ships the listing detail page at `/listings/:listing-slug`. It replaces the resolver at `/listings/:uuid`.
-- Ships a keyword field with a short pause. The keyword, the filters and the sort stay in the URL.
-- Service type and language take many values (toggle pills in the Filters panel). The prefecture select offers only the prefectures of the current region.
-- Applied filters show as removable chips under the toolbar. The Filters button shows how many are on.
+- Ships three listing pages: `/listings`, `/regions/:region-slug/listings` and `/regions/:region-slug/:prefecture-slug/listings`.
+  - One page module serves the three routes.
+- Ships the listing detail page at `/listings/:listing-slug`.
+  - It replaces the resolver at `/listings/:uuid`.
+- Ships a keyword field with a short pause.
+  - The keyword, the filters and the sort stay in the URL.
+- Service type and language take many values (toggle pills in the Filters panel).
+  - The prefecture select offers only the prefectures of the current region.
+- Applied filters show as removable chips under the toolbar.
+  - The Filters button shows how many are on.
 - Ships 301 redirects from the old `/districts`, `/discover` and `/account/discover` URLs, and from `/listings/:uuid` to the slug URL.
 - Ships the empty, not found and error states.
 - Removes the old district and area pages, the geography nav, the price fields and the near-me code.
-- Does NOT ship the price filter, the vehicle type filter, the price sort or the Most booked sort. Does NOT ship the home page region cards (#152). Does NOT change the API.
-- Breaking change: Yes for URLs. Old `/districts/...` URLs now redirect. The old pages are gone.
+- Does NOT ship the price filter, the vehicle type filter, the price sort or the Most booked sort.
+  - Does NOT ship the home page region cards (#152).
+  - Does NOT change the API.
+- Breaking change: Yes for URLs.
+  - Old `/districts/...` URLs now redirect.
+  - The old pages are gone.
 
 ## Problem
 
-Tourists browse at `/districts/{districtSlug}/areas/{areaSlug}/listings` today. A listing now sits on a prefecture (api-204), so the old area page finds no listing.
+Tourists browse at `/districts/{districtSlug}/areas/{areaSlug}/listings` today.
+
+A listing now sits on a prefecture (api-204), so the old area page finds no listing.
 
 1. No route shows the listings of a region, a prefecture or the whole marketplace.
 2. The search field on the toolbar is disabled, and the filters take one value.
-3. The filter panel sends `price_min` and `price_max`. The API returns 422 for them until release 3.
+3. The filter panel sends `price_min` and `price_max`.
+   - The API returns 422 for them until release 3.
 4. The listing detail page lives under the district and area path, and `/listings/:uuid` is only a resolver.
 5. The sort control labels the default "Newest", and Top rated is disabled.
 
@@ -53,7 +65,9 @@ Evidence:
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
@@ -111,7 +125,11 @@ Rulings marked "Owner ruling" were given by the owner on 2026-10-24.
 
 ## API contract
 
-No new API item. The pages call these endpoints. The shapes are in the api specs.
+No new API item.
+
+The pages call these endpoints.
+
+The shapes are in the api specs.
 
 | Method | Path | Auth | Request | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -123,7 +141,8 @@ Query rules:
 
 - Multi-value params are comma lists.
 - `prefecture_slug` needs `region_slug`.
-- The slug `hokkaido` is both a region and a prefecture. The URL `/regions/hokkaido/hokkaido/listings` is valid.
+- The slug `hokkaido` is both a region and a prefecture.
+  - The URL `/regions/hokkaido/hokkaido/listings` is valid.
 
 ## Web contract
 
@@ -137,7 +156,9 @@ Query rules:
 | Marketplace | `/discover`, `/discover/*` | `loader` (301 redirect) | None | None |
 | Tourist | `/account/discover...` (existing redirect routes) | `loader` (301 redirect) | Existing, plus the shared mapping | Existing |
 
-The route order matters: `listings` and `listings/:listingSlug` do not clash. Register the three scope routes and the legacy routes explicitly in `marketplace.routes.js` (no `resources`).
+The route order matters: `listings` and `listings/:listingSlug` do not clash.
+
+Register the three scope routes and the legacy routes explicitly in `marketplace.routes.js` (no `resources`).
 
 ### Layout (text sketch)
 
@@ -187,19 +208,25 @@ Service date [ yyyy-mm-dd ]   Group size [ 4 ]
 Reset                                    [  Apply  ]    (stays in view)
 ```
 
-A pill that is on uses the primary color. A pill that is off has an outline.
+A pill that is on uses the primary color.
+
+A pill that is off has an outline.
 
 States:
 
-- Empty: no result for the scope. With filters on, the text names the filters and offers "Clear filters".
-- Not found: unknown region or prefecture. A link goes to `/listings`.
-- Error: the listings call failed. The text says to try again.
+- Empty: no result for the scope.
+  - With filters on, the text names the filters and offers "Clear filters".
+- Not found: unknown region or prefecture.
+  - A link goes to `/listings`.
+- Error: the listings call failed.
+  - The text says to try again.
 
 ### Files to create or modify (Web)
 
 Routes:
 
-- `app/marketplace.routes.js`: the new routes and the legacy routes. Delete the `districts` layout and its children.
+- `app/marketplace.routes.js`: the new routes and the legacy routes.
+  - Delete the `districts` layout and its children.
 - `app/routes/marketplace/catalog-listing/marketplace-catalog-listing-list-page.jsx` (new): scope page, loader, `meta`, `handle.breadcrumb`.
 - `app/routes/marketplace/catalog-listing/marketplace-catalog-listing-detail-page.jsx`: moved with `git mv` from `catalog-district/` and then edited (slug param, UUID redirect, back link, breadcrumb, `meta`).
 - `app/routes/marketplace/catalog-listing/marketplace-catalog-legacy-redirect-page.jsx` (new): one loader for the legacy `/districts` routes.
@@ -212,13 +239,16 @@ Routes:
 API modules:
 
 - `app/api/marketplace-catalog-regions-api.js` (new): `index`.
-- `app/api/marketplace-catalog-listings-api.js`: replace `indexByArea` with `index(filters)`. Rename the `show` param to `listingId`.
+- `app/api/marketplace-catalog-listings-api.js`: replace `indexByArea` with `index(filters)`.
+  - Rename the `show` param to `listingId`.
 - Delete `app/api/marketplace-catalog-areas-near-api.js` and its spec (decision 22).
 
 Domain:
 
-- `app/domains/catalog-listing/catalog-listing-constant.js`: paths, the keyword pause, the sort labels, the query key whitelist, the copy. Remove the price keys.
-- `app/domains/catalog-listing/catalog-listing-service.js`: scope paths, search param builders and sanitizer, the sort mapping, canonical and robots helpers. Remove the district and area builders and the stale redirect helpers.
+- `app/domains/catalog-listing/catalog-listing-constant.js`: paths, the keyword pause, the sort labels, the query key whitelist, the copy.
+  - Remove the price keys.
+- `app/domains/catalog-listing/catalog-listing-service.js`: scope paths, search param builders and sanitizer, the sort mapping, canonical and robots helpers.
+  - Remove the district and area builders and the stale redirect helpers.
 - `app/domains/catalog-listing/catalog-listing-discover-toolbar.jsx`: the one-row toolbar with the keyword field, the Filters button with its badge, and the chips row (decisions 26 to 30).
 - `app/domains/catalog-listing/catalog-listing-discover-filter-chips.jsx` (new): the chips row (decisions 28, 29 and 34).
 - `app/domains/catalog-listing/catalog-listing-discover-filter-form.jsx` and `catalog-listing-discover-filter-schema.js`: the sections with headings, pill groups, prefecture select, the footer that stays in view, no price (decisions 11, 31 to 33).
@@ -226,7 +256,8 @@ Domain:
 - `app/domains/catalog-listing/catalog-listing-discover-sort-control.jsx`: two options.
 - `app/domains/catalog-listing/catalog-listing-list-view.jsx`: card links use the slug.
 - `app/domains/catalog-listing/catalog-geography-nav.jsx`, `catalog-area-list-view.jsx` and the three near-me files: delete.
-- `app/domains/catalog-listing/catalog-district-list-view.jsx`: keep. Its link uses the old district URL until #152 (decision 22).
+- `app/domains/catalog-listing/catalog-district-list-view.jsx`: keep.
+  - Its link uses the old district URL until #152 (decision 22).
 - `app/domains/bookings-booking/bookings-booking-service.js`: keep `listingResolverPath`.
 
 Other links:
@@ -240,9 +271,11 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 ## Data / domain touchpoints
 
 - Bounded context: CAT
-- Transaction boundaries: none. Every call is a read.
+- Transaction boundaries: none.
+  - Every call is a read.
 - Snapshots: none.
-- Pricing: the card and the detail page show API amounts only. The web computes no price.
+- Pricing: the card and the detail page show API amounts only.
+  - The web computes no price.
 - Discoverability: only the API decides which listings appear (INV-8).
 
 ## Out of scope
@@ -251,7 +284,8 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 - The Most booked sort (release 5).
 - The home page region cards (#152) and the popular destination links.
 - Near-me, and a map on scope pages.
-- Any API change. This includes coordinates for regions.
+- Any API change.
+  - This includes coordinates for regions.
 - Slug history, and redirects from an old draft slug.
 - A page size choice.
 - The update of `tourist-listings-ui.pen`.
@@ -267,7 +301,8 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 - [ ] Add the path builders, the param sanitizer and the search param builders, with specs.
 - [ ] Build the scope page and register the three routes.
 - [ ] Build the keyword field with the pause, the clear button and the word limit message.
-- [ ] Rebuild the Filters panel: sections with headings, pill groups, prefecture select, a footer that stays in view, no price. Update the schema.
+- [ ] Rebuild the Filters panel: sections with headings, pill groups, prefecture select, a footer that stays in view, no price.
+  - Update the schema.
 - [ ] Add the generic pill group field in `app/components/forms/`, with its spec.
 - [ ] Rebuild the toolbar as one row, with the Filters badge, and remove the helper text.
 - [ ] Add the filter chips row with its spec.
@@ -295,33 +330,44 @@ Skills to use when coding: `creating-route-pages`, `creating-api-clients`, `crea
 - [ ] A new keyword resets the page to 1.
 - [ ] Clearing the keyword keeps the scope, the filters and the sort.
 - [ ] A keyword of more than 5 words or 100 characters is not sent and shows a message.
-- [ ] Two service types in the URL show the listings that match either type. Service type and language together narrow the result.
-- [ ] The prefecture select lists only the prefectures of the current region. Applying it goes to the prefecture URL and keeps the keyword, the filters and the sort.
+- [ ] Two service types in the URL show the listings that match either type.
+  - Service type and language together narrow the result.
+- [ ] The prefecture select lists only the prefectures of the current region.
+  - Applying it goes to the prefecture URL and keeps the keyword, the filters and the sort.
 - [ ] "Reset" and "Clear filters" keep the prefecture, the keyword and the sort.
-- [ ] The toolbar is one row on a wide screen. On a phone, the search field is full width and Filters and Sort sit side by side.
+- [ ] The toolbar is one row on a wide screen.
+  - On a phone, the search field is full width and Filters and Sort sit side by side.
 - [ ] The Filters button shows the number of applied filters, and no badge when there is none.
-- [ ] A chip shows for each applied service type, language, date and group size. The prefecture and the keyword have no chip.
-- [ ] The x on a chip removes that one value and keeps the rest. It sets the page to 1.
+- [ ] A chip shows for each applied service type, language, date and group size.
+  - The prefecture and the keyword have no chip.
+- [ ] The x on a chip removes that one value and keeps the rest.
+  - It sets the page to 1.
 - [ ] "Clear filters" is next to the chips and clears the four filters.
 - [ ] The panel has the sections Prefecture, Service type, Language and Trip details, each with a heading.
 - [ ] The service type and language pills work with the keyboard and a screen reader as checkboxes.
 - [ ] The Apply button says "Apply", and Reset and Apply stay in view when the panel scrolls.
 - [ ] The filter form does not import a component from the providers-profile domain.
-- [ ] This item adds no domain code to `app/components/`. The pill group has no domain words. The only change to `tourist-empty-state.jsx` is its copy and its link.
-- [ ] The sort control has "Recently added" and "Top rated". "Recently added" is the default and leaves the URL clean.
+- [ ] This item adds no domain code to `app/components/`.
+  - The pill group has no domain words.
+  - The only change to `tourist-empty-state.jsx` is its copy and its link.
+- [ ] The sort control has "Recently added" and "Top rated".
+  - "Recently added" is the default and leaves the URL clean.
 - [ ] The web never sends `vehicle_type`, `min_price`, `max_price`, `price_min` or `price_max`.
 - [ ] A hand-edited URL with a bad value does not break the page.
-- [ ] An unknown region or prefecture shows the not found state. A page out of range goes to page 1.
-- [ ] A scope with no listing shows the empty state. A failed call shows the error state.
+- [ ] An unknown region or prefecture shows the not found state.
+  - A page out of range goes to page 1.
+- [ ] A scope with no listing shows the empty state.
+  - A failed call shows the error state.
 - [ ] A scope page with a keyword or a filter is `noindex, follow` and its canonical link is the clean scope URL.
-- [ ] `/listings/:uuid` redirects with 301 to `/listings/:slug`. An unknown slug shows not found.
+- [ ] `/listings/:uuid` redirects with 301 to `/listings/:slug`.
+  - An unknown slug shows not found.
 - [ ] Each legacy URL in decision 19 redirects with 301 to the page in that decision.
 - [ ] The detail page "back" link goes to the prefecture page of the listing.
 - [ ] A card links to `/listings/:slug`.
 - [ ] The menu link says "Services" and opens `/listings`.
 - [ ] No page, link or test refers to `/districts` except the redirect code.
 - [ ] No client-side price computation.
-- [ ] Text follows ASD-STE100 Tier A.
+- [ ] Text follows ASD-STE100.
 - [ ] Tests cover the loaders: scope mapping, sanitizer, 404, retry and UUID redirect.
 - [ ] Tests cover the legacy mapping and the search param builders.
 - [ ] Tests cover the keyword field (with fake timers), the filter form and the sort control.

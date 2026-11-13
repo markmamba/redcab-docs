@@ -1,0 +1,28 @@
+name: Prose check
+
+# Runs the plain-English and diagram check scripts on the pages a PR adds or changes.
+# Old pages with violations are fixed when someone edits them.
+# To check every page, run `scripts/check-prose.sh` with no argument, or start this workflow by hand.
+on:
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.claude/skills/**'
+  workflow_dispatch:
+
+jobs:
+  prose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check changed pages
+        if: github.event_name == 'pull_request'
+        run: scripts/check-prose.sh --changed
+
+      - name: Check every page
+        if: github.event_name == 'workflow_dispatch'
+        run: scripts/check-prose.sh

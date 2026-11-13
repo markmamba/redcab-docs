@@ -1,5 +1,5 @@
 ---
-description: Add or fix Mermaid diagrams in redcab-docs Docusaurus pages — flows, state machines, and sequence diagrams with readable labels.
+description: Add or fix a Mermaid diagram in a redcab-docs page, such as a domain context diagram, a flow, a state machine or a sequence. Nodes name a colour category (subject, host, external, ok, problem), one CSS file colours it for light and dark mode, and a script finds colour values that break the rules. Use when the user asks for a diagram, when a diagram is too wide or hard to read, or when a diagram looks wrong in dark mode.
 globs: []
 alwaysApply: false
 ---

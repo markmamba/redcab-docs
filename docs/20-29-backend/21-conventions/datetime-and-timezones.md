@@ -14,7 +14,11 @@ description: Engineering conventions for instants, civil dates, and service time
 
 ## About this document
 
-Single source of truth for date/time engineering rules. Business meaning of Service Timezone: [Glossary](/docs/70-79-business/business-rules/glossary). Storage: `catalog_geographies.timezone`, seeded from `catalog_countries.default_timezone`.
+Single source of truth for date/time engineering rules.
+
+Business meaning of Service Timezone: [Glossary](/docs/70-79-business/business-rules/glossary).
+
+Storage: `catalog_geographies.timezone`, seeded from `catalog_countries.default_timezone`.
 
 | Topic | Document |
 | --- | --- |
@@ -33,7 +37,8 @@ Single source of truth for date/time engineering rules. Business meaning of Serv
 
 **Rules:**
 
-- Every `catalog_geographies` row MUST have a valid IANA timezone, seeded from `catalog_countries.default_timezone` at ingest. Missing timezone is a data bug — fail loud in validators.
+- Every `catalog_geographies` row MUST have a valid IANA timezone, seeded from `catalog_countries.default_timezone` at ingest.
+  - Missing timezone is a data bug — fail loud in validators.
 - NEVER hardcode `'Asia/Tokyo'`, `'JST'`, or numeric offsets in domain Managers, Validators, or Services.
 - Phase 1 Japan seed sets `catalog_countries.default_timezone = Asia/Tokyo` and propagates to every geography node; behavior matches legacy JST without hardcoding.
 
@@ -48,7 +53,9 @@ Single source of truth for date/time engineering rules. Business meaning of Serv
 | **Person-picked local datetime** | User (slot start/end in provider portal) | `timestamptz` | Naive `YYYY-MM-DDTHH:mm` **or** ISO instant per endpoint contract | Anchor in listing's service timezone on write |
 | **Zone-free calendar day** | User (rare) | `date` | `YYYY-MM-DD` | No timezone conversion |
 
-Use a `date` column only when the value has **no time meaning in any zone** (e.g. a date of birth). Do not use `date` for operational cutoffs that depend on local midnight.
+Use a `date` column only when the value has **no time meaning in any zone** (e.g. a date of birth).
+
+Do not use `date` for operational cutoffs that depend on local midnight.
 
 ---
 
@@ -87,7 +94,10 @@ Location: `red-cab-web/app/utils/date-time-utils.js`.
 - **Submit:** `DateTimeUtils.toApiString(formValue, { timezone })` in the submit handler only.
 - **Edit forms:** `DateTimeUtils.toFormValue(apiValue, { timezone })`.
 
-Do not use `PROVIDER_PROFILE_DISPLAY_TIMEZONE` or other hardcoded constants for slot or booking UI — read `timezone` from the listing's embedded geography or the booking payload.
+Do not use `PROVIDER_PROFILE_DISPLAY_TIMEZONE` or other hardcoded constants for slot or booking UI.
+
+- Read `timezone` from the listing's embedded geography.
+- Or read `timezone` from the booking payload.
 
 ---
 
@@ -114,4 +124,6 @@ Do not use `PROVIDER_PROFILE_DISPLAY_TIMEZONE` or other hardcoded constants for 
 
 ## Phase 1 Japan note
 
-All seeded geography nodes inherit `Asia/Tokyo` from the Japan country row. Tests SHOULD include at least one non-Japan IANA zone to prove the model is not Japan-coupled (e.g. `Pacific/Honolulu` or `Asia/Singapore`).
+All seeded geography nodes inherit `Asia/Tokyo` from the Japan country row.
+
+Tests SHOULD include at least one non-Japan IANA zone to prove the model is not Japan-coupled (e.g. `Pacific/Honolulu` or `Asia/Singapore`).

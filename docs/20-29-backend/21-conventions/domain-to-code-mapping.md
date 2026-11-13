@@ -23,7 +23,9 @@ Domain-to-code mapping for Red Cab API and web repos.
 
 ## Actor → API controller namespace
 
-Red Cab has three external actors. Map them to explicit route files and controller namespaces — one file per actor, explicit verb + path (never `resources`).
+Red Cab has three external actors.
+
+Map them to explicit route files and controller namespaces — one file per actor, explicit verb + path (never `resources`).
 
 | Red Cab Actor | Glossary term | Controller namespace | Route file | Auth base |
 | --- | --- | --- | --- | --- |
@@ -33,20 +35,30 @@ Red Cab has three external actors. Map them to explicit route files and controll
 
 ### Notes
 
-- **`marketplace/`** serves optional-auth discovery: geography, listings, `calculate_quote`, availability reads. Uses an optional session (a gone session is a guest).
-- **`tourists/`** serves authenticated B2C booking lifecycle, payments visibility, and reviews. Booking initiation requires auth at checkout per `NFR-SEC-005` (guest browse is unauthenticated per `AMB-022`).
-- **`providers/`** serves onboarding, catalog authoring, incoming bookings, review responses. Gated by Provider Status conformist read.
-- **`team/`** serves Admin operations across all contexts. Independent admin identity, separate from tourist/user accounts.
+- **`marketplace/`** serves optional-auth discovery: geography, listings, `calculate_quote`, availability reads.
+  - Uses an optional session (a gone session is a guest).
+- **`tourists/`** serves authenticated B2C booking lifecycle, payments visibility, and reviews.
+  - Booking initiation requires auth at checkout per `NFR-SEC-005` (guest browse is unauthenticated per `AMB-022`).
+- **`providers/`** serves onboarding, catalog authoring, incoming bookings, review responses.
+  - Gated by Provider Status conformist read.
+- **`team/`** serves Admin operations across all contexts.
+  - Independent admin identity, separate from tourist/user accounts.
 
 ### Visitor / guest browsing
 
-Guest discovery is unauthenticated (`AMB-022` resolved, Option A). Those endpoints live under `marketplace/` with optional auth. They do **not** get a separate actor namespace.
+Guest discovery is unauthenticated (`AMB-022` resolved, Option A).
+
+Those endpoints live under `marketplace/` with optional auth.
+
+They do **not** get a separate actor namespace.
 
 ---
 
 ## Bounded context → `app/domains/` module
 
-Each bounded context maps to a top-level domain folder. Table names use `{domain}_{model_plural}` prefix.
+Each bounded context maps to a top-level domain folder.
+
+Table names use `{domain}_{model_plural}` prefix.
 
 | Context code | Bounded context | `app/domains/` module | Example model / table |
 | --- | --- | --- | --- |
@@ -79,7 +91,9 @@ app/domains/catalog/
   search/             # query-only managers
 ```
 
-`catalog.dbml` is authoritative for geography storage shape: `catalog_countries` + `catalog_geographies` tree (`level`, `code_system`, `external_code`, `path`, `is_discovery_root`, `is_listable`, `discovery_root_id`, `successor_geography_id`, `name_kana`, `latitude`, `longitude`, `timezone` on every node). **Target model** — shipped schema catches up in epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
+`catalog.dbml` is authoritative for geography storage: the `catalog_countries` table and the `catalog_geographies` tree (`level`, `code_system`, `external_code`, `path`, `is_discovery_root`, `is_listable`, `discovery_root_id`, `successor_geography_id`, `name_kana`, `latitude`, `longitude`, `timezone` on every node).
+
+**Target model** — shipped schema catches up in epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
 
 Shared datetime utilities: `app/shared/date_time_utils.rb` — see [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones).
 
@@ -87,7 +101,8 @@ Shared datetime utilities: `app/shared/date_time_utils.rb` — see [Date / Time 
 
 - **Synchronous:** Manager in context A calls `::Catalog::Pricing::CalculateQuoteManager` or `::Bookings::CreateFromQuoteManager` — never raw SQL across tables.
 - **The one shared transaction (CR-1):** `Bookings::CheckoutManager` calls `::Catalog::Availability::ReserveSeatsManager` inside its own `ActiveRecord::Base.transaction` block.
-- **Asynchronous:** publish domain events; `notifications/`, payout queuing, rating recalculation consume them via jobs. No model callbacks.
+- **Asynchronous:** publish domain events; `notifications/`, payout queuing, rating recalculation consume them via jobs.
+  - No model callbacks.
 
 ---
 
@@ -119,9 +134,15 @@ Map Red Cab consumer surfaces to React Router route files — one `*.routes.js` 
 | Provider Portal | `ProviderLayout` | `provider.routes.js` | `/providers` | `withProviderAuth` |
 | Admin Panel | `TeamLayout` | `team.routes.js` | `/team` | Team admin auth (independent) |
 
-Public catalog pages use server `loader` and `index, follow` robots per [spec #56](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract). Checkout and account routes remain in `tourist.routes.js` with `withTouristAuth`.
+Public catalog pages use server `loader` and `index, follow` robots per [spec #56](/docs/60-69-initiatives/61-2026/implementation-specs/iam/web-56-tourist-access-and-route-contract).
 
-The **Auth HOC** column is transitional. Each private surface moves to a policy route (`tourist-required`, `provider-required`, `admin-required`) one surface at a time. See Policy routes and surfaces (removed) and the roadmap (removed).
+Checkout and account routes remain in `tourist.routes.js` with `withTouristAuth`.
+
+The **Auth HOC** column is transitional.
+
+Each private surface moves to a policy route (`tourist-required`, `provider-required`, `admin-required`) one surface at a time.
+
+See Policy routes and surfaces (removed) and the roadmap (removed).
 
 ### API client naming
 
@@ -152,7 +173,9 @@ app/domains/
 
 ## DBML → migrations
 
-Schema design follows a DBML-first workflow. One DBML file per bounded context (split when large):
+Schema design follows a DBML-first workflow.
+
+One DBML file per bounded context (split when large):
 
 ```
 docs/db/               # in red-cab-api

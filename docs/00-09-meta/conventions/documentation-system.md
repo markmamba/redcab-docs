@@ -15,7 +15,9 @@ description: Layers, precedence, doc types, and migration rules for redcab-docs.
 
 ## About this document
 
-This page locks how the documentation repository is organized. Agents and humans read it before large moves or new domain folders.
+This page locks how the documentation repository is organized.
+
+Agents and humans read it before large moves or new domain folders.
 
 | Topic | Document |
 | --- | --- |
@@ -53,11 +55,21 @@ When documents disagree, higher layers win:
 3. Approved implementation specs (`60-69-initiatives/61-2026/implementation-specs/`, `status: approved`)
 4. Application code (`red-cab-api/`, `red-cab-web/`)
 
-**Out of chain:** program and audit pages under `61-2026/` (for example [Catalog revamp 2026](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/)). They link to normative pages; they do not define product behavior.
+**Out of chain:** program and audit pages under `61-2026/` (for example [Catalog revamp 2026](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/)).
 
-**Background only:** old invariants and requirements (`71-business-rules/invariants.md`, `72-requirements/`). They are not a source of truth. An old rule applies only where a domain page cites it. The glossary stays a shared word list.
+They link to normative pages; they do not define product behavior.
 
-A lower layer must not contradict a higher layer. To change a higher layer, amend that document first.
+**Background only:** old invariants and requirements (`71-business-rules/invariants.md`, `72-requirements/`).
+
+They are not a source of truth.
+
+An old rule applies only where a domain page cites it.
+
+The glossary stays a shared word list.
+
+A lower layer must not contradict a higher layer.
+
+To change a higher layer, amend that document first.
 
 ---
 
@@ -72,9 +84,17 @@ A lower layer must not contradict a higher layer. To change a higher layer, amen
 | `implementation-spec` | `61-2026/implementation-specs/` | Yes when approved (a work record) |
 | `legacy` | `80-89-legacy/` | No — do not cite as governing |
 
-Each entry on a `domain-decisions` page has the heading `## D1 — Title (YYYY-MM-DD) \{#slug\}`. The number grows by one for each new entry. The date is the day when the entry was approved. The anchor never changes.
+Each entry on a `domain-decisions` page has the heading `## D1 — Title (YYYY-MM-DD) \{#slug\}`.
 
-New Catalog work uses **sentence titles** in navigation, not `FR-CAT-*` or `ADR-*` in headings. Legacy IDs may appear in `legacy_ids:` frontmatter and in the [document alias table](/docs/80-89-legacy/document-alias-table).
+The number grows by one for each new entry.
+
+The date is the day when the entry was approved.
+
+The anchor never changes.
+
+New Catalog work uses **sentence titles** in navigation, not `FR-CAT-*` or `ADR-*` in headings.
+
+Legacy IDs may appear in `legacy_ids:` frontmatter and in the [document alias table](/docs/80-89-legacy/document-alias-table).
 
 ---
 
@@ -101,11 +121,17 @@ New Catalog work uses **sentence titles** in navigation, not `FR-CAT-*` or `ADR-
 ## Migration policy \{#migration-policy\}
 
 1. **New** normative Catalog content goes under `31-catalog/`.
-2. **Superseded** legacy FR, ADR, and spec pages stay in place with a banner until an alias row exists and redirects are ready.
+2. **Superseded** legacy FR, ADR and spec pages stay in place with a banner.
+   - They stay until an alias row exists and the redirects are ready.
 3. **Physical move** to `80-89-legacy/` happens in a later PR with redirects.
-4. **Old implementation specs** that no current rule depends on moved to `80-89-legacy/implementation-specs/` on 2026-11-01, marked `superseded`. We decide later whether to remove them.
-5. **Lasting rules of a spec** move to a model page or a use-case page in its domain folder, see [Implementation specs](../../60-69-initiatives/61-2026/implementation-specs/README.md#lasting-rules).
-6. **Domain decisions** go on the `{domain}-decisions.md` page, as a numbered and dated entry. A big entry has the sub-sections *Why*, *What changes with it* and *Options we did not choose*. No domain has an `architecture-decisions/` folder. Old cross-context ADRs remain in `34-architecture-decisions/` until removed.
+4. **Old implementation specs** that no current rule depends on moved to `80-89-legacy/implementation-specs/` on 2026-11-01, marked `superseded`.
+   - We decide later whether to remove them.
+5. **Lasting rules of a spec** move to a model page or a use-case page in its domain folder.
+   - See [Implementation specs](../../60-69-initiatives/61-2026/implementation-specs/README.md#lasting-rules).
+6. **Domain decisions** go on the `{domain}-decisions.md` page, as a numbered and dated entry.
+   - A big entry has the sub-sections *Why*, *What changes with it* and *Options we did not choose*.
+   - No domain has an `architecture-decisions/` folder.
+   - Old cross-context ADRs remain in `34-architecture-decisions/` until removed.
 
 ---
 

@@ -104,7 +104,7 @@ The table lists each email, and the rows of `notifications_dispatches` use the m
 
 - Every email that has a link also shows the link as text, under the text key `link_fallback`.
 - The texts live in `config/locales/notifications.en.yml` and `config/locales/notifications.ja.yml`.
-- Every text follows ASD-STE100 Tier A.
+- Every text follows ASD-STE100.
 
 ### How the system sends an email \{#dispatch\}
 

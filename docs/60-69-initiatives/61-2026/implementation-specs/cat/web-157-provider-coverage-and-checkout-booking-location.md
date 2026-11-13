@@ -268,7 +268,7 @@ A provider covers Tokyo, and a tourist books a trip with a pickup at a hotel in 
 - [x] Test: the return page text.
 - [x] No client-side price computation.
 - [ ] No hardcoded currency, locale or timezone.
-- [ ] Text follows ASD-STE100 Tier A.
+- [ ] Text follows ASD-STE100.
 
 ## Verification
 
@@ -285,4 +285,4 @@ npm run build
 | --- | --- | --- |
 | 2026-10-26 | owner | Approved in chat. Owner ruled on decisions 1 to 4 and approved the added points 5 to 24. `review-implementation-spec` was not run. |
 | 2026-10-26 | owner | Corrected after the spec of red-cab-api#247. The status route has no fulfillment detail, so it does not change. The edit step does not wait for the API item, because the web keeps the session in page memory. |
-| 2026-10-26 | owner | Implemented in red-cab-web#179. The boxes for the API item, the form, page and tab, the order summary and the booking views stay open. The boxes for the page-level 422 cases, the empty-list warning and the edit step stay open too. The two checks for hardcoded values and Tier A text stay open because no test covers them. |
+| 2026-10-26 | owner | Implemented in red-cab-web#179. The boxes for the API item, the form, page and tab, the order summary and the booking views stay open. The boxes for the page-level 422 cases, the empty-list warning and the edit step stay open too. The two checks for hardcoded values and plain-English text stay open because no test covers them. |

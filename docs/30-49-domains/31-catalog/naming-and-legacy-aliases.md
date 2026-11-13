@@ -19,7 +19,7 @@ last_reviewed: 2026-10-31
 
 ## About this document
 
-Tier A prose. Implementation specs must use param and field names from this page unless a spec documents a temporary exception.
+Implementation specs must use param and field names from this page unless a spec documents a temporary exception.
 
 | Topic | Document |
 | --- | --- |
@@ -41,7 +41,9 @@ Tier A prose. Implementation specs must use param and field names from this page
 | Home highlights | **Popular destination** | Curated **prefecture** entries (booking-weighted curation) | **Featured**, `featured=true` on districts API |
 | Browse scope | All / region / prefecture | See [Listing scope](#listing-scope) | Area-scoped listings index |
 
-**Pickup and booking geography:** The legacy “area list” is used only for **pickup coverage** (provider) and **booking location** picker (tourist municipality/ward). It is not a tourist browse axis.
+**Pickup and booking geography:** The legacy “area list” is used only for **pickup coverage** (provider) and **booking location** picker (tourist municipality/ward).
+
+It is not a tourist browse axis.
 
 ---
 
@@ -54,7 +56,9 @@ Tier A prose. Implementation specs must use param and field names from this page
 | Service destination | **Deprecated** — means **primary destination** only | — |
 | Pickup coverage | Where the provider will pick up the tourist | Listing junction to prefecture and/or municipality/ward nodes |
 
-Destinations affect **discovery** only. Pickup coverage validates **booking location** at checkout.
+Destinations affect **discovery** only.
+
+Pickup coverage validates **booking location** at checkout.
 
 ---
 
@@ -66,7 +70,9 @@ Destinations affect **discovery** only. Pickup coverage validates **booking loca
 | Region | `/regions/:region-slug/listings` | `region_slug` |
 | Prefecture / popular destination | `/regions/:region-slug/:prefecture-slug/listings` | `region_slug` + `prefecture_slug` |
 
-Keyword, filters, and sort apply **within** the current scope. See [Discover API params](#discover-api-params).
+Keyword, filters, and sort apply **within** the current scope.
+
+See [Discover API params](#discover-api-params).
 
 ---
 
@@ -94,15 +100,23 @@ Keyword, filters, and sort apply **within** the current scope. See [Discover API
 | Most booked | Booking count column | 90-day window by **confirmation date** (`confirmed_at`) |
 | Top rated | Rating columns | Per [Top rated sort](/docs/30-49-domains/catalog/catalog-decisions/#top-rated-sort) and `FR-REV-007` |
 
-**Explore / Discover:** No `/discover` hub in MVP. **Explore** / **Browse** CTAs link to real routes. Legacy `/discover` redirects. Code filenames `*-discover-*` are legacy until rename.
+**Explore / Discover:** No `/discover` hub in MVP. **Explore** / **Browse** CTAs link to real routes.
 
-**Instant book:** Product phrase for confirm on successful payment without provider acceptance (see [Booking confirmation](/docs/30-49-domains/catalog/catalog-decisions/#booking-confirmation)). Not a per-listing flag in MVP.
+Legacy `/discover` redirects.
+
+Code filenames `*-discover-*` are legacy until rename.
+
+**Instant book:** Product phrase for confirm on successful payment without provider acceptance (see [Booking confirmation](/docs/30-49-domains/catalog/catalog-decisions/#booking-confirmation)).
+
+Not a per-listing flag in MVP.
 
 ---
 
 ## Discover API params \{#discover-api-params\}
 
-Successor index: **`GET /marketplace/catalog/listings`** with query params below. Web paths may differ; loaders map path slugs to query scope.
+Successor index: **`GET /marketplace/catalog/listings`** with query params below.
+
+Web paths may differ; loaders map path slugs to query scope.
 
 | Tourist / product | Query param | Value shape |
 | --- | --- | --- |

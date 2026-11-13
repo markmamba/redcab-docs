@@ -46,7 +46,9 @@ The session code does not follow the IAM rulings.
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |

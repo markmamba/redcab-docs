@@ -1,6 +1,6 @@
 ---
 name: write-plain-english
-description: Writing rules for everything the Red Cab team writes for each other, in docs, specs, GitHub issues, PR descriptions, DBML notes, code comments and review comments. Use before writing or rewriting any prose for the team, even one paragraph, and whenever another skill says to load it first. Covers the sentence rule from ASD-STE100, the bullet shape, how to name things, words to avoid, what a doc must contain, and check scripts. For Tier A/B/C applicability see write-tier-a-prose and prose-and-ste100.md.
+description: Writing rules for everything the Red Cab team writes for each other, in docs, specs, GitHub issues, PR descriptions, DBML notes, code comments and review comments. Use before writing or rewriting any prose for the team, even one paragraph, and whenever another skill says to load it first. Covers the sentence rule from ASD-STE100, the bullet shape, how to name things, words to avoid, what a doc must contain, and check scripts.
 ---
 
 # write-plain-english
@@ -10,7 +10,7 @@ The team includes non-native English speakers, so every text must be understood 
 - Plain words never means less technical depth.
 - Run the check scripts before you hand over any text, see "Self-check" below.
 
-Normative tier definitions (when STE is required): `docs/00-09-meta/conventions/prose-and-ste100.md`. Skill `write-tier-a-prose` summarizes tiers for agents.
+One register applies to every text for the team. The human version of these rules is `docs/00-09-meta/conventions/prose-and-ste100.md`.
 
 ## Sentences
 
@@ -18,7 +18,7 @@ One idea per sentence, under 20 words.
 - This is the sentence rule of ASD-STE100, Simplified Technical English.
   - We take its sentence rules, not its dictionary.
 - Active voice, present tense: "the API validates the session", not "the session is validated".
-- The same word for the same thing, every time, so never swap a [Glossary](/docs/70-79-business/business-rules/glossary) term for a casual synonym in normative docs.
+- The same word for the same thing, every time, so never swap a [Glossary](/docs/70-79-business/business-rules/glossary) term for a casual synonym.
 - No "ensure", "leverage" or "serves", no idioms, no metaphors, only the underlying meaning.
 - A sentence that repeats a table or a code block is deleted.
 
@@ -75,13 +75,13 @@ A heading and its first sentence resolve every word they use, in place.
 
 A link says what it points at.
 - `[Catalog D19 — Asset holds](/docs/30-49-domains/catalog/catalog-decisions/#asset-holds)`, never `[D19]`.
-- An ADR or invariant link carries the id and one short phrase.
+- A decision link carries the domain, the number and one short phrase.
 
 ## Words
 
 Common words, used with their own meaning.
 - "cannot change", not "immutable"; "copied from", not "snapshotted"; "does nothing", not "no-op".
-- In Tier B normative docs, use the glossary term when one exists (for example **Snapshot**).
+- Use the glossary term when one exists.
 - Do not borrow a word with a precise SQL, Rails or accounting meaning for something else.
   - "Combination", not "tuple", because in SQL a tuple is a row.
 - A finance term of art is allowed in payment docs when the first use defines it in plain words.
@@ -108,14 +108,14 @@ Common words, used with their own meaning.
 - A diagram earns its place when it shows a branch, a state change, or a relationship between records.
   - A single path of steps is a numbered list.
 - A text states current truth only, never "used to be" or "we removed X".
-  - History belongs on an ADR or explainer, and the text links to it.
-- Do not rely on an initiative name as context the reader must already know, state the rule itself.
+  - History belongs on the domain's decisions page, and the text links to the entry.
+- Do not rely on an initiative name (for example "catalog revamp phase 0") as context the reader must already know. State the rule itself.
 
 Per-issue shipping design is not a `write-doc` page. Use `implementation-specs/` in this repo.
 
 ## Self-check
 
-Run all scripts on the file from this skill's `scripts/` directory. All must exit 0.
+Run all scripts on the file from this skill's `scripts/` directory. All must exit 0. CI runs them on the whole repo.
 
 ```bash
 python3 .claude/skills/write-plain-english/scripts/check_sentences.py <file>
