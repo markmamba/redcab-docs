@@ -88,7 +88,9 @@ The lasting rules of this spec are on the use-case page [Portal access and switc
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
@@ -524,7 +526,8 @@ The owner removed the Playwright e2e tests on 2026-11-06.
 - The folder `e2e/`, `playwright.config.js`, the dev dependency `@playwright/test` and the scripts `test:e2e` and `ci:e2e` go away.
 - The fixture route `/account/e2e/policy-action-fixture` goes away with them.
 - PR CI never ran these tests.
-- The unit tests of this spec cover each access word and each path group, so this spec adds no e2e test.
+- The unit tests of this spec cover each access word and each path group.
+- This spec adds no e2e test.
 
 New tests cover these behaviors.
 

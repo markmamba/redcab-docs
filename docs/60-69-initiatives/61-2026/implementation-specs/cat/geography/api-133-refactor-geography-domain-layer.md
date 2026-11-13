@@ -16,13 +16,29 @@ epic: "https://github.com/markmamba/red-cab-api/issues/130"
 
 ## TL;DR
 
-- Ships **domain models and rewiring** for epic #130 step 9: `Catalog::Country`, `Catalog::Geography`, `Catalog::Listing.geography`, `discoverable` subtree scope (`INV-8`), provider listable-leaf validation (`FR-CAT-033`), geography tree ActiveModel validator(s), and minimum marketplace manager fixes (UUID lookup only).
-- Does **not** ship slug resolution (`API-1`), serializer ancestor embeds (`API-2`), near-me, team geography CRUD, route param rename, or `red-cab-web` changes — epic steps 10–12.
-- Breaking change: **Internal only** — `Catalog::District` / `Catalog::Area` deleted; `listing.area` → `listing.geography`. Provider JSON key `area_id` unchanged.
+- Ships **domain models and rewiring** for epic #130 step 9:
+  - `Catalog::Country`.
+  - `Catalog::Geography`.
+  - `Catalog::Listing.geography`.
+  - `discoverable` subtree scope (`INV-8`).
+  - Provider listable-leaf validation (`FR-CAT-033`).
+  - Geography tree ActiveModel validator(s).
+  - Minimum marketplace manager fixes (UUID lookup only).
+- Does **not** ship these, which belong to epic steps 10–12:
+  - Slug resolution (`API-1`).
+  - Serializer ancestor embeds (`API-2`).
+  - Near-me.
+  - Team geography CRUD.
+  - Route param rename.
+  - `red-cab-web` changes.
+- Breaking change: **Internal only** — `Catalog::District` / `Catalog::Area` deleted; `listing.area` → `listing.geography`.
+  - Provider JSON key `area_id` unchanged.
 
 ## Problem
 
-Schema migration (#131) and Japan seed (#132) landed while application code still references dropped flat models (`Catalog::District`, `Catalog::Area`) and `catalog_listings.area_id`. All geography and listing attach paths are broken until domain code reads `catalog_geographies`.
+Schema migration (#131) and Japan seed (#132) landed while application code still references dropped flat models (`Catalog::District`, `Catalog::Area`) and `catalog_listings.area_id`.
+
+All geography and listing attach paths are broken until domain code reads `catalog_geographies`.
 
 Evidence: `app/domains/catalog/district.rb`, `area.rb`, `listing.rb` (`belongs_to :area`), `listings/providers_create_manager.rb` (`Catalog::Area.find_by`), marketplace managers querying `Catalog::District.discoverable`, stale Sorbet RBIs under `sorbet/rbi/dsl/catalog/{district,area}.rbi`.
 
@@ -88,15 +104,33 @@ EXISTS (
 
 ### `Catalog::Country` model
 
-Associations: `has_many :geographies`. String enum `status` with prefix. No validations in model.
+Associations: `has_many :geographies`.
+
+String enum `status` with prefix.
+
+No validations in model.
 
 ### `Catalog::Geography` model
 
-Self-references: `parent`, `discovery_root`, `successor`, `children`. `belongs_to :country`. `has_many :listings`. String enums: `level`, `code_system`, `status` (active, deactivated, archived) with prefix. Scopes listed above. No validations in model.
+Self-references: `parent`, `discovery_root`, `successor`, `children`.
+
+`belongs_to :country`.
+
+`has_many :listings`.
+
+String enums: `level`, `code_system`, `status` (active, deactivated, archived) with prefix.
+
+Scopes listed above.
+
+No validations in model.
 
 ### Provider write (`FR-CAT-033`)
 
-Keep request key `area_id` (UUID). Manager resolves `Catalog::Geography.find_by(uuid:)`. Validator checks:
+Keep request key `area_id` (UUID).
+
+Manager resolves `Catalog::Geography.find_by(uuid:)`.
+
+Validator checks:
 
 | Check | Error attribute | Message pattern |
 | --- | --- | --- |

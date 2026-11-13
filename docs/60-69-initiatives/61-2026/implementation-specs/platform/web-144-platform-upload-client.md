@@ -26,7 +26,9 @@ related:
 
 ## Problem
 
-Issue [#144](https://github.com/markmamba/red-cab-web/issues/144): register API clients expect `storage_key` after a separate upload, but the web app has no grant or PUT step.
+Issue [#144](https://github.com/markmamba/red-cab-web/issues/144): register API clients expect `storage_key` after a separate upload.
+
+The web app has no grant or PUT step.
 
 `providers-profile-registration-documents-page.jsx` tells providers that upload is disabled.
 
@@ -138,7 +140,9 @@ No method accepts `storage_key` from the caller for grant.
 
 ### UploadField (shared primitive)
 
-First implementation in this repo. All per-kind document forms use the same props and behavior:
+First implementation in this repo.
+
+All per-kind document forms use the same props and behavior:
 
 - **Label:** Required visible `label` wired to control `id` (`Form.Label` + `htmlFor`, same pattern as `text-field.jsx`).
 - **`accept`:** Pass permitted MIME list (from `DOCUMENT_UPLOAD_PERMITTED_CONTENT_TYPES`) so the OS file picker filters where supported.
@@ -184,8 +188,11 @@ Follow `providers-profile-registration-edit-page.jsx`:
 ## Data / domain touchpoints
 
 - No new global client state; upload is per-form submit.
-- **Refresh after upload:** `useRevalidator()` on the documents page is sufficient. `runProviderClientLoaderWithApiErrorFlags` always loads `providerProfile` via `ProvidersProfileService.fetchCurrent()` (`providersProfilesApi.show()`), which includes `documents`, `checklist`, and `required_document_kinds` (API `ProvidersProfileDetailSerializer`). No separate refetch unless implementation finds a gap in tests.
-- **Replace:** Re-uploading the same `document_kind` updates the existing row (API manager); UI should not block replace for kinds already in the uploaded list.
+- **Refresh after upload:** `useRevalidator()` on the documents page is sufficient.
+  - `runProviderClientLoaderWithApiErrorFlags` always loads `providerProfile` via `ProvidersProfileService.fetchCurrent()` (`providersProfilesApi.show()`), which includes `documents`, `checklist`, and `required_document_kinds` (API `ProvidersProfileDetailSerializer`).
+  - No separate refetch unless implementation finds a gap in tests.
+- **Replace:** Re-uploading the same `document_kind` updates the existing row (API manager).
+  - The UI should not block replace for kinds already in the uploaded list.
 - Marketplace pages remain read-only; no upload on tourist surface in #144.
 
 ## Out of scope
