@@ -52,6 +52,7 @@ body.vscode-high-contrast:not(.vscode-high-contrast-light) {
   --mermaid-ok-stroke: #6abf69;
   --mermaid-problem-fill: #4a1f1f;
   --mermaid-problem-stroke: #e06666;
+  --mermaid-line: #d0d0d4;           /* 11:1 on #1b1b1d. The brand red #c8102e has only 2.9:1. */
 }
 
 /* Docusaurus wraps each diagram in .docusaurus-mermaid-container, and VS Code in .mermaid.
@@ -84,4 +85,15 @@ body.vscode-high-contrast:not(.vscode-high-contrast-light) {
 :is(.docusaurus-mermaid-container, .mermaid) .node.problem :is(.label-container, .label-container > path) {
   fill: var(--mermaid-problem-fill) !important;
   stroke: var(--mermaid-problem-stroke) !important;
+}
+
+/* Lines and arrowheads are light grey in dark mode.
+   The brand red in `docusaurus.config.js` has less than 3:1 contrast on the dark page. */
+:is([data-theme='dark'], body.vscode-dark) :is(.docusaurus-mermaid-container, .mermaid) :is(.flowchart-link, .transition) {
+  stroke: var(--mermaid-line) !important;
+}
+
+:is([data-theme='dark'], body.vscode-dark) :is(.docusaurus-mermaid-container, .mermaid) :is(.arrowheadPath, marker path) {
+  fill: var(--mermaid-line) !important;
+  stroke: var(--mermaid-line) !important;
 }
