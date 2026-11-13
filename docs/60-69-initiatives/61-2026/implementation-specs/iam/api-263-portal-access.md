@@ -77,7 +77,9 @@ The lasting rules of this spec are on the model page [Person and provider access
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |

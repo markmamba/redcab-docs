@@ -1,13 +1,14 @@
 ---
 title: Explainers
 sidebar_position: 0
-description: Plain-language walkthroughs that link to normative docs (ASD-STE100 Tier A).
+description: Plain-language walkthroughs that link to normative docs (ASD-STE100).
 ---
 
 ## TL;DR
 
-- Explainers are **non-normative**. They help sponsors, analysts, and new engineers understand flows and decisions.
-- Body prose **must** follow [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) (Tier A).
+- Explainers are **non-normative**.
+  - They help sponsors, analysts, and new engineers understand flows and decisions.
+- Body prose **must** follow [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100).
 - When a rule matters, **link** to glossary, invariants, requirements, or ADRs — do not paraphrase invariants as optional.
 
 ## Explainer index

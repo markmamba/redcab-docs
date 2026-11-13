@@ -87,13 +87,16 @@ The code differs from the plan of this spec in these places.
   - Step 7 adds `formatMemberName` to it.
 - Two small views joined the plan: the owner-only note and the read-only company details.
 - The members loader returns the company in every answer, because the page shows dates in the Service Timezone.
-  - A real browser run found this. The first version returned the company only when the load failed.
+  - A real browser run found this.
+  - The first version returned the company only when the load failed.
 - The accept error shows the API `title` as the toast title.
 - A real browser run passed 20 steps against the API integration branch.
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |

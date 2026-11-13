@@ -6,4 +6,6 @@ description: CI/CD — stub; to be expanded.
 
 ## TL;DR
 
-Stub page. Document ci/cd for Red Cab Marketplace infrastructure here.
+Stub page.
+
+Document ci/cd for Red Cab Marketplace infrastructure here.

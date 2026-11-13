@@ -17,15 +17,19 @@ related:
 - Ships the table `catalog_listing_additional_destinations` and the model for it.
 - Ships a validator: each row is an active prefecture, and it is not the primary destination.
 - A listing can have at most 5 additional destinations.
-- Provider create and update requests take `additional_geography_ids`. Provider payloads return it.
+- Provider create and update requests take `additional_geography_ids`.
+  - Provider payloads return it.
 - `Catalog::Geography.discoverable` now also counts additional destinations.
 - An archive with a successor moves the rows to the successor.
 - Does NOT ship pickup coverage, new endpoints, new URLs, listing pages or the web provider form.
-- Breaking change: No for request fields, because the new field is optional. Yes for marketplace lists: the districts and near-me lookups can show more prefectures.
+- Breaking change: No for request fields, because the new field is optional.
+  - Yes for marketplace lists: the districts and near-me lookups can show more prefectures.
 
 ## Problem
 
-A listing has one destination. A tour that also goes to Yokohama needs a second listing.
+A listing has one destination.
+
+A tour that also goes to Yokohama needs a second listing.
 
 A tourist who browses Kanagawa cannot find a Tokyo tour that also goes there.
 
@@ -66,7 +70,9 @@ Read these before design, and do not invent behavior that contradicts them.
 
 ## API contract
 
-No new endpoint ships. The changes below are in existing provider payloads and in the geography archive.
+No new endpoint ships.
+
+The changes below are in existing provider payloads and in the geography archive.
 
 | Method | Path | Auth | Request body | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -84,7 +90,8 @@ Error text:
 - Not a prefecture: "Additional destinations must be prefectures."
 - Same as primary: "An additional destination cannot be the primary destination."
 - Duplicate: "Please list each additional destination only once."
-- Archive: "Choose an active prefecture as successor. Some listings use this node as an additional destination."
+- Archive: "Choose an active prefecture as successor.
+  - Some listings use this node as an additional destination."
 
 ### Files to create or modify (API)
 
@@ -105,12 +112,15 @@ Error text:
 ## Data / domain touchpoints
 
 - Bounded context: CAT
-- Transaction boundaries: the provider create and update save the listing and its rows in one transaction. The archive moves the rows in the archive transaction.
-- Snapshots: none. Bookings do not read destinations.
+- Transaction boundaries: the provider create and update save the listing and its rows in one transaction.
+  - The archive moves the rows in the archive transaction.
+- Snapshots: none.
+  - Bookings do not read destinations.
 
 ## Out of scope
 
-- Pickup coverage (slice S6). A destination never creates coverage.
+- Pickup coverage (slice S6).
+  - A destination never creates coverage.
 - The web provider form.
 - Region and prefecture listing pages, and keyword search by destination name.
 - Marketplace payloads for the list.
@@ -132,7 +142,8 @@ Error text:
 
 ### Web
 
-- [ ] None in this issue. The provider form is a separate issue.
+- [ ] None in this issue.
+  - The provider form is a separate issue.
 
 ### Docs
 

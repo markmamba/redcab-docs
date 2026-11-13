@@ -17,21 +17,29 @@ related:
 
 ## TL;DR
 
-- Ships region cards on the home page. One card for each region that has a discoverable listing.
+- Ships region cards on the home page.
+  - One card for each region that has a discoverable listing.
 - A card has a 4:3 image (or a placeholder), the region name and the number of services.
 - A card also has a link for every prefecture of the region.
-- A card opens `/regions/:region-slug/listings`. A prefecture link opens `/regions/:region-slug/:prefecture-slug/listings`.
+- A card opens `/regions/:region-slug/listings`.
+  - A prefecture link opens `/regions/:region-slug/:prefecture-slug/listings`.
 - The home page loads the regions from `GET /marketplace/catalog/regions`.
 - Removes the "Featured districts" section, the district card view, and the featured districts call.
-- Does NOT ship the region images (content adds them later). Does NOT ship popular destination ranks, region descriptions or near-me. Does NOT change the API.
-- Breaking change: No for users. The home page shows regions in place of districts.
+- Does NOT ship the region images (content adds them later).
+  - Does NOT ship popular destination ranks, region descriptions or near-me.
+  - Does NOT change the API.
+- Breaking change: No for users.
+  - The home page shows regions in place of districts.
 
 ## Problem
 
-The home page shows "Featured districts" as plain text cards without images. It loads them from the districts index with `featured=true`.
+The home page shows "Featured districts" as plain text cards without images.
+
+It loads them from the districts index with `featured=true`.
 
 1. The Catalog rulings say tourist browse starts with regions, not districts.
-2. A district card opens an old `/districts/...` URL. That URL now only redirects.
+2. A district card opens an old `/districts/...` URL.
+   - That URL now only redirects.
 3. There is no image for a region and no placeholder.
 
 Evidence:
@@ -43,7 +51,9 @@ Evidence:
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
@@ -81,7 +91,9 @@ Rulings marked "Owner ruling" were given by the owner on 2026-10-24.
 
 ## API contract
 
-No new API item. The home page calls one existing endpoint.
+No new API item.
+
+The home page calls one existing endpoint.
 
 | Method | Path | Auth | Request | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -115,7 +127,9 @@ Pick a region to see its services.
 +----------------+ +----------------+ +----------------+
 ```
 
-A card with no image file shows a grey tile with the Red Cab mark in the center. On a tablet the cards are two across, and on a phone they are one across.
+A card with no image file shows a grey tile with the Red Cab mark in the center.
+
+On a tablet the cards are two across, and on a phone they are one across.
 
 States:
 
@@ -134,14 +148,16 @@ Domain:
 
 - `app/domains/catalog-geography/catalog-geography-constant.js` (new): `CATALOG_REGION_IMAGE_DIRECTORY` (`/images/regions`), `CATALOG_REGION_IMAGE_SLUGS` (empty list), `CATALOG_REGION_PLACEHOLDER_IMAGE_PATH` (`/brand/redcab-mark-48.png`).
 - `app/domains/catalog-geography/catalog-geography-service.js` (new): `getRegionImagePath(regionSlug)` (the path of the image, or `null` when the slug is not in the list).
-- `app/domains/catalog-geography/catalog-geography-region-list-view.jsx` (new): one region card. It takes one `catalogRegion`.
+- `app/domains/catalog-geography/catalog-geography-region-list-view.jsx` (new): one region card.
+  - It takes one `catalogRegion`.
 - `app/domains/catalog-listing/home-landing-view.jsx`: takes `catalogRegions`, draws the grid and the section.
 - Delete `app/domains/catalog-listing/catalog-district-list-view.jsx`.
 - `app/domains/catalog-listing/catalog-listing-constant.js`: delete `MARKETPLACE_CATALOG_LEGACY_DISTRICT_PATH`.
 
 API modules:
 
-- `app/api/marketplace-catalog-districts-api.js`: remove `index` and `areasIndex`. Keep `show` and `areaShow`.
+- `app/api/marketplace-catalog-districts-api.js`: remove `index` and `areasIndex`.
+  - Keep `show` and `areaShow`.
 
 Static files:
 
@@ -156,15 +172,19 @@ Skills to use when coding: `creating-route-pages`, `creating-domain-views`, then
 ## Data / domain touchpoints
 
 - Bounded context: CAT
-- Transaction boundaries: none. The page only reads.
+- Transaction boundaries: none.
+  - The page only reads.
 - Snapshots: none.
-- Pricing: none. The cards show no price.
+- Pricing: none.
+  - The cards show no price.
 - Discoverability: only the API decides which regions and prefectures appear (INV-8).
 
 ## Out of scope
 
-- The region image files. Content adds them later.
-- Popular destination ranks, and a "popular destinations" block. The cards use the prefecture list as the API returns it.
+- The region image files.
+  - Content adds them later.
+- Popular destination ranks, and a "popular destinations" block.
+  - The cards use the prefecture list as the API returns it.
 - Region descriptions.
 - Near-me, and a map on the home page.
 - Any API change.
@@ -186,7 +206,8 @@ Skills to use when coding: `creating-route-pages`, `creating-domain-views`, then
 
 ### Docs
 
-- [x] Record the image key in `catalog-decisions.md` (decision 14). Done in the docs PR of this spec.
+- [x] Record the image key in `catalog-decisions.md` (decision 14).
+  - Done in the docs PR of this spec.
 - [ ] Set spec `status: implemented` after merge
 
 ## Acceptance criteria
@@ -194,9 +215,11 @@ Skills to use when coding: `creating-route-pages`, `creating-domain-views`, then
 - [ ] The home page shows one card for each region that the regions endpoint returns, in the order of the response.
 - [ ] A card shows the region name, the number of services, and a link for every prefecture of the region.
 - [ ] The name of a region card opens `/regions/:region-slug/listings`, and the whole card is clickable.
-- [ ] A prefecture link opens `/regions/:region-slug/:prefecture-slug/listings`. The link for Hokkaido opens `/regions/hokkaido/hokkaido/listings`.
+- [ ] A prefecture link opens `/regions/:region-slug/:prefecture-slug/listings`.
+  - The link for Hokkaido opens `/regions/hokkaido/hokkaido/listings`.
 - [ ] The card has no link inside another link.
-- [ ] A region with an image file in the list shows the image at a 4:3 ratio. A region without one shows the grey tile with the Red Cab mark.
+- [ ] A region with an image file in the list shows the image at a 4:3 ratio.
+  - A region without one shows the grey tile with the Red Cab mark.
 - [ ] The names follow the account language.
 - [ ] With no region, or after a 4xx error, the home page shows the hero and its button only.
 - [ ] A 5xx error still shows the error page.
@@ -204,7 +227,7 @@ Skills to use when coding: `creating-route-pages`, `creating-domain-views`, then
 - [ ] No page, link or test refers to `MARKETPLACE_CATALOG_LEGACY_DISTRICT_PATH`.
 - [ ] The test that checks the image list against `public/images/regions/` passes.
 - [ ] No client-side price computation.
-- [ ] Text follows ASD-STE100 Tier A.
+- [ ] Text follows ASD-STE100.
 - [ ] Tests cover the loader, the region card (image, placeholder, links, count, language), the home landing view (with and without regions), and the image service.
 
 ## Verification

@@ -6,7 +6,9 @@ description: Custody, commission, payouts, and refunds in business terms.
 
 ## TL;DR
 
-Non-normative explainer. Every rule cited below links to the authoritative source.
+Non-normative explainer.
+
+Every rule cited below links to the authoritative source.
 
 ## Related documents
 

@@ -59,7 +59,9 @@ Anyone can ask for a reset email for any address many times.
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | Kind | Document | Why |
 | --- | --- | --- |

@@ -17,15 +17,23 @@ related:
 - Moves tourist, team and auth page chrome from `app/components/` to `app/layouts/`.
 - Keeps `app/components/brand/` and the shared components where they are.
 - Adds an ESLint rule: a file in `app/components/` cannot import from `app/domains/` or `app/layouts/`.
-- Does NOT change behavior, text or styles. The pages look the same.
-- Breaking change: No for users. Yes for import paths inside the repo.
+- Does NOT change behavior, text or styles.
+  - The pages look the same.
+- Breaking change: No for users.
+  - Yes for import paths inside the repo.
 
 ## Problem
 
-`AGENTS.md` says domain code stays in its domain. It lists the content of `app/components/`: `forms/`, `tables/`, `navigation/`, `error-display/` and `breadcrumbs`. An audit found more files there.
+`AGENTS.md` says domain code stays in its domain.
 
-1. `components/tourist/tourist-empty-state.jsx` has a bookings variant and a listing variant. It imports constants from `domains/bookings-booking` and `domains/catalog-listing`.
-2. `components/auth/auth-role-content.js` holds the sign-in text for each account role. It imports `ACCOUNT_ROLE` from `domains/identities-account`.
+It lists the content of `app/components/`: `forms/`, `tables/`, `navigation/`, `error-display/` and `breadcrumbs`.
+
+An audit found more files there.
+
+1. `components/tourist/tourist-empty-state.jsx` has a bookings variant and a listing variant.
+   - It imports constants from `domains/bookings-booking` and `domains/catalog-listing`.
+2. `components/auth/auth-role-content.js` holds the sign-in text for each account role.
+   - It imports `ACCOUNT_ROLE` from `domains/identities-account`.
 3. `components/auth/` also has page chrome for the provider and corporate portals.
 4. `components/tourist/` and `components/team/` have page chrome for their surfaces.
 
@@ -76,7 +84,9 @@ Rulings marked "Owner ruling" were given by the owner on 2026-10-24.
 | `components/tourist/tourist-auth-content.jsx` and its spec | `layouts/tourist/tourist-auth-content.jsx` and its spec | The sign-up, forgot password and verify email pages (about 7 users) |
 | `components/team/team-blob-background.jsx` | `layouts/team/team-blob-background.jsx` | `layouts/auth/public-auth-layout.jsx`, `layouts/team/team-login-layout.jsx`, `layouts/team/team-layout.jsx` |
 
-The user counts come from a search of the current code. Use a search when coding to find all of them.
+The user counts come from a search of the current code.
+
+Use a search when coding to find all of them.
 
 ## Web contract
 
@@ -84,7 +94,8 @@ No route, loader or API module changes.
 
 ### Files to create or modify (Web)
 
-- The files in the move table. Use `git mv` for whole-file moves, so history stays.
+- The files in the move table.
+  - Use `git mv` for whole-file moves, so history stays.
 - `eslint.config.js`: the new rule (decision 8).
 - `AGENTS.md`: the Directory Structure line for `components/`.
 - `.claude/skills/creating-route-pages/templates/public-detail-page.md`, `public-list-page.md` and `auth-page.md`: the import paths.
@@ -93,7 +104,8 @@ Skills to use when coding: `creating-domain-views`, then `review-react-style`.
 
 ## Data / domain touchpoints
 
-- Bounded context: none. This is a code move.
+- Bounded context: none.
+  - This is a code move.
 - No data, no API and no price change.
 
 ## Out of scope
@@ -121,14 +133,15 @@ Skills to use when coding: `creating-domain-views`, then `review-react-style`.
 
 ## Acceptance criteria
 
-- [ ] No file in `app/components/` imports from `@/domains` or from `@/layouts`. The ESLint rule enforces it.
+- [ ] No file in `app/components/` imports from `@/domains` or from `@/layouts`.
+  - The ESLint rule enforces it.
 - [ ] `app/components/auth/`, `app/components/tourist/` and `app/components/team/` do not exist.
 - [ ] The booking list page and the listing page show the same empty-state text and links as before.
 - [ ] The sign-in pages show the same text for each role.
 - [ ] The provider and corporate sign-in pages show the same chrome as before.
 - [ ] Each moved file keeps its git history.
 - [ ] `npm run lint`, `npm test` and `npm run build` pass.
-- [ ] Text follows ASD-STE100 Tier A.
+- [ ] Text follows ASD-STE100.
 
 ## Verification
 

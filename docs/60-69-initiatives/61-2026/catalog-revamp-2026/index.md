@@ -11,11 +11,14 @@ status: active
 
 - **Non-normative** program index for marketplace IA, search, destinations, pickup coverage, and provider publish rules.
 - Normative outcomes will live under [Catalog](/docs/30-49-domains/catalog/) and in new **approved** [implementation specs](/docs/60-69-initiatives/61-2026/implementation-specs/).
-- Phase 0 [audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#audit-tldr) inventories legacy FR-CAT, ADRs, specs, and code gaps. It recommends dispositions; PR 4 applies them.
+- Phase 0 [audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#audit-tldr) inventories legacy FR-CAT, ADRs, specs, and code gaps.
+  - It recommends dispositions; PR 4 applies them.
 
 ## About this document
 
-Planning only. Behavior is defined in domain rulings and approved specs, not on this page.
+Planning only.
+
+Behavior is defined in domain rulings and approved specs, not on this page.
 
 | Topic | Document |
 | --- | --- |
@@ -38,7 +41,11 @@ Planning only. Behavior is defined in domain rulings and approved specs, not on 
 
 ## Supersession map \{#supersession-map\}
 
-Summary of audit recommendations. PR 4 applies them. See the [audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#inventory) for every row.
+Summary of audit recommendations.
+
+PR 4 applies them.
+
+See the [audit](/docs/60-69-initiatives/61-2026/catalog-revamp-2026/audit#inventory) for every row.
 
 | Legacy artifact | Action | Replacement |
 | --- | --- | --- |

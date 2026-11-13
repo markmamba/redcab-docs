@@ -79,7 +79,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | Spec | api-168 | The endpoints, the error text and the agreed-policy keys |
 | Spec | web-157 | The pattern for a provider tab, and the checkout create error flow |
 | Invariant | [Invariants](/docs/70-79-business/business-rules/invariants) `INV-1`, `BKG-1`, `BKG-8` | A booking keeps the policy it copied. The tourist agrees to it before payment. |
-| Prose | [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) | EN copy is Tier A. JA copy follows `OPR-9`. |
+| Prose | [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) | EN copy follows the prose page. JA copy follows `OPR-9`. |
 | Convention | `red-cab-web/AGENTS.md`, `app/routes/AGENTS.md`, `app/domains/AGENTS.md` | Routes, API clients, forms, services |
 
 ## Design decisions

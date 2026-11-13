@@ -103,7 +103,7 @@ Read these before design, and do not invent behavior that contradicts them.
 | Rule | [IAM D5 — Company roles](/docs/30-49-domains/iam/iam-decisions/#company-roles) | Owner and Staff |
 | Model | [Provider company and members](/docs/30-49-domains/iam/models/provider-company-and-members) | The invitation and the membership |
 | Column truth | [notifications.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/notifications.dbml) and [identities.dbml](https://github.com/markmamba/red-cab-api/blob/main/docs/db/identities.dbml) | `notifications_dispatches` and the token tables |
-| Convention | [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) | Tier A for every email text |
+| Convention | [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) | Every email text follows it |
 | Depends on | [api-261](api-261-permits-and-approval.md) and [api-264](api-264-invitations-and-members.md) | The decision events and the invitation managers |
 | Paired work | [red-cab-web#214](https://github.com/markmamba/red-cab-web/issues/214) | The reset pages read `lang`, and two invitation texts change |
 | Dependency | [red-cab-api#265](https://github.com/markmamba/red-cab-api/issues/265) | Production sends no email until it ships |
@@ -185,7 +185,7 @@ The table lists the row that the enqueue manager writes for each mail key.
 
 ### Email texts
 
-Every text below follows ASD-STE100 Tier A.
+Every text below follows ASD-STE100.
 
 - Each email has an HTML template and a text template, as the verification email does.
 - The texts live in `config/locales/notifications.en.yml` and `notifications.ja.yml`.

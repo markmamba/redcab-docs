@@ -20,7 +20,11 @@ epic: "https://github.com/markmamba/red-cab-api/issues/130"
 
 ## Problem
 
-Flat `catalog_districts` / `catalog_areas` cannot express the ADR-016 administrative tree. Epic #130 requires schema migration before seed and domain code. Issue #131 implements spec [docs-13-geography-administrative-tree.md](./docs-13-geography-administrative-tree.md) migration sequence steps 2–7 only.
+Flat `catalog_districts` / `catalog_areas` cannot express the ADR-016 administrative tree.
+
+Epic #130 requires schema migration before seed and domain code.
+
+Issue #131 implements spec [docs-13-geography-administrative-tree.md](./docs-13-geography-administrative-tree.md) migration sequence steps 2–7 only.
 
 Evidence: `red-cab-api/docs/db/catalog.dbml` (flat tables), `db/migrate/20260802103200_create_catalog_districts.rb`, `db/migrate/20260802105200_create_catalog_areas.rb`, `db/migrate/20260802110300_create_catalog_listings.rb` (`area_id` FK).
 
@@ -60,7 +64,9 @@ Evidence: `red-cab-api/docs/db/catalog.dbml` (flat tables), `db/migrate/20260802
 
 ### `catalog_countries` columns
 
-Per parent spec §3.4: `uuid`, `code`, `name_en`, `name_ja`, `default_timezone`, `default_locale`, `display_currency`, `display_order`, `status`, `created_at`, `updated_at`. Seed one row: `JP`.
+Per parent spec §3.4: `uuid`, `code`, `name_en`, `name_ja`, `default_timezone`, `default_locale`, `display_currency`, `display_order`, `status`, `created_at`, `updated_at`.
+
+Seed one row: `JP`.
 
 ### `catalog_geographies` columns
 

@@ -482,7 +482,7 @@ The system sends four kinds of IAM email, and each email has an English text and
   - Staff do not get these emails.
 - Language: each email uses the saved language choice of the person who gets it.
   - The invitation email is in English, with one Japanese line, because the invited email may have no account.
-- Text: every email text follows ASD-STE100 Tier A, in English and in Japanese.
+- Text: every email text follows ASD-STE100, in English and in Japanese.
   - A Japanese speaker checks every Japanese text before the code merges to `main`.
 - Replaces: decision 1 of the spec `api-264`, which sent no invitation email.
 

@@ -125,7 +125,10 @@ export const handle = {
 export default BookingsListPage
 ```
 
-Protected tourist pages nest under `tourist-required-policy` in `app/routes.js` — the page module exports the component only; the policy parent enforces access.
+Protected tourist pages nest under `tourist-required-policy` in `app/routes.js`.
+
+- The page module exports the component only.
+- The policy parent enforces access.
 
 ### Route page naming
 
@@ -135,7 +138,9 @@ Protected tourist pages nest under `tourist-required-policy` in `app/routes.js` 
 
 ### Breadcrumbs
 
-Driven by `handle.breadcrumb` on route modules. `Breadcrumbs` reads them via `useMatches()`.
+Driven by `handle.breadcrumb` on route modules.
+
+`Breadcrumbs` reads them via `useMatches()`.
 
 Supported formats: string, `{ label, isClickable }`, or function `({ params }) => ...`.
 
@@ -161,7 +166,13 @@ Account routes (`/account/**`) stay `noindex, nofollow` and may keep `clientLoad
 
 ## Auth policies
 
-Protected surfaces use **policy route parents** in `app/routes.js`. New pages on a migrated surface nest under its policy — never re-add `app/components/hocs/with-*-auth` (removed in [#88](https://github.com/markmamba/red-cab-web/issues/88); ESLint enforced). Never put a policy and a deleted HOC pattern on the same subtree. See the authentication series (removed) and the roadmap (removed).
+Protected surfaces use **policy route parents** in `app/routes.js`.
+
+New pages on a migrated surface nest under its policy — never re-add `app/components/hocs/with-*-auth` (removed in [#88](https://github.com/markmamba/red-cab-web/issues/88); ESLint enforced).
+
+Never put a policy and a deleted HOC pattern on the same subtree.
+
+See the authentication series (removed) and the roadmap (removed).
 
 | Policy parent | Surface | Guard |
 | --- | --- | --- |
@@ -170,7 +181,9 @@ Protected surfaces use **policy route parents** in `app/routes.js`. New pages on
 | `provider-required-policy` | Provider portal (`/providers/*`) | Signed-in person, opened by the access word (entry rule) |
 | Team admin policies | Admin panel (`/team/**`) | Independent admin identity — **not** coupled to tourist auth |
 
-A `401` on a page without a policy route shows the session-expired page. It has a **Sign in again** link.
+A `401` on a page without a policy route shows the session-expired page.
+
+It has a **Sign in again** link.
 
 ### Portal access
 
@@ -375,7 +388,7 @@ Folders: flat, hyphenated — `catalog-listing/`, `bookings-booking/`, `provider
 
 ### Embedded relationships in detail views
 
-When a detail serializer includes an embedded `has_one` (e.g. `provider_company` inside a listing), render as a distinct section within the same card — not flat inlined fields:
+Render an embedded `has_one` (e.g. `provider_company` in a listing) as its own section in the card, not as flat fields:
 
 - Parent attributes first in `<ListGroup variant="flush">`
 - Embedded section below with subdued header (`bg-secondary-subtle`) and its own attribute rows
@@ -410,7 +423,10 @@ return (
 - `DateField` holds naive wall-clock values; RHF carries them untouched
 - Convert in exactly one place — the submit handler — via `DateTimeUtils.toApiString(value, { timezone })`
 - Edit forms: `DateTimeUtils.toFormValue(apiValue, { timezone })`
-- **`timezone` is required** on every `DateTimeUtils` call — pass the Listing's embedded geography `timezone` from the API, or `service_timezone` on booking/order payloads. Do not hardcode `Asia/Tokyo` or use display-only constants for slot or cancellation UI (`OPR-11`).
+- **`timezone` is required** on every `DateTimeUtils` call.
+  - Pass the Listing's embedded geography `timezone` from the API.
+  - Or pass `service_timezone` from booking and order payloads.
+  - Do not hardcode `Asia/Tokyo` or use display-only constants for slot or cancellation UI (`OPR-11`).
 - Geography centroids are for map display and near-me only — not a timezone source.
 - See [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones) for the full classification test and anti-patterns.
 
@@ -424,7 +440,9 @@ return (
 
 ## State management
 
-No Redux/Zustand. Use:
+No Redux/Zustand.
+
+Use:
 
 | Mechanism | Purpose |
 | --- | --- |
@@ -435,19 +453,31 @@ No Redux/Zustand. Use:
 
 Reset `page` to `1` when filters change.
 
-Use `prepareSearchParams` / `serializeUrlParams` from `app/utils/search-param-utils.js`. Pagination reads `meta.page`, `meta.last`, `meta.count` from API responses.
+Use `prepareSearchParams` / `serializeUrlParams` from `app/utils/search-param-utils.js`.
+
+Pagination reads `meta.page`, `meta.last`, `meta.count` from API responses.
 
 ---
 
 ## Red Cab–specific frontend rules
 
-1. **Never compute price on the client.** Display `price_breakdown` from `calculate_quote` API response only. No `listing.base_price * passengers` in JSX or utils.
+1. **Never compute price on the client.** Display `price_breakdown` from `calculate_quote` API response only.
+   - No `listing.base_price * passengers` in JSX or utils.
 2. **Never mutate API response objects.** Pass-through data from serializers.
 3. **Checkout shows server-confirmed breakdown.** Submit booking with slot/listing/passenger selections; amounts come back from API.
-4. **Portal-confined surfaces.** Tourist pages don't nest under the provider policy parent. One segment per page.
-5. **EN/JA rendering.** Use stored language preference; geography labels use `name_en` / `name_ja` / `name_kana` from API; disambiguate homonymous Areas with parent District.
+4. **Portal-confined surfaces.** Tourist pages don't nest under the provider policy parent.
+   - One segment per page.
+5. **EN/JA rendering.**
+   - Use the stored language preference.
+   - Geography labels use `name_en`, `name_ja` and `name_kana` from the API.
+   - Disambiguate homonymous Areas with the parent District.
 6. **Documents.** PDF download links from API; no client-side PDF generation.
-7. **Payment step is provider-agnostic.** The API returns a payment handoff descriptor and the UI branches on its `kind` (redirect to a hosted page, or embedded fields). Only the embedded branch may lazy-load a provider SDK, keeping it out of the main bundle. The charge amount always originates from the server snapshot, never client input. The post-payment return route is a **presentation hint only** — booking confirmation is read from our own API, which converges to verified provider events (`FIN-11`, `FIN-13`).
+7. **Payment step is provider-agnostic.** The API returns a payment handoff descriptor and the UI branches on its `kind` (redirect to a hosted page, or embedded fields).
+   - Only the embedded branch may lazy-load a provider SDK, keeping it out of the main bundle.
+   - The charge amount always originates from the server snapshot, never client input.
+   - The post-payment return route is a **presentation hint only**.
+   - Booking confirmation is read from our own API.
+   - Our API converges to verified provider events (`FIN-11`, `FIN-13`).
 
 ---
 

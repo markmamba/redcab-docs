@@ -282,7 +282,8 @@ The provider pages stay in English, as they are today.
 
 - [x] The calendar lists only open days, and the dropdown lists only free start times.
 - [x] A day with no free time shows the message and no dropdown.
-- [ ] A tourist can finish a booking with the new contract. Tests use a mocked API, and no end-to-end run was done.
+- [ ] A tourist can finish a booking with the new contract.
+  - Tests use a mocked API, and no end-to-end run was done.
 - [x] The URL, the quote and the session calls carry no `availability_slot_id`.
 - [x] A failed hold shows the message and a link back to the same day.
 - [x] A listing that is not bookable shows "currently unavailable", no price and no Book button.
@@ -291,7 +292,8 @@ The provider pages stay in English, as they are today.
 
 ### PR 3
 
-- [ ] The checkout matches the layout above on desktop and mobile. Not checked in a browser.
+- [ ] The checkout matches the layout above on desktop and mobile.
+  - Not checked in a browser.
 - [x] The hold notice shows the end time of the hold from the session.
 - [x] The return page keeps redirect-only success per web-12.
 

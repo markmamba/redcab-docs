@@ -13,17 +13,25 @@ status: active
 - Each row has a disposition: **carry**, **supersede**, **retire**, or **pending**.
 - Each row also has one code-gap line: **exists**, **partial**, or **missing**.
 - Read this page before you write a new Catalog spec or a normative page under `31-catalog/`.
-- The audit **recommends** dispositions. PR 4 applies them. PR 5 owns invariant edits.
+- The audit **recommends** dispositions.
+  - PR 4 applies them.
+  - PR 5 owns invariant edits.
 
 ## Non-normative banner \{#non-normative\}
 
 :::caution Non-normative
-This page does not define product behavior. It sits outside the [precedence chain](/docs/00-09-meta/conventions/documentation-system#precedence). Product rules stay in the linked normative pages until a later PR changes them.
+This page does not define product behavior.
+
+It sits outside the [precedence chain](/docs/00-09-meta/conventions/documentation-system#precedence).
+
+Product rules stay in the linked normative pages until a later PR changes them.
 :::
 
 ## Method \{#method\}
 
-Audit date: 2026-10-17. Program: PR 3 of 5.
+Audit date: 2026-10-17.
+
+Program: PR 3 of 5.
 
 Sources read in `redcab-docs`:
 
@@ -50,9 +58,11 @@ Code areas spot-checked (read only):
 Rules for this page:
 
 - Every row cites a doc or a code source.
-- The personal design scratchpad gave hypotheses only. It is not a source.
+- The personal design scratchpad gave hypotheses only.
+  - It is not a source.
 - Where evidence conflicts with the design review verdict, the row says **pending** and names the file.
-- Traceability matrices stay FR-ID-based until the Catalog pilot proves anchor trace. This PR does not edit them.
+- Traceability matrices stay FR-ID-based until the Catalog pilot proves anchor trace.
+  - This PR does not edit them.
 - "Not verified" in a code-gap cell means the audit did not read that code path.
 
 ## Inventory tables \{#inventory\}
@@ -68,7 +78,9 @@ Disposition key:
 
 ### FR-CAT requirements \{#inventory-fr-cat\}
 
-Source page: `docs/70-79-business/72-requirements/functional-requirements/cat.md`. Site path: `/docs/70-79-business/requirements/functional-requirements/cat`.
+Source page: `docs/70-79-business/72-requirements/functional-requirements/cat.md`.
+
+Site path: `/docs/70-79-business/requirements/functional-requirements/cat`.
 
 | ID / artifact | Current location | Disposition | Replacement / notes | Code gap |
 | --- | --- | --- | --- | --- |
@@ -121,7 +133,11 @@ Folder: `docs/30-49-domains/34-architecture-decisions/`.
 
 ### Open questions \{#inventory-open-questions\}
 
-Source page: `docs/70-79-business/73-planning/open-questions.md`. Both items are resolved today. The revamp changes parts of both.
+Source page: `docs/70-79-business/73-planning/open-questions.md`.
+
+Both items are resolved today.
+
+The revamp changes parts of both.
 
 | ID / artifact | Current location | Disposition | Replacement / notes | Code gap |
 | --- | --- | --- | --- | --- |
@@ -132,7 +148,9 @@ Source page: `docs/70-79-business/73-planning/open-questions.md`. Both items are
 
 ### Invariants and global rules \{#inventory-invariants\}
 
-Source pages: `docs/70-79-business/71-business-rules/invariants.md`. PR 5 owns edits to this layer.
+Source pages: `docs/70-79-business/71-business-rules/invariants.md`.
+
+PR 5 owns edits to this layer.
 
 | ID / artifact | Current location | Disposition | Replacement / notes | Code gap |
 | --- | --- | --- | --- | --- |
@@ -149,7 +167,11 @@ Source pages: `docs/70-79-business/71-business-rules/invariants.md`. PR 5 owns e
 
 ### Implementation specs \{#inventory-specs\}
 
-Root: `docs/60-69-initiatives/61-2026/implementation-specs/`. All files below have `status: approved` unless the table says otherwise. PR 4 sets `status: superseded` where the row says **supersede**.
+Root: `docs/60-69-initiatives/61-2026/implementation-specs/`.
+
+All files below have `status: approved` unless the table says otherwise.
+
+PR 4 sets `status: superseded` where the row says **supersede**.
 
 | ID / artifact | Current location | Disposition | Replacement / notes | Code gap |
 | --- | --- | --- | --- | --- |
@@ -170,7 +192,11 @@ Root: `docs/60-69-initiatives/61-2026/implementation-specs/`. All files below ha
 | `web-124` Discover toolbar filters to API | `cat/web-124-discover-toolbar-filters-api-forwarding.md` | supersede | Search stays disabled in this spec. Keyword search needs a new spec. Filter forwarding carries. | partial: filters forwarded (`catalog-listing-constant.js:240-247`); search disabled (`catalog-listing-discover-toolbar.jsx:13,41`) |
 | `api-161` Marketplace listing index discover filters | `cat/api-161-marketplace-listing-index-discover-filters.md` | supersede | The spec lists "Does NOT ship: free-text search". Filters carry. A new spec adds keyword (`q`). | partial: filters exist (`marketplace_index_manager.rb:130-134`); no `q` anywhere in the index request |
 
-Name clash: `implementation-specs/rev/api-161-provider-review-report.md` is a Reviews spec. It is not part of this audit. The Catalog spec for issue #161 is `cat/api-161-marketplace-listing-index-discover-filters.md`.
+Name clash: `implementation-specs/rev/api-161-provider-review-report.md` is a Reviews spec.
+
+It is not part of this audit.
+
+The Catalog spec for issue #161 is `cat/api-161-marketplace-listing-index-discover-filters.md`.
 
 ### Planning drift \{#inventory-planning-drift\}
 
@@ -189,7 +215,8 @@ Checked on 2026-10-17 against `red-cab-api` and `red-cab-web` `main`.
 Geography:
 
 - Column `catalog_geographies.level` has three values: `subdivision`, `municipality`, `ward` (`catalog.dbml:110`).
-- No region node or level exists. A region would be a new concept.
+- No region node or level exists.
+  - A region would be a new concept.
 - Discovery roles are booleans `is_discovery_root` and `is_listable` (`catalog.dbml:126-127`).
 - Column `parent_id` is null only for `subdivision` (`catalog.dbml:106`).
 
@@ -208,12 +235,14 @@ Marketplace index and search:
 - Supported filters are `date`, `service_type`, `language`, `passenger_count`, `price_min`, `price_max` (`marketplace_index_validator.rb:13-40`).
 - No `q` or keyword parameter exists in the index request or validator.
 - The web search input is disabled (`catalog-listing-discover-toolbar.jsx:13,41`).
-- Allowed order columns are `published_at`, `rating_average`, `reviews_count`, `title_en`, `created_at`. No price or most-booked order exists.
+- Allowed order columns are `published_at`, `rating_average`, `reviews_count`, `title_en`, `created_at`.
+  - No price or most-booked order exists.
 - The web route family is `/districts/:districtSlug/areas/:areaSlug/...` (`marketplace.routes.js:23-41`).
 
 Booking and checkout:
 
-- Checkout creation reserves seats and creates a `pending` session (`tourists_create_manager.rb:91-111`). This matches `BKG-9`.
+- Checkout creation reserves seats and creates a `pending` session (`tourists_create_manager.rb:91-111`).
+  - This matches `BKG-9`.
 - A booking is created as `confirmed` only after payment succeeds (`materialize_order_manager.rb:53-54,134`).
 - Pickup and drop-off are free-text columns `pickup_address` and `dropoff_address` (`bookings.dbml:483-484`).
 - Web checkout validates `pickup_address` as a non-empty string (`bookings-checkout-session-schema.js:4-6`).
@@ -225,7 +254,11 @@ Missing tables:
 
 ## Open forks \{#open-forks\}
 
-This table lists forks only. It gives no rulings. Each fork needs an owner decision before the blocked rows can leave **pending**.
+This table lists forks only.
+
+It gives no rulings.
+
+Each fork needs an owner decision before the blocked rows can leave **pending**.
 
 | Fork | Blocks audit rows | Owner decision needed |
 | --- | --- | --- |
@@ -239,7 +272,9 @@ This table lists forks only. It gives no rulings. Each fork needs an owner decis
 
 ## Recommended PR 4 actions \{#recommended-pr4\}
 
-PR 4 applies these. This PR changes none of them.
+PR 4 applies these.
+
+This PR changes none of them.
 
 Implementation specs to set `status: superseded` (add `superseded_by:` when the successor exists):
 
@@ -262,7 +297,8 @@ Requirement sections to banner in `cat.md`:
 
 ADR and register banners:
 
-- `ADR-017`: banner on the URL family and IA sections. Keep the access and SSR decisions visible.
+- `ADR-017`: banner on the URL family and IA sections.
+  - Keep the access and SSR decisions visible.
 - `AMB-020` and `AMB-022`: mark the superseded clauses in the Decision Log and reopen them.
 
 Carry as-is (no banner):

@@ -6,4 +6,6 @@ description: Configuration & secrets — stub; to be expanded.
 
 ## TL;DR
 
-Stub page. Document configuration & secrets for Red Cab Marketplace infrastructure here.
+Stub page.
+
+Document configuration & secrets for Red Cab Marketplace infrastructure here.

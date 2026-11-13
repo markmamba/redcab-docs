@@ -96,7 +96,9 @@ ApplicationController (ActionController::API)
         └── Sets: CurrentRequest.identities_user (may be nil)
 ```
 
-The concerns `AccountSessionCookies` and `AdminSessionCookies` own the session cookies. They share no code.
+The concerns `AccountSessionCookies` and `AdminSessionCookies` own the session cookies.
+
+They share no code.
 
 - Each concern finds the session, checks the CSRF token, and sets and clears the cookies.
 - The cookie `Domain` comes from the configuration of each identity system.
@@ -104,7 +106,9 @@ The concerns `AccountSessionCookies` and `AdminSessionCookies` own the session c
 
 ### CurrentRequest (thread-local state)
 
-`CurrentRequest` extends `ActiveSupport::CurrentAttributes`. Controllers populate it; Managers receive values as keyword arguments — never read `CurrentRequest` inside Managers.
+`CurrentRequest` extends `ActiveSupport::CurrentAttributes`.
+
+Controllers populate it; Managers receive values as keyword arguments — never read `CurrentRequest` inside Managers.
 
 ```ruby
 CurrentRequest.identities_user      # Identities::Account (optional on marketplace)
@@ -248,7 +252,9 @@ Response shape:
 }
 ```
 
-In Managers, raise `Errors::ValidationError` when validation fails. For non-validation business failures, use `Errors::UnprocessableContentError` (optionally with `skip_sentry: true` for expected auth failures).
+In Managers, raise `Errors::ValidationError` when validation fails.
+
+For non-validation business failures, use `Errors::UnprocessableContentError` (optionally with `skip_sentry: true` for expected auth failures).
 
 ### The `code` field
 
@@ -267,9 +273,11 @@ In Managers, raise `Errors::ValidationError` when validation fails. For non-vali
 
 ### Error messages for users
 
-Tier A [ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) applies to all user-visible API validation and error strings.
+[ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100) applies to all user-visible API validation and error strings.
 
-Target users are non-technical tourists and providers. Every message should answer:
+Target users are non-technical tourists and providers.
+
+Every message should answer:
 
 1. What went wrong?
 2. Why it went wrong?
@@ -318,7 +326,9 @@ Response format:
 
 ## Soft delete pattern
 
-Records are not hard-deleted. Soft delete uses `status :archived` — no `is_deleted` flag and no `deleted_at`.
+Records are not hard-deleted.
+
+Soft delete uses `status :archived` — no `is_deleted` flag and no `deleted_at`.
 
 - **No restore.** Once archived, create a new row to bring something back.
 - **No hard delete.** Rows stay in the database.
@@ -344,7 +354,13 @@ Ask: **did the system create this time, or did a person pick it?**
 | **Person-picked local datetime** | User picks slot start/end | `timestamptz` | Naive `YYYY-MM-DDTHH:mm` per endpoint contract | Anchor in listing geography timezone on write |
 | **Zone-free civil date** | Same calendar day everywhere (rare) | `date` | `YYYY-MM-DD` | Date-only, no conversion |
 
-**Service timezone** resolves from `listing.geography.timezone` (live catalog) or `booking.service_timezone` (snapshotted). Never hardcode `Asia/Tokyo` in domain code. App clock is UTC. See [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones).
+**Service timezone** resolves from `listing.geography.timezone` (live catalog) or `booking.service_timezone` (snapshotted).
+
+Never hardcode `Asia/Tokyo` in domain code.
+
+App clock is UTC.
+
+See [Date / Time / Timezone](/docs/20-29-backend/conventions/datetime-and-timezones).
 
 ---
 
@@ -384,12 +400,19 @@ Ask: **did the system create this time, or did a person pick it?**
 
 These extend the baseline API conventions with Red Cab domain rules:
 
-1. **Never accept price from the client.** Checkout requests carry `listing_id`, `slot_id`, passenger count — not amounts. Manager calls `Catalog::Pricing::CalculateQuoteManager` and snapshots the result.
+1. **Never accept price from the client.** Checkout requests carry `listing_id`, `slot_id`, passenger count — not amounts.
+   - Manager calls `Catalog::Pricing::CalculateQuoteManager` and snapshots the result.
 2. **Never mutate booking snapshots.** No update path for price, commission, or cancellation policy snapshots after create.
-3. **Payments reads snapshots only.** Charge/refund/payout managers take a `booking:` and read its frozen snapshots; they never recompute commission from live `CommissionRateSetting`.
+3. **Payments reads snapshots only.**
+   - Charge, refund and payout managers take a `booking:` and read its frozen snapshots.
+   - They never recompute commission from the live `CommissionRateSetting`.
 4. **Seat reservation only via guarded command.** `Catalog::Availability::ReserveSeatsManager` is the only writer of `available_seats` decrement; called inside `Bookings::CheckoutManager`'s transaction.
 5. **Domain events after commit.** Publish past-tense events (`BookingCreated`, `PaymentSucceeded`) after transaction commits; consumers are idempotent.
-6. **Provider event ingestion in Payments only.** Verified provider events converge state; never roll back committed booking transitions. Events are normalized at the adapter boundary — no provider payload shape enters the domain, and no domain branch may key on provider identity. A client-supplied signal, including a return redirect, MUST NOT drive a money-moving transition (`FIN-13`).
+6. **Provider event ingestion in Payments only.** Verified provider events converge state; never roll back committed booking transitions.
+   - Events are normalized at the adapter boundary.
+   - No provider payload shape enters the domain.
+   - No domain branch may key on provider identity.
+   - A client-supplied signal, including a return redirect, MUST NOT drive a money-moving transition (`FIN-13`).
 7. **Whole-yen integers.** Money columns as integer cents or `decimal` with scale 0 — no fractional yen (`PAY-1`).
 
 ---
@@ -398,7 +421,11 @@ These extend the baseline API conventions with Red Cab domain rules:
 
 ### DBML workflow
 
-Schema is designed DBML-first. One file per bounded context (split when large). See [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) for file layout.
+Schema is designed DBML-first.
+
+One file per bounded context (split when large).
+
+See [Domain-to-Code Mapping](/docs/20-29-backend/conventions/domain-to-code-mapping) for file layout.
 
 DBML conventions:
 

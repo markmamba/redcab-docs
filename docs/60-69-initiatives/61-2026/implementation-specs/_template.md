@@ -12,7 +12,9 @@ context: BKG
 
 ## TL;DR
 
-_Write Tier A STE: short bullets, one idea each. See [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100)._
+_Write plain English: short bullets, one idea each.
+
+See [Prose and ASD-STE100](/docs/00-09-meta/conventions/prose-and-ste100)._
 
 - {What ships — 1 bullet}
 - {What does NOT ship — 1 bullet}
@@ -20,11 +22,27 @@ _Write Tier A STE: short bullets, one idea each. See [Prose and ASD-STE100](/doc
 
 ## Problem
 
-{What is broken or missing? Active voice, short sentences. Link evidence: file paths, test names, issue quote.}
+{What is broken or missing?
+
+Active voice, short sentences.
+
+Link evidence: file paths, test names, issue quote.}
+
+## User stories
+
+_One line each, numbered.
+
+Name the real role: tourist, provider owner, Red Cab admin.
+
+Never "a user"._
+
+- US-1: As {role}, I want {goal}, so {reason}.
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | Kind | Document | Why |
 | --- | --- | --- |
@@ -41,7 +59,9 @@ Read these before design. Do not invent behavior that contradicts them.
 
 ## API contract
 
-_Applies when `red-cab-api` is in `repos`. Delete section if not._
+_Applies when `red-cab-api` is in `repos`.
+
+Delete section if not._
 
 | Method | Path | Auth | Request body | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -55,7 +75,9 @@ _Applies when `red-cab-api` is in `repos`. Delete section if not._
 
 ## Web contract
 
-_Applies when `red-cab-web` is in `repos`. Delete section if not._
+_Applies when `red-cab-web` is in `repos`.
+
+Delete section if not._
 
 | Surface | Route | Loader | API module | Auth HOC |
 | --- | --- | --- | --- | --- |

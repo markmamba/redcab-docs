@@ -17,23 +17,43 @@ related:
 ## TL;DR
 
 - Ships a prefecture picker for the primary destination in the provider create form.
-- Ships a searchable multi-select with chips for up to 5 additional destinations. The list is grouped by region.
-- The form sends `primary_geography_id` and `additional_geography_ids`. It no longer sends `area_id`.
+- Ships a searchable multi-select with chips for up to 5 additional destinations.
+  - The list is grouped by region.
+- The form sends `primary_geography_id` and `additional_geography_ids`.
+  - It no longer sends `area_id`.
 - The provider listing page shows the primary and additional destinations.
 - Needs ONE new API item first: a provider endpoint that lists ALL active prefectures, grouped by region (see decision 1).
 - Does NOT ship the edit form (the edit page is a stub), pickup coverage or marketplace pages.
-- Breaking change: Yes. Today the create form sends `area_id`, and the API rejects it. This item fixes that.
+- Breaking change: Yes.
+  - Today the create form sends `area_id`, and the API rejects it.
+  - This item fixes that.
 
 ## Problem
 
-The API now needs `primary_geography_id` (a prefecture UUID). It accepts `additional_geography_ids` (up to 5 prefecture UUIDs). It no longer reads `area_id` (api-204 decision 7).
+The API now needs `primary_geography_id` (a prefecture UUID).
 
-The create form still sends `area_id`. Every listing create fails with a 422 error.
+It accepts `additional_geography_ids` (up to 5 prefecture UUIDs).
 
-The district and area picker also has a second fault. It loads data from `GET /marketplace/catalog/districts`. That endpoint returns only discoverable discovery roots. A node is discoverable only when a published listing sits below it. The result has two faults:
+It no longer reads `area_id` (api-204 decision 7).
 
-- A prefecture with no published listing never appears. A provider cannot create the first listing in a new prefecture.
-- A designated city can appear. The API rejects a designated city as a primary destination.
+The create form still sends `area_id`.
+
+Every listing create fails with a 422 error.
+
+The district and area picker also has a second fault.
+
+It loads data from `GET /marketplace/catalog/districts`.
+
+That endpoint returns only discoverable discovery roots.
+
+A node is discoverable only when a published listing sits below it.
+
+The result has two faults:
+
+- A prefecture with no published listing never appears.
+  - A provider cannot create the first listing in a new prefecture.
+- A designated city can appear.
+  - The API rejects a designated city as a primary destination.
 
 Evidence:
 
@@ -41,11 +61,14 @@ Evidence:
 - `app/api/providers-catalog-listings-api.js` (`buildListingConfigurationPayload`)
 - `app/domains/catalog-area/catalog-area-select-field.jsx` (calls `marketplaceCatalogDistrictsApi.index`)
 - `red-cab-api` `Catalog::Districts::MarketplaceIndexManager` (`discovery_roots.active_geographies.discoverable`)
-- No provider endpoint lists geographies. Only `/team/catalog/geographies` exists, and it is for admins.
+- No provider endpoint lists geographies.
+  - Only `/team/catalog/geographies` exists, and it is for admins.
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
@@ -83,7 +106,11 @@ Read these before design. Do not invent behavior that contradicts them.
 
 ## API contract
 
-_The web item needs one new endpoint. [red-cab-api#223](https://github.com/markmamba/red-cab-api/issues/223) and its spec fix the final path and code. This table is the contract the web expects._
+_The web item needs one new endpoint.
+
+[red-cab-api#223](https://github.com/markmamba/red-cab-api/issues/223) and its spec fix the final path and code.
+
+This table is the contract the web expects._
 
 | Method | Path | Auth | Request body | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -120,18 +147,25 @@ API error text the form shows (field `additional_geography_ids`):
 | Provider | `/providers/listings/new` (existing create page) | `clientLoader` also fetches the region list | `providers-catalog-regions-api.js` (new) | `provider-required-policy` (existing) |
 | Provider | existing show page | `clientLoader` also fetches the region list | `providers-catalog-regions-api.js` | Same |
 
-The route paths stay as they are. Check the real paths in `PROVIDER_CATALOG_LISTINGS_PATHS` when coding.
+The route paths stay as they are.
+
+Check the real paths in `PROVIDER_CATALOG_LISTINGS_PATHS` when coding.
 
 ### Files to create or modify (Web)
 
 - `app/api/providers-catalog-regions-api.js` (new): `index`, with JSDoc and the `*_PATH` constant.
-- `app/api/providers-catalog-listings-api.js`: replace `area_id` with `primary_geography_id`. Add `additional_geography_ids`. Keep `[]` on update (decision 11).
+- `app/api/providers-catalog-listings-api.js`: replace `area_id` with `primary_geography_id`.
+  - Add `additional_geography_ids`.
+  - Keep `[]` on update (decision 11).
 - `app/domains/catalog-geography/catalog-primary-destination-select-field.jsx` (new)
 - `app/domains/catalog-geography/catalog-additional-destinations-field.jsx` (new): the searchable multi-select with chips (decisions 5 and 14 to 20).
-- `app/domains/catalog-geography/catalog-destination-service.js` (new): list prefecture UUIDs, find a prefecture name by UUID, and find the names for the show page. It also filters the regions by search text, flattens the options and finds the next active option (decision 19).
+- `app/domains/catalog-geography/catalog-destination-service.js` (new): list prefecture UUIDs, find a prefecture name by UUID, and find the names for the show page.
+  - It also filters the regions by search text, flattens the options and finds the next active option (decision 19).
 - `app/domains/catalog-listing/catalog-listing-schema.js`: replace `district_uuid` and `area` (decisions 8 and 9).
-- `app/domains/catalog-listing/catalog-listing-service.js`: `defaultFormValues`, `buildUpdatePayload`. Remove `extractAreaId`.
-- `app/domains/catalog-listing/catalog-listing-form.jsx`: replace `CatalogAreaSelectField`. Take `catalogRegions` as a prop.
+- `app/domains/catalog-listing/catalog-listing-service.js`: `defaultFormValues`, `buildUpdatePayload`.
+  - Remove `extractAreaId`.
+- `app/domains/catalog-listing/catalog-listing-form.jsx`: replace `CatalogAreaSelectField`.
+  - Take `catalogRegions` as a prop.
 - `app/domains/catalog-listing/catalog-listing-destinations-view.jsx` (new): the show page section.
 - `app/routes/provider/provider-catalog-listings-create-page.jsx`: load regions, pass the prop.
 - `app/routes/provider/provider-catalog-listings-show-page.jsx`: load regions, render the destinations view.
@@ -142,14 +176,19 @@ Skills to use when coding: `creating-api-clients`, `creating-domain-forms`, `cre
 ## Data / domain touchpoints
 
 - Bounded context: CAT
-- Transaction boundaries: none on the web. The API saves the listing and its destinations in one transaction.
+- Transaction boundaries: none on the web.
+  - The API saves the listing and its destinations in one transaction.
 - Snapshots: none.
-- The web sends no price. No price logic changes.
+- The web sends no price.
+  - No price logic changes.
 
 ## Out of scope
 
-- The provider edit form. The edit page is a stub. Edit support comes with that page.
-- Pickup coverage (release 4). A destination never creates coverage.
+- The provider edit form.
+  - The edit page is a stub.
+  - Edit support comes with that page.
+- Pickup coverage (release 4).
+  - A destination never creates coverage.
 - Region and prefecture pages for tourists (issue #153) and the home page cards (issue #152).
 - A `listing_count` or a discoverable rule for providers.
 - Changes to `marketplaceCatalogDistrictsApi` and its other callers.
@@ -186,19 +225,24 @@ Skills to use when coding: `creating-api-clients`, `creating-domain-forms`, `cre
 - [ ] The picker never offers a region or a designated city.
 - [ ] The form blocks a primary value that is not in the prefecture list.
 - [ ] The form blocks more than 5 additional destinations, a duplicate and the primary prefecture.
-- [ ] Typing in the additional destinations field filters the options by English or Japanese name. Regions with no match are hidden.
-- [ ] A pick adds a chip and keeps the list open. The × button of a chip removes it.
+- [ ] Typing in the additional destinations field filters the options by English or Japanese name.
+  - Regions with no match are hidden.
+- [ ] A pick adds a chip and keeps the list open.
+  - The × button of a chip removes it.
 - [ ] At 5 chips, the other options are disabled and the list shows the hint.
-- [ ] The primary prefecture is not offered. Picking it as primary removes its chip.
+- [ ] The primary prefecture is not offered.
+  - Picking it as primary removes its chip.
 - [ ] The field works with the keyboard only (Down, Up, Home, End, Enter, Escape, Backspace).
-- [ ] The field has the roles and attributes of decision 14. A live region announces each add and remove.
+- [ ] The field has the roles and attributes of decision 14.
+  - A live region announces each add and remove.
 - [ ] The request body has `primary_geography_id` and has no `area_id`.
-- [ ] On update, an empty additional list is sent as `[]`. An omitted list is not sent.
+- [ ] On update, an empty additional list is sent as `[]`.
+  - An omitted list is not sent.
 - [ ] The API error text shows on the matching field.
 - [ ] The provider listing page shows the primary and additional destinations by name.
 - [ ] Test: schema, listing service payload, both API clients, the destination service and the destinations view.
 - [ ] No client-side price computation.
-- [ ] Text follows ASD-STE100 Tier A.
+- [ ] Text follows ASD-STE100.
 
 ## Verification
 

@@ -26,9 +26,13 @@ Engineering overview — how planning docs connect to implementation repos.
 
 ## Purpose
 
-The domain pages describe **what** the system must do and **who owns what**. This engineering set describes **how to structure the codebase** so implementation is consistent and predictable across both repos.
+The domain pages describe **what** the system must do and **who owns what**.
 
-These conventions use the same structural patterns you will apply when scaffolding (`Request → Manager → Validator`, `app/domains/`, explicit routes, React Router v7 SSR, ky + zod + RHF). Red Cab–specific rules (pricing authority, snapshots, actor namespaces) sit on top of that baseline — they do not replace it.
+This engineering set describes **how to structure the codebase** so implementation is consistent and predictable across both repos.
+
+These conventions use the same structural patterns you will apply when scaffolding (`Request → Manager → Validator`, `app/domains/`, explicit routes, React Router v7 SSR, ky + zod + RHF).
+
+Red Cab–specific rules (pricing authority, snapshots, actor namespaces) sit on top of that baseline — they do not replace it.
 
 | Repo (planned) | Conventions documented in |
 | --- | --- |
@@ -69,7 +73,9 @@ When documents overlap:
 5. **Engineering conventions** (this folder)
 6. Roadmap
 
-Engineering conventions **must not** override invariants, context ownership, or ADR decisions. They only specify how to express those decisions in code.
+Engineering conventions **must not** override invariants, context ownership, or ADR decisions.
+
+They only specify how to express those decisions in code.
 
 ### Baseline vs Red Cab–specific
 
@@ -106,7 +112,9 @@ app/routes/AGENTS.md       # Route registry (web only)
 .cursor/rules/             # Pointers to AGENTS.md and .claude/skills/
 ```
 
-Planning docs in this folder are the **planning-time source** for implementation-repo `AGENTS.md`. When conventions change here, update api/web `AGENTS.md` to match.
+Planning docs in this folder are the **planning-time source** for implementation-repo `AGENTS.md`.
+
+When conventions change here, update api/web `AGENTS.md` to match.
 
 ---
 

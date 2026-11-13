@@ -6,4 +6,6 @@ description: Environments — stub; to be expanded.
 
 ## TL;DR
 
-Stub page. Document environments for Red Cab Marketplace infrastructure here.
+Stub page.
+
+Document environments for Red Cab Marketplace infrastructure here.

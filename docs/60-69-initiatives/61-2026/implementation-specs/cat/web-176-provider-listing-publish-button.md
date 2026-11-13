@@ -27,9 +27,13 @@ related:
 
 A provider creates a draft listing and adds packages to it.
 
-The web has no way to publish the draft. The API method `providersCatalogListingsApi.publish` exists, and no page calls it.
+The web has no way to publish the draft.
 
-The API refuses a publish with status 422 when the listing has no active package. The message is "Add at least one package before publishing your listing." No screen shows this message today.
+The API method `providersCatalogListingsApi.publish` exists, and no page calls it.
+
+The API refuses a publish with status 422 when the listing has no active package.
+
+The message is "Add at least one package before publishing your listing." No screen shows this message today.
 
 Evidence: `app/api/providers-catalog-listings-api.js` (`publish`), `app/routes/provider/provider-catalog-listings-show-page.jsx`, `app/routes/provider/provider-catalog-listings-edit-page.jsx` (stub), decision 40 of web-156, issue #176.
 
@@ -51,7 +55,9 @@ Read these before design, and do not invent behavior that contradicts them.
 
 Each row says who made the decision.
 
-"Added point, please review" means the author added it. The owner must confirm or change each row before approval.
+"Added point, please review" means the author added it.
+
+The owner must confirm or change each row before approval.
 
 | # | Decision | Alternatives considered | Rationale |
 | --- | --- | --- | --- |
@@ -88,7 +94,9 @@ Check the real path in `PROVIDERS_CATALOG_LISTINGS_PATH` before coding.
 - `app/routes/provider/provider-catalog-listings-create-page.spec.jsx`: update the intro text if a test checks it.
 - `app/domains/catalog-listing-package/catalog-listing-package-service.spec.js`: tests for `hasActivePackage`.
 
-The handler lives in the page file and is exported for tests, like `handleProviderCatalogListingReviewReport`. No passive view calls the API.
+The handler lives in the page file and is exported for tests, like `handleProviderCatalogListingReviewReport`.
+
+No passive view calls the API.
 
 ## Data / domain touchpoints
 
