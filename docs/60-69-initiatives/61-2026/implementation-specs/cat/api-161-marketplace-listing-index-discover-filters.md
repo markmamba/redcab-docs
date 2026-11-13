@@ -18,15 +18,23 @@ related:
 
 - **Ships:** Optional query filters on `GET` area listings index for date, service type, language, group size, and price range (FR-CAT-023 through FR-CAT-026).
 - **Does NOT ship:** Free-text search, new sort presets, web loader forwarding (web-124), or contract-test matrix expansion (api-163).
-- **Price:** Row `starting_price_jpy` still comes from `Catalog::Pricing::CalculateQuoteService` with `passenger_count: 1`; filter query `passenger_count` is group size only and must not be passed into the quote (PRC-2, FR-CAT-026).
+- **Price:** Row `starting_price_jpy` comes from `Catalog::Pricing::CalculateQuoteService` with `passenger_count: 1`.
+  - Filter query `passenger_count` is group size only.
+  - It must not be passed into the quote (PRC-2, FR-CAT-026).
 - **Inventory:** Read-only index; no seat reservation and no slot writes (does not call `ReserveSeatsService`; CON-1 applies at checkout only).
 - **Breaking change:** No — omitted filter params keep today’s listing set.
 
-> **Note:** Docs slug `api-161-provider-review-report` (REV provider report) is unrelated to [red-cab-api#161](https://github.com/markmamba/red-cab-api/issues/161). This file is the canonical design for **catalog discover filters** on that issue.
+> **Note:** Docs slug `api-161-provider-review-report` (REV provider report) is unrelated to [red-cab-api#161](https://github.com/markmamba/red-cab-api/issues/161).
+>
+> This file is the canonical design for **catalog discover filters** on that issue.
 
 ## Problem
 
-Tourist discover must filter area listings by date, service type, language, group size, and starting-price range. The marketplace area listings index today accepts pagination and sort only (`Catalog::Listings::MarketplaceIndexRequest`, `MarketplaceIndexValidator`). Web discover URLs already reserve filter keys (`LISTING_FILTER_SEARCH_PARAMS` in red-cab-web) but the API does not interpret them yet.
+Tourist discover must filter area listings by date, service type, language, group size, and starting-price range.
+
+The marketplace area listings index today accepts pagination and sort only (`Catalog::Listings::MarketplaceIndexRequest`, `MarketplaceIndexValidator`).
+
+Web discover URLs already reserve filter keys (`LISTING_FILTER_SEARCH_PARAMS` in red-cab-web) but the API does not interpret them yet.
 
 ## Governing docs
 
@@ -73,7 +81,11 @@ Tourist discover must filter area listings by date, service type, language, grou
 
 ### Query parameters
 
-All filters are optional. Omit a param to skip that predicate. Omit **all** filter params to preserve pre-change behavior for the area.
+All filters are optional.
+
+Omit a param to skip that predicate.
+
+Omit **all** filter params to preserve pre-change behavior for the area.
 
 | Query key | Type | When present | Rules |
 | --- | --- | --- | --- |
@@ -95,7 +107,9 @@ All filters are optional. Omit a param to skip that predicate. Omit **all** filt
 - `start_time` falls in the civil day `[date 00:00, next day 00:00)` in the listing geography timezone.
 - `start_time >=` current time in that timezone (no past slots today).
 
-**Price authority:** For each surviving listing row, `starting_price_jpy` in the response is still `CalculateQuoteService.execute(passenger_count: 1, ...)`. Filter inputs `price_min` / `price_max` are not pricing authority; they only narrow the returned set.
+**Price authority:** For each surviving listing row, `starting_price_jpy` in the response is still `CalculateQuoteService.execute(passenger_count: 1, ...)`.
+
+Filter inputs `price_min` / `price_max` are not pricing authority; they only narrow the returned set.
 
 **`passenger_count` (two roles):**
 
@@ -115,11 +129,19 @@ Never pass filter N into `CalculateQuoteService` on this endpoint.
 5. Drop rows outside inclusive `price_min` / `price_max` when those params are set.
 6. Controller `paginate_and_render` on the filtered array.
 
-If any row **in step 4** (after SQL filters) cannot quote (missing commission or inactive pricing policy), the manager raises `422` unprocessable for the whole request. With filters applied, listings excluded by SQL are not quoted (a filtered request may succeed when an unfiltered request would `422` for a broken row elsewhere in the area).
+If any row **in step 4** (after SQL filters) cannot quote (missing commission or inactive pricing policy), the manager raises `422` unprocessable for the whole request.
 
-When `date` is present, resolving civil day bounds for a candidate listing with blank geography timezone raises `422` unprocessable with the same title as `Catalog::Listings::ServiceTimezoneFetchService` (match slots index; correct data).
+With filters applied, listings excluded by SQL are not quoted (a filtered request may succeed when an unfiltered request would `422` for a broken row elsewhere in the area).
 
-**Validation errors:** Use `Catalog::Listings::MarketplaceIndexValidator` with field keys matching query names (`date`, not `service_date`). Reuse message style from availability slots date validation where applicable (adapt attribute to `date`).
+When `date` is present, a candidate listing with blank geography timezone cannot get civil day bounds.
+
+The request raises `422` unprocessable.
+
+The title is the same as `Catalog::Listings::ServiceTimezoneFetchService` (match slots index; correct data).
+
+**Validation errors:** Use `Catalog::Listings::MarketplaceIndexValidator` with field keys matching query names (`date`, not `service_date`).
+
+Reuse message style from availability slots date validation where applicable (adapt attribute to `date`).
 
 **Validator rules (summary):**
 
@@ -131,9 +153,19 @@ When `date` is present, resolving civil day bounds for a candidate listing with 
 | `passenger_count` | Optional; integer ≥ 1 |
 | `price_min`, `price_max` | Optional; integer JPY ≥ 0; when both present, `price_min <= price_max` |
 
-**Date filter implementation:** Use an `EXISTS` (or equivalent) on `catalog_availability_slots` for each listing, with civil day bounds from `DateTimeUtils.parse_civil_date` using the listing geography timezone (same source as `Catalog::Listings::ServiceTimezoneFetchService` in the slots index path). Apply the bookable predicates in the table below. If timezone resolution would fail for a listing in the filtered candidate set, fail the request with `422` (do not silently omit).
+**Date filter implementation:** Use an `EXISTS` (or equivalent) on `catalog_availability_slots` for each listing.
 
-**Language filter implementation:** `languages_supported` JSONB must contain the validated lowercase code (PostgreSQL JSONB containment). Reject uppercase or mixed case at validation (`EN` is invalid, not normalized).
+Take civil day bounds from `DateTimeUtils.parse_civil_date` using the listing geography timezone.
+
+The timezone source is the same as `Catalog::Listings::ServiceTimezoneFetchService` in the slots index path.
+
+Apply the bookable predicates in the table below.
+
+If timezone resolution would fail for a listing in the filtered candidate set, fail the request with `422` (do not silently omit).
+
+**Language filter implementation:** `languages_supported` JSONB must contain the validated lowercase code (PostgreSQL JSONB containment).
+
+Reject uppercase or mixed case at validation (`EN` is invalid, not normalized).
 
 | Condition | HTTP |
 | --- | --- |
@@ -146,7 +178,9 @@ When `date` is present, resolving civil day bounds for a candidate listing with 
 | Commission or pricing policy missing for a row in the post-SQL set | `422` unprocessable |
 | `date` set and a candidate listing has blank geography timezone | `422` unprocessable (same message as slots index) |
 
-**Response:** Unchanged JSON shape (`catalog_listings` array with `starting_price_jpy`, pagination meta). Filtered-out listings are omitted before pagination.
+**Response:** Unchanged JSON shape (`catalog_listings` array with `starting_price_jpy`, pagination meta).
+
+Filtered-out listings are omitted before pagination.
 
 ### Cross-repo contract (read-only reference)
 
@@ -172,7 +206,10 @@ Do not forward `availability_slot_id` on this index (detail/checkout flows only)
 
 - `app/domains/catalog/listings/marketplace_index_request.rb` — permit new query params via `custom_permitted_params`
 - `app/domains/catalog/listings/marketplace_index_validator.rb` — validation rules and normalized values
-- `app/domains/catalog/listings/marketplace_index_manager.rb` — SQL scopes for non-price filters; price bounds on DTO array; optional small query object or scope under `catalog/listings` or `catalog/availability_slots` if needed for date EXISTS
+- `app/domains/catalog/listings/marketplace_index_manager.rb`:
+  - SQL scopes for non-price filters.
+  - Price bounds on DTO array.
+  - Optional small query object or scope under `catalog/listings` or `catalog/availability_slots`, if needed for date EXISTS.
 - `test/domains/catalog/listings/marketplace_index_manager_test.rb` — per-filter, conjunctive, regression without filters
 - `test/integration/marketplace/catalog/listings_index_integration_test.rb` — optional HTTP smoke for one filtered happy path
 

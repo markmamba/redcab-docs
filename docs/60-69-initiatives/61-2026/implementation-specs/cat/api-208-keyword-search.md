@@ -15,17 +15,28 @@ related:
 ## TL;DR
 
 - Ships the `keyword` param on `GET /marketplace/catalog/listings`.
-- A listing matches when every word of the keyword appears in its title, its description, the name of a destination, or the provider name.
-- The keyword narrows the scope and the filters. It never widens them.
-- The first version uses `ILIKE`. The slice measures it on 10,000 generated listings and records the result in this spec.
+- A listing matches when every word of the keyword appears in one of these places:
+  - Its title.
+  - Its description.
+  - The name of a destination.
+  - The provider name.
+- The keyword narrows the scope and the filters.
+  - It never widens them.
+- The first version uses `ILIKE`.
+  - The slice measures it on 10,000 generated listings and records the result in this spec.
 - Does NOT ship the web search field, a search store, a relevance sort or a database migration.
-- Breaking change: No. The param was rejected with 422 before. Now it works.
+- Breaking change: No. The param was rejected with 422 before.
+  - Now it works.
 
 ## Problem
 
-A tourist cannot search for a place or a service name. The scoped index rejects `keyword` with "This filter is not available yet."
+A tourist cannot search for a place or a service name.
 
-The ruling Keyword search scope matches the title, the description, the destination names and the provider legal business name. The provider field was open.
+The scoped index rejects `keyword` with "This filter is not available yet."
+
+The ruling Keyword search scope matches the title, the description, the destination names and the provider legal business name.
+
+The provider field was open.
 
 Evidence: `app/domains/catalog/listings/marketplace_scoped_index_request.rb` (`UNSUPPORTED_FILTERS`), issue #208.
 
@@ -60,7 +71,9 @@ Read these before design, and do not invent behavior that contradicts them.
 
 ## API contract
 
-No new route ships. `GET /marketplace/catalog/listings` gets one more param.
+No new route ships.
+
+`GET /marketplace/catalog/listings` gets one more param.
 
 | Method | Path | Auth | Request | Response | Notes |
 | --- | --- | --- | --- | --- | --- |
@@ -82,7 +95,8 @@ Error text:
 
 ## Data / domain touchpoints
 
-- Bounded context: CAT. The provider name is a read-only `EXISTS` on `providers_profiles`.
+- Bounded context: CAT.
+  - The provider name is a read-only `EXISTS` on `providers_profiles`.
 - Transaction boundaries: read only.
 - Snapshots: none.
 
@@ -121,9 +135,12 @@ Error text:
 - [ ] The keyword finds a listing by its title and by its description, in English and in Japanese.
 - [ ] The keyword finds a listing by the name of its primary destination.
 - [ ] The keyword finds a listing by the `business_name` of an operator, and by the `display_name` of a guide.
-- [ ] The keyword does not find an operator by its `display_name`. It does not find an operator with no `business_name`.
+- [ ] The keyword does not find an operator by its `display_name`.
+  - It does not find an operator with no `business_name`.
 - [ ] Matching ignores case and finds part of a word.
-- [ ] Every word must match. "yokohama tour" finds "Tour of Tokyo and Yokohama" and does not find a listing that has only one of the words.
+- [ ] Every word must match.
+  - "yokohama tour" finds "Tour of Tokyo and Yokohama".
+  - "yokohama tour" does not find a listing that has only one of the words.
 - [ ] A keyword never returns a listing outside the current scope or outside the other filters.
 - [ ] A keyword never returns a listing that is not discoverable.
 - [ ] A blank keyword returns the same result as no keyword.
@@ -150,9 +167,24 @@ bin/brakeman --no-pager
 
 ## Performance record
 
-Setup: a scratch database with 10,000 discoverable listings, about 15,000 additional destinations and 200 providers. PostgreSQL 17.4 on a local machine. The query cache was off. The scratch database is dropped. The code is in red-cab-api#222.
+Setup: a scratch database with 10,000 discoverable listings, about 15,000 additional destinations and 200 providers.
 
-Each time is the whole request in the manager: validation, the count query, the page query (10 rows) and the card price quotes. The table shows the median of 15 runs and the slowest run.
+PostgreSQL 17.4 on a local machine.
+
+The query cache was off.
+
+The scratch database is dropped.
+
+The code is in red-cab-api#222.
+
+Each time is the whole request in the manager, with four parts:
+
+- Validation.
+- The count query.
+- The page query (10 rows).
+- The card price quotes.
+
+The table shows the median of 15 runs and the slowest run.
 
 | Date | Listings | Query | Plan | Time | Result |
 | --- | --- | --- | --- | --- | --- |
@@ -167,15 +199,23 @@ Each time is the whole request in the manager: validation, the count query, the 
 
 Decision:
 
-- The slowest case is 61 ms, below the limit of 100 ms in decision 9. `ILIKE` stays, and the slice adds no `pg_trgm` index.
-- `ILIKE '%word%'` cannot use a B-tree index. The count query reads every listing, so the time grows with the number of listings.
-- At about 15,000 listings, the 5-word case would pass 100 ms. At that size, add `pg_trgm` GIN indexes on the searched columns and measure again.
-- The count and the page both run the keyword condition. This is the cost of `meta.count`.
+- The slowest case is 61 ms, below the limit of 100 ms in decision 9.
+  - `ILIKE` stays, and the slice adds no `pg_trgm` index.
+- `ILIKE '%word%'` cannot use a B-tree index.
+  - The count query reads every listing, so the time grows with the number of listings.
+- At about 15,000 listings, the 5-word case would pass 100 ms.
+  - At that size, add `pg_trgm` GIN indexes on the searched columns and measure again.
+- The count and the page both run the keyword condition.
+  - This is the cost of `meta.count`.
 
 How to read the numbers:
 
-- `EXPLAIN (ANALYZE, BUFFERS)` with timing on reported 20 to 38 ms for each query. Most of that was the timing overhead of each plan node. The plans were taken again with `TIMING OFF`, and the table above comes from the manager timings.
-- A first run showed about 2 ms for every case. It was wrong, because `rails runner` turns on the query cache. All numbers above were taken with the cache off.
+- `EXPLAIN (ANALYZE, BUFFERS)` with timing on reported 20 to 38 ms for each query.
+  - Most of that was the timing overhead of each plan node.
+  - The plans were taken again with `TIMING OFF`, and the table above comes from the manager timings.
+- A first run showed about 2 ms for every case.
+  - It was wrong, because `rails runner` turns on the query cache.
+  - All numbers above were taken with the cache off.
 
 ## Review record
 

@@ -19,21 +19,32 @@ depends_on:
 {/* codegen: do not use spec_path when status is superseded (featured API may inform successor) */}
 
 :::caution Superseded (partial)
-**Information architecture** (home discover entry, `/districts` CTA, region-first home) is superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). **`featured=true` districts API** sections below may still inform a successor spec until replaced.
+**Information architecture** (home discover entry, `/districts` CTA, region-first home) is superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia).
+
+**`featured=true` districts API** sections below may still inform a successor spec until replaced.
 :::
 
 ## TL;DR
 
-- **Superseded (IA only):** Region-first home and discover entry replace the `/districts` primary CTA model in [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). This file remains a historical record for `featured=true` loader and API co-ship until a successor spec exists.
-- **Ships:** replace Phase 0 placeholder at `/` with a marketplace landing page in `TouristPublicLayout`; primary CTA → `/districts`; `index, follow` robots; canonical tag for `/`.
+- **Superseded (IA only):** Region-first home and discover entry replace the `/districts` primary CTA model in [Catalog decisions](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia).
+  - This file remains a historical record for `featured=true` loader and API co-ship until a successor spec exists.
+- **Ships:** replace Phase 0 placeholder at `/` with a marketplace landing page in `TouristPublicLayout`, with:
+  - Primary CTA → `/districts`.
+  - `index, follow` robots.
+  - Canonical tag for `/`.
 - **Ships API + web together:** `featured=true` query param on districts index; co-shipped in this spec (no separate API issue). **API deploys before web.**
-- **Resilient homepage:** hero + primary CTA always render; featured district grid only when loader returns `districts.length > 0`; API errors degrade to CTA-only via `handleLoaderError`.
+- **Resilient homepage:**
+  - The hero and primary CTA always render.
+  - The featured district grid renders only when the loader returns `districts.length > 0`.
+  - API errors degrade to CTA-only via `handleLoaderError`.
 - **Does NOT ship:** layout shell (`#58`), route migration (`#60`), breadcrumbs/sitemap (`#57` follow-on), auth page restyle, listing/checkout UX.
 - **Breaking change:** No.
 
 ## Problem
 
-Homepage `/` is still a Phase 0 scaffold (`app/routes/home-page.jsx`) with auth CTAs and no discover entry. Milestone B P0 and ADR-017 require a real SEO landing that routes guests into the public catalog funnel at `/districts`.
+Homepage `/` is still a Phase 0 scaffold (`app/routes/home-page.jsx`) with auth CTAs and no discover entry.
+
+Milestone B P0 and ADR-017 require a real SEO landing that routes guests into the public catalog funnel at `/districts`.
 
 Evidence: `home-page.jsx` placeholder copy; roadmap `tourist-ui-pre-phase-2.md` Milestone B; ADR-017 §5 issue #59 row.
 
@@ -97,9 +108,11 @@ Evidence: `home-page.jsx` placeholder copy; roadmap `tourist-ui-pre-phase-2.md` 
 - **Server-side contract** for homepage curation — not client-side filtering of a full list.
 - **Force sort:** `order_by=display_order`, `order_dir=asc`, then `name_en` asc tie-break (manager behavior). **Ignore** client `order_by` / `order_dir`.
 - **Page size:** default `6`; cap at `12`; values outside `1..12` fall back to default.
-- **Pagination:** `page > 1` → **422** validation error. Featured mode is always a single slice.
+- **Pagination:** `page > 1` → **422** validation error.
+  - Featured mode is always a single slice.
 - **`INV-8` unchanged:** only districts with published listings (existing `.discoverable` scope).
-- **No new DB column:** `display_order` on `catalog_geographies` is the ordering key. Changing order affects both homepage featured set and `/districts` index sort — accepted for #59; `is_featured` deferred.
+- **No new DB column:** `display_order` on `catalog_geographies` is the ordering key.
+  - Changing order affects both homepage featured set and `/districts` index sort — accepted for #59; `is_featured` deferred.
 - **Tied `display_order`:** falls back to `name_en` asc (existing manager tie-break).
 
 **Non-featured index:** unchanged — existing pagination and `order_by` validation apply.
@@ -121,7 +134,8 @@ Evidence: `home-page.jsx` placeholder copy; roadmap `tourist-ui-pre-phase-2.md` 
 
 1. **Hero** — H1, short value proposition (functional copy; Bootstrap typography).
 2. **Primary CTA** — "Browse districts" (or equivalent) → `MARKETPLACE_CATALOG_PATHS.DISTRICTS` (`/districts`). **Always rendered.**
-3. **Featured districts** — section heading + `CatalogDistrictListView` **only when** `districts.length > 0`. No empty-state alert on homepage when zero districts.
+3. **Featured districts** — section heading + `CatalogDistrictListView` **only when** `districts.length > 0`.
+   - No empty-state alert on homepage when zero districts.
 4. **No** Sign up / Sign in in page body (decision #5).
 
 ### Meta
