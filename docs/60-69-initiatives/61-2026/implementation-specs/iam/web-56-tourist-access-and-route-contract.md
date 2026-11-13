@@ -15,18 +15,30 @@ depends_on:
 ## TL;DR
 
 - **Locks:** the `AMB-022` disposition (public browse, auth only at checkout), the canonical public URL family (`/districts/{districtSlug}/areas/{areaSlug}/listings[/{listingUuid}]`), the per-surface auth-gate/SEO matrix, and the `/account/discover/*` redirect plan.
-- **Does NOT ship:** no route files move and no code changes land under this issue — that is `#60` (route migration), `#58` (layout shell unification), and a follow-on web issue for breadcrumbs/sitemap/deep-links (contract in [`web-57`](/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links); GitHub `#57` closed docs-only). This issue is docs + spec only.
-- **Breaking URL change: Yes.** Public catalog browsing moves from the auth-gated `/account/discover/:districtId/:areaId/:listingId` to the unauthenticated, slug-based paths below. A redirect matrix is defined in [Redirect / migration](#redirect--migration) but is implemented in `#60`.
+- **Does NOT ship:** no route files move and no code changes land under this issue.
+  - `#60` ships route migration.
+  - `#58` ships layout shell unification.
+  - A follow-on web issue ships breadcrumbs/sitemap/deep-links (contract in [`web-57`](/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links); GitHub `#57` closed docs-only).
+  - This issue is docs + spec only.
+- **Breaking URL change: Yes.** Public catalog browsing moves from the auth-gated `/account/discover/:districtId/:areaId/:listingId` to the unauthenticated, slug-based paths below.
+  - A redirect matrix is defined in [Redirect / migration](#redirect--migration) but is implemented in `#60`.
 
 ## Problem
 
 The current tourist web implementation contradicts three sources of truth simultaneously:
 
-1. **Requirements.** `FR-IAM-012` states visitors *may* browse catalog content without an account (status was `Provisional (AMB-022)`), and `NFR-SEC-005` requires auth only at booking initiation. In code, the discover funnel layout exports `withTouristAuth(...)` (`tourist-catalog-district-page-layout.jsx:110`), gating every catalog page behind a Tourist session.
-2. **Architecture.** `geography.md` (removed) specifies the canonical public path family as `/districts/{district_slug}/areas/{area_slug}/listings`. The live routes are `/account/discover/:districtId/:areaId/:listingId` (`tourist.routes.js:10-24`) — wrong prefix, wrong segment type (UUID instead of slug), and owned by the wrong route file (`tourist.routes.js` instead of `marketplace.routes.js` / today's `public.routes.js`).
-3. **SEO / rendering.** With SEO priority high, indexable pages must render via server `loader`. All three public funnel modules currently use `clientLoader` (`tourist-catalog-district-page-layout.jsx:23`, `tourist-catalog-listing-list-page.jsx:19`, `tourist-catalog-listing-detail-page.jsx:39`) and are marked `noindex, nofollow`.
+1. **Requirements.** `FR-IAM-012` states visitors *may* browse catalog content without an account (status was `Provisional (AMB-022)`), and `NFR-SEC-005` requires auth only at booking initiation.
+   - In code, the discover funnel layout exports `withTouristAuth(...)` (`tourist-catalog-district-page-layout.jsx:110`), gating every catalog page behind a Tourist session.
+2. **Architecture.** `geography.md` (removed) specifies the canonical public path family as `/districts/{district_slug}/areas/{area_slug}/listings`.
+   - The live routes are `/account/discover/:districtId/:areaId/:listingId` (`tourist.routes.js:10-24`) — wrong prefix, wrong segment type (UUID instead of slug), and owned by the wrong route file (`tourist.routes.js` instead of `marketplace.routes.js` / today's `public.routes.js`).
+3. **SEO / rendering.** With SEO priority high, indexable pages must render via server `loader`.
+   - All three public funnel modules currently use `clientLoader` (`tourist-catalog-district-page-layout.jsx:23`, `tourist-catalog-listing-list-page.jsx:19`, `tourist-catalog-listing-detail-page.jsx:39`) and are marked `noindex, nofollow`.
 
-Evidence and verdicts for each row are recorded in the Session A alignment matrix — see `/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture` (removed). This spec exists to convert that decision record into a spec artifact the codegen skills and `#60` can implement from without re-opening the access-model or URL-scheme debate.
+Evidence and verdicts for each row are recorded in the Session A alignment matrix — see `/docs/30-49-domains/architecture-decisions/adr-017-tourist-ui-public-url-architecture` (removed).
+
+This spec exists to convert that decision record into a spec artifact.
+
+The codegen skills and `#60` can implement from it without re-opening the access-model or URL-scheme debate.
 
 ## Governing docs
 
@@ -50,7 +62,9 @@ Evidence and verdicts for each row are recorded in the Session A alignment matri
 ## Design decisions
 
 :::caution Superseded (partial)
-Decisions **#2**, **#3**, and **#7** below (canonical URL family, resolver alias, redirect matrix) are superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). Decisions **#1**, **#5**, **#6**, and **#8** (access, checkout gate, SSR, API slug work) remain in force until a successor route spec amends them.
+Decisions **#2**, **#3**, and **#7** below (canonical URL family, resolver alias, redirect matrix) are superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia).
+
+Decisions **#1**, **#5**, **#6**, and **#8** (access, checkout gate, SSR, API slug work) remain in force until a successor route spec amends them.
 :::
 
 | # | Decision | Alternatives considered | Rationale |
@@ -66,7 +80,11 @@ Decisions **#2**, **#3**, and **#7** below (canonical URL family, resolver alias
 
 ## API contract
 
-_No API code changes are proposed or implemented by this issue._ `red-cab-web` is the only repo in scope for `#56`. The table below records the Session A verdict on API readiness so `#60` and the API team know what is and is not already in place.
+_No API code changes are proposed or implemented by this issue._ `red-cab-web` is the only repo in scope for `#56`.
+
+The table below records the Session A verdict on API readiness.
+
+`#60` and the API team use it to see what is and is not already in place.
 
 | Change | Verdict |
 | --- | --- |
@@ -80,7 +98,9 @@ _No API code changes are proposed or implemented by this issue._ `red-cab-web` i
 ## Web contract
 
 :::caution Superseded (partial)
-The path table below reflects the District → Area URL family superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia). Access and loader columns remain reference for migration work until a successor spec replaces routes.
+The path table below reflects the District → Area URL family superseded by [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia).
+
+Access and loader columns remain reference for migration work until a successor spec replaces routes.
 :::
 
 | Surface | Path | Route file | Page module | Layout | Auth HOC | Loader | API module | `meta` robots |
@@ -101,10 +121,17 @@ The path table below reflects the District → Area URL family superseded by [Ca
 
 **Web contract notes**
 
-- **Home (`#59`):** Path and `index, follow` robots are locked here. No server `loader` or catalog API call until `#59` ships. Homepage district data requires a **new API capability** (featured filter or dedicated endpoint) — **not** a reuse of `marketplace-catalog-districts-api.index` with client-side picking. `#60` does not modify `home-page.jsx` except layout wiring `#58` may require.
-- **Sitemap:** `/sitemap.xml` path is locked here; resource-route registration, loader, and XML generation ship in a **follow-on web issue** — contract in [`web-57`](/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links) (GitHub `#57` closed docs-only).
-- **API method names:** Match `app/api/marketplace-catalog-*-api.js` exports — `index`, `show`, `areasIndex`, `areaShow`, `indexByArea`. After `#134`, loaders pass **slug** path segments; method names stay unchanged.
-- **Canonical tags:** Each indexable catalog row above (not Home until `#59`, not account routes, not the `/listings/:uuid` alias) emits `<link rel="canonical" href="…">` pointing at its path **without** pagination or filter query params (`page`, `service_type`, `order_by`, `order_dir`, `date`). Listing detail canonical uses the slug path with listing UUID segment.
+- **Home (`#59`):** Path and `index, follow` robots are locked here.
+  - No server `loader` or catalog API call until `#59` ships.
+  - Homepage district data requires a **new API capability** (featured filter or dedicated endpoint) — **not** a reuse of `marketplace-catalog-districts-api.index` with client-side picking.
+  - `#60` does not modify `home-page.jsx` except layout wiring `#58` may require.
+- **Sitemap:** `/sitemap.xml` path is locked here.
+  - Resource-route registration, loader, and XML generation ship in a **follow-on web issue**.
+  - Contract in [`web-57`](/docs/60-69-initiatives/61-2026/implementation-specs/cat/web-57-tourist-ia-breadcrumbs-deep-links) (GitHub `#57` closed docs-only).
+- **API method names:** Match `app/api/marketplace-catalog-*-api.js` exports — `index`, `show`, `areasIndex`, `areaShow`, `indexByArea`.
+  - After `#134`, loaders pass **slug** path segments; method names stay unchanged.
+- **Canonical tags:** Each indexable catalog row above (not Home until `#59`, not account routes, not the `/listings/:uuid` alias) emits `<link rel="canonical" href="…">` pointing at its path **without** pagination or filter query params (`page`, `service_type`, `order_by`, `order_dir`, `date`).
+  - Listing detail canonical uses the slug path with listing UUID segment.
 
 Reserved query params on the listings-in-area route (no new path segments for these, ever): `service_type` (`D-02` filter), `order_by`, `order_dir`, `page`, `date`.
 
@@ -113,15 +140,25 @@ Reserved query params on the listings-in-area route (no new path segments for th
 - `app/public.routes.js` → rename to `app/marketplace.routes.js` (same `marketplaceRoutes` export)
 - Discover subtree in `app/tourist.routes.js` → move into `app/marketplace.routes.js`
 - `app/routes/tourist/catalog-district/tourist-catalog-*` (5 modules) → `app/routes/marketplace/catalog-district/marketplace-catalog-*`
-- `tourist-catalog-district-page-layout.jsx` → `marketplace-catalog-district-page-layout.jsx`: drop `withTouristAuth`, flip robots, convert `clientLoader` → `loader`; update geography nav links to slug paths only — full breadcrumb data contract and UI in follow-on web issue per `web-57`
+- `tourist-catalog-district-page-layout.jsx` → `marketplace-catalog-district-page-layout.jsx`:
+  - Drop `withTouristAuth`.
+  - Flip robots.
+  - Convert `clientLoader` → `loader`.
+  - Update geography nav links to slug paths only.
+  - Full breadcrumb data contract and UI in follow-on web issue per `web-57`.
 - `catalog-listing-constant.js`: delete `TOURIST_DISCOVER_PATH`; add `MARKETPLACE_CATALOG_PATHS` with `DISTRICTS`, `district(districtSlug)`, `areaListings(districtSlug, areaSlug)`, `listing(districtSlug, areaSlug, listingUuid)`
-- `catalog-listing-service.js`: replace `buildDiscoverPath(districtId, areaId)` / `buildListingDetailPath(districtId, areaId, listingId)` with slug-taking builders; `buildCheckoutPath` unchanged; split checkout eligibility so guests with a valid quote can reach login via Book (Design decision #5)
+- `catalog-listing-service.js`:
+  - Replace `buildDiscoverPath(districtId, areaId)` / `buildListingDetailPath(districtId, areaId, listingId)` with slug-taking builders.
+  - `buildCheckoutPath` unchanged.
+  - Split checkout eligibility so guests with a valid quote can reach login via Book (Design decision #5).
 - `tourist-dashboard-layout.jsx`, `tourist-public-layout.jsx`: nav "Discover" link target becomes `/districts` (label wording is `#58`'s call)
 
 ## Redirect / migration
 
 :::caution Superseded (partial)
-Redirect targets in this section assume the superseded District → Area URL family. See [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia).
+Redirect targets in this section assume the superseded District → Area URL family.
+
+See [Catalog decisions — tourist discovery IA](/docs/30-49-domains/catalog/catalog-decisions#tourist-discovery-ia).
 :::
 
 | Old path | New path | Redirect type |
@@ -138,18 +175,50 @@ Redirect targets in this section assume the superseded District → Area URL fam
 | Canonical listing-detail path with stale district or area slug | canonical nested listing path | 301 |
 | Canonical path where the listing UUID is unknown or unpublished | 404 | none |
 
-Legacy `/account/discover/*` redirects accept UUID segments and depend on the API accepting either key during the transition window (`#134`'s UUID fallback). They ship in `#60`, are retained for one release, then removed by `WEB-1`.
+Legacy `/account/discover/*` redirects accept UUID segments and depend on the API accepting either key during the transition window (`#134`'s UUID fallback).
+
+They ship in `#60`, are retained for one release, then removed by `WEB-1`.
 
 **Path constant locations to update (in `#60`):**
 
 - `catalog-listing-constant.js` — delete `TOURIST_DISCOVER_PATH`; add `MARKETPLACE_CATALOG_PATHS`
 - `catalog-listing-service.js` — replace `buildDiscoverPath` / `buildListingDetailPath` with slug-taking builders
 - Nav links in `tourist-dashboard-layout.jsx` and `tourist-public-layout.jsx` — "Discover" target → `/districts`
-- Checkout "back" links (wherever they currently reference the discover path) — must be re-pointed to the canonical listing path so a tourist can navigate back to the exact listing they were booking
+- Checkout "back" links (wherever they currently reference the discover path).
+  - They must be re-pointed to the canonical listing path.
+  - A tourist can then navigate back to the exact listing they were booking.
 
-**Redirect implementation note (React Router v7):** Recommend implementing all rows above as `redirect()` calls inside route `loader` functions on the legacy route definitions (kept registered, non-rendering), rather than a server-level 301 config. Pass the status code from the **Redirect type** column explicitly — e.g. `redirect(url, 301)` for permanent rows and `redirect(url, 302)` for the `/listings/:listingUuid` resolver (React Router defaults to 302 when omitted). Rationale: loader-level `redirect()` keeps the mapping co-located with route registration (reviewable in one file), supports the UUID→slug resolution rows without a separate infra layer, and matches existing loader `redirect()` usage in this codebase. A CDN/server 301 is only preferable if the legacy paths must resolve without invoking Node at all (e.g., pure static asset host) — not the case here since SSR is already required.
+**Redirect implementation note (React Router v7):** Recommend implementing all rows above as `redirect()` calls inside route `loader` functions.
 
-**Stale-slug detection (all catalog loaders):** Every public catalog `loader` compares URL slug segments against the authoritative slugs in the API response and `redirect(canonicalPath, 301)` before render when they differ. Applies to district show, area list, listings-in-area, and listing detail — not only legacy `/account/discover/*` redirects.
+The `loader` functions sit on the legacy route definitions (kept registered, non-rendering).
+
+This is preferred over a server-level 301 config.
+
+Pass the status code from the **Redirect type** column explicitly.
+
+Example: `redirect(url, 301)` for permanent rows and `redirect(url, 302)` for the `/listings/:listingUuid` resolver.
+
+React Router defaults to 302 when omitted.
+
+Rationale: loader-level `redirect()` keeps the mapping co-located with route registration (reviewable in one file).
+
+It supports the UUID→slug resolution rows without a separate infra layer.
+
+It matches existing loader `redirect()` usage in this codebase.
+
+A CDN/server 301 is preferable only in one case.
+
+The case is when legacy paths must resolve without invoking Node at all (e.g., pure static asset host).
+
+That is not the case here, because SSR is already required.
+
+**Stale-slug detection (all catalog loaders):**
+
+Every public catalog `loader` compares URL slug segments against the authoritative slugs in the API response.
+
+When they differ, it calls `redirect(canonicalPath, 301)` before render.
+
+Applies to district show, area list, listings-in-area, and listing detail — not only legacy `/account/discover/*` redirects.
 
 | Loader route | API call | Compare URL segments vs payload |
 | --- | --- | --- |
@@ -157,22 +226,44 @@ Legacy `/account/discover/*` redirects accept UUID segments and depend on the AP
 | `/districts/:districtSlug/areas/:areaSlug/listings` | `marketplace-catalog-districts-api.areaShow` (or area embed from index) | `:districtSlug`, `:areaSlug` vs district/area slugs in response |
 | `/districts/:d/areas/:a/listings/:listingUuid` | `marketplace-catalog-listings-api.show` | `:districtSlug`, `:areaSlug` vs embedded district/area slugs (`#134`) |
 
-Districts index (`/districts`) has no slug segment to validate. Bare `/districts/:d/areas/:a` (no `/listings`) is handled by the dedicated 301 row above, not by payload comparison.
+Districts index (`/districts`) has no slug segment to validate.
+
+Bare `/districts/:d/areas/:a` (no `/listings`) is handled by the dedicated 301 row above, not by payload comparison.
 
 ## Data / domain touchpoints
 
 - **Slug fields:** `catalog_districts.slug` (unique) and `catalog_areas.slug` (unique per district) already exist and are serialized by the API; slug lookup is delivered in [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134).
-- **Listing identification:** `catalog_listings` has `uuid`, no slug column. Listing segment stays UUID for Phase 1; slug-based listing URLs are `CAT-1`, deferred to Phase 2.
-- **Quote/checkout handoff:** listing + slot context passes from public listing detail to checkout via `catalog-listing-service.js`'s `buildCheckoutPath` (amended by web-155 on 2026-10-25: listing UUID, `package_slug`, `service_date`, `start_time`, passenger count) — preserving `PRC-2` input parity. Book CTA routing per Design decision #5: authenticated tourist with profile → `buildCheckoutPath`; guest with valid quote → `buildIdentitiesLoginRedirect(checkoutPath)`; no day or start time → disabled.
-- **`FR-CAT-003` vs `INV-8`:** `INV-8` means Districts/Areas with zero **published** listings never appear in discovery — public browse does not widen geography. `FR-CAT-003`'s "indicate when an area has no available services" applies only within a **discoverable** area (e.g. filter/date yields zero results, or `FR-CAT-006` fully-booked marking) — not for zero-listing geography.
-- **Bounded context:** IAM owns the access-model decision (`FR-IAM-012`, `NFR-SEC-005`, `AMB-022`); CAT owns the district/area/listing discovery behavior itself (`FR-CAT-003/004/005/007`). This spec is filed under `context: IAM` because its primary lock is the access/auth boundary; the route table is a CAT-domain surface expressed through that boundary.
+- **Listing identification:** `catalog_listings` has `uuid`, no slug column.
+  - Listing segment stays UUID for Phase 1; slug-based listing URLs are `CAT-1`, deferred to Phase 2.
+- **Quote/checkout handoff:** listing + slot context passes from public listing detail to checkout via `buildCheckoutPath` in `catalog-listing-service.js`.
+  - It preserves `PRC-2` input parity.
+  - web-155 amended it on 2026-10-25: listing UUID, `package_slug`, `service_date`, `start_time`, passenger count.
+- Book CTA routing per Design decision #5:
+  - Authenticated tourist with profile → `buildCheckoutPath`.
+  - Guest with valid quote → `buildIdentitiesLoginRedirect(checkoutPath)`.
+  - No day or start time → disabled.
+- **`FR-CAT-003` vs `INV-8`:** `INV-8` means Districts/Areas with zero **published** listings never appear in discovery.
+  - Public browse does not widen geography.
+  - `FR-CAT-003`'s "indicate when an area has no available services" applies only within a **discoverable** area (e.g. filter/date yields zero results, or `FR-CAT-006` fully-booked marking) — not for zero-listing geography.
+- **Bounded context:** IAM owns the access-model decision (`FR-IAM-012`, `NFR-SEC-005`, `AMB-022`); CAT owns the district/area/listing discovery behavior itself (`FR-CAT-003/004/005/007`).
+  - This spec is filed under `context: IAM`, because its primary lock is the access/auth boundary.
+  - The route table is a CAT-domain surface expressed through that boundary.
 
 ## Out of scope
 
-- **`web-57`** — IA sitemap entry rules, breadcrumbs data contract, deep-link UX (how stale-slug redirects surface to the user), `/listings/:uuid` alias in deep-link section — **docs in `web-57` spec**; web implementation is a follow-on issue. Stale-slug **301 rules** are locked here; `#60` implements them.
-- **`#58`** — Unified tourist layout shell (nav items, mobile pattern, footer, shared empty/error/loading states). Implementation, not this spec.
-- **`#59`** — Homepage content, district hub internal-linking, and the **featured-district API** (new filter or endpoint — not `marketplace-catalog-districts-api.index` reuse). Implementation, not this spec.
-- **`#60`** — Route migration implementation: file moves, HOC removal, `clientLoader`→`loader` conversion, redirect implementation, robots flip. This spec is `#60`'s design input, not its code.
+- **`web-57`** holds these docs (in the `web-57` spec):
+  - IA sitemap entry rules.
+  - Breadcrumbs data contract.
+  - Deep-link UX (how stale-slug redirects surface to the user).
+  - `/listings/:uuid` alias in deep-link section.
+- Web implementation of `web-57` is a follow-on issue.
+  - Stale-slug **301 rules** are locked here; `#60` implements them.
+- **`#58`** — Unified tourist layout shell (nav items, mobile pattern, footer, shared empty/error/loading states).
+  - Implementation, not this spec.
+- **`#59`** — Homepage content, district hub internal-linking, and the **featured-district API** (new filter or endpoint — not `marketplace-catalog-districts-api.index` reuse).
+  - Implementation, not this spec.
+- **`#60`** — Route migration implementation: file moves, HOC removal, `clientLoader`→`loader` conversion, redirect implementation, robots flip.
+  - This spec is `#60`'s design input, not its code.
 - **`#61`** — Closed, absorbed into `#60` (listing detail leaf cannot ship separately from its parent route tree without a broken intermediate state).
 - **`#62`+** — Funnel/checkout alignment implementation (reasserts checkout as the single auth gate; no design change here).
 - **Listing slug field + API (`CAT-1`)** — deferred beyond this track to Phase 2.
@@ -183,18 +274,38 @@ Districts index (`/districts`) has no slug segment to validate. Bare `/districts
 
 ### Docs (this issue)
 
-- [x] P0: `/docs/70-79-business/planning/open-questions` — mark `AMB-022` RESOLVED (Option A, Product Owner, 2026-09-20); move from P1 list to RESOLVED list; add Decision Log row citing this spec and the Session A record
+- [x] P0: `/docs/70-79-business/planning/open-questions`:
+  - Mark `AMB-022` RESOLVED (Option A, Product Owner, 2026-09-20).
+  - Move it from P1 list to RESOLVED list.
+  - Add Decision Log row citing this spec and the Session A record.
 - [x] P0: `requirements/functional-requirements/iam.md` — `FR-IAM-012` status `Provisional (AMB-022)` → `Approved (Decision Log AMB-022)`
 - [x] P0: `requirements/non-functional-requirements.md` — `NFR-SEC-005` status → `Approved`; update the `AMB-022 (guest scope)` cross-reference to point at the resolution
-- [x] P0: `roadmap/phase-1-mvp.md` — remove "Defer guest-scope UI" from the open decisions table; move `AMB-022` into the applied-decisions paragraph as public browse with auth at checkout
-- [x] P0: `roadmap/tourist-ui-pre-phase-2.md` — replace the provisional A1 route map with this spec's Web contract table; replace the migration note with this spec's Redirect / migration section; drop "working assumption" framing
-- [x] P0: `engineering/domain-to-code-mapping.md` — update frontend surface → route groups table (`/`, `/districts`, `/districts/:d/areas/:a/listings`); confirm `marketplace.routes.js`; state guest discovery resolves to `marketplace/` with optional auth
-- [x] P1: `architecture/geography.md` — add note that Listing segment is UUID at Phase 1, that slug changes require a 301 from the prior slug, and that slug is the public lookup key for districts/areas
-- [x] P1: `engineering/conventions/frontend.md` — add canonical-tag rule, sitemap resource route, and the rule that indexable public routes use server `loader` not `clientLoader`
+- [x] P0: `roadmap/phase-1-mvp.md`:
+  - Remove "Defer guest-scope UI" from the open decisions table.
+  - Move `AMB-022` into the applied-decisions paragraph as public browse with auth at checkout.
+- [x] P0: `roadmap/tourist-ui-pre-phase-2.md`:
+  - Replace the provisional A1 route map with this spec's Web contract table.
+  - Replace the migration note with this spec's Redirect / migration section.
+  - Drop "working assumption" framing.
+- [x] P0: `engineering/domain-to-code-mapping.md`:
+  - Update frontend surface → route groups table (`/`, `/districts`, `/districts/:d/areas/:a/listings`).
+  - Confirm `marketplace.routes.js`.
+  - State guest discovery resolves to `marketplace/` with optional auth.
+- [x] P1: `architecture/geography.md`:
+  - Add note that Listing segment is UUID at Phase 1.
+  - Add note that slug changes require a 301 from the prior slug.
+  - Add note that slug is the public lookup key for districts/areas.
+- [x] P1: `engineering/conventions/frontend.md`:
+  - Add canonical-tag rule.
+  - Add sitemap resource route.
+  - Add the rule that indexable public routes use server `loader` not `clientLoader`.
 - [x] P1: `roadmap/tourist-ui-pre-phase-2.md` — drop conditional "if provisional `AMB-022` stands" language; refresh implementation-snapshot rows for public discover and listing detail
 - [x] P2: `requirements/functional-requirements/cat.md` — add cross-reference note on `FR-CAT-003`/`FR-CAT-004` that discovery is unauthenticated per `AMB-022` resolution
 - [x] API dependency — delivered as [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) under epic [#130](https://github.com/markmamba/red-cab-api/issues/130); `API-1`/`API-2` are traceability aliases only
-- [x] Close `#61` as absorbed into `#60`; edit `#56`'s (this issue's) provisional route table reference to point at this spec; edit `#60`'s acceptance criteria to include listing detail, robots, SSR, and the `red-cab-api#134` dependency
+- [x] Update the issues:
+  - Close `#61` as absorbed into `#60`.
+  - Edit `#56`'s (this issue's) provisional route table reference to point at this spec.
+  - Edit `#60`'s acceptance criteria to include listing detail, robots, SSR, and the `red-cab-api#134` dependency.
 
 ### Web (deferred to `#60` unless noted)
 
@@ -202,23 +313,35 @@ Districts index (`/districts`) has no slug segment to validate. Bare `/districts
 - [ ] Remove `withTouristAuth` from public catalog pages/layout
 - [ ] Update path builders (`catalog-listing-constant.js`, `catalog-listing-service.js`) to the slug + UUID scheme
 - [ ] Add redirects from `/account/discover/*` (`redirect(url, 301)`) and `/listings/:listingUuid` resolver alias (`redirect(url, 302)`); stale-slug 301 on **all** catalog loaders per Redirect / migration note
-- [ ] Book CTA conditional routing on public listing detail — guest + valid quote → `buildIdentitiesLoginRedirect(checkoutPath)`; logged-in tourist with profile → `buildCheckoutPath`; split `canStartCheckout` so guests are not blocked when a quote exists (Design decision #5)
+- [ ] Book CTA conditional routing on public listing detail:
+  - Guest + valid quote → `buildIdentitiesLoginRedirect(checkoutPath)`.
+  - Logged-in tourist with profile → `buildCheckoutPath`.
+  - Split `canStartCheckout` so guests are not blocked when a quote exists (Design decision #5).
 - [ ] Update `meta` robots on public catalog pages to `index, follow`; convert `clientLoader` → `loader`
 - [ ] Emit `<link rel="canonical">` on each indexable catalog page per Web contract notes
 - [ ] Re-point nav "Discover" links and checkout "back" links to `/districts` / canonical listing path
 
 ### API
 
-- [x] None for `#56`. Slug resolution and district embed delivered in [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134).
+- [x] None for `#56`.
+  - Slug resolution and district embed delivered in [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134).
 
 ## Acceptance criteria
 
 - [x] Written decision on guest browse vs auth-gated discover — `AMB-022` = Option A, recorded in Design decisions #1
 - [x] Target route map agreed and recorded — see Web contract table
-- [x] Auth gate matrix documented per surface — Web contract `Auth HOC` column; checkout route gated by `withTouristAuth`; Book CTA uses conditional login redirect for guests (Design decision #5)
+- [x] Auth gate matrix documented per surface:
+  - Web contract `Auth HOC` column.
+  - Checkout route gated by `withTouristAuth`.
+  - Book CTA uses conditional login redirect for guests (Design decision #5).
 - [x] Stale-slug 301 on all catalog loaders documented — Redirect / migration matrix + stale-slug detection table
-- [x] SEO meta rules documented — Web contract `meta robots` column; `<link rel="canonical">` rule in Web contract notes; sitemap path locked here, generation in follow-on web issue per `web-57`
-- [x] Canonical tags documented — each indexable catalog route emits `<link rel="canonical">` at the slug path without pagination/filter query params (Web contract notes); corpus rule in `frontend.md`
+- [x] SEO meta rules documented:
+  - Web contract `meta robots` column.
+  - `<link rel="canonical">` rule in Web contract notes.
+  - Sitemap path locked here, generation in follow-on web issue per `web-57`.
+- [x] Canonical tags documented:
+  - Each indexable catalog route emits `<link rel="canonical">` at the slug path without pagination/filter query params (Web contract notes).
+  - Corpus rule in `frontend.md`.
 - [x] Redirect/migration plan documented for all path changes — see Redirect / migration section, all rows sourced from Session A §3.3
 - [x] Spec cites `geography.md` URL hierarchy — Governing docs + Design decision #2
 - [x] Spec states listing segment = UUID for Phase 1 — Design decision #2, Data/domain touchpoints
