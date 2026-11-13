@@ -14,13 +14,33 @@ epic: "https://github.com/markmamba/red-cab-api/issues/130"
 
 ## TL;DR
 
-- Ships the **approved implementation spec** for Option C + C1 geography: `catalog_countries` (JP now) plus self-referencing `catalog_geographies`, migrations, seed task, marketplace slug resolution (`API-1`), listing-detail ancestor embed (`API-2`), near-me, provider listable-leaf validation, and team admin geography CRUD.
-- Does **not** ship API/web code in this PR — codegen input for epic [red-cab-api#130](https://github.com/markmamba/red-cab-api/issues/130). Tourist-web-56/57/58 receive `depends_on` patches only.
-- Breaking change: **Yes** — marketplace route params become `:district_slug`/`:area_slug`; provider listing create rejects non-listable geography nodes; DB column `catalog_listings.geography_id` replaces `area_id` (JSON keys `district_id` / `area_id` unchanged per ADR-016 decision 11).
+- Ships the **approved implementation spec** for Option C + C1 geography:
+  - `catalog_countries` (JP now) plus self-referencing `catalog_geographies`.
+  - Migrations.
+  - Seed task.
+  - Marketplace slug resolution (`API-1`).
+  - Listing-detail ancestor embed (`API-2`).
+  - Near-me.
+  - Provider listable-leaf validation.
+  - Team admin geography CRUD.
+- Does **not** ship API/web code in this PR — codegen input for epic [red-cab-api#130](https://github.com/markmamba/red-cab-api/issues/130).
+  - Tourist-web-56/57/58 receive `depends_on` patches only.
+- Breaking change: **Yes**:
+  - Marketplace route params become `:district_slug`/`:area_slug`.
+  - Provider listing create rejects non-listable geography nodes.
+  - DB column `catalog_listings.geography_id` replaces `area_id` (JSON keys `district_id` / `area_id` unchanged per ADR-016 decision 11).
 
 ## Problem
 
-The shipped flat `catalog_districts` / `catalog_areas` schema cannot express designated cities as children of prefectures, has no official-code upsert key (`FR-CAT-001`), no coordinates (`FR-CAT-032`), no successor pointer (`INV-11`), and resolves marketplace geography by UUID while Session A froze slug-based public URLs. ADR-016 (removed) and [geography data model review §3–§5](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model) define the target tree; this spec is the codegen contract for epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
+The shipped flat `catalog_districts` / `catalog_areas` schema has these limits:
+
+- It cannot express designated cities as children of prefectures.
+- It has no official-code upsert key (`FR-CAT-001`).
+- It has no coordinates (`FR-CAT-032`).
+- It has no successor pointer (`INV-11`).
+- It resolves marketplace geography by UUID, while Session A froze slug-based public URLs.
+
+ADR-016 (removed) and [geography data model review §3–§5](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model) define the target tree; this spec is the codegen contract for epic [#130](https://github.com/markmamba/red-cab-api/issues/130).
 
 Evidence: `red-cab-api/docs/db/catalog.dbml` (flat tables), `config/routes/marketplace_routes.rb` (`:district_id`/`:area_id`), `Catalog::Districts::MarketplaceShowManager` (`find_by(uuid:)`), `MarketplaceAreaEmbeddedSerializer` (no district/ancestors).
 
@@ -60,13 +80,22 @@ Evidence: `red-cab-api/docs/db/catalog.dbml` (flat tables), `config/routes/marke
 | 12 | **JSON keys unchanged** — `district_id`, `area_id` in payloads; `area_id` on provider write accepts geography UUID | Rename to `geography_id` in JSON | Session A; provider API stability |
 | 13 | **Separate lifecycle statuses** — `active`, `deactivated`, `archived` with distinct timestamps | Single `archived` status for both deactivate and archive | Deactivate is reversible admin pull; archive is irreversible merger with successor; avoids overloading one enum value |
 
-> **Human verification (2026-09-21):** Q1=`60-69-initiatives/61-2026/implementation-specs/cat/geography/docs-13-geography-administrative-tree.md`; Q2=ADR-016 on main; Q3=tourist `depends_on` path only; Q4=remove UUID fallback after tourist-web-60; Q5=vendored seed files; Q6=separate `deactivated`/`archived` statuses + `deactivated_at`/`archived_at` timestamps.
+> **Human verification (2026-09-21):**
+>
+> - Q1=`60-69-initiatives/61-2026/implementation-specs/cat/geography/docs-13-geography-administrative-tree.md`.
+> - Q2=ADR-016 on main.
+> - Q3=tourist `depends_on` path only.
+> - Q4=remove UUID fallback after tourist-web-60.
+> - Q5=vendored seed files.
+> - Q6=separate `deactivated`/`archived` statuses + `deactivated_at`/`archived_at` timestamps.
 
 ## Data model
 
 ### DBML (authoritative sketch)
 
-From [geography data model review §3.4](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model#34-column-level-dbml-sketch). Implement in `red-cab-api/docs/db/catalog.dbml` during codegen.
+From [geography data model review §3.4](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model#34-column-level-dbml-sketch).
+
+Implement in `red-cab-api/docs/db/catalog.dbml` during codegen.
 
 ```dbml
 // ---------------------------------------------------------------------------
@@ -190,11 +219,17 @@ Parent-level ordering and "listable node has no listable descendants" are **vali
 | **reactivate** | `deactivated` | `active` | clear `deactivated_at` | stay Unlisted — providers republish manually | — |
 | **archive** | `active` or `deactivated` | `archived` | set `archived_at`; preserve `deactivated_at` if already set (audit) | cascade unlist (`OPR-10`) | no |
 
-Shared side effect: deactivate and archive both require `confirm_listing_count` and cascade listing unlist via `path` prefix (`FR-CAT-002`, `OPR-10`). Rows are never deleted (`INV-11`). Backend convention "no restore once `archived`" applies; only `deactivated` is reversible.
+Shared side effect: deactivate and archive both require `confirm_listing_count` and cascade listing unlist via `path` prefix (`FR-CAT-002`, `OPR-10`).
+
+Rows are never deleted (`INV-11`).
+
+Backend convention "no restore once `archived`" applies; only `deactivated` is reversible.
 
 ### Migration sequence
 
-From [geography data model review §4](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model#4-migration-from-the-current-schema). Safe because no production geography data exists.
+From [geography data model review §4](/docs/60-69-initiatives/61-2026/implementation-specs/cat/geography/design-review-data-model#4-migration-from-the-current-schema).
+
+Safe because no production geography data exists.
 
 | Step | Change | Notes |
 | --- | --- | --- |
@@ -230,7 +265,8 @@ From [geography data model review §4](/docs/60-69-initiatives/61-2026/implement
 
 1. **`path`** — materialized slug path from root to node (`kanagawa/yokohama/nishi`).
 2. **`is_discovery_root`** — C1: `true` on 47 prefectures (`level = subdivision`) and 20 designated cities (`level = municipality` with administrative children that are wards).
-3. **`is_listable`** — `true` on leaves only: municipalities without ward children (incl. Tokyo 23 特別区) and all 行政区 (`level = ward`). Designated cities with wards: `is_listable = false`.
+3. **`is_listable`** — `true` on leaves only: municipalities without ward children (incl. Tokyo 23 特別区) and all 行政区 (`level = ward`).
+   - Designated cities with wards: `is_listable = false`.
 4. **`discovery_root_id`** — nearest ancestor-or-self with `is_discovery_root = true`; set on every listable node.
 5. **`slug`** — derived from `name_en` per `geography.md` slug rules; homonym overrides for 10 prefecture/city pairs (`kyoto` vs `kyoto-prefecture`, etc.).
 6. **`timezone`** — copy `catalog_countries.default_timezone` (`Asia/Tokyo`) onto every node (`ADR-014`).
@@ -303,7 +339,8 @@ One shared resolver service: `Catalog::Geographies::SlugResolutionService` (name
 
 1. Find discovery root by slug (include non-active rows for redirect/404 resolution).
 2. If `area_slug` present: find listable child `where(discovery_root_id: root.id, slug: area_slug, is_listable: true)`.
-3. **UUID fallback (temporary):** if slug lookup fails, attempt `find_by(uuid: segment)` for each segment; log deprecation warning. Remove in release after tourist-web-60 ships.
+3. **UUID fallback (temporary):** if slug lookup fails, attempt `find_by(uuid: segment)` for each segment; log deprecation warning.
+   - Remove in release after tourist-web-60 ships.
 4. **Lifecycle resolution:**
    - `status = active` — resolve normally (marketplace lists filter to active only).
    - `status = deactivated` — return **404** (no redirect target).
@@ -345,7 +382,9 @@ One shared resolver service: `Catalog::Geographies::SlugResolutionService` (name
 
 ### Empty-area / no-available-services signal (`FR-CAT-003`, `INV-8`)
 
-`INV-8` and geography list endpoints **do not** surface zero-listing nodes — district and area index/show payloads never include an explicit `has_available_services` flag.
+`INV-8` and geography list endpoints **do not** surface zero-listing nodes.
+
+District and area index/show payloads never include an explicit `has_available_services` flag.
 
 | Surface | Geography layer | `FR-CAT-003` signal |
 | --- | --- | --- |
@@ -353,7 +392,9 @@ One shared resolver service: `Catalog::Geographies::SlugResolutionService` (name
 | `GET .../districts/:district_slug/areas/:area_slug` | Area is discoverable by definition (`INV-8`) | Geography payload has no availability flag; tourist-web shows area shell |
 | `GET .../districts/:district_slug/areas/:area_slug/listings` | — | **Empty `listings` array** (after server-side filters/date) is the API signal for "no available services" within a discoverable area. No separate boolean on geography serializers in v1. |
 
-Fully-booked or date-filtered empty states (`FR-CAT-006`) use the same listings-index empty array — copy and UX live in tourist-web listing pages, not geography serializers.
+Fully-booked or date-filtered empty states (`FR-CAT-006`) use the same listings-index empty array.
+
+Copy and UX live in tourist-web listing pages, not geography serializers.
 
 ### Serializer field matrix
 
@@ -390,11 +431,14 @@ No DB queries inside serializers — preload associations in managers.
 | `archived` | **301** to successor slug path | omitted | show `archived_at` + `successor: { uuid, slug, name_en, name_ja }` |
 
 - List/index endpoints never use successor embed in JSON — non-active nodes are simply absent.
-- Rows never deleted. `deactivated_at` and `archived_at` are audit timestamps; both may be set when a node was deactivated then later archived (merger after admin pull).
+- Rows never deleted.
+  - `deactivated_at` and `archived_at` are audit timestamps; both may be set when a node was deactivated then later archived (merger after admin pull).
 
 ### Provider write
 
-Keep JSON key **`area_id`** (geography UUID). Validator rejects when:
+Keep JSON key **`area_id`** (geography UUID).
+
+Validator rejects when:
 
 - Geography not found
 - `status <> active` (deactivated or archived nodes are not attach targets)
@@ -406,7 +450,9 @@ Keep JSON key **`area_id`** (geography UUID). Validator rejects when:
 
 Auth: team JWT (`Team::BaseController`).
 
-**Status enum:** `catalog_geographies.status` is `rails_enum(:active, :deactivated, :archived)`. See [Lifecycle state machine](#lifecycle-state-machine).
+**Status enum:** `catalog_geographies.status` is `rails_enum(:active, :deactivated, :archived)`.
+
+See [Lifecycle state machine](#lifecycle-state-machine).
 
 | Command | When to use | Resulting `status` | Timestamps | Marketplace URLs |
 | --- | --- | --- | --- | --- |
@@ -414,7 +460,11 @@ Auth: team JWT (`Team::BaseController`).
 | **reactivate** | Admin restores a temporarily pulled node | `active` | clear `deactivated_at` | Slugs work again; `INV-8` applies |
 | **archive** | Administrative merger — retired node absorbed into a survivor (`FR-CAT-034`, `INV-11`) | `archived` | set `archived_at`; preserve `deactivated_at` if set | Show → **301** to successor path |
 
-Deactivate and archive both cascade listing unlist per `OPR-10` / `FR-CAT-002`. Reactivate does **not** auto-republish listings — providers must manually republish. Archive is irreversible per backend conventions.
+Deactivate and archive both cascade listing unlist per `OPR-10` / `FR-CAT-002`.
+
+Reactivate does **not** auto-republish listings — providers must manually republish.
+
+Archive is irreversible per backend conventions.
 
 | Method | Path | Request body | Response | Notes |
 | --- | --- | --- | --- | --- |
@@ -466,7 +516,8 @@ Deactivate and archive both cascade listing unlist per `OPR-10` / `FR-CAT-002`. 
 - **Bounded context:** CAT — geography is reference data inside Catalog; no cross-context model imports.
 - **Listing FK:** `catalog_listings.geography_id` → listable `Catalog::Geography` only (`FR-CAT-033`).
 - **`INV-8`:** `discoverable` scope — node or any descendant has published listing; query-time, never stored.
-- **Lifecycle scopes:** `active_geographies` → `where(status: :active)`; marketplace read lists use this scope. Show/resolver queries include non-active rows to return 404 (`deactivated`) or 301 (`archived`).
+- **Lifecycle scopes:** `active_geographies` → `where(status: :active)`; marketplace read lists use this scope.
+  - Show/resolver queries include non-active rows to return 404 (`deactivated`) or 301 (`archived`).
 - **`OPR-10` / `FR-CAT-002`:** deactivate/archive uses `path LIKE '{prefix}%'` to find affected listings.
 - **Snapshots:** booking/checkout snapshots unchanged — geography timezone already snapshotted per ADR-014/ADR-006.
 - **Pricing:** no geography column in `calculate_quote` (`PRC-1`).

@@ -19,15 +19,23 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 
 ## TL;DR
 
-- **Ships:** URL-driven sort control on public **area listings** index; `order_by` / `order_dir` forwarded to `marketplaceCatalogListingsApi.indexByArea`; pagination preserves sort; sort change resets `page` to `1`.
-- **Minimum live preset:** newest by `published_at` desc. **Rating** visible in UI per human Q3 — not active until REV milestone (client stub, not API feature gate).
+- **Ships:** URL-driven sort control on public **area listings** index:
+  - `order_by` / `order_dir` forwarded to `marketplaceCatalogListingsApi.indexByArea`.
+  - Pagination preserves sort.
+  - Sort change resets `page` to `1`.
+- **Minimum live preset:** newest by `published_at` desc.
+- **Rating** visible in UI per human Q3, not active until REV milestone (client stub, not API feature gate).
 - **Does NOT ship:** filter bar, price/recommended sorts, client-side reorder, API changes, geography nav carrying sort query.
 - **FR-CAT-027:** partial Milestone C delivery — traceability per human Q7.
 - **Breaking change:** No.
 
 ## Problem
 
-Milestone C requires a listing index sort control wired to URL params (`tourist-ui-pre-phase-2.md`). Marketplace listings index API accepts `order_by` / `order_dir` (`Catalog::Listings::MarketplaceIndexValidator`). The web area listings route loader today only passes `{ page }` to `indexByArea` ([`marketplace-catalog-listing-list-page.jsx`](https://github.com/markmamba/red-cab-web/blob/main/app/routes/marketplace/catalog-district/marketplace-catalog-listing-list-page.jsx)).
+Milestone C requires a listing index sort control wired to URL params (`tourist-ui-pre-phase-2.md`).
+
+Marketplace listings index API accepts `order_by` / `order_dir` (`Catalog::Listings::MarketplaceIndexValidator`).
+
+The web area listings route loader today only passes `{ page }` to `indexByArea` ([`marketplace-catalog-listing-list-page.jsx`](https://github.com/markmamba/red-cab-web/blob/main/app/routes/marketplace/catalog-district/marketplace-catalog-listing-list-page.jsx)).
 
 Evidence: no `order_by` usage under `red-cab-web/app` for marketplace catalog listings; provider catalog list already documents sort params.
 
@@ -75,7 +83,15 @@ Evidence: no `order_by` usage under `red-cab-web/app` for marketplace catalog li
 | `order_by` | string | `published_at`, `rating_average`, `reviews_count`, `title_en`, `created_at` | `published_at` |
 | `order_dir` | string | `asc`, `desc` | `desc` |
 
-**Web rule:** Pass sort keys only from loader whitelist (Q5). Clamp `order_by` to `published_at` in the loader (Q8). Forward `order_dir` only when it is `desc` for the live Newest preset; omit otherwise so API default matches the UI. Do not send price sort. Do not reorder response arrays in the browser.
+**Web rule:** Pass sort keys only from loader whitelist (Q5).
+
+Clamp `order_by` to `published_at` in the loader (Q8).
+
+Forward `order_dir` only when it is `desc` for the live Newest preset; omit otherwise so API default matches the UI.
+
+Do not send price sort.
+
+Do not reorder response arrays in the browser.
 
 ## Web contract
 
@@ -87,9 +103,11 @@ Evidence: no `order_by` usage under `red-cab-web/app` for marketplace catalog li
 
 1. Control reads current `order_by` / `order_dir` from `useSearchParams` (and preset mapping).
 2. On change: `setSearchParams` with updated sort keys and `page: '1'`; preserve other keys (future filters).
-3. Rating-related preset: visible per Q3 but must not issue API requests with `rating_average` / `reviews_count` until a future REV issue enables it.
+3. Rating-related preset: visible per Q3.
+   - It must not issue API requests with `rating_average` / `reviews_count` until a future REV issue enables it.
 4. Render placement per Q4 (recommended draft: between map and grid, end-aligned).
-5. Empty list: sort may still render (user can change sort before results) — unless Q4/C dictates otherwise; prefer showing sort when area is valid even if `catalogListings` empty.
+5. Empty list: sort may still render (user can change sort before results), unless Q4/C dictates otherwise.
+   - Prefer showing sort when area is valid even if `catalogListings` empty.
 
 ### Preset map (Q1=A, Q3=A)
 
@@ -168,7 +186,13 @@ cd red-cab-web && npm run lint
 
 ### Must-fix
 
-- None — aligns with issue #67 AC, web-56 reserved params, ADR-017, API `MarketplaceIndexValidator` columns, web-66 page regions, no pricing or client re-sort.
+- None, and it aligns with these sources:
+  - Issue #67 AC.
+  - web-56 reserved params.
+  - ADR-017.
+  - API `MarketplaceIndexValidator` columns.
+  - web-66 page regions.
+  - No pricing or client re-sort.
 
 ### Should-fix
 
