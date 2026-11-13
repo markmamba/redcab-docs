@@ -1,5 +1,5 @@
 ---
-description: Write or rewrite a Docusaurus page in the Red Cab docs repo — explainer, ADR, bounded-context page, or engineering convention. Loads write-plain-english first. Not for implementation specs (use write-implementation-spec in api/web).
+description: "Write or rewrite a page of the Red Cab docs repo in its fixed shape, from a brain dump, from the conversation so far, or from an old page. Six doc types: a decision entry, a domain page, a feature design doc, an explainer, an engineering convention and a runbook. Use when the user asks to write, draft, document or rewrite a doc, a design, a decision, a convention or a runbook, or types /write-doc. Not for an implementation spec (use implementation-specs/_template.md) and not for one model's full specification (use model-spec). Loads write-plain-english first."
 globs: []
 alwaysApply: false
 ---

@@ -1,5 +1,5 @@
 ---
-description: Draft a GitHub issue for red-cab-api, red-cab-web, or redcab-docs — Context, Problem, Direction, stable section names, templates A–E, and gh workflow. Loads write-plain-english first.
+description: "Draft a GitHub issue for red-cab-api, red-cab-web or redcab-docs in the team format, Context then Problem then Direction, with a words table, a worked example and tasks, so an engineer can start cold from the issue alone. Use when the user asks to write, draft, compose or post a GitHub issue, says \"an issue\", or wants a finding or a conversation turned into an issue. Loads write-plain-english first for the sentence, bullet and naming rules."
 globs: []
 alwaysApply: false
 ---

@@ -1,0 +1,9 @@
+---
+description: "Write or complete the model page of one Red Cab domain model or aggregate, with its structure, states, contract and use cases, checked against the DBML and the code. Use when the user asks to specify, document or formalize a model, to list every use case of a model, or types /model-spec. Not for a per-issue implementation spec (use implementation-specs/_template.md) and not for a domain ruling (use write-doc, decision entry). Loads write-plain-english first."
+globs: []
+alwaysApply: false
+---
+
+# /model-spec
+
+Read and follow the instructions in `.claude/skills/model-spec/SKILL.md`.

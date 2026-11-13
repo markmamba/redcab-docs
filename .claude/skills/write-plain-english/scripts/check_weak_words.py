@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Flag discouraged Tier A phrases in markdown (skips fenced code)."""
+"""Flag discouraged words and phrases in markdown (skips fenced code)."""
 
 import re
 import sys

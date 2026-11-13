@@ -1,33 +1,36 @@
 # Agent skills — redcab-docs
 
+The conventions for agents live in `AGENTS.md` at the repo root. `CLAUDE.md` imports it. This file is the skill catalog only.
+
 ## Layout
 
 ```
 .claude/
-  instructions.md     # Single source of truth for this repo
   settings.json       # Tool permissions (Claude Code)
   skills/             # Task prompts (canonical copy)
   scripts/
-    add-skill.sh      # Generate Cursor rule pointer for a skill
+    add-skill.sh      # Generate a Cursor rule pointer for a skill
 
-.cursor/rules/        # Optional Cursor rule pointers per skill
+.cursor/rules/        # Cursor rule pointers, one for each skill
 ```
 
-Implementation specs live in this repo (`implementation-specs/`). Codegen and review skills live in `red-cab-api` and `red-cab-web` under `.claude/skills/`; conventions in each repo's `AGENTS.md`.
+Implementation specs live in this repo (`implementation-specs/`). Codegen and review skills live in `red-cab-api` and `red-cab-web` under `.claude/skills/`, with their conventions in each repo's `AGENTS.md`.
 
 ## Skills
 
 | Skill | Purpose |
 | --- | --- |
-| `write-plain-english` | Sentence, bullet, naming, words, doc contents; check scripts; `references/examples.md` |
-| `write-tier-a-prose` | STE Tier A/B/C summary; load after `write-plain-english` |
-| `write-issue` | GitHub issue: Context → Problem → Direction; templates A–E; `gh` workflow |
-| `write-doc` | Docusaurus pages (domain decision entry, domain page, explainer, convention) |
-| `system-design` | Design plan before an implementation spec |
-| `mermaid-diagram` | Mermaid layout, colors, MDX-safe blocks; flows and state machines |
+| `write-plain-english` | Sentence, bullet, naming and word rules, what a doc contains, check scripts, `references/examples.md` |
+| `write-issue` | GitHub issue: Context, Problem, Direction. Templates A–E and the `gh` workflow |
+| `write-doc` | Docusaurus pages: decision entry, domain page, feature design doc, explainer, convention, runbook |
+| `model-spec` | The full specification of one model, with use cases, states and invariants |
+| `system-design` | A design plan before an implementation spec |
+| `mermaid-diagram` | Mermaid colour categories, layout, MDX-safe blocks, and the colour check script |
 
 ## Add a skill
 
 1. Create `.claude/skills/{name}/SKILL.md` with YAML frontmatter (`name`, `description`).
+   - The description says what the skill does and when to use it, in the words a user would type.
 2. Run `.claude/scripts/add-skill.sh {name}` to create `.cursor/rules/{name}.mdc`.
-3. Commit `.claude/` and `.cursor/rules/` together.
+3. Add the skill to the tables in this file and in `AGENTS.md`.
+4. Commit `.claude/` and `.cursor/rules/` together.

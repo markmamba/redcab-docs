@@ -194,7 +194,7 @@ Right:
 - US-2: As a provider, I want confirmed bookings to keep the price shown at checkout, so my payout matches what the guest saw.
 ```
 
-Implementation spec narrative uses Tier A; normative `FR-*` lines stay in requirements docs.
+Implementation spec narrative follows these rules. A legacy `FR-*` line keeps its `shall` keyword.
 
 ## 14. A diagram earns its place
 
