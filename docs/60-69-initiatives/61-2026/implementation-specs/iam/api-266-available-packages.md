@@ -134,7 +134,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 28 | The publish check reads the approved status of the company only. | Keep the license expiry check. | A permit now acts on the packages. |
 | 29 | The provider listing detail holds `is_discoverable` and `hidden_reasons`. | Compute in the web. | The web cannot read the permit, and one rule lives in one place. |
 | 30 | The provider package JSON holds `is_available` and `unavailable_reason`. | The web works it out. | Same reason. |
-| 31 | A manager computes the reasons before the serializer. | Query in the serializer. | A serializer never queries. |
+| 31 | A manager computes the reasons for the listing detail before the serializer. Decisions 50 and 51 cover the package reasons. | Query in the serializer. | A serializer never queries. |
 | 32 | The provider list endpoints hold no hidden reasons. | Compute for every row. | Each row would add queries. |
 | 33 | The marketplace detail keeps `is_bookable` and `unavailable_reason`, with new values. | Remove the reason. | The web already reads `is_bookable`. |
 | 34 | `Catalog::Geography.discoverable` goes away. | Keep it. | No code calls it, and its name hides a weaker test. |
@@ -153,6 +153,8 @@ Read these before design. Do not invent behavior that contradicts them.
 | 47 | The open dates and the start times answer `package_not_offered` for an `inactive` or `archived` package. A slug that matches no package, and an active package that is not available, keep `404`. | The same code for every unavailable package. An empty list. | This keeps the change to the rule of decision 41. The owner may change the second case (see Open items). |
 | 48 | When the payment start gives `package_not_offered` and no pending charge exists, `Bookings::CheckoutSessions::ReleaseForPackageNotOfferedManager` releases the hold and expires the checkout session. With a pending charge, the hold and the session stay until the hold expires. The release uses the hold reason `session_expired`. | Keep the hold in every case. Let the same tourist ignore an old hold. | The tourist must not wait up to 15 minutes for a hold that no charge can use. The manager takes the row lock of the payment start, so a charge cannot appear between the check and the release. |
 | 49 | A payment retry with a pending charge gets `package_not_offered`, and the API leaves the older Stripe intent alone. The Payments redesign decides if the API cancels the intent or returns the existing handoff first. | Cancel or expire the intent now. Return the existing handoff before the package check. | The Payments domain has no ruling yet, so this spec cannot decide it. The older intent can still pay, and the webhook then confirms the booking (decision 39). |
+| 50 | The package list controller builds the package reasons. `paginate_and_render` takes an optional `context_builder:`. The helper calls it with the records of the page. It passes the result to the serializer as the context. The context key `unavailable_reasons` holds a hash from `catalog_listing_packages.id` to the reason. | Page in the controller, and write the `meta` block twice. Compute the reasons for the whole list. | The helper pages inside, so the controller cannot see the records of the page. One place pages and builds the context. The reasons run for the rows of the page only, and the 12 other callers do not change. |
+| 51 | The create and the update package controllers call `Catalog::Packages::UnavailableReasonsService.execute(packages: [listing_package])`. They pass the hash as the serializer context with the key `unavailable_reasons`. | The managers return the reasons. | The list and the single answer use the same serializer and the same service. A serializer never queries, and a manager does not know a detail of the serializer. |
 
 ## API contract
 
@@ -358,7 +360,9 @@ The codes follow the tests of `discoverable`, apart from the status.
 | `unavailable_reason` | `null`, `not_active`, `no_active_asset` or `no_valid_permit` |
 
 - The reason is the first test that fails, in the order of the codes above.
-- `Catalog::Packages::UnavailableReasonsService.execute(packages:)` returns a hash for the whole list in a fixed number of queries.
+- `Catalog::Packages::UnavailableReasonsService.execute(packages:)` returns a hash for the packages that it gets, in a fixed number of queries.
+- The list controller passes the records of the page to it through `context_builder:` (decision 50).
+- The create and the update controllers pass one package to it (decision 51).
 
 ### Migration order
 
@@ -432,7 +436,8 @@ Provider side:
 - `app/domains/catalog/providers_listing_detail_serializer.rb`
 - `app/domains/catalog/providers_listing_package_base_serializer.rb`
 - `app/controllers/providers/catalog/listings_controller.rb`
-- The package list manager and controller, for the reasons.
+- `app/controllers/concerns/pagination_helper.rb`, for the optional `context_builder:`.
+- `app/controllers/providers/catalog/listing_packages_controller.rb`, for the reasons of the list, the create and the update.
 
 Jobs and config:
 
