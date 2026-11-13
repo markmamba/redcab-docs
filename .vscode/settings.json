@@ -1,0 +1,7 @@
+{
+  // The VS Code Markdown preview draws Mermaid diagrams like Docusaurus:
+  // the same category colours, and the same Mermaid themes for each mode.
+  "markdown.styles": ["src/css/mermaid-categories.css"],
+  "markdown-mermaid.lightModeTheme": "default",
+  "markdown-mermaid.darkModeTheme": "dark"
+}

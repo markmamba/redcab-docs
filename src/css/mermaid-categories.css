@@ -1,0 +1,87 @@
+/* ============================================================
+   Mermaid diagram colours, one set for each colour mode.
+
+   A diagram names the category of a node with a class line,
+   such as `class PRD subject`, and writes no colour value.
+   The categories are `subject`, `host`, `external`, `ok` and
+   `problem`. The rules
+   are in the skill `.claude/skills/mermaid-diagram/`.
+
+   Two renderers load this file:
+   - Docusaurus, through `customCss` in `docusaurus.config.js`.
+   - The VS Code Markdown preview, through `markdown.styles` in
+     `.vscode/settings.json`.
+
+   Docusaurus marks dark mode with `data-theme="dark"` on `html`,
+   and VS Code marks it with the class `vscode-dark` on `body`,
+   so each colour set names both.
+
+   `!important` is needed because Mermaid writes its theme rules
+   into each diagram, scoped to the id of the diagram.
+   ============================================================ */
+
+:root,
+body.vscode-light,
+body.vscode-high-contrast-light {
+  --mermaid-subject-fill: #ffe6cc;   /* draw.io orange */
+  --mermaid-subject-stroke: #d79b00;
+  --mermaid-subject-text: #333333;
+  --mermaid-host-fill: #e5e5ff;
+  --mermaid-host-stroke: #6666cc;
+  --mermaid-external-fill: #f5f5f5;
+  --mermaid-external-stroke: #999999;
+  --mermaid-ok-fill: #d5e8d4;        /* draw.io green */
+  --mermaid-ok-stroke: #82b366;
+  --mermaid-problem-fill: #f8cecc;   /* draw.io red */
+  --mermaid-problem-stroke: #b85450;
+}
+
+/* The subject stays bright in dark mode, because it is the main topic of the page.
+   The text is dark: #1b1b1d on #f97316 has 6.1:1 contrast. */
+[data-theme='dark'],
+body.vscode-dark,
+body.vscode-high-contrast:not(.vscode-high-contrast-light) {
+  --mermaid-subject-fill: #f97316;
+  --mermaid-subject-stroke: #fb923c;
+  --mermaid-subject-text: #1b1b1d;
+  --mermaid-host-fill: #2b2b52;
+  --mermaid-host-stroke: #8f8fe6;
+  --mermaid-external-fill: #2c2c2e;
+  --mermaid-external-stroke: #8a8a8a;
+  --mermaid-ok-fill: #1f3d24;
+  --mermaid-ok-stroke: #6abf69;
+  --mermaid-problem-fill: #4a1f1f;
+  --mermaid-problem-stroke: #e06666;
+}
+
+/* Docusaurus wraps each diagram in .docusaurus-mermaid-container, and VS Code in .mermaid.
+   A flowchart node draws its shape as .label-container; a state node draws a path inside it. */
+:is(.docusaurus-mermaid-container, .mermaid) .node.subject :is(.label-container, .label-container > path) {
+  fill: var(--mermaid-subject-fill) !important;
+  stroke: var(--mermaid-subject-stroke) !important;
+  stroke-width: 3px !important;
+}
+
+:is(.docusaurus-mermaid-container, .mermaid) .node.subject .nodeLabel {
+  color: var(--mermaid-subject-text) !important;
+}
+
+:is(.docusaurus-mermaid-container, .mermaid) .node.host :is(.label-container, .label-container > path) {
+  fill: var(--mermaid-host-fill) !important;
+  stroke: var(--mermaid-host-stroke) !important;
+}
+
+:is(.docusaurus-mermaid-container, .mermaid) .node.external :is(.label-container, .label-container > path) {
+  fill: var(--mermaid-external-fill) !important;
+  stroke: var(--mermaid-external-stroke) !important;
+}
+
+:is(.docusaurus-mermaid-container, .mermaid) .node.ok :is(.label-container, .label-container > path) {
+  fill: var(--mermaid-ok-fill) !important;
+  stroke: var(--mermaid-ok-stroke) !important;
+}
+
+:is(.docusaurus-mermaid-container, .mermaid) .node.problem :is(.label-container, .label-container > path) {
+  fill: var(--mermaid-problem-fill) !important;
+  stroke: var(--mermaid-problem-stroke) !important;
+}
