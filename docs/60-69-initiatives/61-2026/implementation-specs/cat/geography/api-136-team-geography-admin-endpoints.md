@@ -15,13 +15,22 @@ epic: "https://github.com/markmamba/red-cab-api/issues/130"
 
 ## TL;DR
 
-- Ships **epic #130 step 13** — team admin geography API: list/filter, show, label PATCH, deactivate/reactivate/archive with successor, and synchronous subtree listing unlist (`FR-CAT-001`, `FR-CAT-002`, `FR-CAT-034`, `OPR-10`, `INV-11`).
+- Ships **epic #130 step 13**, the team admin geography API (`FR-CAT-001`, `FR-CAT-002`, `FR-CAT-034`, `OPR-10`, `INV-11`):
+  - List and filter.
+  - Show.
+  - Label PATCH.
+  - Deactivate, reactivate and archive with successor.
+  - Synchronous subtree listing unlist.
 - Does **not** ship `red-cab-web` team UI, marketplace read changes (#134 done), migrations, or seed task changes.
 - Breaking change: **No** — new team endpoints only.
 
 ## Problem
 
-Epic #130 steps 1–12 (#131–#135) delivered schema, seed, domain models, marketplace slug resolution, and near-me. Team admins cannot yet curate geography labels, reorder nodes, or run deactivate/archive lifecycle transitions with listing cascade. Marketplace 301 on archived nodes (#134) reads `successor_geography_id` but nothing sets it yet.
+Epic #130 steps 1–12 (#131–#135) delivered schema, seed, domain models, marketplace slug resolution, and near-me.
+
+Team admins cannot yet curate geography labels, reorder nodes, or run deactivate/archive lifecycle transitions with listing cascade.
+
+Marketplace 301 on archived nodes (#134) reads `successor_geography_id` but nothing sets it yet.
 
 Evidence: `config/routes/team_routes.rb` (no `catalog/geographies`), no `app/domains/catalog/geographies/team_*` managers, no `SubtreeUnlistService`, `unlisted_at` column never set.
 

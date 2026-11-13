@@ -21,7 +21,11 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 
 ## TL;DR
 
-- **Ships:** client-driven **Near me** section on public `/districts` hub — geolocation prompt, permission-state UI, ranked area list container consuming `{ areas: [...] }` with `distance_km`; dedicated ky API module.
+- **Ships:** client-driven **Near me** section on public `/districts` hub:
+  - Geolocation prompt.
+  - Permission-state UI.
+  - Ranked area list container consuming `{ areas: [...] }` with `distance_km`.
+  - Dedicated ky API module.
 - **Does NOT ship:** client Haversine or reordering; new routes; map pins; `CatalogGeographyNav` / breadcrumb IA changes (#57); homepage mount (unless plan Q1=B).
 - **Scaffold (Q2=A):** API `near()` implemented; runtime fetch gated by `NEAR_ME_AREAS_FETCH_ENABLED = false` in service module until Phase 2 checklist.
 - **Phase 2 (Q6=B):** Flip gate in same spec checklist after staging verifies `api-135`; PR copy requires API deploy before web.
@@ -29,7 +33,11 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 
 ## Problem
 
-Milestone C requires a near-me discovery shell (`FR-CAT-032`, `tourist-ui-pre-phase-2.md`) on the public discover surface. ADR-017 requires near-me as a **section on `/districts`**, not `/near-me` or `/discover`. API contract is live in `api-135`; web has no geolocation flow or near areas client today.
+Milestone C requires a near-me discovery shell (`FR-CAT-032`, `tourist-ui-pre-phase-2.md`) on the public discover surface.
+
+ADR-017 requires near-me as a **section on `/districts`**, not `/near-me` or `/discover`.
+
+API contract is live in `api-135`; web has no geolocation flow or near areas client today.
 
 Evidence: no `geolocation` usage in `red-cab-web`; district hub is `marketplace-catalog-district-list-page.jsx`; envelope mismatch if districts `areasIndex` were reused.
 
@@ -70,7 +78,8 @@ Evidence: no `geolocation` usage in `red-cab-web`; district hub is `marketplace-
 
 ### Section states
 
-1. **Prompt** — heading + short copy + primary button “Use my location” (or equivalent); optional text link “Not now” / continue browsing districts.
+1. **Prompt** — heading, short copy and primary button “Use my location” (or equivalent).
+   - Optional text link “Not now” / continue browsing districts.
 2. **Locating** — inline pending (`TouristShellPending` or compact spinner) after user accepts prompt.
 3. **Success** — ranked list; each row shows localized name + formatted `distance_km` (e.g. `12.4 km`); links per plan Q4.
 4. **Empty** — `areas: []` → muted empty copy (not an error).
