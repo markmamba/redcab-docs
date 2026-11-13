@@ -18,16 +18,23 @@ depends_on:
 
 ## TL;DR
 
-- **Locks:** sitemap entry rules (`INV-8`), per-route breadcrumb data contract, deep-link/back-navigation rules, and bilingual label resolution for the tourist catalog funnel — built on the locked `#56` route table (not restated here).
-- **Does NOT ship:** route migration (`#60`), layout shell (`#58`), homepage (`#59`), or checkout UX (`#63`). Stale-slug **301 rules** are locked in `#56`; this spec defines breadcrumb/deep-link UX on top.
-- **Breaking change:** No URL changes. Behavior change (documented for `#60`/follow-on web): public routes **drop** single-child auto-redirect; always render `/districts` and district index pages.
+- **Locks:** these rules, built on the locked `#56` route table (not restated here):
+  - Sitemap entry rules (`INV-8`).
+  - Per-route breadcrumb data contract.
+  - Deep-link/back-navigation rules.
+  - Bilingual label resolution for the tourist catalog funnel.
+- **Does NOT ship:** route migration (`#60`), layout shell (`#58`), homepage (`#59`), or checkout UX (`#63`).
+  - Stale-slug **301 rules** are locked in `#56`; this spec defines breadcrumb/deep-link UX on top.
+- **Breaking change:** No URL changes.
+  - Behavior change (documented for `#60`/follow-on web): public routes **drop** single-child auto-redirect; always render `/districts` and district index pages.
 
 ## Problem
 
 Public routes are locked (`#56`) but the tourist funnel lacks:
 
 1. A crawlable `/sitemap.xml` with layout-aware entry rules.
-2. A documented breadcrumb data contract — `FR-CAT-004` requires District → Area hierarchy to be *visible*, not only present in the URL.
+2. A documented breadcrumb data contract.
+   - `FR-CAT-004` requires District → Area hierarchy to be *visible*, not only present in the URL.
 3. Documented deep-link, back-navigation, and locale rules for shareable listing URLs, booking return paths, and the `/listings/:uuid` resolver alias.
 
 [`red-cab-api#134`](https://github.com/markmamba/red-cab-api/issues/134) delivered `area.district` and `area.ancestors[]` on listing detail — breadcrumb ancestor chain is buildable from the listing payload alone.
@@ -102,7 +109,9 @@ Layout assignment references the `#56` Web contract table — paths are not rest
 
 ## Breadcrumb data contract
 
-Rendered by `<Breadcrumbs />` in layout shells (`#58` wires placement). Each route module exports `handle.breadcrumb`.
+Rendered by `<Breadcrumbs />` in layout shells (`#58` wires placement).
+
+Each route module exports `handle.breadcrumb`.
 
 ### Shape
 
@@ -127,7 +136,9 @@ breadcrumb: [
 ]
 ```
 
-Last crumb is never linked (`breadcrumbs.jsx` rule). Prior crumbs link when `to` is set.
+Last crumb is never linked (`breadcrumbs.jsx` rule).
+
+Prior crumbs link when `to` is set.
 
 ### Per-route trail (public catalog)
 
@@ -139,7 +150,11 @@ Last crumb is never linked (`breadcrumbs.jsx` rule). Prior crumbs link when `to`
 | Area listings | `Districts` → `:district` → `:area` | district + area names from loader | district path; area path omitted on last |
 | Listing detail | `Districts` → `:district` → `:area` → `:listing title` | embeds from listing detail payload (`#134`) | prior levels link to slug paths |
 
-Layout-level crumb (e.g. `Discover` on old layout) is replaced by geography crumbs above. **`CatalogGeographyNav` is deprecated in the follow-on web issue** once breadcrumbs render — remove the component to avoid duplicate hierarchy affordances (coordinated with `web-58` (removed) decision #16).
+Layout-level crumb (e.g. `Discover` on old layout) is replaced by geography crumbs above.
+
+**`CatalogGeographyNav` is deprecated in the follow-on web issue** once breadcrumbs render.
+
+Remove the component to avoid duplicate hierarchy affordances (coordinated with `web-58` (removed) decision #16).
 
 ### Account booking crumbs
 
@@ -205,7 +220,11 @@ _No new API endpoints._ Sitemap and breadcrumbs consume existing marketplace API
 
 ### Files to create or modify (Web)
 
-_Follow-on web issue — after this spec is `status: approved` and committed. Coordinate with `#60` for file paths post-rename. Not in `#57` scope._
+_Follow-on web issue — after this spec is `status: approved` and committed.
+
+Coordinate with `#60` for file paths post-rename.
+
+Not in `#57` scope._
 
 - `app/routes/marketplace/sitemap.xml.js` — **create** — XML generation
 - `app/marketplace.routes.js` — register sitemap resource route

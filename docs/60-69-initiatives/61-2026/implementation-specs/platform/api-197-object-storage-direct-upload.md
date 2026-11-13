@@ -15,12 +15,17 @@ related:
 
 ## TL;DR
 
-- Ships a **Platform object-storage port** in `red-cab-api`: upload grants, object HEAD verification, signed download for private blobs, and optional public URLs for listing photos.
+- Ships a **Platform object-storage port** in `red-cab-api`:
+  - Upload grants.
+  - Object HEAD verification.
+  - Signed download for private blobs.
+  - Optional public URLs for listing photos.
 - **Development and test** use a **disk** adapter under `storage/objects/`.
 - **Production** uses a **private S3** bucket with presigned PUT.
 - **Register** endpoints for provider documents, listing photos, and review submit **must** pass HEAD verification and prefix rules before insert.
 - Does **not** ship web upload UI (web #144), virus scan, image variants, or Active Storage on domain models.
-- **Breaking change:** No for HTTP shapes on existing register bodies; clients that register keys without a prior upload will get **422** after this ships.
+- **Breaking change:** No for HTTP shapes on existing register bodies.
+  - Clients that register keys without a prior upload will get **422** after this ships.
 
 ## Problem
 
@@ -51,7 +56,9 @@ Marketplace serializers expose photo metadata without a delivery URL, so the web
 
 ### Explicit deferrals (not closed)
 
-These stay **out of scope** for #197. There is **no** resolved `AMB-*` for them; do not treat silence as a product decision.
+These stay **out of scope** for #197.
+
+There is **no** resolved `AMB-*` for them; do not treat silence as a product decision.
 
 | Topic | Status in #197 | Follow-on |
 | --- | --- | --- |
@@ -103,7 +110,9 @@ Grant validation **must** match the same rules as the register endpoint for that
 ### S3 PUT constraints
 
 - When the AWS SDK supports it, presigned PUT **must** bind `Content-Type` and maximum object size to grant `content_type` and `byte_size`.
-- When the SDK **cannot** enforce max size on PUT, the client may still upload an oversize object to S3; **register** and disk PUT **must** reject via HEAD / `Content-Length` mismatch. Document any SDK limitation in adapter comments.
+- When the SDK **cannot** enforce max size on PUT, the client may still upload an oversize object to S3.
+  - **Register** and disk PUT **must** reject via HEAD / `Content-Length` mismatch.
+  - Document any SDK limitation in adapter comments.
 
 ### Configuration
 
@@ -221,7 +230,9 @@ Extend `Catalog::MarketplaceListingPhotoEmbeddedSerializer` (list and detail emb
 | --- | --- | --- |
 | `url` | string or null | When `RED_CAB_OBJECT_STORAGE_PUBLIC_BASE_URL` set: `#{base}/#{storage_key}`; else null |
 
-When `url` is present, listing photos are **world-readable** by design (tourist marketplace). License documents never use this field.
+When `url` is present, listing photos are **world-readable** by design (tourist marketplace).
+
+License documents never use this field.
 
 Do not add `storage_key` to marketplace serializers.
 
