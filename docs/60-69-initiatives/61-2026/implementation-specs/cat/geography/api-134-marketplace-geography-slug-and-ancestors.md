@@ -21,7 +21,13 @@ epic: "https://github.com/markmamba/red-cab-api/issues/130"
 
 ## Problem
 
-Marketplace geography endpoints still resolve by UUID (`find_by(uuid:)`), route params are named `:district_id`/`:area_id`, and listing detail area embed is lean (no `latitude`/`longitude`, no `district`, no `ancestors[]`). Tourist-web #57 breadcrumbs and Session A slug URLs are blocked.
+Marketplace geography endpoints work like this:
+
+- They resolve by UUID (`find_by(uuid:)`).
+- Route params are named `:district_id`/`:area_id`.
+- The listing detail area embed is lean, with no `latitude`/`longitude`, no `district` and no `ancestors[]`.
+
+Tourist-web #57 breadcrumbs and Session A slug URLs are blocked.
 
 Evidence: `config/routes/marketplace_routes.rb` (`:district_id`/`:area_id`), `Catalog::Districts::MarketplaceShowManager` (`find_by(uuid:)`), `MarketplaceAreaEmbeddedSerializer` (5 fields only), `MarketplaceListingListSerializer` reuses same embedded serializer.
 

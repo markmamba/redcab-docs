@@ -21,7 +21,11 @@ epic: "https://github.com/markmamba/red-cab-api/issues/130"
 
 ## Problem
 
-Marketplace discovery has district/area slug routes and listing detail geography embeds (#134) but no API to rank Areas by user geolocation. `FR-CAT-032` and epic step 12 require a near-me endpoint using listable-node centroids and the `INV-8` discoverable filter without a spatial DB extension.
+Marketplace discovery has district/area slug routes and listing detail geography embeds (#134) but no API to rank Areas by user geolocation.
+
+`FR-CAT-032` and epic step 12 require a near-me endpoint.
+
+The endpoint uses listable-node centroids and the `INV-8` discoverable filter, with no spatial DB extension.
 
 Evidence: `config/routes/marketplace_routes.rb` (no `areas/near` route), no `NearMeManager` under `app/domains/catalog/geographies/`, partial coordinate index on `catalog_geographies` exists from #131.
 
@@ -111,7 +115,9 @@ end
 
 ### Haversine SQL (illustrative)
 
-Constants: `EARTH_RADIUS_KM = 6371.0`. Bind query `lat`/`lng` as sanitized numeric params.
+Constants: `EARTH_RADIUS_KM = 6371.0`.
+
+Bind query `lat`/`lng` as sanitized numeric params.
 
 ```sql
 ROUND(
