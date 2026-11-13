@@ -19,13 +19,27 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 
 ## TL;DR
 
-- **Ships:** Reusable `CatalogGeographyCentroidMapView` — Bootstrap placeholder map shell + accessible fallback; mounted on public **area listings** and **listing detail** routes; centroid from API `latitude` / `longitude` on area payloads (city-hall point per geography pattern).
-- **Does NOT ship:** Map SDK (Mapbox/Leaflet/Google); client Haversine or polygons; multiple listing pins on area list; map on `/districts` hub or near-me section (#65); API changes.
+- **Ships:** Reusable `CatalogGeographyCentroidMapView`:
+  - Bootstrap placeholder map shell and accessible fallback.
+  - Mounted on public **area listings** and **listing detail** routes.
+  - Centroid from API `latitude` / `longitude` on area payloads (city-hall point per geography pattern).
+- **Does NOT ship:**
+  - Map SDK (Mapbox/Leaflet/Google).
+  - Client Haversine or polygons.
+  - Multiple listing pins on area list.
+  - Map on `/districts` hub or near-me section (#65).
+  - API changes.
 - **Breaking change:** No.
 
 ## Problem
 
-Milestone C requires map/pin **container regions** on tourist discover surfaces (`tourist-ui-pre-phase-2.md`). Phase 1 API already serializes listable-node centroids on marketplace `areaShow` and listing `area` embeds; web loaders fetch those payloads but **never read** lat/lng. No issue-scoped web contract exists for component boundaries, fallback UX, or tests.
+Milestone C requires map/pin **container regions** on tourist discover surfaces (`tourist-ui-pre-phase-2.md`).
+
+Phase 1 API already serializes listable-node centroids on marketplace `areaShow` and listing `area` embeds.
+
+Web loaders fetch those payloads but **never read** lat/lng.
+
+No issue-scoped web contract exists for component boundaries, fallback UX, or tests.
 
 Evidence: no `latitude` / `longitude` usage under `red-cab-web/app` except near-me **client** geolocation (#65); listing/area pages implemented in `marketplace-catalog-listing-list-page.jsx` and `marketplace-catalog-listing-detail-page.jsx`.
 
@@ -57,7 +71,9 @@ Evidence: no `latitude` / `longitude` usage under `red-cab-web/app` except near-
 
 ## API contract (read-only — no API repo changes)
 
-Centroids are **municipal office** points on listable geography nodes — not computed on the client. See Geography (removed).
+Centroids are **municipal office** points on listable geography nodes — not computed on the client.
+
+See Geography (removed).
 
 | Consumer surface | Loader / call | JSON path | Fields | Type | When null |
 | --- | --- | --- | --- | --- | --- |
@@ -77,10 +93,15 @@ Centroids are **municipal office** points on listable geography nodes — not co
 
 ### `CatalogGeographyCentroidMapView` behavior
 
-1. **With coordinates** — `section` with `aria-labelledby`; heading (default “Map” or passed `heading`) styled like other catalog detail subsections (`h6 text-uppercase text-muted fw-semibold small mb-3`); `ratio ratio-16x9` shell with decorative pin (`aria-hidden`); optional `children` for future SDK (Q3=B).
+1. **With coordinates:**
+   - `section` with `aria-labelledby`.
+   - Heading (default “Map” or passed `heading`) styled like other catalog detail subsections (`h6 text-uppercase text-muted fw-semibold small mb-3`).
+   - `ratio ratio-16x9` shell with decorative pin (`aria-hidden`).
+   - Optional `children` for future SDK (Q3=B).
 2. **Without coordinates** — same `section` landmark; muted text fallback (no interactive map); no error toast.
 3. **Supplementary** — pages must render list/detail content regardless of map state (list-first discover).
-4. **Shell `data-latitude` / `data-longitude`** — implementation hooks on the placeholder shell for future map-provider mount and automated tests. Not part of the public HTTP API contract; do not treat as stable for third-party integrations (document again when a map SDK issue ships).
+4. **Shell `data-latitude` / `data-longitude`** — implementation hooks on the placeholder shell for future map-provider mount and automated tests.
+   - Not part of the public HTTP API contract; do not treat as stable for third-party integrations (document again when a map SDK issue ships).
 
 ### Accessibility
 
@@ -119,8 +140,21 @@ cd red-cab-web && npm run lint
 
 ## Human verification (plan artifact)
 
-Human verification **passed** (2026-09-26): Q1=A, Q2=A, Q3=B, Q4=A — see PKM `inbox/2026-09-26-issue-66-plan.md`. User approved 2026-09-26; spec `status: approved` for codegen.
+Human verification **passed** (2026-09-26): Q1=A, Q2=A, Q3=B, Q4=A — see PKM `inbox/2026-09-26-issue-66-plan.md`.
+
+User approved 2026-09-26; spec `status: approved` for codegen.
 
 ### Spec review (2026-09-26)
 
-**Recommendation:** approved — no must-fix. Aligns with issue #66 AC, `frontend.md` geography/maps rules, centroid semantics in `geography.md`, public SSR loaders on existing marketplace APIs; no pricing, auth, or API changes. **Should-fix (optional):** inherit existing `meta` robots (`index, follow`) on both routes — unchanged by this issue.
+**Recommendation:** approved — no must-fix.
+
+Aligns with these sources:
+
+- Issue #66 AC.
+- `frontend.md` geography/maps rules.
+- Centroid semantics in `geography.md`.
+- Public SSR loaders on existing marketplace APIs.
+
+It makes no pricing, auth, or API changes.
+
+**Should-fix (optional):** inherit existing `meta` robots (`index, follow`) on both routes, unchanged by this issue.

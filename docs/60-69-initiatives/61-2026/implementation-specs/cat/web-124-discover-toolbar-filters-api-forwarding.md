@@ -18,14 +18,27 @@ epic: "https://github.com/markmamba/red-cab-web/issues/55"
 
 ## TL;DR
 
-- **Ships:** Live discover **filter** UI on public area listings; URL query keys match [api-161](./api-161-marketplace-listing-index-discover-filters.md); loader and `indexByArea` forward those keys; list refetches on Apply; **Clear filters** and form Reset remove filter keys and keep sort params.
-- **Does NOT ship:** Free-text search (search field stays disabled); API changes; client-side row filtering or price math; `availability_slot_id` on the area index; new sort presets beyond web-67.
+- **Ships:** Live discover **filter** UI on public area listings:
+  - URL query keys match [api-161](./api-161-marketplace-listing-index-discover-filters.md).
+  - Loader and `indexByArea` forward those keys.
+  - The list refetches on Apply.
+  - **Clear filters** and form Reset remove filter keys and keep sort params.
+- **Does NOT ship:**
+  - Free-text search (search field stays disabled).
+  - API changes.
+  - Client-side row filtering or price math.
+  - `availability_slot_id` on the area index.
+  - New sort presets beyond web-67.
 - **Co-ship:** Merge only after api-161 filter contract is live in staging (see Verification).
 - **Breaking change:** No.
 
 ## Problem
 
-Tourist discover must filter area listings by date, service type, language, group size, and price range ([FR-CAT-023](/docs/70-79-business/requirements/functional-requirements/cat) through [FR-CAT-026](/docs/70-79-business/requirements/functional-requirements/cat)). The API ships those filters on `GET` area listings index ([api-161](./api-161-marketplace-listing-index-discover-filters.md)). The web area listings route still whitelists only `page`, `order_by`, and `order_dir` in `buildAreaListingsIndexFilters` and `CATALOG_LISTING_DISCOVER_LISTINGS_QUERY_KEYS` ([web-67](./web-67-listing-sort-control-url-params.md)).
+Tourist discover must filter area listings by date, service type, language, group size, and price range ([FR-CAT-023](/docs/70-79-business/requirements/functional-requirements/cat) through [FR-CAT-026](/docs/70-79-business/requirements/functional-requirements/cat)).
+
+The API ships those filters on `GET` area listings index ([api-161](./api-161-marketplace-listing-index-discover-filters.md)).
+
+The web area listings route still whitelists only `page`, `order_by`, and `order_dir` in `buildAreaListingsIndexFilters` and `CATALOG_LISTING_DISCOVER_LISTINGS_QUERY_KEYS` ([web-67](./web-67-listing-sort-control-url-params.md)).
 
 Evidence:
 
@@ -87,7 +100,13 @@ Evidence:
 
 **Web must not forward:** `availability_slot_id` on this index (detail/show and checkout only).
 
-**Web rule:** Loader builds the `indexByArea` filters object only from the whitelist above. Omit empty or blank URL values. Do not send filter keys the user did not set. Do not reorder `catalog_listings` in the browser.
+**Web rule:** Loader builds the `indexByArea` filters object only from the whitelist above.
+
+Omit empty or blank URL values.
+
+Do not send filter keys the user did not set.
+
+Do not reorder `catalog_listings` in the browser.
 
 ## Web contract
 
@@ -99,9 +118,16 @@ Evidence:
 
 1. **Search:** Remains disabled with `CATALOG_LISTING_DISCOVER_TOOLBAR_COPY.SEARCH_HELPER` (no change to search label/helper semantics).
 2. **Filters button:** Opens Bootstrap `Offcanvas` (end or start per existing tourist layout patterns) containing `catalog-listing-discover-filter-form.jsx` (name per frontend.md).
-3. **Form state:** `react-hook-form` + `zod` in matching `catalog-listing-discover-filter-schema.js`. Default values hydrate from `useSearchParams` on open and when URL changes (same pattern as `catalog-listing-filter-form.jsx`).
-4. **Apply:** `CatalogListingService.buildDiscoverFilterSearchParams(previousParams, formValues)` sets only whitelisted filter keys with non-empty values, deletes cleared fields, sets `page` to `1`, preserves `order_by` / `order_dir`.
-5. **Reset (form):** Same as **Clear filters** on the page — `buildClearDiscoverFilterSearchParams`; removes filter keys only; preserves sort keys and current `page` (matches `catalog-listing-service.spec.js`).
+3. **Form state:** `react-hook-form` + `zod` in matching `catalog-listing-discover-filter-schema.js`.
+   - Default values hydrate from `useSearchParams` on open and when URL changes (same pattern as `catalog-listing-filter-form.jsx`).
+4. **Apply:** `CatalogListingService.buildDiscoverFilterSearchParams(previousParams, formValues)` does these things:
+   - Sets only whitelisted filter keys with non-empty values.
+   - Deletes cleared fields.
+   - Sets `page` to `1`.
+   - Preserves `order_by` / `order_dir`.
+5. **Reset (form):** Same as **Clear filters** on the page, `buildClearDiscoverFilterSearchParams`:
+   - It removes filter keys only.
+   - It preserves sort keys and current `page` (matches `catalog-listing-service.spec.js`).
 6. **Clear filters** link (page): Unchanged handler; uses updated `LISTING_FILTER_SEARCH_PARAMS`.
 7. **Empty state:** When filters are active and API returns zero rows, keep `TOURIST_EMPTY_STATE_VARIANT.LISTING_FILTERS` (now aligned with loader forwarding).
 8. **Sort row:** Keep web-68 layout — toolbar + sort in one `flex` row on `md+`.
@@ -229,7 +255,13 @@ npm run test
 
 ### Must-fix
 
-- None — aligns with issue #124 AC, api-161 public param names, web-67 loader whitelist pattern, web-68 search placeholder, PRC-2 (no client price math), and `MarketplaceIndexRequest` / `MarketplaceIndexValidator` in red-cab-api.
+- None, and it aligns with these sources:
+  - Issue #124 AC.
+  - api-161 public param names.
+  - web-67 loader whitelist pattern.
+  - web-68 search placeholder.
+  - PRC-2 (no client price math).
+  - `MarketplaceIndexRequest` / `MarketplaceIndexValidator` in red-cab-api.
 
 ### Should-fix
 
