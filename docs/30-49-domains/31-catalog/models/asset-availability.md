@@ -63,6 +63,9 @@ About 50 files use the availability slot today: 29 in Catalog and 19 in Bookings
 | If no asset in the pool is free, checkout fails with "this time is no longer available". | checkout | Both cars are held on that day. |
 | Session expiry, payment failure and booking cancellation release the hold. | always | An unpaid hold ends when the checkout session expires. |
 | Releasing a hold twice has the same result as releasing it once. | always | A retry does not free another booking. |
+| The hold and the payment start test the same rule: the package must be sellable on the service date. | checkout, payment | A permit that ends before the service date blocks the hold and the payment. |
+| A payment start for a package that is not offered releases the hold and expires the checkout session when no charge is pending. | payment | The tourist can hold the same day with another package at once. |
+| A pending charge keeps the hold and the checkout session, because an older payment can still succeed. | payment | The payment start gives the refusal, and the hold stays until it ends. |
 | Only Catalog services write holds. | always | Bookings calls `Catalog::Availability::HoldAssetService` and never writes the table. |
 | Every booking gets the whole asset in MVP. | always | A shared seat sale is a later ruling. |
 

@@ -4,7 +4,7 @@ sidebar_label: Web · Available packages
 issue: "https://github.com/markmamba/red-cab-web/issues/194"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -317,6 +317,7 @@ New tests cover these behaviors.
 - Transaction boundaries: none in the web.
 - Snapshots: none.
 - The web stores no reason, and the alert reads the answer of each load.
+- The lasting rules live in the [Listings and packages model](../../../../30-49-domains/31-catalog/models/listings-and-packages.md#reasons) and in [Provider listings](../../../../30-49-domains/31-catalog/requirements/provider-listings.md).
 
 ## Worked example
 
@@ -368,34 +369,34 @@ Emma saved a link to the Sedan package of Kanto Charter, and Kenji later archive
 
 ### Web
 
-- [ ] Add the reason labels and the alert component.
-- [ ] Update the provider listing page and the Publish button.
-- [ ] Add the badge to the package list.
-- [ ] Update the create page, and remove `buildCreatedToast`.
-- [ ] Update the card for an empty price.
-- [ ] Remove `hasActivePackage` when nothing else reads it.
-- [ ] Handle the code `package_not_offered` in the open dates, the start times, the checkout start and the payment start.
-- [ ] Add the stale link notice and the checkout refusal.
-- [ ] Add the tourist copy in English and in Japanese.
-- [ ] Update the tests.
+- [x] Add the reason labels and the alert component.
+- [x] Update the provider listing page and the Publish button.
+- [x] Add the badge to the package list.
+- [x] Update the create page, and remove `buildCreatedToast`.
+- [x] Update the card for an empty price.
+- [x] Remove `hasActivePackage` when nothing else reads it.
+- [x] Handle the code `package_not_offered` in the open dates, the start times, the checkout start and the payment start.
+- [x] Add the stale link notice and the checkout refusal.
+- [x] Add the tourist copy in English and in Japanese.
+- [x] Update the tests.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] A published listing that is hidden shows why.
-- [ ] A draft shows what it needs, and the Publish button follows the reasons.
-- [ ] A package with no valid permit shows a badge.
-- [ ] A listing with no hidden reason shows no alert.
-- [ ] An unknown code shows a general line and breaks no page.
-- [ ] A create shows one success message.
-- [ ] An empty starting price shows no price line.
-- [ ] No file in `app/` names `skipped_prefectures`.
-- [ ] The picker, the checkout start and the payment start show a message for a package that is not offered.
-- [ ] An old package link shows a notice on the detail page and a message instead of the checkout form.
-- [ ] The entry rules are unchanged.
+- [x] A published listing that is hidden shows why.
+- [x] A draft shows what it needs, and the Publish button follows the reasons.
+- [x] A package with no valid permit shows a badge.
+- [x] A listing with no hidden reason shows no alert.
+- [x] An unknown code shows a general line and breaks no page.
+- [x] A create shows one success message.
+- [x] An empty starting price shows no price line.
+- [x] No file in `app/` names `skipped_prefectures`.
+- [x] The picker, the checkout start and the payment start show a message for a package that is not offered.
+- [x] An old package link shows a notice on the detail page and a message instead of the checkout form.
+- [x] The entry rules are unchanged.
 
 ## Verification
 

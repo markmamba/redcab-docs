@@ -4,7 +4,7 @@ sidebar_label: API · Available packages
 issue: "https://github.com/markmamba/red-cab-api/issues/266"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -411,6 +411,8 @@ Developers run `bin/rails db:reset`.
 | --- | --- |
 | `docs/30-49-domains/31-catalog/catalog-decisions.md`, section Listing publication | The publish gates become five: one photo, pickup coverage, an approved provider company, verified payout and at least one available package |
 | `docs/30-49-domains/31-catalog/requirements/provider-listings.md` | The publish rule lists the fifth gate, and the example shows it |
+| `docs/30-49-domains/31-catalog/models/listings-and-packages.md` | The lasting rules: the slug rule, the service date rule, the price refresh, the discoverable scope and the hidden and unavailable reasons |
+| `docs/30-49-domains/31-catalog/models/asset-availability.md` | The payment start tests the same rule as the hold, and it releases the hold when a package is not offered |
 
 ### Files to create or modify (API)
 
@@ -607,42 +609,42 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 
 ### API
 
-- [ ] Add the valid permits query and the approved companies query.
-- [ ] Add the scopes with one private method that holds the inline SQL.
-- [ ] Move every reader to the scopes.
-- [ ] Add the service date rule to the open dates, the start times, the hold and the payment check.
-- [ ] Handle an empty starting price in the index.
-- [ ] Add `execute_for_provider_company`, and call it from the team check and the withdrawal.
-- [ ] Add the sweep, the listing job and the schedule.
-- [ ] Update the publish check.
-- [ ] Add the hidden reasons and the unavailable reasons.
-- [ ] Remove the code in [Code to remove](#code-to-remove).
-- [ ] Add `package_not_offered` to the quote, the checkout start, the payment start, the open dates and the start times.
-- [ ] Add the slug migration and the generator change, in their own sub-PR.
-- [ ] Add the migration, and update the DBML.
-- [ ] Update the Catalog pages named in [Docs this spec changes](#docs-this-spec-changes).
-- [ ] Update the dev seeders, the test helpers and the tests.
+- [x] Add the valid permits query and the approved companies query.
+- [x] Add the scopes with one private method that holds the inline SQL.
+- [x] Move every reader to the scopes.
+- [x] Add the service date rule to the open dates, the start times, the hold and the payment check.
+- [x] Handle an empty starting price in the index.
+- [x] Add `execute_for_provider_company`, and call it from the team check and the withdrawal.
+- [x] Add the sweep, the listing job and the schedule.
+- [x] Update the publish check.
+- [x] Add the hidden reasons and the unavailable reasons.
+- [x] Remove the code in [Code to remove](#code-to-remove).
+- [x] Add `package_not_offered` to the quote, the checkout start, the payment start, the open dates and the start times.
+- [x] Add the slug migration and the generator change, in their own sub-PR.
+- [x] Add the migration, and update the DBML.
+- [x] Update the Catalog pages named in [Docs this spec changes](#docs-this-spec-changes).
+- [x] Update the dev seeders, the test helpers and the tests.
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] A package with an ended or withdrawn permit does not sell.
-- [ ] Listings that use another permit stay live.
-- [ ] A renewal brings the packages back with no listing change.
-- [ ] A service date after the last valid day is not open and cannot be held.
-- [ ] A confirmed booking does not change when a permit ends.
-- [ ] `Listing.discoverable` does not read `starting_price_jpy`.
-- [ ] An empty starting price breaks no index.
-- [ ] A direct link to a listing that is not discoverable shows `is_bookable` false.
-- [ ] Checkout and payment refuse a package that is not available.
-- [ ] Publishing needs pickup coverage and one available package.
-- [ ] The provider JSON gives the hidden reasons and the unavailable reasons.
-- [ ] No Catalog class names a Providers table for permits or company status.
-- [ ] The create response holds no `skipped_prefectures`.
-- [ ] The sweep refreshes every listing at 00:05 in Japan.
+- [x] A package with an ended or withdrawn permit does not sell.
+- [x] Listings that use another permit stay live.
+- [x] A renewal brings the packages back with no listing change.
+- [x] A service date after the last valid day is not open and cannot be held.
+- [x] A confirmed booking does not change when a permit ends.
+- [x] `Listing.discoverable` does not read `starting_price_jpy`.
+- [x] An empty starting price breaks no index.
+- [x] A direct link to a listing that is not discoverable shows `is_bookable` false.
+- [x] Checkout and payment refuse a package that is not available.
+- [x] Publishing needs pickup coverage and one available package.
+- [x] The provider JSON gives the hidden reasons and the unavailable reasons.
+- [x] No Catalog class names a Providers table for permits or company status.
+- [x] The create response holds no `skipped_prefectures`.
+- [x] The sweep refreshes every listing at 00:05 in Japan.
 
 ## Verification
 

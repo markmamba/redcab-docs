@@ -50,6 +50,7 @@ This page describes what the tourist does and sees at booking, without screens, 
 3. US-3: As a tourist, I want a coverage check before I pay, so I know the trip can start.
 4. US-4: As a tourist, I want confirmation when I pay, so I do not wait for the provider.
 5. US-5: As a tourist, I want a clear message for an unavailable listing, so I know why I cannot book.
+6. US-6: As a tourist, I want a clear message for a gone package, so I can choose another.
 
 ## Rules \{#rules\}
 
@@ -68,6 +69,8 @@ This page describes what the tourist does and sees at booking, without screens, 
 | A listing with no coverage, or a check that cannot finish, blocks confirmation. | US-3 | The coverage service is down, so no booking is confirmed. |
 | A destination alone never counts as coverage. | US-3 | A Tokyo tour with Kanagawa as extra destination fails a Yokohama pickup without coverage. |
 | A listing that appears in results can still fail a check at booking time. | US-3 | A discoverable listing still blocks a location outside its coverage. |
+| A package that the provider no longer offers gives the message `This package is not offered now. Please choose another package.` | US-6 | A provider archives a package, and a tourist with an old checkout link sees the message. |
+| The listing page never fails for an old package link. It shows the first available package and a notice. | US-6 | An old link names an archived package, and the page shows another package with a notice. |
 | RedCab checks coverage and the hold again just before payment starts. | US-3 | The provider removes Nishi-ku while the tourist fills in checkout, so the check fails before payment. |
 | If a check fails after payment succeeds, RedCab reverses the charge and makes no booking. | US-4 | The provider removes the coverage seconds after payment, so the charge is reversed and no booking exists. |
 | RedCab confirms a booking only after reliable proof of successful payment and after all checks pass. | US-4 | Payment succeeds and coverage passes, so the booking is `confirmed`. |
