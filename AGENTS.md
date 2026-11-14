@@ -1,6 +1,6 @@
 # Red Cab Docs — Agent Instructions
 
-You are working in `redcab-docs`, the Docusaurus knowledge base of the Red Cab platform (`red-cab-api` and `red-cab-web`). System design, domain rulings, implementation specs and conventions are written here. The site is published at [redcab-docs site](https://markmamba.github.io/redcab-docs/).
+You are working in `redcab-docs`, the Docusaurus knowledge base of the Red Cab platform (`red-cab-api` and `red-cab-web`). System design, domain rulings, implementation specs and conventions are written here. The site is published at [redcab-docs site](https://docs.redcab.app).
 
 This file is the single source of truth for agents. `CLAUDE.md` imports it. Codex and Cursor read it as it is.
 

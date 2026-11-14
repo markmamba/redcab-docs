@@ -50,8 +50,8 @@ const config = {
     v4: true,
   },
 
-  url: 'https://markmamba.github.io',
-  baseUrl: '/redcab-docs/',
+  url: 'https://docs.redcab.app',
+  baseUrl: '/',
 
   organizationName: 'markmamba',
   projectName: 'redcab-docs',
@@ -111,7 +111,7 @@ const config = {
         logo: {
           alt: 'Red Cab Docs',
           src: 'img/redcab-logo-outlined.png',
-          href: '/redcab-docs/docs/',
+          href: '/docs/',
         },
         items: [
           {
