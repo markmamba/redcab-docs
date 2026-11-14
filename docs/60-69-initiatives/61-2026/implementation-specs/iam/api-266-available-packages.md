@@ -81,7 +81,9 @@ An expired permit has no effect on sales, and the available test is copied acros
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
