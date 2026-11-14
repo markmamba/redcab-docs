@@ -20,6 +20,7 @@ supersedes:
 - Additional destinations and pickup coverage are separate tables, so a destination never grants coverage.
 - Two display price columns serve filter and sort, and one service writes them.
 - One query scope decides whether a listing is discoverable, and no stored flag exists.
+- The provider JSON tells why a listing is hidden and why a package cannot sell.
 
 ## About this document
 
@@ -102,7 +103,7 @@ The table `catalog_listing_packages` has one row for each sellable option.
 
 | Column | Meaning |
 | --- | --- |
-| `slug` | The `package_slug` that checkout sends. It is unique for each listing among packages that are not archived. |
+| `slug` | The `package_slug` that checkout sends. It is unique for each listing across all statuses, so an archived slug is never used again. |
 | `schedule_kind` | `full_day` holds the asset for the whole day. `timed` holds it for the booked hours. |
 | `duration_minutes` | The length of the service. It is above 0. |
 | `earliest_start_time`, `latest_start_time` | The local start window. The tourist picks a start time inside it. |
@@ -118,6 +119,7 @@ The table `catalog_listing_packages` has one row for each sellable option.
 | --- | --- | --- |
 | A listing has at most 5 packages that are not archived. | provider save | The sixth package is rejected. |
 | A package is available when it is `active`, has an active pool asset and has a valid permit for its vehicle kind. | discovery | A package with only a retired vehicle is not available. |
+| A package sells a service date only up to the last valid day of its permit. | discovery, hold, payment | A permit valid until 20 November opens 20 November, and 21 November is not open. |
 | A listing has exactly one service type: `tour`, `airport_transfer`, `private_charter` or `port_transfer`. | provider save | A Tokyo day trip has `tour`. |
 | The pricing policy sets pricing mode and cancellation for all packages. | pricing | Both packages of a tour are priced per vehicle. |
 | A package with bookings is archived and never deleted. | provider save | An old package stays for booking history. |
@@ -178,23 +180,46 @@ Two columns hold display prices, and one service writes both.
 - `catalog_listing_packages.display_price_jpy` is the quote for one passenger with no date.
 - It is empty when the package is not available.
 - `catalog_listings.starting_price_jpy` is the lowest display price of an available package.
+- It is empty when no package is available.
 - The writer is `Catalog::Pricing::RefreshDisplayPricesService`.
 - It runs in the same transaction as any package, pool, asset or pricing mode change.
+- It also runs in the same transaction when the team checks a permit or withdraws the check.
+- `Catalog::Listings::RefreshDisplayPricesSweepJob` refreshes every listing of every status each day at 15:05 UTC, which is 00:05 in Japan.
+- Between 00:00 and 00:05 a card can show an old price.
 - Checkout never reads these columns and always calls `Catalog::Pricing::CalculateQuoteService`.
 - The starting price ignores seasonal overrides until Phase 2 decides.
+- A card with an empty starting price shows no price line, and a price sort puts that card last.
 
 ## Discoverable scope \{#discoverable-scope\}
 
 The scope `Catalog::Listing.discoverable` is a query and stores nothing.
 
 ```text
-# red-cab-api/docs/db/catalog.dbml:511-515
+# red-cab-api/docs/db/catalog.dbml:507-513
     DISCOVERABLE = Catalog::Listing.discoverable (one scope, calculated at query time, DP-11):
     - status = :published
     - EXISTS an available package (live check, see the catalog_listing_packages note, C2)
+    - The provider company has status :approved, so a suspended company is hidden at once
     - EXISTS a catalog_listing_photos row (INV-10)
     - EXISTS a catalog_listing_pickup_coverages row (DP-6)
+    - primary_geography_id is NOT NULL by schema (DP-4d)
 ```
+
+The scope `discoverable` holds six tests.
+
+| Test | Scope |
+| --- | --- |
+| The listing has `status: "published"`. | `discoverable_apart_from_packages` |
+| The listing has a photo. | `with_photo` |
+| The listing has a pickup coverage row. | `with_pickup_coverage` |
+| The listing has an active pricing policy. | `with_active_pricing_policy` |
+| The company has the status `approved`. | `with_approved_company` |
+| At least one package is available. | `discoverable` only |
+
+- `Catalog::Listing.discoverable_apart_from_packages` holds every test except the available package test.
+- A tourist who names a package that is not offered gets the package answer.
+- The package answer needs a listing that this scope holds.
+- [Catalog D26 — Package not offered and package slug](/docs/30-49-domains/catalog/catalog-decisions/#package-not-offered) gives the answers.
 
 Each filter reads these data.
 
@@ -209,6 +234,55 @@ Each filter reads these data.
 | Keyword | Titles, descriptions, destination names and `providers_companies.business_name` |
 
 For a timed package, the date filter means "may have free times", and the time picker gives the exact answer.
+
+## Why a listing or a package cannot sell \{#reasons\}
+
+The API tells a provider why a listing is hidden and why a package cannot sell.
+
+The provider listing JSON has two keys.
+
+| Key | Value |
+| --- | --- |
+| `hidden_reasons` | A list of codes. It is empty when no test of `discoverable` fails, apart from the status. |
+| `is_discoverable` | True when `status` is `published` and `hidden_reasons` is empty. |
+
+The codes follow the tests of `discoverable_apart_from_packages` and the available package test.
+
+| Code | Meaning |
+| --- | --- |
+| `no_photo` | The listing has no photo. |
+| `no_pickup_coverage` | The listing has no pickup coverage row. |
+| `no_active_pricing_policy` | The listing has no active pricing policy. |
+| `no_available_package` | No package of the listing is available. |
+| `company_not_approved` | The company does not have the status `approved`. |
+
+- A draft gets the list too, so the provider sees what to fix before publishing.
+- A new test of `discoverable_apart_from_packages` needs a new code.
+- The verified payout is a publish gate, and it is not a hidden reason, because `discoverable` does not test it.
+- The pricing policy is a hidden reason, and it is not a publish gate.
+- [Catalog D12 — Listing publication](/docs/30-49-domains/catalog/catalog-decisions/#listing-publication) lists the publish gates.
+
+The provider package JSON has one key, `unavailable_reason`.
+
+| Value | Meaning |
+| --- | --- |
+| `null` | The package is available. |
+| `not_active` | The package status is not `active`. |
+| `no_active_asset` | The pool has no active asset. |
+| `no_valid_permit` | No valid permit unlocks the vehicle kind. |
+
+- The value is the first test that fails, in the order of the table.
+- The marketplace listing detail keeps `is_bookable` and gives `unavailable_reason` for a tourist.
+
+| Case | `unavailable_reason` |
+| --- | --- |
+| `is_bookable` is true | `null` |
+| No package is available | `no_available_package` |
+| At least one package is available, and the listing is not discoverable | `listing_not_visible` |
+
+- The package test comes first, because `discoverable` already needs an available package.
+- A listing with no available package still opens for a tourist, and checkout is blocked.
+- The tourist sees no reason about a permit, because the permit is private to the company.
 
 ## Worked example \{#worked-example\}
 

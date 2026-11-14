@@ -18,6 +18,7 @@ supersedes:
 - A listing has one primary destination, extra destinations, pickup coverage and one to five packages.
 - A provider sets a schedule for each asset and can close single days.
 - A listing that is not complete stays hidden from tourists.
+- The provider sees why a listing is hidden and why a package cannot sell.
 - A provider can edit a published listing in place.
 
 ## About this document
@@ -51,6 +52,7 @@ This page describes what the provider does and sees, without screens, APIs or al
 4. US-4: As a provider, I want several packages, so I can sell different vehicles and lengths.
 5. US-5: As a provider, I want working days for each asset, so nobody books a day I cannot work.
 6. US-6: As a provider, I want to publish and edit on purpose, so I control what tourists see.
+7. US-7: As a provider, I want to see why a listing is hidden, so I can fix it.
 
 ## Rules \{#rules\}
 
@@ -85,6 +87,11 @@ This page describes what the provider does and sees, without screens, APIs or al
 | A listing that becomes complete again and is still published appears again without a new publish. | US-6 | The provider adds coverage again, and the listing returns. |
 | The provider edits a published listing in place, and completeness is checked on save. | US-6 | Removing the last photo hides the listing at once. |
 | A missing optional attribute does not hide a listing. It fails only the matching filter. | US-6 | A listing with no languages still shows with no language filter on. |
+| A published listing that is hidden shows one line for each reason. | US-7 | After the last package stops selling, the page says to add a package that can be sold. |
+| A draft shows one line for each item that it still needs. | US-7 | A new draft lists a photo, pickup coverage and a package. |
+| A paused or unlisted listing shows no reason, because the provider chose that status. | US-7 | A paused listing shows no alert. |
+| An active package that cannot sell shows why: no active vehicle, or no valid permit. | US-7 | A package with an ended permit shows that its permit is not valid. |
+| The verified payout is a publish gate, and it is not a reason for a hidden listing. | US-6, US-7 | A listing with no verified payout cannot publish, and it shows no reason line. |
 
 ## Worked example \{#worked-example\}
 
@@ -96,6 +103,7 @@ A provider creates a Tokyo tour.
 4. The provider sets Car #1 to work Monday to Saturday and uploads a photo.
 5. The provider publishes the complete listing, so tourists can find it.
 6. The provider removes the coverage row, and the listing is hidden at once, though it is still `published`.
+7. The listing page shows the line that says to add pickup coverage.
 
 ## Related requirements
 
