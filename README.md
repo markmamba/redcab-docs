@@ -30,22 +30,23 @@ This command generates static content into the `build` directory and can be serv
 
 Production deploys run automatically via GitHub Actions on every push to `main`.
 
-Live site: [https://markmamba.github.io/redcab-docs/](https://markmamba.github.io/redcab-docs/)
+Live site: [https://docs.redcab.app](https://docs.redcab.app)
 
-### GitHub Pages setup (one-time)
+### GitHub Pages setup
 
 1. Open **Settings → Pages** in the `markmamba/redcab-docs` repository.
 2. Set **Build and deployment → Source** to **GitHub Actions**.
-3. Leave **Custom domain** empty until DNS for `docs.redcab.com` is ready.
+3. Set **Custom domain** to `docs.redcab.app`.
+4. Turn on **Enforce HTTPS** when GitHub finishes the DNS check.
 
-### Custom domain (later)
+### Custom domain
 
-When DNS is configured for `docs.redcab.com`:
+The domain `redcab.app` is managed in Cloudflare.
 
-1. Set `url` to `https://docs.redcab.com` and `baseUrl` to `/` in `docusaurus.config.js`.
-2. Add `static/CNAME` containing `docs.redcab.com`.
-3. Add a CNAME record: `docs` → `markmamba.github.io`.
-4. Set the custom domain in **Settings → Pages** and enable **Enforce HTTPS** once verified.
+- `docusaurus.config.js` sets `url` to `https://docs.redcab.app` and `baseUrl` to `/`.
+- `static/CNAME` contains `docs.redcab.app`.
+- Cloudflare has a `CNAME` record: `docs` → `markmamba.github.io`.
+- The Cloudflare SSL/TLS mode is **Full (strict)** when the record is proxied.
 
 ### Manual deploy check
 
