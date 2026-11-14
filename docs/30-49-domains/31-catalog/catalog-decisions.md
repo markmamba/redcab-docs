@@ -695,8 +695,9 @@ A tourist who names a package that the provider no longer offers gets one clear 
   - The listing has an active pricing policy.
   - The company is approved.
 - The listing detail never fails for a stale slug.
-  - It prices the first available package, and `price_breakdown.package_id` names it.
-  - The web compares the slug of the link with that id, and it shows a notice when they differ.
+  - It prices the first available package, and `price_breakdown.package_id` holds the `uuid` of that package.
+  - The web compares the slug of the link with the slugs in `packages`.
+  - It shows a notice when the slug is missing there.
 - A payment that starts after a provider pauses or archives the package gets `package_not_offered`.
   - The package answer comes before the other payment refusals, for example a merchant that is not verified.
   - The system releases the hold and expires the checkout session when no charge is pending.
