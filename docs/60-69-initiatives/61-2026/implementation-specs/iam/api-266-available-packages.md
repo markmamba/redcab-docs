@@ -81,7 +81,9 @@ An expired permit has no effect on sales, and the available test is copied acros
 
 ## Governing docs
 
-Read these before design. Do not invent behavior that contradicts them.
+Read these before design.
+
+Do not invent behavior that contradicts them.
 
 | ID | Document | Why |
 | --- | --- | --- |
@@ -118,7 +120,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 12 | The payment validator checks the package again with the date of the hold. | Trust the hold. | A team can withdraw a permit between the hold and the payment. |
 | 13 | A listing is not discoverable when its company is not approved. The test uses a Providers subquery. | Keep the `EXISTS` on `providers_companies` from `api-261`. | The same rule: Catalog names no Providers table. |
 | 14 | `Listing.discoverable` stops reading `starting_price_jpy`. | Keep both tests. | The ruling says the price can lag, so the test must not read it. |
-| 15 | An empty starting price does not break an index. The card shows no price line, and the API reports to Sentry. | Answer `422` for the whole page, as `api-211` decision 33 does. | One bad row must not hide the others. |
+| 15 | An empty starting price does not break an index. The card shows no price line, and the API reports it through `ErrorReporter`. | Answer `422` for the whole page, as `api-211` decision 33 does. | One bad row must not hide the others. |
 | 16 | A first check, a renewal and a withdrawal refresh the display prices in the same transaction. | A job after the commit. | `Schema ground rules` ask for the writer in the same transaction. |
 | 17 | An edit of a license number by the team does not refresh. | Refresh on every team write. | The edit changes no validity. |
 | 18 | A suspend and a reinstate do not refresh. | Refresh on a status change. | `available` does not read the company status. |
@@ -126,15 +128,15 @@ Read these before design. Do not invent behavior that contradicts them.
 | 20 | The daily sweep refreshes every listing, of every status. | Only the companies whose permit just ended. | No look-back window, no new Providers query, and it repairs any missed refresh. |
 | 21 | The sweep runs at 15:05 UTC, which is 00:05 in Japan. | 18:00 UTC with the booking count job. | The lag after midnight is about 5 minutes and not 3 hours. |
 | 22 | Each listing job takes the listing lock in a transaction. | No lock. | The job must not overwrite a provider save. |
-| 23 | A failed job reports to Sentry on an exception. Nothing checks for a run that never started. | A heartbeat check. | The existing sweeps have none, and the risk is a stale card price. |
+| 23 | A failed job reports through `ErrorReporter` on an exception. Nothing checks for a run that never started. | A heartbeat check. | The existing sweeps have none, and the risk is a stale card price. |
 | 24 | The rake task `catalog:refresh_display_prices` stays as the manual repair. | Remove it. | Developers use it for local tests and repairs. |
 | 25 | A more frequent sweep may come later. | Build it now. | The ruling says a daily job. |
 | 26 | The publish check gets a fifth gate, pickup coverage. | Leave coverage out. | Without a gate, a provider publishes and the listing stays hidden with no message. |
 | 27 | The publish check reads available packages, with two messages. | One message. | The provider must know whether to add a package or to fix a permit. |
 | 28 | The publish check reads the approved status of the company only. | Keep the license expiry check. | A permit now acts on the packages. |
 | 29 | The provider listing detail holds `is_discoverable` and `hidden_reasons`. | Compute in the web. | The web cannot read the permit, and one rule lives in one place. |
-| 30 | The provider package JSON holds `is_available` and `unavailable_reason`. | The web works it out. | Same reason. |
-| 31 | A manager computes the reasons for the listing detail before the serializer. Decisions 50 and 51 cover the package reasons. | Query in the serializer. | A serializer never queries. |
+| 30 | The provider package JSON holds `unavailable_reason`. The value `null` means that the package is available. | A second field, `is_available`. The web works it out. | One field has one source of truth. The web reads no `is_available` yet. |
+| 31 | The listing controller calls `Catalog::Listings::HiddenReasonsService` and passes the list to the serializer as the context key `hidden_reasons`. `ProvidersShowManager` still returns the listing. | A manager returns a DTO that holds the reasons. A query in the serializer. | The package answers use the same pattern (decisions 50 and 51). A serializer never queries. |
 | 32 | The provider list endpoints hold no hidden reasons. | Compute for every row. | Each row would add queries. |
 | 33 | The marketplace detail keeps `is_bookable` and `unavailable_reason`, with new values. | Remove the reason. | The web already reads `is_bookable`. |
 | 34 | `Catalog::Geography.discoverable` goes away. | Keep it. | No code calls it, and its name hides a weaker test. |
@@ -148,7 +150,7 @@ Read these before design. Do not invent behavior that contradicts them.
 | 42 | One code covers `inactive` and `archived`. | One code for each status. | The tourist can do the same thing in both cases. |
 | 43 | In the quote, the checkout start and the payment start, a listing that fails a listing-level test gets the time message before the package check. The five listing-level tests are published, one photo, pickup coverage, an active pricing policy and an approved company. "Has an available package" is not one of them. | Use the full `discoverable` rule. | A listing whose only package is paused would then get a message about dates that no date can fix. |
 | 44 | The payment validator reads `package.status`, which the manager loaded, and the listing-level tests. A status `inactive` or `archived` on a listing that passes them gives `package_not_offered`, before the other payment refusals. Any other refusal keeps the time message, and then the hold stays until it expires (decision 48 covers the release). | Block the archive while a checkout is open. | An older Stripe intent can still pay, so a release with a pending charge could book the asset twice. |
-| 45 | The listing detail sends no flag for a stale slug. The web compares the slug of the link with `price_breakdown.package_id`, and it shows a notice when they differ. | A flag in the detail answer. | The web needs no new field, and the API contract stays small. |
+| 45 | The listing detail sends no flag for a stale slug. The web compares the slug of the link with the slugs in `packages`, and it shows a notice when the slug is missing there. | A flag in the detail answer. | The web needs no new field, and the API contract stays small. `price_breakdown.package_id` holds the package `uuid`, so the web cannot compare it with a slug. |
 | 46 | The unique index on `catalog_listing_packages` covers all statuses, and `SlugGenerateService` avoids archived slugs too. | The generator only. The package `uuid` in checkout. | An old link must never point to another package or another price. |
 | 47 | The open dates and the start times answer `package_not_offered` for an `inactive` or `archived` package. A slug that matches no package, and an active package that is not available, keep `404`. | The same code for every unavailable package. An empty list. | This keeps the change to the rule of decision 41. The owner may change the second case (see Open items). |
 | 48 | When the payment start gives `package_not_offered` and no pending charge exists, `Bookings::CheckoutSessions::ReleaseForPackageNotOfferedManager` releases the hold and expires the checkout session. With a pending charge, the hold and the session stay until the hold expires. The release uses the hold reason `session_expired`. | Keep the hold in every case. Let the same tourist ignore an old hold. | The tourist must not wait up to 15 minutes for a hold that no charge can use. The manager takes the row lock of the payment start, so a charge cannot appear between the check and the release. |
@@ -270,22 +272,42 @@ A request for a package with status `inactive` or `archived` gets this body (dec
 | Case | Value |
 | --- | --- |
 | `is_bookable` is true | `null` |
-| The listing is discoverable and no package is available | `no_available_package` |
-| The listing is not discoverable | `listing_not_visible` |
+| No package is available | `no_available_package` |
+| At least one package is available, and the listing is not discoverable | `listing_not_visible` |
 
+- The package test comes first, because `discoverable` already needs an available package.
+- A listing with no available package therefore gets `no_available_package`, whatever else is missing.
 - The old value `no_active_package` goes away.
 - The page still opens for a published listing, and checkout is blocked.
 - A stale `package_slug` never gives an error.
 - The quote prices the first available package.
-- The web compares the slug of the link with `price_breakdown.package_id` and shows a notice when they differ (decision 45).
+- The web compares the slug of the link with the slugs in `packages` (decision 45).
+- The web shows a notice when the slug is missing there.
 
 ### Empty starting price
 
 `Catalog::Listings::MarketplaceListingListItemDto` takes a nilable `starting_price_jpy`.
 
 - The list serializer sends `null`.
-- The manager calls `Sentry.capture_message` once for each page that holds such a row.
+- `Catalog::Listings::MarketplaceScopedIndexManager` calls `ErrorReporter.capture_message(message:)` once for each page that holds such a row.
 - A price sort puts a null price last, as the SQL already does.
+
+### Error reporting
+
+`ErrorReporter` in `app/shared/error_reporter.rb` is the one place where new code reports a problem.
+
+- It has two methods, `capture_exception(error:)` and `capture_message(message:)`.
+- Each method writes a log line first.
+  - `capture_exception` logs only the class of the error.
+  - `capture_message` logs the message.
+- Each method then sends the problem to Sentry only when the constant `Sentry` exists.
+- The Sentry gem is not in the Gemfile yet, so today a method sends nothing.
+- `Catalog::Listings::RefreshDisplayPricesJob` reports a failed run through `capture_exception`.
+- The shim `sorbet/rbi/shims/sentry.rbi` tells Sorbet about the `Sentry` methods.
+- New code calls Sentry only through `ErrorReporter`.
+  - The shim lets a direct call pass `srb tc`.
+  - Such a call fails at run time.
+- [red-cab-api#323](https://github.com/markmamba/red-cab-api/issues/323) adds the gem and decides whether `ErrorReporter` stays.
 
 ### Refresh on a permit change
 
@@ -329,6 +351,10 @@ catalog_listings_refresh_display_prices:
 | `payout_capability_verified?` | Unchanged |
 | `provider_company_approved?` replaces `provider_operating_permitted?` | `Your company must be approved before you can publish listings.` |
 
+- The check has five gates: one photo, pickup coverage, an available package, a verified payout and an approved company.
+- The pricing policy is a hidden reason, but it is not a publish gate.
+  - [red-cab-api#316](https://github.com/markmamba/red-cab-api/issues/316) holds the open question.
+
 ### Provider JSON
 
 `ProvidersListingDetailSerializer` gets two keys.
@@ -350,16 +376,17 @@ The codes follow the tests of `discoverable`, apart from the status.
 
 - A draft also gets the list, so the provider sees what to fix before the publish.
 - `Catalog::Listings::HiddenReasonsService.execute(listing:)` runs a fixed number of queries.
-- `ProvidersShowManager` calls it and passes the result to the serializer.
+- The listing controller calls it and passes the list to the serializer as the context key `hidden_reasons` (decision 31).
+- `ProvidersShowManager` still returns the listing.
 
-`ProvidersListingPackageBaseSerializer` gets two keys.
+`ProvidersListingPackageBaseSerializer` gets one key.
 
 | Key | Value |
 | --- | --- |
-| `is_available` | True when the package is in `.available` |
 | `unavailable_reason` | `null`, `not_active`, `no_active_asset` or `no_valid_permit` |
 
 - The reason is the first test that fails, in the order of the codes above.
+- The value `null` means that the package is in `.available` (decision 30).
 - `Catalog::Packages::UnavailableReasonsService.execute(packages:)` returns a hash for the packages that it gets, in a fixed number of queries.
 - The list controller passes the records of the page to it through `context_builder:` (decision 50).
 - The create and the update controllers pass one package to it (decision 51).
@@ -376,6 +403,7 @@ Developers run `bin/rails db:reset`.
 3. Update the comments and the tags in `docs/db/catalog.dbml`, `docs/db/providers.dbml` and `docs/db/redcab.dbml`.
    - The refresh note says "every listing".
    - The publish gate note lists the fifth gate.
+   - The migration `20261114100100_update_catalog_listings_comments_for_available_packages.rb` copies the comments to the database.
 
 ### Docs this spec changes
 
@@ -402,6 +430,7 @@ Catalog scopes and services:
 - `app/domains/catalog/packages/sellable_check_service.rb` (create)
 - `app/domains/catalog/packages/last_valid_day_service.rb` (create)
 - `app/domains/catalog/packages/package_slug_state_service.rb` (create)
+- `app/domains/bookings/checkout_sessions/release_for_package_not_offered_manager.rb` (create)
 - `test/domains/catalog/packages/package_not_offered_test.rb` (create)
 - `app/domains/catalog/listing_packages/slug_generate_service.rb`
 - `app/domains/catalog/listing_packages/availability_target_fetch_service.rb` and its open dates and start times managers
@@ -444,7 +473,9 @@ Jobs and config:
 - `app/jobs/catalog/listings/refresh_display_prices_sweep_job.rb` (create)
 - `app/jobs/catalog/listings/refresh_display_prices_job.rb` (create)
 - `config/sidekiq_scheduler.yml`
-- `db/migrate/` (one migration for the index)
+- `db/migrate/` (three migrations: the unique slug index, the drop of the `valid_until` index and the column comments)
+- `app/shared/error_reporter.rb` (create)
+- `sorbet/rbi/shims/sentry.rbi` (create)
 - `lib/dev/catalog_marketplace_seeder.rb`, `lib/dev/test_accounts_seeder.rb` and the other dev seeders.
 - `docs/db/catalog.dbml`, `docs/db/providers.dbml` and `docs/db/redcab.dbml`
 
@@ -564,6 +595,7 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 - The owner may change the rule for service dates after a permit ends.
 - An active package that is not available gets `404` on the open dates and the start times.
 - The owner may want an empty list or another answer for that case.
+- A new hold reason `package_not_offered` needs a migration, and today the release uses `session_expired` (decision 48).
 - The Payments redesign in [redcab-docs#155](https://github.com/markmamba/redcab-docs/issues/155) decides what happens to an open Stripe intent when a package is not offered (decision 49).
 - An expert should review a trip that starts on the last valid day and ends after it.
 - Nobody has measured the cost of the permit subquery on a large catalog.
