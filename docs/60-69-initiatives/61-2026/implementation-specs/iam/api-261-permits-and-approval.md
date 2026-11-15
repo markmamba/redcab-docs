@@ -438,7 +438,7 @@ Kenji applies, and the team approves Kanto Charter.
 - The removal of `PickupCoveragePrefillService` and `skipped_prefectures`.
 - Removing `identities_accounts.role`, the new sign-up flow and the new access words.
 - Invitations and the owner-only checks, so any member may use the owner endpoints for now.
-- What expired insurance does.
+- What expired insurance does to a company that is already approved.
 - All emails, which launch does not need.
   - The later work sends the owner an email on approval, rejection and correction.
   - The later work sends the team an email on submit.

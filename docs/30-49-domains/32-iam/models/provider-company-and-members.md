@@ -448,7 +448,8 @@ The check call also records a renewal, because both write the same two columns o
 - Approve, reject and request correction each send one email to each active owner, see [IAM emails and reset pages](/docs/30-49-domains/iam/use-cases/emails-and-reset-pages#decision-emails).
 
 - Approve needs a valid permit and an active vehicle of the kind that the permit unlocks.
-- Approve also needs a checked insurance record and a checked company registration record.
+- Approve also needs a valid insurance record and a valid company registration record.
+  - See [IAM D20 — Expired insurance blocks approval](/docs/30-49-domains/iam/iam-decisions/#expired-insurance).
 - Approve does not read documents, because submit already needs them.
 - A call that the status does not allow answers `409`.
 - A suspension changes no confirmed booking, and it changes no listing status.

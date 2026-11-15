@@ -479,7 +479,7 @@ Kenji runs Kanto Charter and adds Mika as staff.
 - Only an approved company can invite for now, and the owner may change this.
 - A staff member whose owners all left cannot leave, and the team fixes this by hand.
 - The login rate limit must see the real visitor address before launch.
-- Insurance validity has no effect for now.
+- Insurance validity has no effect on a company that is already approved, for now.
 
 ## Tasks
 

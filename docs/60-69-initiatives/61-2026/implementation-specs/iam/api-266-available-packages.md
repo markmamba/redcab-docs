@@ -585,7 +585,7 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 
 - A more frequent price sweep.
 - Keyword search on `business_name`, which still names a Providers table.
-- What expired insurance does.
+- What expired insurance does to a company that is already approved.
 - Any email or reminder about a permit.
 - A reason for a tourist about a permit.
 - The member columns on other tables, which [api-268](api-268-member-columns.md) shipped.

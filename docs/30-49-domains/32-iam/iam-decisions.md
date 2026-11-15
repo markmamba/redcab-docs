@@ -7,7 +7,7 @@ doc_type: domain-decisions
 normative: true
 status: current
 context: iam
-last_reviewed: 2026-11-09
+last_reviewed: 2026-11-15
 supersedes:
   - ADR-018
   - ADR-019
@@ -174,10 +174,12 @@ A company holds permits, and a permit unlocks a vehicle kind.
 - A permit stays valid until the end of its last valid day in Japan time.
 - A company has no time zone, so the system uses the time zone of Japan.
 - The approval needs a valid permit with a matching vehicle.
-- The approval also needs a checked insurance record and a checked company registration record.
+- The approval also needs a valid insurance record and a valid company registration record.
+  - See [D20 — Expired insurance blocks approval](#expired-insurance).
 - The approval reads these records and the vehicles, and no stored checklist exists.
 - A pending company can save a vehicle after it adds a permit record of the matching kind.
-- Insurance has no expiry rule for now, and [Open questions](#open-forks) lists it.
+- An expired insurance record blocks approval, see [D20 — Expired insurance blocks approval](#expired-insurance).
+- What expired insurance does to a company that is already approved is in [Open questions](#open-forks).
 - An expired permit makes the packages with that vehicle kind unavailable.
 - A package sells a service date only up to the last valid day of its permit.
 - An ended permit changes no confirmed booking, and the team follows up by hand.
@@ -599,6 +601,40 @@ A password reset request has two limits, and neither limit changes the answer fo
 | Send no email when Redis fails | Nobody can reset a password during the outage, and the page still says "we sent it". |
 | Keep the lookup in the request and add only the limits | The answer time still shows which emails have an account. |
 
+## D20 — Expired insurance blocks approval (2026-11-15) \{#expired-insurance\}
+
+An approval needs a valid insurance record and a valid company registration record.
+
+- A record is valid when the team checked it and its last valid day has not ended.
+  - This is the same rule that a permit follows.
+- An insurance record or a company registration record with no `valid_until` is valid once the team checks it.
+- An expired insurance record or an expired company registration record blocks the approval.
+  - The owner gives the team a new record, and the team checks it.
+- The approval answer tells the team that the record must be checked and not expired.
+- A company that is already approved changes nothing yet, and [Open questions](#open-forks) lists it.
+
+### Why \{#expired-insurance-why\}
+
+- A company with expired insurance has no cover for its guests.
+  - The team must not approve it.
+- The team used to check insurance dates by hand, and a person can miss a date.
+  - One rule in the code does not miss a date.
+- A permit and an insurance record then follow one valid rule, so the team learns one rule.
+
+### What changes with it \{#expired-insurance-changes\}
+
+- The validator `Providers::Companies::TeamApproveValidator` reads the valid rule of `Providers::LicenseRecord` for insurance and for company registration.
+- The approval message for a missing or expired record changes.
+  - It says that the record must be checked and not expired.
+- An approval that passed before can now answer an error, when its insurance date has ended.
+
+### Options we did not choose \{#expired-insurance-options\}
+
+| Option | Why not chosen |
+| --- | --- |
+| Keep checking insurance dates by hand | The team can miss a date, and then a company with no cover is approved. |
+| Also suspend an approved company when its insurance ends | It needs a suspension rule and a notice to the owner, and the owner has not decided it. |
+
 ## Open questions \{#open-forks\}
 
 These items are proposed, not agreed, and no page may treat them as rules.
@@ -607,7 +643,7 @@ These items are proposed, not agreed, and no page may treat them as rules.
 | --- | --- | --- |
 | What is the exact seat limit between the two permits? | Sources disagree. Confirm with MLIT or a 行政書士. | Provider company spec |
 | Does Red Cab need registration under the Travel Agency Act? | Unclear for a marketplace. Ask a Japanese lawyer or a 行政書士. | Launch |
-| What does expired insurance do? | Nothing for now. The team checks insurance by hand. The owner decides. | Acceptance |
+| What does expired insurance do to a company that is already approved? | Nothing for now. The principal developer decided this, and the owner may change it. | Acceptance |
 | Does the owner accept a second application after a rejection? | Yes for now. The principal developer decided this, and the owner may change it. | Acceptance |
 | Do confirmed bookings stay after a permit ends? | Yes for now. Operating without a permit may be a legal risk, so an expert must confirm it. | Launch |
 | May a package sell a date after its permit ends? | No for now. The principal developer decided this, and the owner may change it. | Acceptance |
