@@ -38,7 +38,7 @@ related:
 | Word | Meaning |
 | --- | --- |
 | member | A person with a row in `providers_memberships`. A removed member keeps the row. |
-| member column | A column that names a membership. Its name ends in `_by_membership_id`. |
+| member column | A column that names a membership. Its name is `providers_membership_id`, the full table name. |
 | member key | A JSON key that holds the name of a member. |
 | owner, staff | The two values of `providers_memberships.company_role`. |
 | system action | A change that no person makes, such as the auto-complete sweep. |
@@ -101,7 +101,7 @@ Do not invent behavior that contradicts them.
 | 6 | Staff get the same JSON without the key. | Send `null` to Staff. | `null` means that the system acted, or that nobody acted yet. |
 | 7 | Team endpoints show no member for now. | Add it to the team JSON. | The ruling names the owner, and the team has no use case yet. |
 | 8 | The member key goes on four detail reads only. | Add it to lists. Add it to write responses. | Two pages load all four reads. Lists would need a preload on every row. |
-| 9 | The key names say what happened, not the column name. | Use the column names. | `marked_delivered_by` is clear to a reader, and `determined_by_membership` is not. |
+| 9 | The key names say what happened, not the column name. | Use the column names. | `marked_delivered_by` is clear to a reader, and `providers_membership_id` is not. |
 | 10 | Each key holds `first_name` and `last_name`, or `null`. | Add the email, the membership uuid or the role. | This matches `invited_by` in `api-264`. The owner already has the rest on the members page. |
 | 11 | A removed member still shows by name. | Hide the name. Add `is_removed`. | The ruling keeps the row for this reason. |
 | 12 | A name can be `null` on a key that exists. | Add a fallback text. | `identities_accounts.first_name` is nullable. The web decides what to show. |
@@ -122,6 +122,7 @@ Do not invent behavior that contradicts them.
 | 27 | The indexes are plain, not partial. | Partial `WHERE ... IS NOT NULL` indexes. | The DBML has plain indexes, and the tables are small. |
 | 28 | The new constraint uses the name `reviews_reviews_flagged_by_member_when_flagged`. | A shorter name. Rename the table. | It matches the other constraints on the table. B4 of `redcab-docs#154` owns any rename. |
 | 29 | The four migrations run in one release. | The two-deploy rule of `db/AGENTS.md`. | No production system exists, as in `api-260`. |
+| 30 | Each of the four columns is named `providers_membership_id`, the full table name. | The role names, such as `status_changed_by_membership_id`. | Rule D33 of `review-rails-style` says a new foreign key uses the full table name. The column comment keeps the role. The principal developer decided this on 2026-11-15. |
 
 ## API contract
 
@@ -129,10 +130,10 @@ Do not invent behavior that contradicts them.
 
 | Method | Path | Key | Read from |
 | --- | --- | --- | --- |
-| GET | `/providers/catalog/listings/:listing_id` | `status_changed_by` | `catalog_listings.status_changed_by_membership_id` |
-| GET | `/providers/bookings/orders/:booking_id` | `marked_delivered_by` | `bookings_completion_determinations.determined_by_membership_id` |
-| GET | `/providers/reviews/:review_id/provider_response` | `answered_by` | `reviews_provider_responses.answered_by_membership_id` |
-| GET | `/providers/reviews/:review_id` | `reported_by` | `reviews_reviews.flagged_by_membership_id` |
+| GET | `/providers/catalog/listings/:listing_id` | `status_changed_by` | `catalog_listings.providers_membership_id` |
+| GET | `/providers/bookings/orders/:booking_id` | `marked_delivered_by` | `bookings_completion_determinations.providers_membership_id` |
+| GET | `/providers/reviews/:review_id/provider_response` | `answered_by` | `reviews_provider_responses.providers_membership_id` |
+| GET | `/providers/reviews/:review_id` | `reported_by` | `reviews_reviews.providers_membership_id` |
 
 Each key has this shape for an owner.
 
@@ -210,23 +211,23 @@ This case is a code bug, so no client sees it.
 - It returns `first_name` and `last_name`, read from `object.identities_account`.
 - It reads only preloaded data.
 
-The association on each model uses the `*_by_membership` name, with `class_name: 'Providers::Membership'`.
+The association on each model is `providers_membership`, with `class_name: 'Providers::Membership'` and `foreign_key: :providers_membership_id`.
 
 | Model | Association | `optional` |
 | --- | --- | --- |
-| `Catalog::Listing` | `status_changed_by_membership` | true |
-| `Bookings::CompletionDetermination` | `determined_by_membership` | true |
-| `Reviews::Review` | `flagged_by_membership` | true |
-| `Reviews::ProviderResponse` | `answered_by_membership` | false |
+| `Catalog::Listing` | `providers_membership` | true |
+| `Bookings::CompletionDetermination` | `providers_membership` | true |
+| `Reviews::Review` | `providers_membership` | true |
+| `Reviews::ProviderResponse` | `providers_membership` | false |
 
 The show managers add these preloads.
 
 | Manager | Preload |
 | --- | --- |
-| `Catalog::Listings::ProvidersShowManager` | `status_changed_by_membership: :identities_account` |
-| `Bookings::Orders::ProvidersShowManager` | `completion_determination: { determined_by_membership: :identities_account }` |
-| `Reviews::Reviews::ProvidersShowManager` | `flagged_by_membership: :identities_account` |
-| `Reviews::ProviderResponses::ProvidersShowManager` | `answered_by_membership: :identities_account` |
+| `Catalog::Listings::ProvidersShowManager` | `providers_membership: :identities_account` |
+| `Bookings::Orders::ProvidersShowManager` | `completion_determination: { providers_membership: :identities_account }` |
+| `Reviews::Reviews::ProvidersShowManager` | `providers_membership: :identities_account` |
+| `Reviews::ProviderResponses::ProvidersShowManager` | `providers_membership: :identities_account` |
 
 `Providers::BaseController` gets one private helper, `member_read_context`.
 
@@ -266,34 +267,37 @@ Developers run `bin/rails db:reset`, because `db:migrate` fails when local answe
 
 Each migration adds one column from the DBML, with its comment, its index and its foreign key.
 
-1. `catalog_listings.status_changed_by_membership_id`, nullable.
-2. `bookings_completion_determinations.determined_by_membership_id`, nullable.
+1. `catalog_listings.providers_membership_id`, nullable.
+2. `bookings_completion_determinations.providers_membership_id`, nullable.
    - Add the CHECK constraint below.
    - Change the comment on `determined_by_id` to the text in `docs/db/bookings.dbml`.
-3. `reviews_reviews.flagged_by_membership_id`, nullable.
+3. `reviews_reviews.providers_membership_id`, nullable.
    - Add the CHECK constraint below.
    - The constraint `reviews_reviews_flagged_at_when_flagged` stays.
-4. `reviews_provider_responses.answered_by_membership_id`, `NOT NULL`.
+4. `reviews_provider_responses.providers_membership_id`, `NOT NULL`.
 
 ```sql
 -- docs/db/bookings.dbml:96-98
 -- bookings_completion_determinations_member_on_provider_path
-CHECK ((determined_by_type = 'provider') = (determined_by_membership_id IS NOT NULL))
+CHECK ((determined_by_type = 'provider') = (providers_membership_id IS NOT NULL))
 
 -- docs/db/reviews.dbml:68
 -- reviews_reviews_flagged_by_member_when_flagged
-CHECK (is_flagged_by_provider = (flagged_by_membership_id IS NOT NULL))
+CHECK (is_flagged_by_provider = (providers_membership_id IS NOT NULL))
 ```
 
-The index names come from the DBML.
+The index names follow the rule `index_{table}_on_{column}`.
 
-- `index_catalog_listings_on_status_changed_by_membership_id`
+- `index_catalog_listings_on_providers_membership_id`
 - `index_bookings_completion_determinations_on_membership_id`
-- `index_reviews_reviews_on_flagged_by_membership_id`
-- `index_reviews_provider_responses_on_answered_by_membership_id`
+  - The rule gives a name of 67 characters, and PostgreSQL allows 63.
+  - So the migration passes this shorter name.
+- `index_reviews_reviews_on_providers_membership_id`
+- `index_reviews_provider_responses_on_providers_membership_id`
 
-After the migrations, the same PR updates the DBML.
+Each sub-PR updates the DBML in its first commit, before the migration.
 
+- It renames the column to `providers_membership_id`, with its index name and its `Ref`.
 - It removes the `ships in: I2` tags of these columns.
 - It removes `update: cascade` from these four refs.
 - It does this in the per-context files and in `docs/db/redcab.dbml`.
@@ -432,7 +436,7 @@ New tests cover these behaviors.
 
 Kenji owns Kanto Charter, and Mika is staff.
 
-1. Mika publishes a draft listing, and the API saves the membership in `status_changed_by_membership_id`.
+1. Mika publishes a draft listing, and the API saves the membership in `catalog_listings.providers_membership_id`.
 2. Kenji reads the listing, and the JSON says `"status_changed_by": { "first_name": "Mika", "last_name": "Tanaka" }`.
 3. Mika reads the same listing, and the JSON has no `status_changed_by` key.
 4. Mika marks a booking delivered, and the determination saves the membership.
@@ -440,7 +444,7 @@ Kenji owns Kanto Charter, and Mika is staff.
 6. Kenji reads that booking, and `marked_delivered_by` is `null`, with `completed_via` for the system.
 7. Mika answers a review, and the answer saves the membership.
 8. Mika reports another review, and the team dismisses the report.
-9. The API clears `flagged_by_membership_id`, so `reported_by` is `null`.
+9. The API clears `reviews_reviews.providers_membership_id`, so `reported_by` is `null`.
 10. Kenji removes Mika, and the first booking still says `Mika Tanaka`.
 11. The team deactivates the prefecture, and the listing becomes `unlisted`.
 12. `status_changed_by` is `null`, because the system did the latest action.
@@ -511,8 +515,8 @@ bin/rails test
 bundle exec srb tc
 bundle exec rubocop
 bundle exec brakeman
-git grep -n '_by_membership' -- db/schema.rb
-git grep -n 'ships in: I2' -- docs/db | grep '_by_membership'
+git grep -n 'providers_membership_id' -- db/schema.rb
+git grep -n 'ships in: I2' -- docs/db | grep 'providers_membership_id'
 git grep -n -E 'status_changed_by|marked_delivered_by|answered_by|reported_by' -- app
 ```
 
@@ -520,4 +524,4 @@ git grep -n -E 'status_changed_by|marked_delivered_by|answered_by|reported_by' -
 
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
-| | | |
+| 2026-11-15 | Principal developer | Approved the change of the four column names to `providers_membership_id` (decision 30). |
