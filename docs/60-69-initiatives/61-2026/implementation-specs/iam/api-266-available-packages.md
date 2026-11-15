@@ -588,7 +588,7 @@ Kenji runs Kanto Charter with a Sedan package and a Microbus package.
 - What expired insurance does.
 - Any email or reminder about a permit.
 - A reason for a tourist about a permit.
-- The member columns on other tables, which spec 6 covers.
+- The member columns on other tables, which [api-268](api-268-member-columns.md) shipped.
 - How production runs the job worker.
 
 ## Open items

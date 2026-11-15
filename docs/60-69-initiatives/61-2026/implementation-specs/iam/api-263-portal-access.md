@@ -386,7 +386,7 @@ Aiko is a tourist who starts a business.
 ## Out of scope
 
 - Invitations, member screens and the owner-only checks.
-- The member columns on other tables.
+- The member columns on other tables, which [api-268](api-268-member-columns.md) shipped.
 - The portal switch and the entry rules, which the web issue covers.
 - The team admin login.
 - The language rules, and the language prompt in the web.

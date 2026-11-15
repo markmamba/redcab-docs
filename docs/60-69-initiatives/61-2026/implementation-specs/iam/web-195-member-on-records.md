@@ -4,7 +4,7 @@ sidebar_label: Web · Member on records
 issue: "https://github.com/markmamba/red-cab-web/issues/195"
 repos:
   - red-cab-web
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -77,7 +77,7 @@ Do not invent behavior that contradicts them.
 | --- | --- | --- | --- |
 | 1 | A page shows a line when the key holds a name, and it makes no role check. | Read `company_role` on each page. | The API decides who gets the key. The booking page does not load the company. |
 | 2 | A missing key, a `null` key and an empty name all show no line. | A different text for each case. | The owner needs no text when no member acted. |
-| 3 | `formatMemberName` returns the name or `null`. | Reuse `buildDisplayName`. | That helper is private, and it falls back to an email that this JSON does not hold. |
+| 3 | `formatMemberName` returns the name or `null`. | Reuse `buildPersonLabel`. | That helper falls back to the email, and then to a dash, and this JSON holds no email. |
 | 4 | `formatMemberName` lives in `ProvidersMembershipService`. | One copy in each domain. | `web-193` creates this service, and the rule stays in one place. |
 | 5 | One small view, `ProvidersMembershipMemberLineView`, shows every line. | Write the markup four times. | The four lines stay the same. |
 | 6 | The listing line shows only when the status is `published`. | Show it for any status. | Later pause work needs another label, so `Published by` must never show on a paused listing. |
@@ -126,7 +126,11 @@ Do not invent behavior that contradicts them.
 
 The booking list keeps its markup for `Completed At`.
 
-- The view takes a `className` only if that place needs it.
+- The view takes an optional `className` for the place that needs it.
+  - The listing page passes `mb-3`.
+- The booking parent builds the named fact `isMarkedDeliveredByShown` from `formatMemberName`.
+  - It draws the `ListGroup.Item` of `Marked delivered by` only when that fact is true.
+  - So a missing name leaves no empty row.
 
 ### Files to create or modify (Web)
 
@@ -153,8 +157,8 @@ This spec replaces no part of an implemented spec.
 
 | Test files | Change |
 | --- | --- |
-| `app/routes/provider/provider-catalog-listings-show-page.spec.jsx` | Assert the line for each case in the table below |
-| `app/routes/provider/provider-bookings-detail-page.spec.jsx` | Assert the three lines with an owner answer, and none with a Staff answer |
+| `app/routes/provider/provider-catalog-listings-show-page.render.spec.jsx` | Assert the line for each case in the table below |
+| `app/routes/provider/provider-bookings-detail-page.render.spec.jsx` | New file. Assert the three lines with an owner answer, and none with a Staff answer |
 
 New tests cover these behaviors.
 
@@ -211,29 +215,31 @@ Kenji owns Kanto Charter, and Mika is staff.
 
 ### Web
 
-- [ ] Add `formatMemberName`.
-- [ ] Add `ProvidersMembershipMemberLineView`.
-- [ ] Add the line to the listing page.
-- [ ] Add the three lines to the booking page.
-- [ ] Check that the booking page reloads after a mark delivered and after a new answer.
-- [ ] Add a reload to the booking page if the check fails.
-- [ ] Update the tests.
-- [ ] Run the checks in [Verification](#verification).
+- [x] Add `formatMemberName`.
+- [x] Add `ProvidersMembershipMemberLineView`.
+- [x] Add the line to the listing page.
+- [x] Add the three lines to the booking page.
+- [x] Check that the booking page reloads after a mark delivered and after a new answer.
+- [x] Add a reload to the booking page if the check fails.
+  - The check passed, because the page already calls `revalidate()` after both actions.
+  - So no reload was added.
+- [x] Update the tests.
+- [x] Run the checks in [Verification](#verification).
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] An owner sees all four lines when the keys hold names.
-- [ ] Staff see none of the four lines.
-- [ ] A `null` key, a missing key and an empty name show no line.
-- [ ] A paused listing never shows `Published by`.
-- [ ] A removed member still shows by name.
-- [ ] The booking page shows the new line right after a mark delivered and after a new answer.
-- [ ] The pages make no new API call and read no role.
-- [ ] Tourist pages show no member.
+- [x] An owner sees all four lines when the keys hold names.
+- [x] Staff see none of the four lines.
+- [x] A `null` key, a missing key and an empty name show no line.
+- [x] A paused listing never shows `Published by`.
+- [x] A removed member still shows by name.
+- [x] The booking page shows the new line right after a mark delivered and after a new answer.
+- [x] The pages make no new API call and read no role.
+- [x] Tourist pages show no member.
 
 ## Verification
 
@@ -249,4 +255,4 @@ git grep -n -E 'status_changed_by|marked_delivered_by|answered_by|reported_by' -
 
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
-| | | |
+| 2026-11-15 | Principal developer | Merged in [red-cab-web#226](https://github.com/markmamba/red-cab-web/pull/226). |

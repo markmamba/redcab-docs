@@ -299,7 +299,7 @@ The test helpers get one method that builds a company and an owner membership fo
 - Transaction boundaries: onboarding creates the company and the owner membership in one transaction.
 - Snapshots: none.
 - Other domains keep the column `provider_id`, so no snapshot column changes.
-- `bookings_completion_determinations.determined_by_id` still names `providers_profiles.uuid` in its comment, and the member columns spec replaces it.
+- `bookings_completion_determinations.determined_by_id` named `providers_profiles.uuid` in its comment when this spec shipped, and [api-268](api-268-member-columns.md) replaced the comment.
 
 ## Worked example
 
@@ -320,7 +320,7 @@ Kenji signs up and creates his company.
 - Permits, approval and the removal of `provider_type`.
 - Removing `identities_accounts.role`, the new sign-up flow and the new access codes.
 - The URL and JSON rename, and any web change.
-- The member columns on other tables.
+- The member columns on other tables, which [api-268](api-268-member-columns.md) shipped.
 - The update of `AGENTS.md`, `db/AGENTS.md`, `backend.md` and the `.dbdiagram` files, which wait until I2 ships.
 
 ## Open items
