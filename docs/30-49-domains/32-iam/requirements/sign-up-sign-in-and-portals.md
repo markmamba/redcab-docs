@@ -56,7 +56,7 @@ This page describes what the person does and sees, without screens, APIs or algo
 | Rule | Applies to | Example |
 | --- | --- | --- |
 | Tourist sign-up creates the person and a tourist profile, and sends a verification email. | US-1 | Aiko signs up with email and gets a verification email. |
-| Google sign-up from the tourist login creates the person, the Google link and a tourist profile. | US-1 | Aiko signs up with Google and can book at once. |
+| Google sign-up from the tourist login creates the person, the Google link and a tourist profile, and sends no verification email. | US-1 | Aiko signs up with Google, gets no verification email and can book at once. |
 | Provider sign-up creates the person, a company with the status pending and an owner membership. | US-2 | Kenji signs up on "List your service" and sees his pending company. |
 | Provider sign-up does not create a tourist profile. | US-2 | Kenji has no tourist profile after sign-up. |
 | Google sign-up from the provider login creates a provider company, not a tourist profile. | US-2 | Kenji signs up with Google on the provider login. |

@@ -167,12 +167,12 @@ Do not invent behavior that contradicts them.
 | Column | Meaning |
 | --- | --- |
 | `providers_company_id` | The company that holds the permit |
-| `vehicle_kind` | `private_car` or `charter_bus`, from `Providers::PermitVehicleKinds` |
+| `vehicle_kind` | `private_car` or `charter_bus`, from `Providers::LicenseRecord::VEHICLE_KIND_BY_PERMIT_KIND` |
 | `last_valid_on` | The civil date of `valid_until` in the Service Timezone |
 
 - It reads only permit kinds, so it never returns insurance or company registration.
 - A row exists when `verified_at` is set and `valid_until + interval '1 day'` is after `at`.
-- The map from license kind to vehicle kind has one home, `Providers::PermitVehicleKinds`.
+- The map from license kind to vehicle kind has one home, `Providers::LicenseRecord::VEHICLE_KIND_BY_PERMIT_KIND`.
 - `Providers::Companies::ApprovedCompaniesQuery.relation` returns the ids of companies with `status: "approved"`.
 
 ### The Catalog scopes
