@@ -4,7 +4,7 @@ sidebar_label: API · Member columns
 issue: "https://github.com/markmamba/red-cab-api/issues/268"
 repos:
   - red-cab-api
-status: approved
+status: implemented
 phase: 2
 context: IAM
 depends_on:
@@ -189,8 +189,9 @@ A listing hidden by an expired permit or a suspension keeps its member, because 
 
 ### Passing the member
 
-Controllers pass `CurrentRequest.provider_membership` as a keyword.
+Controllers pass `current_provider_membership` as a keyword.
 
+- `Providers::BaseController` narrows `CurrentRequest.provider_membership` once, with `T.must`, in this accessor.
 - The gate sets it from the same row as `CurrentRequest.provider_company`.
 - The keyword type is `::Providers::Membership`, and it is not nilable.
 - `CompleteManager` takes `determined_by_membership: T.nilable(::Providers::Membership)` with no default.
@@ -234,6 +235,7 @@ The show managers add these preloads.
 - It returns `{ can_read_member: true }` for an owner.
 - It returns `{ can_read_member: false }` for Staff.
 - The four show actions pass it as the serializer `context`.
+- The listing show action merges it with `hidden_reasons`, because that serializer already reads a context.
 
 Four serializers add the key and define `filters_for`.
 
@@ -304,10 +306,10 @@ Each sub-PR updates the DBML in its first commit, before the migration.
 
 ### Docs this spec changes
 
-| Page | Change |
-| --- | --- |
-| `docs/30-49-domains/32-iam/iam-decisions.md`, section Member on records | Adds that only an owner reads the member |
-| `docs/30-49-domains/32-iam/requirements/provider-company-members.md` | Adds the rule, and a Staff example |
+No page changes with this spec, because [redcab-docs#172](https://github.com/markmamba/redcab-docs/pull/172) already did both.
+
+- `docs/30-49-domains/32-iam/iam-decisions.md`, section Member on records, says that only an owner reads the member.
+- `docs/30-49-domains/32-iam/requirements/provider-company-members.md` holds the rule and a Staff example.
 
 ### Files to create or modify (API)
 
@@ -384,6 +386,7 @@ This spec changes no Catalog scope, so it replaces no part of [api-208](../cat/a
 | Test files | Change |
 | --- | --- |
 | `test/support/bookings_test_helper.rb` | Set the member on a provider completion |
+| `test/support/provider_company_test_helper.rb` | Gets `first_active_membership_of`, which the review builders share |
 | `test/domains/catalog/listings/providers_publish_manager_test.rb` | Pass the keyword, and assert the member |
 | `test/controllers/providers/catalog/listings_controller_test.rb` | Assert the key for an owner and for Staff |
 | `test/domains/catalog/geographies/subtree_unlist_service_test.rb` | Assert NULL after an unlist |
@@ -399,6 +402,8 @@ This spec changes no Catalog scope, so it replaces no part of [api-208](../cat/a
 | `test/integration/providers/catalog/listing_reviews_integration_test.rb` | Set the member on flagged rows |
 | `test/domains/reviews/reviews/team_dismiss_report_validator_test.rb` | Set the member on flagged rows |
 | `test/integration/team/reviews/moderation_integration_test.rb` | Assert NULL after a dismiss, and no key in the team JSON |
+
+New test files are `test/domains/bookings/orders/complete_validator_test.rb`, `test/domains/reviews/review_member_test.rb`, `test/models/catalog/listing_member_test.rb` and `test/integration/providers/member_on_records_integration_test.rb`.
 
 New tests cover these behaviors.
 
@@ -475,36 +480,36 @@ Kenji owns Kanto Charter, and Mika is staff.
 
 ### API
 
-- [ ] Add the four migrations, and update the DBML.
-- [ ] Add the four associations.
-- [ ] Pass the member to the four managers and to `CompleteManager`.
-- [ ] Add the rule to `CompleteValidator`.
-- [ ] Write NULL in `SubtreeUnlistService` and `TeamDismissReportManager`.
-- [ ] Add the embedded serializer and the four keys.
-- [ ] Add the preloads and `member_read_context`.
-- [ ] Update the dev data and the test helpers.
-- [ ] Update the tests.
-- [ ] Run the checks in [Verification](#verification).
+- [x] Add the four migrations, and update the DBML.
+- [x] Add the four associations.
+- [x] Pass the member to the four managers and to `CompleteManager`.
+- [x] Add the rule to `CompleteValidator`.
+- [x] Write NULL in `SubtreeUnlistService` and `TeamDismissReportManager`.
+- [x] Add the embedded serializer and the four keys.
+- [x] Add the preloads and `member_read_context`.
+- [x] Update the dev data and the test helpers.
+- [x] Update the tests.
+- [x] Run the checks in [Verification](#verification).
 
 ### Docs
 
-- [ ] Set spec `status: implemented` after merge.
+- [x] Set spec `status: implemented` after merge.
 
 ## Acceptance criteria
 
-- [ ] A publish, a mark delivered, a review answer and a review report each keep the member.
-- [ ] A geography unlist and an auto-complete name no member.
-- [ ] A team dismiss clears the report member.
-- [ ] A retry keeps the first member.
-- [ ] The database refuses a provider completion with no member, and a system completion with one.
-- [ ] The database refuses a flagged review with no member, and a review answer with no member.
-- [ ] The database refuses to delete a membership that a record names.
-- [ ] An owner reads the four keys on the four detail reads.
-- [ ] Staff get the same JSON without the key.
-- [ ] A read with no context holds no key.
-- [ ] A removed member still shows by name.
-- [ ] Lists, write responses, tourist JSON and team JSON hold no member key.
-- [ ] No serializer makes a query.
+- [x] A publish, a mark delivered, a review answer and a review report each keep the member.
+- [x] A geography unlist and an auto-complete name no member.
+- [x] A team dismiss clears the report member.
+- [x] A retry keeps the first member.
+- [x] The database refuses a provider completion with no member, and a system completion with one.
+- [x] The database refuses a flagged review with no member, and a review answer with no member.
+- [x] The database refuses to delete a membership that a record names.
+- [x] An owner reads the four keys on the four detail reads.
+- [x] Staff get the same JSON without the key.
+- [x] A read with no context holds no key.
+- [x] A removed member still shows by name.
+- [x] Lists, write responses, tourist JSON and team JSON hold no member key.
+- [x] No serializer makes a query.
 
 ## Verification
 
@@ -525,3 +530,5 @@ git grep -n -E 'status_changed_by|marked_delivered_by|answered_by|reported_by' -
 | Date | Reviewer | Outcome |
 | --- | --- | --- |
 | 2026-11-15 | Principal developer | Approved the change of the four column names to `providers_membership_id` (decision 30). |
+| 2026-11-15 | Opus review | The review of A2, A3 and A4 found no blocker, and the findings are applied. |
+| 2026-11-15 | Principal developer | Merged in [red-cab-api#331](https://github.com/markmamba/red-cab-api/pull/331). |

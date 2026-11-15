@@ -468,7 +468,7 @@ Kenji runs Kanto Charter and adds Mika as staff.
 - The production mail settings, which [red-cab-api#265](https://github.com/markmamba/red-cab-api/issues/265) covers.
 - Invitations from a pending or rejected company.
 - A Leave action for staff.
-- The member columns on listings, bookings and reviews.
+- The member columns on listings, bookings and reviews, which [api-268](api-268-member-columns.md) shipped.
 - The payout account endpoints other than the create action, because none exist.
 - The team admin audit of members.
 - A rate limit on the public read, because the token holds 256 bits of randomness.
