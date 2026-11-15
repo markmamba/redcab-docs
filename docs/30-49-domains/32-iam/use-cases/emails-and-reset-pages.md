@@ -91,7 +91,7 @@ The table lists each email, and the rows of `notifications_dispatches` use the m
 
 | Mail key | Sent when | Receiver | Language | Link |
 | --- | --- | --- | --- | --- |
-| `account_registered` | A person signs up. | The account email | The saved choice | The page `/verify-email` |
+| `account_registered` | A person signs up and the email is not verified yet. | The account email | The saved choice | The page `/verify-email` |
 | `verification_resent` | A person asks for the verification email again. | The account email | The saved choice | The page `/verify-email` |
 | `password_reset` | A person with a password asks for a reset. | The account email | The saved choice | `{web_base_url}/reset-password?lang=…&token=…` |
 | `password_reset_without_password` | A Google-only person asks for a reset. | The account email | The saved choice | `{web_base_url}/login` |

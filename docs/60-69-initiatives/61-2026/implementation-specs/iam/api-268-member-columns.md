@@ -465,7 +465,8 @@ Kenji owns Kanto Charter, and Mika is staff.
 - The web lines, which [red-cab-web#195](https://github.com/markmamba/red-cab-web/issues/195) covers.
 - The team serializer on `POST /providers/reviews/:review_id/report`, and the Reviews redesign.
   - Topic B4 of [redcab-docs#154](https://github.com/markmamba/redcab-docs/issues/154) tracks both.
-- The update of `AGENTS.md`, `db/AGENTS.md`, `backend.md` and the `.dbdiagram` files, which wait until I2 ships.
+- The update of `db/AGENTS.md` and the `.dbdiagram` files.
+  - [red-cab-api#315](https://github.com/markmamba/red-cab-api/issues/315) covers it.
 
 ## Open items
 
